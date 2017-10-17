@@ -1,0 +1,97 @@
+/* --------- Css of cart-menu ---------- */
+
+.cart-menu a {
+    margin-right: 14px;
+    color: #d3d3db;
+    background: transparent;
+}
+
+.cart-menu a:hover {
+    color: inherit;
+}
+
+/*------------  Css for Items image-thumnails ------------*/
+
+.item-body .item-content-thumbnail {
+    margin-right: 6px;
+    width: 24%;
+}
+
+/*------------  Css for cart modal ------------*/
+
+.item-quantity {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    apperance: none;
+    border-radius: 0;
+    line-height: 18px;
+    display: inline-block;
+    border: none;
+    padding: 4px 15px 3px;
+}
+
+#item-cart-modal .modal-body
+select {
+    background: #fff;
+    border: 1px solid #ccc;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    text-align: center;
+    margin: 0;
+}
+
+.up-down-select {
+    height: 25px;
+    line-height: 25px;
+    display: inline-block;
+    width: 90px;
+    position: relative;
+    text-align: center;
+    overflow: hidden;
+    border: 1px solid #e3e3e3;
+}
+
+.up-down-select .btn-up-down {
+    position: absolute;
+    top: 0;
+    width: 25px;
+    height: 25px;
+    display: inline-block;
+    float: left;
+    font-size: 16px;
+    line-height: 16px;
+    cursor: pointer;
+    overflow: hidden;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.up-down-select .btn-up-down.down {
+    left: 0;
+    border-right: 1px solid #e3e3e3;
+}
+
+.up-down-select .btn-up-down.up {
+    right: 0;
+    border-left: 1px solid #e3e3e3;
+}
+
+.up-down-select .btn-up-down .up-down-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    font-size: 55%;
+}
+
+.modal-header .close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-family: Helvetica, Arial, sans-serif;
+}
+
+

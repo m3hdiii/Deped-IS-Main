@@ -1,0 +1,233 @@
+[
+  {
+    "sectionId": 1,
+    "name": "IT",
+    "description": "IT Section",
+    "creationDate": null
+  },
+  {
+    "sectionId": 2,
+    "name": "IT Section",
+    "description": "IT Section Description",
+    "creationDate": null
+  },
+  {
+    "sectionId": 3,
+    "name": "IT Section",
+    "description": "IT Section Description",
+    "creationDate": null
+  },
+  {
+    "sectionId": 4,
+    "name": "2 Section",
+    "description": "2 Section Description",
+    "creationDate": null
+  },
+  {
+    "sectionId": 5,
+    "name": "3 Section",
+    "description": "3 Section Description",
+    "creationDate": null
+  },
+  {
+    "sectionId": 6,
+    "name": "4 Section",
+    "description": "4 Section Description",
+    "creationDate": null
+  },
+  {
+    "sectionId": 7,
+    "name": "5 Section",
+    "description": "5 Section Description",
+    "creationDate": null
+  },
+  {
+    "sectionId": 8,
+    "name": "6 Section",
+    "description": "6 Section Description",
+    "creationDate": null
+  },
+  {
+    "sectionId": 9,
+    "name": "7 Section",
+    "description": "7 Section Description",
+    "creationDate": null
+  },
+  {
+    "sectionId": 10,
+    "name": "8 Section",
+    "description": "8 Section Description",
+    "creationDate": null
+  },
+  {
+    "sectionId": 11,
+    "name": "9 Section",
+    "description": "9 Section Description",
+    "creationDate": null
+  },
+  {
+    "sectionId": 12,
+    "name": "Cooper Section",
+    "description": "Cooper Section Desc",
+    "creationDate": 1506096000000
+  }
+]
+
+//{
+//  "name": "SCIS Department",
+//  "description" : "SCIS Department Description",
+//  "departmentHead": "Kevin",
+//  "creationDate" : 1506149850002
+//}
+
+
+//[
+//
+//{
+//"userId": 1
+//},
+//{
+//"userId": 2
+//},
+//{
+//"userId": 3
+//},
+//{
+//"userId": 4
+//},
+//{
+//"userId": 5
+//},
+//{
+//"userId": 6
+//},
+//{
+//"userId": 7
+//},
+//{
+//"userId": 8
+//}
+//]
+
+//add user
+
+
+{
+  "username": "mohammad",
+  "password": "123",
+  "emailAddress": "mohammad@gmail.com",
+  "firstName": "mohammad",
+  "lastName": "abedini"
+}
+
+
+//user
+//{
+//  "userId": 1,
+//  "username": "mehdi",
+//  "password": "123",
+//  "accountStatus": "ACTIVE",
+//  "firstName": "Mehdi",
+//  "lastName": "Afsari",
+//  "middleName": null,
+//  "emailAddress": "ix56@yahoo.com",
+//  "phoneNo1": null,
+//  "phoneNo2": null,
+//  "gender": null,
+//  "birthDate": null,
+//  "employmentDate": null,
+//  "position": null,
+//  "address": null,
+//  "website": null,
+//  "picture": null,
+//  "createdDate": null,
+//  "referrerName": null,
+//  "referrerAddress": null,
+//  "referrerPhoneNo1": null,
+//  "referrerPhoneNo2": null,
+//  "section": null,
+//  "age": null
+//}
+
+
+//update user
+//{
+//  "userId": 1,
+//  "username": "mehdi33",
+//  "password": "123",
+//  "accountStatus": "ACTIVE",
+//  "firstName": "Mehdi",
+//  "lastName": "Afsari",
+//  "emailAddress": "ix56@yahoo.com"
+//}
+
+
+
+//[
+//  {
+//    "itemId": null,
+//    "name": "paper",
+//    "description": "paper description",
+//    "itemType": "GOODS",
+//    "visibility": "EVERYONE",
+//    "threshold": 1000,
+//    "quantity": 100000,
+//    "request": null,
+//    "creationDate": 1506397258288,
+//    "brand": {
+//      "brandId": null,
+//      "name": "amano",
+//      "description": "amano desc",
+//      "contactNumber": "09064403211",
+//      "contactNumber2": "09878787871",
+//      "centralOfficeAddress": "Manila makati",
+//      "serviceCenterAddress": "Baguio Bakakeng",
+//      "items": null
+//    },
+//    "material": "MONOBLOCK"
+//  },
+//  {
+//    "itemId": null,
+//    "name": "paper",
+//    "description": "paper description",
+//    "itemType": "GOODS",
+//    "visibility": "EVERYONE",
+//    "threshold": 1000,
+//    "quantity": 100000,
+//    "request": null,
+//    "creationDate": 1506397258288,
+//    "brand": {
+//      "brandId": null,
+//      "name": "amano",
+//      "description": "amano desc",
+//      "contactNumber": "09064403211",
+//      "contactNumber2": "09878787871",
+//      "centralOfficeAddress": "Manila makati",
+//      "serviceCenterAddress": "Baguio Bakakeng",
+//      "items": null
+//    },
+//    "material": "MONOBLOCK"
+//  },
+//  {
+//    "itemId": null,
+//    "name": "paper",
+//    "description": "paper description",
+//    "itemType": "GOODS",
+//    "visibility": "EVERYONE",
+//    "threshold": 1000,
+//    "quantity": 100000,
+//    "request": null,
+//    "creationDate": 1506397258288,
+//    "brand": {
+//      "brandId": null,
+//      "name": "amano",
+//      "description": "amano desc",
+//      "contactNumber": "09064403211",
+//      "contactNumber2": "09878787871",
+//      "centralOfficeAddress": "Manila makati",
+//      "serviceCenterAddress": "Baguio Bakakeng",
+//      "items": null
+//    },
+//    "material": "MONOBLOCK"
+//  }
+//]

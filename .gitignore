@@ -1,0 +1,8 @@
+/.git/*
+/target/*
+**/target/*
+/.idea/*
+*.iml
+/META-INF
+/META-INF/*
+nb-configuration.xml

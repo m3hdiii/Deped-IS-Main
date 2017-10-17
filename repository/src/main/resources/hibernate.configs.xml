@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration SYSTEM
+        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.dialect">
+            org.hibernate.dialect.MySQLDialect
+        </property>
+        <property name="hibernate.connection.driver_class">
+            com.mysql.jdbc.Driver
+        </property>
+
+        <!-- Assume test is the database name -->
+        <property name="hibernate.connection.url">
+            jdbc:mysql://localhost:3306/deped
+        </property>
+        <property name="hibernate.connection.username">
+            root
+        </property>
+        <property name="hibernate.connection.password">mysqlmysql</property>
+
+        <!-- List of XML mapping files -->
+        <mapping class="com.deped.model.account.User"/>
+        <mapping class="com.deped.model.location.City"/>
+        <mapping class="com.deped.model.location.Country"/>
+
+        <mapping class="com.deped.model.order.Order" />
+        <mapping class="com.deped.model.order.OrderDetails" />
+        <!--<mapping class="com.deped.model.order.OrderDetailsID" />-->
+
+        <mapping class="com.deped.model.items.type.Equipment"/>
+        <mapping class="com.deped.model.items.type.SemiExpendable"/>
+        <mapping class="com.deped.model.items.type.Goods"/>
+        <mapping class="com.deped.model.items.Item"/>
+        <mapping class="com.deped.model.items.ItemDetails"/>
+        <mapping class="com.deped.model.brand.Brand"/>
+        <mapping class="com.deped.model.brand.BrandModel"/>
+        <mapping class="com.deped.model.category.Category"/>
+        <mapping class="com.deped.model.pack.Pack"/>
+        <mapping class="com.deped.model.location.office.Department"/>
+        <mapping class="com.deped.model.location.office.Section"/>
+        <mapping class="com.deped.model.request.Request"/>
+        <mapping class="com.deped.model.request.RequestDetails"/>
+        <mapping class="com.deped.model.tracker.RequestTracker"/>
+        <mapping class="com.deped.model.security.Role"/>
+        <mapping class="com.deped.model.security.Privilege"/>
+        <mapping class="com.deped.model.delivery.DeliveryInformation"/>
+        <mapping class="com.deped.model.supply.Supplier"/>
+        <mapping class="com.deped.model.supply.Supply"/>
+
+
+    </session-factory>
+</hibernate-configuration>
