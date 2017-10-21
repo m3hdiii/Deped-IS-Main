@@ -54,7 +54,7 @@ public class Brand implements Serializable {
     private String logoUrl;
 
     @Transient
-    private byte[] logoPic;
+    private String logoPic;
 
 //    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "brands")
 //    private Set<Item> items;
@@ -142,11 +142,11 @@ public class Brand implements Serializable {
         this.logoUrl = logoUrl;
     }
 
-    public byte[] getLogoPic() {
+    public String getLogoPic() {
         return logoPic;
     }
 
-    public void setLogoPic(byte[] logoPic) {
+    public void setLogoPic(String logoPic) {
         this.logoPic = logoPic;
     }
 

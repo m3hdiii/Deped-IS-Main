@@ -7,11 +7,9 @@ import com.deped.model.account.User;
 import com.deped.model.brand.Brand;
 import com.deped.model.brand.BrandModel;
 import com.deped.model.category.Category;
+import com.deped.model.items.Item;
 import com.deped.model.items.ItemDetails;
 import com.deped.model.items.features.*;
-import com.deped.model.items.type.Equipment;
-import com.deped.model.items.type.Goods;
-import com.deped.model.items.type.SemiExpendable;
 import com.deped.model.location.City;
 import com.deped.model.location.Continent;
 import com.deped.model.location.Country;
@@ -35,24 +33,25 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 public class Launcher {
     public static void main(String[] args) {
-
+        bindLeftAssociationFacadeMethod();
         //bindLeftAssociationFacadeMethod();
         //orderBindings();
         OrderDetailsWithRequestTracker();
 
     }
 
-    private static void OrderDetailsWithRequestTracker(){
+    private static void OrderDetailsWithRequestTracker() {
         Session session = Launcher.getSessionFactory().openSession();
         Transaction tr = session.beginTransaction();
         session.get(User.class, 13L);
         User user = createUser();
         session.save("User", user);
 
-        Equipment equipment = createEquipment();
+        Item equipment = createEquipment();
         session.save("Equipment", equipment);
 
         ItemDetails it1 = createItemDetailsForEquipment1();
@@ -65,7 +64,7 @@ public class Launcher {
 
         Category category = createCategory();
 //        category.setOrderDetailsSet();
-        session.save("Category" , category);
+        session.save("Category", category);
 
         Request request = new Request();
         request.setRequestDate(new Date());
@@ -92,16 +91,20 @@ public class Launcher {
         session.save("BrandModel", brandModel2);
 
 
-        brand.setBrandModels(new ArrayList<BrandModel>(){{add(brandModel1); add(brandModel2);}});
+        brand.setBrandModels(new ArrayList<BrandModel>() {{
+            add(brandModel1);
+            add(brandModel2);
+        }});
 
         ItemDetails itemDetails1 = createItemDetailsForEquipment1();
         itemDetails1.setBrandModel(brandModel1);
 
-        brandModel1.setItemDetails(new ArrayList<ItemDetails>(){{add(itemDetails1);}});
+        brandModel1.setItemDetails(new ArrayList<ItemDetails>() {{
+            add(itemDetails1);
+        }});
 
         itemDetails1.setItem(equipment);
         session.save("ItemDetails", itemDetails1);
-
 
 
         RequestTracker requestTracker = new RequestTracker();
@@ -121,14 +124,14 @@ public class Launcher {
         tr.commit();
     }
 
-    private static void OrderBindings(){
+    private static void OrderBindings() {
         Session session = Launcher.getSessionFactory().openSession();
 
         Transaction tr = session.beginTransaction();
         User user = createUser();
         session.save("User", user);
 
-        Equipment equipment = createEquipment();
+        Item equipment = createEquipment();
         session.save("Equipment", equipment);
 
         ItemDetails it1 = createItemDetailsForEquipment1();
@@ -141,7 +144,7 @@ public class Launcher {
 
         Category category = createCategory();
 //        category.setOrderDetailsSet();
-        session.save("Category" , category);
+        session.save("Category", category);
 
         Order order = createOrder();
 //        order.setDeliveryInformation();
@@ -161,7 +164,7 @@ public class Launcher {
     }
 
 
-    private static OrderDetails createOrderDetails(){
+    private static OrderDetails createOrderDetails() {
         OrderDetails orderDetails = new OrderDetails();
         orderDetails.setOrderState(OrderState.ORDERING);
         //FIXME
@@ -173,7 +176,7 @@ public class Launcher {
         return orderDetails;
     }
 
-    private static Order createOrder(){
+    private static Order createOrder() {
         Order order = new Order();
         order.setBudgetAmount(10000.0);
         order.setOrderDate(new Date());
@@ -182,7 +185,7 @@ public class Launcher {
         return order;
     }
 
-    private static Pack createPack(){
+    private static Pack createPack() {
         Pack pack = new Pack();
         pack.setCreationDate(new Date());
         pack.setDescription("Box Description");
@@ -191,7 +194,7 @@ public class Launcher {
         return pack;
     }
 
-    private static Category createCategory(){
+    private static Category createCategory() {
         Category category = new Category();
         category.setCreationDate(new Date());
         category.setDescription("Common Office Supply Description");
@@ -199,18 +202,18 @@ public class Launcher {
         return category;
     }
 
-    private static void bindLeftAssociationFacadeMethod2(){
+    private static void bindLeftAssociationFacadeMethod2() {
         Session session = Launcher.getSessionFactory().openSession();
 
         Transaction tr = session.beginTransaction();
 
-        Equipment equipment = createEquipment();
+        Item equipment = createEquipment();
         session.save("Equipment", equipment);
 
-        SemiExpendable semiExpendable = createSemiExpandable();
+        Item semiExpendable = createSemiExpandable();
         session.save("SemiExpendable", semiExpendable);
 
-        Goods goods = createGoods();
+        Item goods = createGoods();
         session.save("Goods", goods);
 
         Brand brand = createBrand();
@@ -223,7 +226,10 @@ public class Launcher {
         session.save("BrandModel", brandModel2);
 
 
-        brand.setBrandModels(new ArrayList<BrandModel>(){{add(brandModel1); add(brandModel2);}});
+        brand.setBrandModels(new ArrayList<BrandModel>() {{
+            add(brandModel1);
+            add(brandModel2);
+        }});
 
         ItemDetails itemDetails1 = createItemDetailsForEquipment1();
         ItemDetails itemDetails2 = createItemDetailsForEquipment2();
@@ -233,7 +239,10 @@ public class Launcher {
         itemDetails1.setBrandModel(brandModel1);
         itemDetails2.setBrandModel(brandModel2);
 
-        brandModel1.setItemDetails(new ArrayList<ItemDetails>(){{add(itemDetails1); add(itemDetails2);}});
+        brandModel1.setItemDetails(new ArrayList<ItemDetails>() {{
+            add(itemDetails1);
+            add(itemDetails2);
+        }});
 
         itemDetails1.setItem(equipment);
         itemDetails2.setItem(equipment);
@@ -246,12 +255,12 @@ public class Launcher {
         session.save("ItemDetails", itemDetails3);
         session.save("ItemDetails", itemDetails4);
 
-        equipment.setItemDetails(new ArrayList<ItemDetails>(){{
+        equipment.setItemDetails(new ArrayList<ItemDetails>() {{
             add(itemDetails1);
             add(itemDetails2);
         }});
 
-        semiExpendable.setItemDetails(new ArrayList<ItemDetails>(){{
+        semiExpendable.setItemDetails(new ArrayList<ItemDetails>() {{
             add(itemDetails3);
             add(itemDetails4);
         }});
@@ -261,14 +270,14 @@ public class Launcher {
 
     }
 
-    private static ItemDetails createItemDetailsForEquipment1(){
+    private static ItemDetails createItemDetailsForEquipment1() {
         ItemDetails id = new ItemDetails();
         id.setColour(Colour.BLACK);
         id.setCondition(Condition.OK);
         id.setCreationDate(new Date());
         id.setEquipmentAvailability(EquipmentAvailability.AVAILABLE);
         id.setEquipmentSerialNo("xyz-xyz-12-68");
-        id.setLifeSpan((short)2);
+        id.setLifeSpan((short) 2);
         id.setMaterial(Material.METAL);
         id.setPurchasePrice(192.0);
         id.setWeightInGram(1000L);
@@ -276,14 +285,14 @@ public class Launcher {
         return id;
     }
 
-    private static ItemDetails createItemDetailsForEquipment2(){
+    private static ItemDetails createItemDetailsForEquipment2() {
         ItemDetails id = new ItemDetails();
         id.setColour(Colour.YELLOW);
         id.setCondition(Condition.DAMAGED);
         id.setCreationDate(new Date());
         id.setEquipmentAvailability(EquipmentAvailability.AVAILABLE);
         id.setEquipmentSerialNo("xyz-xyz-12-69");
-        id.setLifeSpan((short)3);
+        id.setLifeSpan((short) 3);
         id.setMaterial(Material.MONOBLOCK);
         id.setPurchasePrice(2000.0);
         id.setWeightInGram(1600L);
@@ -292,11 +301,11 @@ public class Launcher {
         return id;
     }
 
-    private static ItemDetails createItemDetailsForSemiExpendable1(){
+    private static ItemDetails createItemDetailsForSemiExpendable1() {
         ItemDetails id = new ItemDetails();
         id.setColour(Colour.WHITE);
         id.setCreationDate(new Date());
-        id.setLifeSpan((short)2);
+        id.setLifeSpan((short) 2);
         id.setMaterial(Material.METAL);
         id.setPurchasePrice(50.0);
         id.setWeightInGram(100L);
@@ -304,11 +313,11 @@ public class Launcher {
         return id;
     }
 
-    private static ItemDetails createItemDetailsForSemiExpendable2(){
+    private static ItemDetails createItemDetailsForSemiExpendable2() {
         ItemDetails id = new ItemDetails();
         id.setColour(Colour.RED);
         id.setCreationDate(new Date());
-        id.setLifeSpan((short)8);
+        id.setLifeSpan((short) 8);
         id.setMaterial(Material.WOOD);
         id.setPurchasePrice(10.0);
         id.setWeightInGram(10L);
@@ -316,7 +325,7 @@ public class Launcher {
         return id;
     }
 
-    private static BrandModel createBrandModel1(Brand brand){
+    private static BrandModel createBrandModel1(Brand brand) {
         BrandModel brandModel1 = new BrandModel();
         brandModel1.setModelNumber("DX-SHOCK 5");
         brandModel1.setSpecification("Light - Beautiful - Multi Colour");
@@ -326,7 +335,7 @@ public class Launcher {
         return brandModel1;
     }
 
-    private static BrandModel createBrandModel2(Brand brand){
+    private static BrandModel createBrandModel2(Brand brand) {
         BrandModel brandModel2 = new BrandModel();
         brandModel2.setModelNumber("SKY POWER");
         brandModel2.setSpecification("Nice Design - Multi Colour - Special Price");
@@ -337,8 +346,7 @@ public class Launcher {
     }
 
 
-
-    private static Brand createBrand(){
+    private static Brand createBrand() {
         Brand brand = new Brand();
         brand.setCentralOfficeAddress("Manila Makati");
         brand.setContactNumber("09056352410");
@@ -351,19 +359,19 @@ public class Launcher {
         return brand;
     }
 
-    private static Goods createGoods(){
-        Goods goods = new Goods();
+    private static Item createGoods() {
+        Item goods = new Item();
         goods.setName("Semi Expendable 1");
         goods.setDescription("Semi Expendable Description");
         goods.setThreshold(30);
         goods.setQuantity(100);
         goods.setCreationDate(new Date());
-        goods.setPicUrl("/items/goods/goods1.png");
+        goods.setPicName("/items/goods/goods1.png");
         return goods;
     }
 
-    private static SemiExpendable createSemiExpandable(){
-        SemiExpendable se = new SemiExpendable();
+    private static Item createSemiExpandable() {
+        Item se = new Item();
         se.setName("Semi Expendable 1");
         se.setDescription("Semi Expendable Description");
         se.setFunctionType(FunctionType.NON_ELECTRICAL);
@@ -371,12 +379,12 @@ public class Launcher {
         se.setQuantity(100);
 //        se.setLifeSpan((short)1);
         se.setCreationDate(new Date());
-        se.setPicUrl("/items/semi-expandable/semi-expandable1.png");
+        se.setPicName("/items/semi-expandable/semi-expandable1.png");
         return se;
     }
 
-    private static Equipment createEquipment(){
-        Equipment eq = new Equipment();
+    private static Item createEquipment() {
+        Item eq = new Item();
         eq.setName("Equipment 1");
         eq.setDescription("Equipment Description");
         eq.setFunctionType(FunctionType.ELECTRICAL);
@@ -386,51 +394,54 @@ public class Launcher {
 //        eq.setWeightInGram(1500);
 //        eq.setLifeSpan((short)6);
         eq.setCreationDate(new Date());
-        eq.setPicUrl("/items/equipment/equipment1.png");
+        eq.setPicName("/items/equipment/equipment1.png");
 
         return eq;
     }
 
-    private static void bindLeftAssociationFacadeMethod(){
+    private static void bindLeftAssociationFacadeMethod() {
         Session session = Launcher.getSessionFactory().openSession();
 
         Transaction tr = session.beginTransaction();
         Department department = createDepartment();
         session.save("Department", department);
 
-        Section section  = createSection();
-        department.setSections(new ArrayList<Section>(){{
-            add(section);
-        }});
-        section.setDepartment(department);
-        session.save("Section", section);
+        for (int i = 0; i < 7; i++) {
+            Section section = createSection();
+            department.setSections(new ArrayList<Section>() {{
+                add(section);
+            }});
+            section.setDepartment(department);
+            session.save("Section", section);
+        }
+
+//        Country country = createCountry();
+//        session.save("Country", country);
+//
+//        City city = createCity();
+//        city.setCountry(country);
+//        country.setCities(new ArrayList<City>() {{
+//            add(city);
+//        }});
+//        session.save("City", city);
+//
+//        country.setCapital(city);
 
 
-        Country country  = createCountry();
-        session.save("Country", country);
+//        User user = createUser();
+////        user.setSection(section);
+//        user.setCityOfBorn(city);
+//        session.save("User", user);
 
-        City city = createCity();
-        city.setCountry(country);
-        country.setCities(new ArrayList<City>(){{add(city);}});
-        session.save("City", city);
-
-        country.setCapital(city);
-
-
-        User user = createUser();
-        user.setSection(section);
-        user.setCityOfBorn(city);
-        session.save("User",user);
-
-        Request request = createRequest();
-        request.setUser(user);
-
-        session.save("Request", request);
+//        Request request = createRequest();
+//        request.setUser(user);
+//
+//        session.save("Request", request);
 
         tr.commit();
     }
 
-    private static Request createRequest(){
+    private static Request createRequest() {
         Request req = new Request();
         req.setRequestDate(new Date());
         req.setUserMessage("For The IT Section");
@@ -438,10 +449,10 @@ public class Launcher {
     }
 
     private static Section createSection() {
-        Section section  = new Section();
-        section.setName("IT");
+        Section section = new Section();
+        section.setName(UUID.randomUUID().toString().substring(0, 5));
         section.setCreationDate(new Date());
-        section.setDescription("IT Section ");
+        section.setDescription(UUID.randomUUID().toString().substring(0, 20));
         return section;
     }
 
@@ -455,7 +466,7 @@ public class Launcher {
         return department;
     }
 
-    public static User createUser(){
+    public static User createUser() {
         User user = new User();
         user.setFirstName("Mehdi");
         user.setLastName("Afsari");
@@ -484,26 +495,26 @@ public class Launcher {
         return user;
     }
 
-    private static Country createCountry(){
+    private static Country createCountry() {
 
         Country country = new Country();
-        country.setContinent(Continent.Africa);
-        country.setGdp(100);
+        country.setContinent(Continent.AFRICA);
+        country.setGdp(100.0);
         country.setCountryCode("IRN");
         country.setGovernmentForm("Monarchy");
         country.setHeadOfState("Hassan Rouhani");
-        country.setIndependentYear((short)100);
-        country.setLifeExpectancy(50);
+        country.setIndependentYear((short) 100);
+        country.setLifeExpectancy(50.0);
         country.setLocalName("Iran");
-        country.setSurfaceArea(1000000);
+        country.setSurfaceArea(1000000.0);
         country.setCode2("IR");
         country.setRegion("South Africa");
-        country.setOldGdp(800);
+        country.setOldGdp(800.0);
         country.setName("IRAN");
         return country;
     }
 
-    private static City createCity(){
+    private static City createCity() {
 
         City city = new City();
         city.setDistrict("Red District");

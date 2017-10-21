@@ -1,8 +1,9 @@
-package com.deped.controller.item.goods;
+package com.deped.controller.item;
 
 import com.deped.controller.AbstractMainController;
 import com.deped.model.Response;
 import com.deped.model.items.Item;
+import com.deped.utils.ImageUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -10,9 +11,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -20,7 +23,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-public class GoodsController extends AbstractMainController<Item, Long> {
+public class ItemController extends AbstractMainController<Item, Long> {
 
     private static final String BASE_NAME = "item";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
@@ -47,9 +50,28 @@ public class GoodsController extends AbstractMainController<Item, Long> {
     }
 
     @Override
+    public ModelAndView createAction(Item entity) {
+        return null;
+    }
+
     @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createAction(@Valid @ModelAttribute("item") Item entity) {
+    public ModelAndView createActionWithPic(@PathVariable MultipartFile itemPic, @Valid @ModelAttribute("item") Item entity) {
+
         entity.setCreationDate(new Date());
+        byte[] fileBytes;
+        try {
+            if (itemPic != null && (fileBytes = itemPic.getBytes()) != null && fileBytes.length != 0) {
+                boolean isImage = ImageUtils.isImage(fileBytes);
+                if (isImage) {
+                    String encodeBase64 = ImageUtils.encodeBase64(fileBytes);
+                    entity.setPictureBase64(encodeBase64);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         ResponseEntity<Item> response = makeCreateRestRequest(entity, BASE_ENTITY_URL_NAME, HttpMethod.POST, Item.class);
         ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE);
         return mv;
@@ -81,7 +103,6 @@ public class GoodsController extends AbstractMainController<Item, Long> {
         ModelAndView mv = updateProcessing(response, UPDATE_VIEW_PAGE);
         return mv;
     }
-
 
     @Override
     @RequestMapping(value = RENDER_LIST_MAPPING, method = GET)

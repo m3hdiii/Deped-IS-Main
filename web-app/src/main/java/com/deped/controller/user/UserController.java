@@ -1,20 +1,39 @@
 package com.deped.controller.user;
 
 import com.deped.controller.AbstractMainController;
+import com.deped.controller.SharedData;
 import com.deped.log.injector.FancyLogger;
 import com.deped.model.Response;
+import com.deped.model.account.Gender;
+import com.deped.model.account.Position;
 import com.deped.model.account.User;
+import com.deped.model.location.City;
+import com.deped.model.location.office.Section;
+import com.deped.utils.ImageUtils;
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.imageio.ImageIO;
 import javax.validation.Valid;
-
+import java.awt.image.BufferedImage;
+import java.beans.PropertyEditorSupport;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.net.URLConnection;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -44,16 +63,54 @@ public class UserController extends AbstractMainController<User, Long> {
     private static final String UPDATE_VIEW_PAGE = BASE_SHOW_PAGE + UPDATE_PAGE + BASE_NAME;
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
 
-    @Override
+
     @RequestMapping(value = {CREATE_MAPPING}, method = GET)
-    public ModelAndView renderCreatePage(@Valid User entity) {
+    public ModelAndView renderCreatePage() {
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("genders", Gender.values());
+        modelMap.put("positions", Position.values());
+        modelMap.put("countries", SharedData.getCountries(false));
+        modelMap.put("departments", SharedData.getDepartments(false));
+        modelMap.put("user", new User());
+        return new ModelAndView(CREATE_VIEW_PAGE, modelMap);
+    }
+
+
+    @RequestMapping(value = {CREATE_MAPPING}, method = POST)
+    public ModelAndView createActionMain(@RequestParam MultipartFile userPic, @Valid @ModelAttribute("user") User entity) {
+        Map<String, Object> model = new HashMap<>();
+        byte[] picture = null;
+        if (userPic != null) {
+            try {
+                picture = userPic.getBytes();
+                if (picture == null)
+                    throw new IOException("file is empty");
+
+                BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(picture));
+                if (bufferedImage == null) {
+                    throw new IOException("this is not a picture");
+                }
+                boolean isFileExtensionOK = ImageUtils.isImage(picture);
+                if (!isFileExtensionOK)
+                    throw new IOException("file extension problem");
+                entity.setPicture(userPic);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         return new ModelAndView(CREATE_VIEW_PAGE);
     }
 
     @Override
-    @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createAction(@Valid User entity) {
-        makeCreateRestRequest(entity, REST_CONTEXT_NAME + CREATE_MAPPING, HttpMethod.POST, User.class);
+    public ModelAndView renderCreatePage(User entity) {
+        return null;
+    }
+
+    @Override
+    @RequestMapping(value = "dummy", method = POST)
+    public ModelAndView createAction(User entity) {
         return null;
     }
 
@@ -101,5 +158,82 @@ public class UserController extends AbstractMainController<User, Long> {
     @RequestMapping(value = REMOVE_MAPPING, method = POST)
     public ModelAndView removeAction(@Valid User... entity) {
         return null;
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder, WebRequest request) {
+
+        binder.registerCustomEditor(Section.class, "section", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                if (text != null && !text.isEmpty()) {
+                    Section section = new Section();
+                    section.setSectionId(Long.parseLong(text));
+                    setValue(section);
+                }
+            }
+        });
+
+        binder.registerCustomEditor(City.class, "cityOfBorn", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                if (text != null && !text.isEmpty()) {
+                    City city = new City();
+                    city.setCityId(Long.parseLong(text));
+                    setValue(city);
+                }
+            }
+        });
+
+        binder.registerCustomEditor(Gender.class, "gender", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                if (text != null && !text.isEmpty()) {
+                    if (text.equals("FEMALE")) {
+                        setValue(Gender.FEMALE);
+                    } else if (text.equals("MALE")) {
+                        setValue(Gender.MALE);
+                    } else
+                        setValue(null);
+
+                    return;
+                }
+            }
+        });
+
+        binder.registerCustomEditor(Date.class, "birthDate", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                if (text != null && !text.isEmpty()) {
+                    try {
+                        Date birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(text);
+                        setValue(birthDate);
+                    } catch (ParseException e) {
+                        setValue(null);
+                    }
+                }
+            }
+        });
+    }
+
+    public static void main(String[] args) {
+        String file1 = "/home/mehdi/Pictures/RED.png";
+        String file2 = "/home/mehdi/Pictures/mehdi2.jpg";
+        String file3 = "/home/mehdi/Pictures/1171994_o.jpeg";
+        String file4 = "/home/mehdi/Pictures/Old-HDD/maps.gif";
+        String file5 = "/home/mehdi/Pictures/Old-HDD/pause.png";
+        String file6 = "/home/mehdi/Desktop/fff.bmp";
+        String[] files = new String[]{file1, file2, file3, file4, file5, file6};
+
+        try {
+            for (String path : files) {
+                byte[] picture = FileUtils.readFileToByteArray(new File(path));
+                String extension = URLConnection.guessContentTypeFromStream(new ByteArrayInputStream(picture));
+
+                System.out.println(extension.startsWith("image"));
+            }
+        } catch (IOException e) {
+
+        }
     }
 }

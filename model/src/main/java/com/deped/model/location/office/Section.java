@@ -16,9 +16,9 @@ import java.util.Date;
 })
 @Entity
 @Table(name = "section")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "sectionId", scope = Section.class)
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "sectionId", scope = Section.class)
 public class Section implements Serializable {
 
     @Id
@@ -34,7 +34,7 @@ public class Section implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "department_id")
-//    @JsonManagedReference("department-binding")
+    @JsonBackReference
     private Department department;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -90,6 +90,4 @@ public class Section implements Serializable {
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
-
-
 }

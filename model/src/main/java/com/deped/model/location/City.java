@@ -1,9 +1,24 @@
 package com.deped.model.location;
 
+import static com.deped.repository.utils.ConstantValues.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 
+@NamedQueries({
+        @NamedQuery(
+                name = FETCH_ALL_CITIES_BY_COUNTRY_CODE,
+                query = "SELECT c FROM City c WHERE c.country.countryCode = :countryCode"
+        )
+})
 @Table(name = "city")
 @Entity
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "cityId", scope = City.class)
 public class City {
 
     @Column(name = "city_id")
@@ -20,8 +35,9 @@ public class City {
     @Column(name = "population")
     private Long population;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "country_code")
+    @JsonBackReference("city-binding")
     private Country country;
 
     public Long getCityId() {

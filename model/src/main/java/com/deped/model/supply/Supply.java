@@ -1,7 +1,6 @@
 package com.deped.model.supply;
 
 import com.deped.model.delivery.DeliveryInformation;
-import com.deped.model.items.type.Equipment;
 import com.deped.model.items.Item;
 
 import javax.persistence.*;
@@ -34,7 +33,7 @@ public class Supply {
     private DeliveryInformation deliveryInformation;
 
     @ManyToMany(cascade = CascadeType.ALL, mappedBy = "supplies")
-    private Set<Equipment> equipments = new HashSet<>();
+    private Set<Item> equipments = new HashSet<>();
 
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -71,11 +70,11 @@ public class Supply {
         this.deliveryInformation = deliveryInformation;
     }
 
-    public Set<Equipment> getEquipments() {
+    public Set<Item> getEquipments() {
         return equipments;
     }
 
-    public void setEquipments(Set<Equipment> equipments) {
+    public void setEquipments(Set<Item> equipments) {
         this.equipments = equipments;
     }
 

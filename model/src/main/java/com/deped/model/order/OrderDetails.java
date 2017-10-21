@@ -4,13 +4,15 @@ import com.deped.model.category.Category;
 import com.deped.model.items.Item;
 import com.deped.model.pack.Pack;
 import com.deped.model.supply.Supplier;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 
 @Entity
 @Table(name = "order_details")
-public class OrderDetails {
+public class OrderDetails implements Serializable {
 
 
     @EmbeddedId
@@ -26,10 +28,12 @@ public class OrderDetails {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("categoryId")
+    @JsonBackReference
     private Category category;
 
     @ManyToOne
     @JoinColumn(name = "pack_id")
+    @JsonBackReference("pack-ref")
     private Pack pack;
 
     @Column(name = "item_unit_price")

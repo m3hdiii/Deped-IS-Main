@@ -1,6 +1,7 @@
 package com.deped.model.category;
 
 import com.deped.model.order.OrderDetails;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -38,6 +39,7 @@ public class Category implements Serializable {
     private Date creationDate;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "category")
+    @JsonManagedReference
     private Set<OrderDetails> orderDetailsSet;
 
 

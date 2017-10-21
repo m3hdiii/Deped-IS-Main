@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Formula;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -80,6 +81,9 @@ public class User implements Serializable {
 
     @Column(name = "password")
     private String password;
+
+    @Transient
+    private String repassword;
 
     @Column(name = "account_status")
     @Enumerated(value = EnumType.STRING)
@@ -173,7 +177,7 @@ public class User implements Serializable {
     private String picUrl;
 
     @Transient
-    private byte[] picture;
+    private MultipartFile picture;
 
     @ManyToMany
     @JoinTable(
@@ -192,7 +196,7 @@ public class User implements Serializable {
         this.userId = userId;
     }
 
-    public User(String username, String password, AccountStatus accountStatus, String firstName, String lastName, String middleName, String emailAddress, String phoneNo1, String phoneNo2, Gender gender, Date birthDate, Date employmentDate, Position position, String address, String website, byte[] picture, Date creationDate, String referrerName, String referrerAddress, String referrerPhoneNo1, String referrerPhoneNo2, Section section, Integer age) {
+    public User(String username, String password, AccountStatus accountStatus, String firstName, String lastName, String middleName, String emailAddress, String phoneNo1, String phoneNo2, Gender gender, Date birthDate, Date employmentDate, Position position, String address, String website, MultipartFile picture, Date creationDate, String referrerName, String referrerAddress, String referrerPhoneNo1, String referrerPhoneNo2, Section section, Integer age) {
         this.username = username;
         this.password = password;
         this.accountStatus = accountStatus;
@@ -241,6 +245,14 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRepassword() {
+        return repassword;
+    }
+
+    public void setRepassword(String repassword) {
+        this.repassword = repassword;
     }
 
     public AccountStatus getAccountStatus() {
@@ -339,11 +351,11 @@ public class User implements Serializable {
         this.website = website;
     }
 
-    public byte[] getPicture() {
+    public MultipartFile getPicture() {
         return picture;
     }
 
-    public void setPicture(byte[] picture) {
+    public void setPicture(MultipartFile picture) {
         this.picture = picture;
     }
 

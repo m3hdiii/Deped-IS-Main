@@ -20,6 +20,7 @@
 
 <c:import url="../includes/top-nav.jsp" />
 
+    <%--
     <div class="warper container-fluid">
 
         <div class="page-header">
@@ -453,7 +454,7 @@
     </div>
 
     </div>
-
+--%>
     <c:import url="../modals/cart.jsp"/>
 </section>
 <section class="content">

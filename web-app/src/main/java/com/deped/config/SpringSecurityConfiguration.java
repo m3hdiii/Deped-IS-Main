@@ -58,7 +58,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .logoutUrl("/logout");
 
 
-        http.csrf();
+        http.csrf().disable();
 //
 //        http.sessionManagement().
 //                enableSessionUrlRewriting(false);

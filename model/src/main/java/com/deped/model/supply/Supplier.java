@@ -12,7 +12,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "supplier")
-public class Supplier {
+public class
+Supplier {
 
     @Column(name = "supplier_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,8 +48,95 @@ public class Supplier {
     @Transient
     private byte[] picture;
 
-    @ManyToMany
-    private Set<Item> items;
+//    @ManyToMany
+//    private Set<Item> items;
 
 
+    public Long getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(Long supplierId) {
+        this.supplierId = supplierId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getSupplierContactNo1() {
+        return supplierContactNo1;
+    }
+
+    public void setSupplierContactNo1(String supplierContactNo1) {
+        this.supplierContactNo1 = supplierContactNo1;
+    }
+
+    public String getSupplierContactNo2() {
+        return supplierContactNo2;
+    }
+
+    public void setSupplierContactNo2(String supplierContactNo2) {
+        this.supplierContactNo2 = supplierContactNo2;
+    }
+
+    public String getSupplierAddress() {
+        return supplierAddress;
+    }
+
+    public void setSupplierAddress(String supplierAddress) {
+        this.supplierAddress = supplierAddress;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getPicUrl() {
+        return picUrl;
+    }
+
+    public void setPicUrl(String picUrl) {
+        this.picUrl = picUrl;
+    }
+
+    public byte[] getPicture() {
+        return picture;
+    }
+
+    public void setPicture(byte[] picture) {
+        this.picture = picture;
+    }
+
+//    public Set<Item> getItems() {
+//        return items;
+//    }
+//
+//    public void setItems(Set<Item> items) {
+//        this.items = items;
+//    }
 }

@@ -1,26 +1,21 @@
 package com.deped.controller.place;
 
 import com.deped.controller.AbstractMainController;
+import com.deped.controller.SharedData;
 import com.deped.model.Response;
 import com.deped.model.location.office.Department;
 import com.deped.model.location.office.Section;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.JstlView;
 
 import javax.validation.Valid;
-
 import java.beans.PropertyEditorSupport;
 import java.util.Date;
 import java.util.HashMap;
@@ -38,6 +33,7 @@ public class SectionController extends AbstractMainController<Section, Long> {
     private static final String RENDER_UPDATE_MAPPING = BASE_NAME + RENDER_UPDATE_PATTERN;
     private static final String RENDER_LIST_MAPPING = BASE_NAME + FETCH_PATTERN;
     private static final String RENDER_LIST_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
+    private static final String RENDER_LIST_MAPPING_BY_COUNTRY_CODE = BASE_NAME + FETCH_PATTERN + FETCH_BY_ID_PATTERN;
     private static final String RENDER_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
 
@@ -129,6 +125,21 @@ public class SectionController extends AbstractMainController<Section, Long> {
         return response.getBody();
     }
 
+    @RequestMapping(value = RENDER_LIST_MAPPING_BY_COUNTRY_CODE, method = RequestMethod.POST)
+    public @ResponseBody
+    List<Section> renderListPage(@PathVariable(ID_STRING_LITERAL) Long departmentId) {
+//        ResponseEntity<List<Section>> response = makeFetchRestRequestByFreignKey(BASE_NAME, String.valueOf(departmentId), HttpMethod.POST, new ParameterizedTypeReference<List<Section>>() {
+//        });
+//        List<Section> list = response.getBody();
+        List<Department> departments = SharedData.getDepartments(false);
+        for (Department dep : departments) {
+            if (dep.getDepartmentId() == departmentId) {
+                return dep.getSections();
+            }
+        }
+        return null;
+    }
+
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
 
@@ -147,5 +158,7 @@ public class SectionController extends AbstractMainController<Section, Long> {
                 setValue((text.equals("")) ? null : department);
             }
         });
+
+
     }
 }

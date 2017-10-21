@@ -5,6 +5,7 @@ import com.deped.repository.utils.Range;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
@@ -12,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class AbstractMainController<T, ID> implements MainController<T, ID>, ConstantMessages {
-
 
     public ResponseEntity<T> makeCreateRestRequest(T entity, String baseRestName, HttpMethod method, Class<T> entityClass) {
         RestTemplate restTemplate = new RestTemplate();
@@ -44,6 +44,14 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
             restUrl = String.format(FETCH_RANGE_URL, baseName, range.getFrom(), range.getTo());
         }
 
+        ResponseEntity<List<T>> response = restTemplate.exchange(restUrl, method, httpEntity, typeRef);
+        return response;
+    }
+
+    public ResponseEntity<List<T>> makeFetchRestRequestByFreignKey(String baseName, String foreignKeyValue, HttpMethod method, ParameterizedTypeReference<List<T>> typeRef) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity httpEntity = makeHttpEntity(null);
+        String restUrl = String.format(FETCH_URL, baseName) + URL_SEPARATOR + foreignKeyValue;
         ResponseEntity<List<T>> response = restTemplate.exchange(restUrl, method, httpEntity, typeRef);
         return response;
     }

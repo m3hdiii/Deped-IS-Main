@@ -75,6 +75,7 @@
                             </div>
                         </div>
 
+                        <%--
                         <hr class="style13">
                         <div class="form-group">
                             <label class="col-sm-2 control-label">This Package is for Item</label>
@@ -84,16 +85,19 @@
                                 </form:select>
                             </div>
                         </div>
+                        --%>
 
                         <hr class="style13">
-                        <div class="btn-group-sm row">
-                            <div class="col-sm-2">
-                                <button type="submit" class="btn btn-success btn-block">Submit</button>
+                        <p>
+                        <div class="form-group">
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-green"> Create Pack</button>
                             </div>
-                            <div class="form-group col-sm-2">
-                                <button type="reset" class="btn btn-primary btn-block">Reset Fields</button>
+                            <div class="col-md-2">
+                                <button type="reset" class="btn btn-green"> Reset</button>
                             </div>
                         </div>
+                        </p>
 
                         <hr class="style13">
 

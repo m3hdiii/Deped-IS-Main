@@ -2,9 +2,11 @@ package com.deped.model.pack;
 
 import com.deped.model.order.OrderDetails;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +27,7 @@ import static com.deped.repository.utils.ConstantValues.FETCH_ALL_PACKS;
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "packId", scope = Pack.class)
-public class Pack {
+public class Pack implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,7 +47,8 @@ public class Pack {
     @Column(name = "creation_date")
     private Date creationDate;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "pack")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "pack")
+    @JsonManagedReference("pack-ref")
     private List<OrderDetails> orderDetailsList;
 
     public Pack() {

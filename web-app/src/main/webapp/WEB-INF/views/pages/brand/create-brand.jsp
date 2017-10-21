@@ -41,7 +41,7 @@
                         </c:when>
                     </c:choose>
 
-                    <form:form commandName="brand" method="post" class="form-horizontal">
+                    <form:form commandName="brand" method="post" class="form-horizontal" enctype="multipart/form-data">
 
                         <p>
                         <div class="form-group">
@@ -84,6 +84,11 @@
                             <form:input path="serviceCenterAddress" class="col-md-4"/>
                         </div>
                         </p>
+
+                        <div>
+                            <label class="col-sm-2"> Service Center Address: </label>
+                            <input type="file" name="brandPic" id="brandPicture" class="col-md-4"/>
+                        </div>
 
                         <p>
                         <div class="form-group">

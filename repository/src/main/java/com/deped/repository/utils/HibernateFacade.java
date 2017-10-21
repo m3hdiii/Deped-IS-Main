@@ -10,6 +10,7 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.Id;
 import java.lang.reflect.Field;
@@ -44,7 +45,7 @@ public class HibernateFacade {
         return sessionInstance;
     }
 
-
+    @Transactional
     public Boolean updateEntity(Object entity) {
         Session hibernateSession;
         try {
@@ -72,6 +73,7 @@ public class HibernateFacade {
         return true;
     }
 
+    @Transactional
     public <T> T saveEntity(Class<T> entityClass, T object) {
         Session hibernateSession;
         try {
@@ -100,6 +102,7 @@ public class HibernateFacade {
         return object;
     }
 
+    @Transactional
     public <T> List<T> fetchAllByParameterMap(String nameQuery, Class<T> entityClass, Map<String, Object> parameterMap) {
         Session hibernateSession;
         try {
@@ -135,10 +138,12 @@ public class HibernateFacade {
         return rows;
     }
 
+    @Transactional
     public <T> List<T> fetchAllEntity(String nameQuery, Class<T> entityClass) {
         return fetchAllEntity(nameQuery, null, entityClass);
     }
 
+    @Transactional
     public <T> List<T> fetchAllEntity(String nameQuery, Range range, Class<T> entityClass) {
         Session hibernateSession;
         try {
@@ -206,6 +211,7 @@ public class HibernateFacade {
         return true;
     }
 
+    @Transactional
     public <T> T fetchEntityById(Class<T> entityClass, Object entityId) {
         Session hibernateSession;
         try {

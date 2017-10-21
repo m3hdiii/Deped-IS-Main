@@ -10,10 +10,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -49,13 +52,28 @@ public class BrandController extends AbstractMainController<Brand, Long> {
     }
 
     @Override
-    @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createAction(@Valid @ModelAttribute("brand") Brand entity) {
+    public ModelAndView createAction(Brand entity) {
+        return null;
+    }
+
+    @RequestMapping(value = {CREATE_MAPPING}, method = POST)
+    public ModelAndView createActionWithPic(@RequestParam MultipartFile brandPic, @Valid @ModelAttribute("brand") Brand entity) {
         entity.setCreationDate(new Date());
+        String base64Encoded = null;
+        try {
+            byte[] picture = brandPic.getBytes();
+            base64Encoded = Base64.getEncoder().encodeToString(picture);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        entity.setLogoPic(base64Encoded);
+//        Base64.getDecoder().decode(str)
         ResponseEntity<Brand> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Brand.class);
         ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE);
         return mv;
     }
+
 
     @Override
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
@@ -74,9 +92,23 @@ public class BrandController extends AbstractMainController<Brand, Long> {
     }
 
     @Override
+    public ModelAndView updateAction(Long aLong, Brand entity) {
+        return null;
+    }
+
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute Brand entity) {
+    public ModelAndView updateActionWithPicture(@RequestParam MultipartFile brandPic, @PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute Brand entity) {
         entity.setBrandId(aLong);
+        String base64Encoded = null;
+        try {
+            byte[] picture = brandPic.getBytes();
+            base64Encoded = Base64.getEncoder().encodeToString(picture);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        entity.setLogoPic(base64Encoded);
+
         //This is actually the update date
         entity.setCreationDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST);

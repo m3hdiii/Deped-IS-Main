@@ -28,10 +28,6 @@
         <mapping class="com.deped.model.order.Order" />
         <mapping class="com.deped.model.order.OrderDetails" />
         <!--<mapping class="com.deped.model.order.OrderDetailsID" />-->
-
-        <mapping class="com.deped.model.items.type.Equipment"/>
-        <mapping class="com.deped.model.items.type.SemiExpendable"/>
-        <mapping class="com.deped.model.items.type.Goods"/>
         <mapping class="com.deped.model.items.Item"/>
         <mapping class="com.deped.model.items.ItemDetails"/>
         <mapping class="com.deped.model.brand.Brand"/>

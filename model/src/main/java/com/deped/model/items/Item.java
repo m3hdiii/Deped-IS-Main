@@ -3,8 +3,8 @@ package com.deped.model.items;
 
 import com.deped.model.items.features.FunctionType;
 import com.deped.model.order.OrderDetails;
-import com.deped.model.pack.Pack;
-import com.deped.model.supply.Supplier;
+
+import static com.deped.repository.utils.ConstantValues.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,10 +17,10 @@ import java.util.Set;
  * Created by mehdi on 7/6/17.
  */
 
-//@NamedQueries({
-//        @NamedQuery(name = FETCH_ALL_ITEMS, query = "SELECT i FROM Item i"),
-//        @NamedQuery(name = FETCH_ALL_ITEMS_BY_TYPE, query = "SELECT i FROM Item i WHERE i.itemType  = :itemType")
-//})
+@NamedQueries({
+        @NamedQuery(name = FETCH_ALL_ITEMS, query = "SELECT i FROM Item i"),
+        @NamedQuery(name = FETCH_ALL_ITEMS_BY_TYPE, query = "SELECT i FROM Item i WHERE i.itemType  = :itemType")
+})
 //
 //@JsonIdentityInfo(
 //        generator = ObjectIdGenerators.PropertyGenerator.class,
@@ -28,8 +28,6 @@ import java.util.Set;
 
 @Entity
 @Table(name = "item")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "item_type", discriminatorType = DiscriminatorType.STRING)
 public class Item implements Serializable {
 
     @Id
@@ -43,7 +41,7 @@ public class Item implements Serializable {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "item_type", insertable = false, updatable = false)
+    @Column(name = "item_type")
     @Enumerated(value = EnumType.STRING)
     private ItemType itemType;
 
@@ -61,14 +59,14 @@ public class Item implements Serializable {
     @Column(name = "creation_date")
     private Date creationDate;
 
-    @Column(name = "pic_url")
-    private String picUrl;
+    @Column(name = "pic_name")
+    private String picName;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
     protected List<ItemDetails> itemDetails;
 
     @Transient
-    private byte[] picture;
+    private String pictureBase64;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,mappedBy = "item")
     private Set<OrderDetails> orderItems;
@@ -147,22 +145,21 @@ public class Item implements Serializable {
         this.creationDate = creationDate;
     }
 
-    public String getPicUrl() {
-        return picUrl;
+    public String getPicName() {
+        return picName;
     }
 
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
+    public void setPicName(String picName) {
+        this.picName = picName;
     }
 
-    public byte[] getPicture() {
-        return picture;
+    public String getPictureBase64() {
+        return pictureBase64;
     }
 
-    public void setPicture(byte[] picture) {
-        this.picture = picture;
+    public void setPictureBase64(String pictureBase64) {
+        this.pictureBase64 = pictureBase64;
     }
-
 
     public void setFunctionType(FunctionType functionType) {
         this.functionType = functionType;

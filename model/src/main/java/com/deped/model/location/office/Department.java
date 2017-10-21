@@ -22,9 +22,9 @@ import static com.deped.repository.utils.ConstantValues.FETCH_ALL_DEPARTMENTS;
 })
 @Entity
 @Table(name = "department")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "departmentId", scope = Department.class)
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "departmentId", scope = Department.class)
 public class Department implements Serializable {
 
     @Id
@@ -45,8 +45,8 @@ public class Department implements Serializable {
     @Column(name = "department_head")
     private String departmentHead;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "department")
-    @JsonBackReference("department-binding")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "department", orphanRemoval = true)
+    @JsonManagedReference
     private List<Section> sections = new ArrayList<>();
 
 
@@ -108,6 +108,4 @@ public class Department implements Serializable {
     public void setDepartmentHead(String departmentHead) {
         this.departmentHead = departmentHead;
     }
-
-
 }

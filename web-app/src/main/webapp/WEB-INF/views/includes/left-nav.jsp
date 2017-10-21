@@ -1,10 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<%--
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <sec:authentication var="principal" property="principal" />
 <c:set var="currentUser" value="${principal.user}" />
-
+--%>
 <aside class="left-panel">
 
     <div class="user text-center">
@@ -26,6 +28,31 @@
             </ul>
         </div>
     </div>
+
+
+    <li class="has-submenu"><a href="#"><i class="fa fa-file-text-o"></i> <span
+            class="nav-label leftNavHeader">Brand</span></a>
+        <ul class="list-unstyled">
+            <li><a href="/brand/create">Create Brand</a></li>
+            <li><a href="/brand/list">All Brands</a></li>
+        </ul>
+    </li>
+
+    <li class="has-submenu"><a href="#"><i class="fa fa-file-text-o"></i> <span
+            class="nav-label leftNavHeader">Category</span></a>
+        <ul class="list-unstyled">
+            <li><a href="/category/create">Create Category</a></li>
+            <li><a href="/category/list">Category List</a></li>
+        </ul>
+    </li>
+
+    <li class="has-submenu"><a href="#"><i class="fa fa-file-text-o"></i> <span
+            class="nav-label leftNavHeader">Pack</span></a>
+        <ul class="list-unstyled">
+            <li><a href="/pack/create">Create Pack</a></li>
+            <li><a href="/pack/list">Pack List</a></li>
+        </ul>
+    </li>
 
     <nav class="navigation">
         <ul class="list-unstyled">
@@ -49,14 +76,6 @@
             </li>
 
             <li class="has-submenu"><a href="#"><i class="fa fa-file-text-o"></i> <span
-                    class="nav-label leftNavHeader">Brand</span></a>
-                <ul class="list-unstyled">
-                    <li><a href="/brand/create">Create Brand</a></li>
-                    <li><a href="/brand/list">All Brands</a></li>
-                </ul>
-            </li>
-
-            <li class="has-submenu"><a href="#"><i class="fa fa-file-text-o"></i> <span
                     class="nav-label leftNavHeader">Order Items</span></a>
                 <ul class="list-unstyled">
                     <li><a href="/order/create">Create Orders</a></li>
@@ -76,23 +95,6 @@
                     <li><a href="/request/manage">Manage Requests</a></li>
                 </ul>
             </li>
-
-            <li class="has-submenu"><a href="#"><i class="fa fa-file-text-o"></i> <span
-                    class="nav-label leftNavHeader">Category</span></a>
-                <ul class="list-unstyled">
-                    <li><a href="/category/create">Create Category</a></li>
-                    <li><a href="/category/list">Category List</a></li>
-                </ul>
-            </li>
-
-            <li class="has-submenu"><a href="#"><i class="fa fa-file-text-o"></i> <span
-                    class="nav-label leftNavHeader">Pack</span></a>
-                <ul class="list-unstyled">
-                    <li><a href="/category/create">Create Pack</a></li>
-                    <li><a href="/category/list">Pack List</a></li>
-                </ul>
-            </li>
-
 
             <li class="has-submenu"><a href="#"><span
                     class="nav-label leftNavHeader">User Management</span></a>

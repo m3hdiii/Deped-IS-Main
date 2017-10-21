@@ -1,10 +1,25 @@
 package com.deped.model.location;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
 import java.util.List;
 
+import static com.deped.repository.utils.ConstantValues.FETCH_ALL_COUNTRIES;
+
+@NamedQueries({
+        @NamedQuery(
+                name = FETCH_ALL_COUNTRIES,
+                query = "SELECT c FROM Country c"
+        )
+})
 @Entity
 @Table(name = "country")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "countryCode", scope = Country.class)
 public class Country {
 
     @Column(name = "country_code")
@@ -15,13 +30,14 @@ public class Country {
     private String name;
 
     @Column(name = "continent")
+    @Enumerated(EnumType.STRING)
     private Continent continent;
 
     @Column(name = "region")
     private String region;
 
     @Column(name = "surface_area")
-    private double surfaceArea;
+    private Double surfaceArea;
 
     @Column(name = "indep_year")
     private Short independentYear;
@@ -30,13 +46,13 @@ public class Country {
     private Long population;
 
     @Column(name = "life_expectancy")
-    private double lifeExpectancy;
+    private Double lifeExpectancy;
 
     @Column(name = "gnp")
-    private double gdp;
+    private Double gdp;
 
     @Column(name = "gnp_old")
-    private double oldGdp;
+    private Double oldGdp;
 
     @Column(name = "local_name")
     private String localName;
@@ -48,14 +64,17 @@ public class Country {
     private String headOfState;
 
     @JoinColumn(name = "capital")
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = false)
+    @JsonBackReference("country-binding")
     private City capital;
 
     @Column(name = "code2")
     private String code2;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "country")
-    private List<City> cities;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "country", fetch = FetchType.LAZY)
+//    @JsonBackReference("country-binding")
+//    private List<City> cities;
+
 
     public String getCountryCode() {
         return countryCode;
@@ -89,11 +108,11 @@ public class Country {
         this.region = region;
     }
 
-    public double getSurfaceArea() {
+    public Double getSurfaceArea() {
         return surfaceArea;
     }
 
-    public void setSurfaceArea(double surfaceArea) {
+    public void setSurfaceArea(Double surfaceArea) {
         this.surfaceArea = surfaceArea;
     }
 
@@ -113,27 +132,27 @@ public class Country {
         this.population = population;
     }
 
-    public double getLifeExpectancy() {
+    public Double getLifeExpectancy() {
         return lifeExpectancy;
     }
 
-    public void setLifeExpectancy(double lifeExpectancy) {
+    public void setLifeExpectancy(Double lifeExpectancy) {
         this.lifeExpectancy = lifeExpectancy;
     }
 
-    public double getGdp() {
+    public Double getGdp() {
         return gdp;
     }
 
-    public void setGdp(double gdp) {
+    public void setGdp(Double gdp) {
         this.gdp = gdp;
     }
 
-    public double getOldGdp() {
+    public Double getOldGdp() {
         return oldGdp;
     }
 
-    public void setOldGdp(double oldGdp) {
+    public void setOldGdp(Double oldGdp) {
         this.oldGdp = oldGdp;
     }
 
@@ -177,11 +196,11 @@ public class Country {
         this.code2 = code2;
     }
 
-    public List<City> getCities() {
-        return cities;
-    }
-
-    public void setCities(List<City> cities) {
-        this.cities = cities;
-    }
+//    public List<City> getCities() {
+//        return cities;
+//    }
+//
+//    public void setCities(List<City> cities) {
+//        this.cities = cities;
+//    }
 }

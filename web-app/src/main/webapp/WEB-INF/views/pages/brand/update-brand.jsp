@@ -41,7 +41,7 @@
                         </c:when>
                     </c:choose>
 
-                    <form:form commandName="brand" method="post" class="form-horizontal">
+                    <form:form commandName="brand" method="post" class="form-horizontal" enctype="multipart/form-data">
 
                         <p>
                         <div class="form-group">
@@ -86,12 +86,19 @@
                         </p>
 
                         <p>
+                        <div>
+                            <label class="col-sm-2">Brand Picture: </label>
+                            <input type="file" name="brandPic" id="brandPicture" class="col-md-4"/>
+                        </div>
+                        </p>
+
+                        <p>
                         <div class="form-group">
                             <div class="col-md-2">
-                                <button type="submit" class="btn btn-green"> Update Brand </button>
+                                <button type="submit" class="btn btn-green"> Update Brand</button>
                             </div>
                             <div class="col-md-2">
-                                <button type="reset" class="btn btn-green"> Reset </button>
+                                <button type="reset" class="btn btn-green"> Reset</button>
                             </div>
                         </div>
                         </p>
