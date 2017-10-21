@@ -1,5 +1,6 @@
 package com.deped.config;
 
+import com.deped.model.config.AppConfigEnum;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -8,10 +9,12 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.util.Map;
+
 @Configuration
 @ComponentScan(basePackages = {"com.deped.config", "com.deped.restcontroller", "com.deped.service", "com.deped.repository"})
 @EnableWebMvc
-public class SpringMVCConfiguration extends WebMvcConfigurerAdapter {
+public class SpringMVCRestConfiguration extends WebMvcConfigurerAdapter {
 
     private static final String RESOURCES_URI = "/public/**";
     private static final String RESOURCES_MAPPING = "/resources/assets/";
@@ -20,7 +23,8 @@ public class SpringMVCConfiguration extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler(RESOURCES_URI).addResourceLocations(RESOURCES_MAPPING);
+        Map<AppConfigEnum, String> map = SharedConfigData.getAppConfigs(false);
+        registry.addResourceHandler(RESOURCES_URI).addResourceLocations("file:" + map.get(AppConfigEnum.RESOURCE_PATH_ON_DISK));
     }
 
     @Bean
@@ -29,7 +33,5 @@ public class SpringMVCConfiguration extends WebMvcConfigurerAdapter {
         cmr.setMaxUploadSize(MAX_UPLOAD_SIZE_IN_MB * 2);
         cmr.setMaxUploadSizePerFile(MAX_UPLOAD_SIZE_IN_MB);
         return cmr;
-
     }
-
 }

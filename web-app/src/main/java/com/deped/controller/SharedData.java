@@ -1,5 +1,6 @@
 package com.deped.controller;
 
+import com.deped.model.config.ApplicationConfig;
 import com.deped.model.location.City;
 import com.deped.model.location.Country;
 import com.deped.model.location.office.Department;
@@ -16,6 +17,7 @@ public class SharedData {
     private static List<City> philippineCities;
     private static List<Role> roles;
     private static List<Department> departments;
+    private static ApplicationConfig applicationConfigs;
 
     public synchronized static List<Country> getCountries(boolean dataIsUpdated) {
         if (countries == null || dataIsUpdated) {
@@ -23,6 +25,13 @@ public class SharedData {
             });
         }
         return countries;
+    }
+
+    public synchronized static ApplicationConfig getApplicationConfigs(boolean dataIsUpdated) {
+        if (applicationConfigs == null || dataIsUpdated) {
+            applicationConfigs = fetchAll("application-configs", null);
+        }
+        return null;
     }
 
     public synchronized static List<City> getCities(boolean dataIsUpdated) {

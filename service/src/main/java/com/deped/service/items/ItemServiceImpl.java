@@ -1,7 +1,9 @@
 package com.deped.service.items;
 
+import com.deped.config.SharedConfigData;
 import com.deped.model.Operation;
 import com.deped.model.Response;
+import com.deped.model.config.AppConfigEnum;
 import com.deped.model.items.Item;
 import com.deped.repository.items.ItemRepository;
 import com.deped.repository.utils.Range;
@@ -23,7 +25,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private ItemRepository itemRepository;
-    private static final String USER_DIR_ROOT_PATH = SystemUtils.getRootPath();
+    private static final String USER_DIR_ROOT_PATH = SharedConfigData.getAppConfigs(false).get(AppConfigEnum.RESOURCE_PATH_ON_DISK);
 
     @Override
     public ResponseEntity<Item> create(Item entity) {
@@ -36,7 +38,7 @@ public class ItemServiceImpl implements ItemService {
             byte[] image = ImageUtils.decodeBase64(pictureBase64);
             fileName = SystemUtils.getRandomString() + ImageUtils.getExtension(image);
             try {
-                String rootItemPathFolder = USER_DIR_ROOT_PATH.concat(File.separator).concat(baseFileUrl);
+                String rootItemPathFolder = USER_DIR_ROOT_PATH.concat(baseFileUrl);
                 File rootFolderItemPath = new File(rootItemPathFolder);
                 if (!rootFolderItemPath.exists()) {
                     boolean isCreated = rootFolderItemPath.mkdir();
@@ -45,8 +47,7 @@ public class ItemServiceImpl implements ItemService {
                     }
                 }
 
-                String directoryAndFile = baseFileUrl.concat("/").concat(fileName);
-                String filePathStr = rootItemPathFolder.concat(File.separator).concat(directoryAndFile);
+                String filePathStr = rootItemPathFolder.concat(File.separator).concat(fileName);
                 File file = new File(filePathStr);
                 FileUtils.writeByteArrayToFile(file, image);
             } catch (IOException e) {

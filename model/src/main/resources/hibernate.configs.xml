@@ -44,6 +44,7 @@
         <mapping class="com.deped.model.delivery.DeliveryInformation"/>
         <mapping class="com.deped.model.supply.Supplier"/>
         <mapping class="com.deped.model.supply.Supply"/>
+        <mapping class="com.deped.model.config.ApplicationConfig"/>
 
 
     </session-factory>
