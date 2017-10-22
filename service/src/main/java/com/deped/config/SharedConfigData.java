@@ -1,7 +1,7 @@
 package com.deped.config;
 
-import com.deped.model.config.AppConfigEnum;
-import com.deped.model.config.ApplicationConfig;
+import com.deped.model.config.server.ServerEnumKey;
+import com.deped.model.config.server.ServerConfig;
 import com.deped.repository.utils.HibernateFacade;
 import org.hibernate.Session;
 import org.hibernate.query.NativeQuery;
@@ -12,16 +12,16 @@ import java.util.Map;
 
 public class SharedConfigData {
 
-    private static Map<AppConfigEnum, String> appConfigMap;
+    private static Map<ServerEnumKey, String> appConfigMap;
 
-    public synchronized static Map<AppConfigEnum, String> getAppConfigs(boolean isDataUpdated) {
+    public synchronized static Map<ServerEnumKey, String> getAppConfigs(boolean isDataUpdated) {
         if (appConfigMap == null || isDataUpdated) {
-            appConfigMap = new EnumMap<>(AppConfigEnum.class);
+            appConfigMap = new EnumMap<>(ServerEnumKey.class);
             Session session = HibernateFacade.getSessionFactory().openSession();
-            NativeQuery<ApplicationConfig> nativeQuery = session.createNativeQuery("SELECT * FROM application_config", ApplicationConfig.class);
-            List<ApplicationConfig> configs = nativeQuery.list();
+            NativeQuery<ServerConfig> nativeQuery = session.createNativeQuery("SELECT * FROM application_config", ServerConfig.class);
+            List<ServerConfig> configs = nativeQuery.list();
             session.close();
-            for (ApplicationConfig ac : configs) {
+            for (ServerConfig ac : configs) {
                 appConfigMap.put(ac.getKey(), ac.getValue());
             }
         }

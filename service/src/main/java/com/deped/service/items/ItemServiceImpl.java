@@ -3,7 +3,7 @@ package com.deped.service.items;
 import com.deped.config.SharedConfigData;
 import com.deped.model.Operation;
 import com.deped.model.Response;
-import com.deped.model.config.AppConfigEnum;
+import com.deped.model.config.server.ServerEnumKey;
 import com.deped.model.items.Item;
 import com.deped.repository.items.ItemRepository;
 import com.deped.repository.utils.Range;
@@ -25,37 +25,16 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private ItemRepository itemRepository;
-    private static final String USER_DIR_ROOT_PATH = SharedConfigData.getAppConfigs(false).get(AppConfigEnum.RESOURCE_PATH_ON_DISK);
+
 
     @Override
     public ResponseEntity<Item> create(Item entity) {
-
         final String baseFileUrl = "items";
-
         String pictureBase64 = entity.getPictureBase64();
-        String fileName = null;
-        if (pictureBase64 != null) {
-            byte[] image = ImageUtils.decodeBase64(pictureBase64);
-            fileName = SystemUtils.getRandomString() + ImageUtils.getExtension(image);
-            try {
-                String rootItemPathFolder = USER_DIR_ROOT_PATH.concat(baseFileUrl);
-                File rootFolderItemPath = new File(rootItemPathFolder);
-                if (!rootFolderItemPath.exists()) {
-                    boolean isCreated = rootFolderItemPath.mkdir();
-                    if (!isCreated) {
-                        throw new NullPointerException("Permission and Access Problem ~");
-                    }
-                }
 
-                String filePathStr = rootItemPathFolder.concat(File.separator).concat(fileName);
-                File file = new File(filePathStr);
-                FileUtils.writeByteArrayToFile(file, image);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
+        String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, baseFileUrl);
         entity.setPicName(fileName);
+
         Item savedEntity = itemRepository.create(entity);
         ResponseEntity<Item> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
@@ -63,6 +42,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ResponseEntity<Response> update(Item entity) {
+        final String baseFileUrl = "items";
+        String pictureBase64 = entity.getPictureBase64();
+
+        String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, baseFileUrl);
+        entity.setPicName(fileName);
+
         Boolean isUpdated = itemRepository.update(entity);
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, Item.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
@@ -110,11 +95,5 @@ public class ItemServiceImpl implements ItemService {
         List<Item> items = itemRepository.fetchAllSemiExpendable();
         ResponseEntity<List<Item>> responseEntity = new ResponseEntity<>(items, OK);
         return responseEntity;
-    }
-
-    public static void main(String[] args) {
-
-        String filePath = USER_DIR_ROOT_PATH.concat(File.separator).concat("items").concat(File.separator).concat("test.jpeg");
-        System.out.println(filePath);
     }
 }

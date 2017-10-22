@@ -1,6 +1,7 @@
 package com.deped.controller;
 
-import com.deped.model.config.ApplicationConfig;
+import com.deped.model.config.client.ClientConfig;
+import com.deped.model.config.client.ClientEnumKey;
 import com.deped.model.location.City;
 import com.deped.model.location.Country;
 import com.deped.model.location.office.Department;
@@ -9,7 +10,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
 public class SharedData {
 
@@ -17,7 +20,7 @@ public class SharedData {
     private static List<City> philippineCities;
     private static List<Role> roles;
     private static List<Department> departments;
-    private static ApplicationConfig applicationConfigs;
+    private static Map<ClientEnumKey, String> clientConfigsMap;
 
     public synchronized static List<Country> getCountries(boolean dataIsUpdated) {
         if (countries == null || dataIsUpdated) {
@@ -27,11 +30,18 @@ public class SharedData {
         return countries;
     }
 
-    public synchronized static ApplicationConfig getApplicationConfigs(boolean dataIsUpdated) {
-        if (applicationConfigs == null || dataIsUpdated) {
-            applicationConfigs = fetchAll("application-configs", null);
+    public synchronized static Map<ClientEnumKey, String> getClientConfigsMap(boolean dataIsUpdated) {
+        if (clientConfigsMap == null || dataIsUpdated) {
+            List<ClientConfig> clientConfigList = fetchAll("config", new ParameterizedTypeReference<List<ClientConfig>>() {
+            });
+
+            clientConfigsMap = new EnumMap<>(ClientEnumKey.class);
+            for (ClientConfig cc : clientConfigList) {
+                clientConfigsMap.put(cc.getKey(), cc.getValue());
+            }
         }
-        return null;
+
+        return clientConfigsMap;
     }
 
     public synchronized static List<City> getCities(boolean dataIsUpdated) {

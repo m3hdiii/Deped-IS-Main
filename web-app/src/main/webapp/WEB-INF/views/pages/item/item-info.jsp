@@ -24,30 +24,52 @@
     <c:import url="../../includes/top-nav.jsp"/>
 
     <div class="page-header">
-        <h3> Edit </h3>
+        <h3> Item Information </h3>
     </div>
 
-    <p>
-        JSP location:
-    </p>
-    <p style="color: red; font-weight: bold;">
-        WEB-INF/views/<c:out value="${jspLocation}"/>.jsp
-    </p>
-    <hr>
-    <p>
-        Controller Class:
-    </p>
-    <p style="color: red; font-weight: bold;">
-        ${controllerClazz}
-    </p>
-    <hr>
-    <p>
-        Method Name:
-    </p>
-    <p style="color: red; font-weight: bold;">
-        ${methodName}
-    </p>
+    <c:if test="${not empty itemInfo.picName}">
+        <div class="row col-md-12">
+            <p class="text-center"><img width="400" src="${baseUrl}${itemInfo.picName}" alt="item image"/></p>
+        </div>
+    </c:if>
 
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <div class="col-md-11">
+                        <p><label class="col-sm-2"> Name: </label> ${itemInfo.name}</p>
+                    </div>
+                    <div class="col-md-11">
+                        <p><label class="col-sm-2"> Description: </label> ${itemInfo.description}</p>
+                    </div>
+                    <div class="col-md-11">
+                        <p><label class="col-sm-2"> Item Type: </label> ${itemInfo.itemType}</p>
+                    </div>
+                    <div class="col-md-11">
+                        <p><label class="col-sm-2"> Function Type: </label> ${itemInfo.functionType}</p>
+                    </div>
+                    <div class="col-md-11">
+                        <p><label class="col-sm-2"> Thershold: </label> ${itemInfo.threshold}</p>
+                    </div>
+                    <div class="col-md-11">
+                        <p><label class="col-sm-2"> Quantity: </label>
+                            <c:choose>
+                                <c:when test="${not empty itemInfo.quantity}">
+                                    ${itemInfo.quantity}
+                                </c:when>
+                                <c:otherwise>
+                                    not yet populated
+                                </c:otherwise>
+                            </c:choose>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
     <c:import url="../../modals/cart.jsp"/>
 </section>
 <section class="content">

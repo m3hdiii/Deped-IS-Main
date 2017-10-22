@@ -3,6 +3,8 @@ package com.deped.model.items;
 
 import com.deped.model.items.features.FunctionType;
 import com.deped.model.order.OrderDetails;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
 import static com.deped.repository.utils.ConstantValues.*;
 
@@ -28,6 +30,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "item")
+@DynamicUpdate
 public class Item implements Serializable {
 
     @Id

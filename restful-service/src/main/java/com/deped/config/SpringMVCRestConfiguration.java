@@ -1,6 +1,6 @@
 package com.deped.config;
 
-import com.deped.model.config.AppConfigEnum;
+import com.deped.model.config.server.ServerEnumKey;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -17,14 +17,12 @@ import java.util.Map;
 public class SpringMVCRestConfiguration extends WebMvcConfigurerAdapter {
 
     private static final String RESOURCES_URI = "/public/**";
-    private static final String RESOURCES_MAPPING = "/resources/assets/";
     private static final int MAX_UPLOAD_SIZE_IN_MB = 5 * 1024 * 1024; // 5 MB
-
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        Map<AppConfigEnum, String> map = SharedConfigData.getAppConfigs(false);
-        registry.addResourceHandler(RESOURCES_URI).addResourceLocations("file:" + map.get(AppConfigEnum.RESOURCE_PATH_ON_DISK));
+        Map<ServerEnumKey, String> map = SharedConfigData.getAppConfigs(false);
+        registry.addResourceHandler(RESOURCES_URI).addResourceLocations("file:" + map.get(ServerEnumKey.RESOURCE_PATH_ON_DISK));
     }
 
     @Bean

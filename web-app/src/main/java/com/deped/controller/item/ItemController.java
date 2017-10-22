@@ -17,7 +17,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -81,7 +83,7 @@ public class ItemController extends AbstractMainController<Item, Long> {
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
     public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) Long aLong) {
         ResponseEntity<Item> response = makeFetchByIdRequest(BASE_ENTITY_URL_NAME, HttpMethod.POST, aLong, Item.class);
-        ModelAndView mv = renderProcessing(response, aLong, "item", INFO_VIEW_PAGE);
+        ModelAndView mv = renderProcessing(response, aLong, BASE_NAME, INFO_VIEW_PAGE);
         return mv;
     }
 
@@ -90,12 +92,28 @@ public class ItemController extends AbstractMainController<Item, Long> {
     public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
         ResponseEntity<Item> response = makeFetchByIdRequest(BASE_ENTITY_URL_NAME, HttpMethod.POST, aLong, Item.class);
         Item item = response.getBody();
-        return new ModelAndView(UPDATE_VIEW_PAGE, "updateItem", item);
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.putAll(getConfigMap());
+        modelMap.put(BASE_NAME, item);
+        return new ModelAndView(UPDATE_VIEW_PAGE, modelMap);
     }
 
     @Override
+    public ModelAndView updateAction(Long aLong, Item entity) {
+        return null;
+    }
+
+
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute("updateItem") Item entity) {
+    public ModelAndView updateActionWithPic(@PathVariable MultipartFile itemPic, @PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Item entity) {
+
+        if (itemPic != null) {
+            String itemBase64String = getBase64String(itemPic);
+            if (itemBase64String != null) {
+                entity.setPictureBase64(itemBase64String);
+            }
+        }
+
         entity.setItemId(aLong);
         //This is actually the update date
         entity.setCreationDate(new Date());
@@ -109,7 +127,7 @@ public class ItemController extends AbstractMainController<Item, Long> {
     public ModelAndView renderListPage() {
         ResponseEntity<List<Item>> response = makeFetchAllRestRequest(BASE_NAME, HttpMethod.POST, new ParameterizedTypeReference<List<Item>>() {
         });
-        ModelAndView mv = listProcessing(response, BASE_NAME, LIST_VIEW_PAGE);
+        ModelAndView mv = listProcessing(response, "itemList", LIST_VIEW_PAGE);
         return mv;
     }
 

@@ -27,7 +27,7 @@
 
         <mapping class="com.deped.model.order.Order" />
         <mapping class="com.deped.model.order.OrderDetails" />
-        <mapping class="com.deped.model.config.ApplicationConfig"/>
+        <mapping class="com.deped.model.config.server.ServerConfig"/>
         <!--<mapping class="com.deped.model.order.OrderDetailsID" />-->
 
         <mapping class="com.deped.model.items.Item"/>

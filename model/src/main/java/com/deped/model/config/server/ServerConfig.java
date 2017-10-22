@@ -1,32 +1,32 @@
-package com.deped.model.config;
+package com.deped.model.config.server;
 
 import javax.persistence.*;
 
 @Table(name = "application_config")
 @Entity
-public class ApplicationConfig {
+public class ServerConfig {
 
     @Id
     @Column(name = "key")
     @Enumerated(EnumType.STRING)
-    private AppConfigEnum key;
+    private ServerEnumKey key;
 
     @Column(name = "value")
     private String value;
 
-    public ApplicationConfig() {
+    public ServerConfig() {
     }
 
-    public ApplicationConfig(AppConfigEnum key, String value) {
+    public ServerConfig(ServerEnumKey key, String value) {
         this.key = key;
         this.value = value;
     }
 
-    public AppConfigEnum getKey() {
+    public ServerEnumKey getKey() {
         return key;
     }
 
-    public void setKey(AppConfigEnum key) {
+    public void setKey(ServerEnumKey key) {
         this.key = key;
     }
 

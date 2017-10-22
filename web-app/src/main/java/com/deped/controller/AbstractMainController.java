@@ -1,13 +1,16 @@
 package com.deped.controller;
 
 import com.deped.model.Response;
+import com.deped.model.config.client.ClientEnumKey;
 import com.deped.repository.utils.Range;
+import com.deped.utils.ImageUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -138,7 +141,7 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
             modelMap.put(NOT_UPDATED_KEY, FAILURE_MESSAGE);
         } else {
             T entity = response.getBody();
-
+            modelMap.putAll(getConfigMap());
             modelMap.put(baseJSPPageName + "Info", entity);
             modelMap.put(baseJSPPageName + "Id", entityId);
 
@@ -148,11 +151,43 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         return mv;
     }
 
+    protected Map<String, Object> getConfigMap() {
+        Map<ClientEnumKey, String> mapConfig = SharedData.getClientConfigsMap(false);
+        Map<String, Object> configMap = new HashMap<>();
+        configMap.put("baseUrl", mapConfig.get(ClientEnumKey.RESOURCE_BASE_URL));
+        return configMap;
+    }
+
 
     public ModelAndView listProcessing(ResponseEntity<List<T>> response, String baseJSPPageName, String createViewPage) {
         List<T> list = response.getBody();
         HashMap<String, Object> map = new HashMap<>();
         map.put(baseJSPPageName, list);
+        Map<ClientEnumKey, String> mapConfig = SharedData.getClientConfigsMap(false);
+        map.put("baseUrl", mapConfig.get(ClientEnumKey.RESOURCE_BASE_URL));
         return new ModelAndView(createViewPage, map);
+    }
+
+    protected String getBase64String(MultipartFile multipartFile) {
+        byte[] fileBytes;
+
+        try {
+            fileBytes = multipartFile.getBytes();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        if (fileBytes == null || fileBytes.length == 0) {
+            return null;
+        }
+
+        boolean isImage = ImageUtils.isImage(fileBytes);
+        if (isImage) {
+            String encodeBase64 = ImageUtils.encodeBase64(fileBytes);
+            return encodeBase64;
+        }
+
+        return null;
     }
 }

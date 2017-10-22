@@ -26,22 +26,41 @@
     <div class="page-header">
         <h3> Edit </h3>
     </div>
-
     <table class="table table-hover">
         <thead>
             <th>Name</th>
             <th>Description</th>
             <th>Item Type</th>
-            <th>Visibility</th>
+            <th>Function Type</th>
+            <th>Threshold</th>
             <th>Quantity</th>
+            <th>Item Picture</th>
+            <th>Edit</th>
+            <th>Delete</th>
         </thead>
         <c:forEach items="${itemList}" var="item">
             <tr>
-                <td>${item.name}</td>
+                <td><a href="/item/${item.itemId}">${item.name}</a></td>
                 <td>${item.description}</td>
                 <td>${item.itemType}</td>
-                <td>${item.visibility}</td>
+                <th>${item.functionType}</th>
+                <td>${item.threshold}</td>
                 <td>${item.quantity}</td>
+
+                <c:choose>
+                    <c:when test="${not empty item.picName}">
+                        <td><img width="64" src="${baseUrl}${item.picName}" alt="item image"/></td>
+                    </c:when>
+                    <c:otherwise>
+                        <td><img width="64" src="${resourceURL}/images/shared-images/no-item.png" alt="item image"/>
+                        </td>
+                    </c:otherwise>
+                </c:choose>
+
+                <td><a href="/item/update/${item.itemId}"><img src="${resourceURL}/images/edit.png"
+                                                               width="16"/></a></td>
+                <td><img src="${resourceURL}/images/delete.png" width="16"/></td>
+
             </tr>
         </c:forEach>
     </table>
