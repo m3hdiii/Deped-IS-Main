@@ -17,9 +17,15 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Autowired
     private SupplierRepository supplyRepository;
+    private static final String BASE_FILE_FOLDER = "suppliers";
 
     @Override
     public ResponseEntity<Supplier> create(Supplier entity) {
+        String pictureBase64 = entity.getPictureBase64();
+
+        String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, BASE_FILE_FOLDER);
+        entity.setPicName(fileName);
+
         Supplier savedEntity = supplyRepository.create(entity);
         ResponseEntity<Supplier> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
@@ -27,6 +33,11 @@ public class SupplierServiceImpl implements SupplierService {
 
     @Override
     public ResponseEntity<Response> update(Supplier entity) {
+        String pictureBase64 = entity.getPictureBase64();
+
+        String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, BASE_FILE_FOLDER);
+        entity.setPicName(fileName);
+
         Boolean isUpdated = supplyRepository.update(entity);
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, Supplier.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);

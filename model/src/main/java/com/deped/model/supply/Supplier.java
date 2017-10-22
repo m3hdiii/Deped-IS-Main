@@ -49,12 +49,11 @@ Supplier {
     @Column(name = "creation_date")
     private Date creationDate;
 
-    @Column(name = "pic_url")
-    private String picUrl;
+    @Column(name = "pic_name")
+    private String picName;
 
     @Transient
-    private byte[] picture;
-
+    private String pictureBase64;
 //    @ManyToMany
 //    private Set<Item> items;
 
@@ -123,23 +122,23 @@ Supplier {
         this.creationDate = creationDate;
     }
 
-    public String getPicUrl() {
-        return picUrl;
+    public String getPicName() {
+        return picName;
     }
 
-    public void setPicUrl(String picUrl) {
-        this.picUrl = picUrl;
+    public void setPicName(String picName) {
+        this.picName = picName;
     }
 
-    public byte[] getPicture() {
-        return picture;
+    public String getPictureBase64() {
+        return pictureBase64;
     }
 
-    public void setPicture(byte[] picture) {
-        this.picture = picture;
+    public void setPictureBase64(String pictureBase64) {
+        this.pictureBase64 = pictureBase64;
     }
 
-//    public Set<Item> getItems() {
+    //    public Set<Item> getItems() {
 //        return items;
 //    }
 //

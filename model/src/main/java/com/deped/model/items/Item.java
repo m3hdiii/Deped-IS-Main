@@ -66,6 +66,7 @@ public class Item implements Serializable {
     @Column(name = "pic_name")
     private String picName;
 
+
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "item")
     protected List<ItemDetails> itemDetails;
 

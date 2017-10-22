@@ -1,22 +1,15 @@
 package com.deped.service.items;
 
-import com.deped.config.SharedConfigData;
 import com.deped.model.Operation;
 import com.deped.model.Response;
-import com.deped.model.config.server.ServerEnumKey;
 import com.deped.model.items.Item;
 import com.deped.repository.items.ItemRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
-import com.deped.utils.ImageUtils;
-import com.deped.utils.SystemUtils;
-import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 
@@ -25,14 +18,14 @@ public class ItemServiceImpl implements ItemService {
 
     @Autowired
     private ItemRepository itemRepository;
+    private static final String BASE_FILE_FOLDER = "items";
 
 
     @Override
     public ResponseEntity<Item> create(Item entity) {
-        final String baseFileUrl = "items";
         String pictureBase64 = entity.getPictureBase64();
 
-        String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, baseFileUrl);
+        String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, BASE_FILE_FOLDER);
         entity.setPicName(fileName);
 
         Item savedEntity = itemRepository.create(entity);
@@ -42,10 +35,9 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ResponseEntity<Response> update(Item entity) {
-        final String baseFileUrl = "items";
         String pictureBase64 = entity.getPictureBase64();
 
-        String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, baseFileUrl);
+        String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, BASE_FILE_FOLDER);
         entity.setPicName(fileName);
 
         Boolean isUpdated = itemRepository.update(entity);

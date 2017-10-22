@@ -10,9 +10,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.io.IOException;
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -40,19 +44,27 @@ public class SupplierController extends AbstractMainController<Supplier, Long> {
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = GET)
-    public ModelAndView renderCreatePage(@Valid @ModelAttribute(BASE_NAME) Supplier entity) {
+    public ModelAndView renderCreatePage(@ModelAttribute(BASE_NAME) Supplier entity) {
         ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE);
         return mv;
+
     }
 
     @Override
-    @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createAction(@Valid @ModelAttribute(BASE_NAME) Supplier entity) {
+    public ModelAndView createAction(Supplier entity) {
+        return null;
+    }
+
+    @RequestMapping(value = {CREATE_MAPPING}, method = POST)
+    public ModelAndView createActionWithPic(@RequestParam MultipartFile supplyPic, @Valid @ModelAttribute(BASE_NAME) Supplier entity) {
         entity.setCreationDate(new Date());
+        String base64Encoded = getBase64String(supplyPic);
+        entity.setPictureBase64(base64Encoded);
         ResponseEntity<Supplier> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Supplier.class);
         ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE);
         return mv;
     }
+
 
     @Override
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
@@ -71,9 +83,23 @@ public class SupplierController extends AbstractMainController<Supplier, Long> {
     }
 
     @Override
+    public ModelAndView updateAction(Long aLong, Supplier entity) {
+        return null;
+    }
+
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Supplier entity) {
+    public ModelAndView updateActionWithPicture(@RequestParam MultipartFile brandPic, @PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute Supplier entity) {
         entity.setSupplierId(aLong);
+        String base64Encoded = null;
+        try {
+            byte[] picture = brandPic.getBytes();
+            base64Encoded = Base64.getEncoder().encodeToString(picture);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        //entity.setLogoPic(base64Encoded);
+
         //This is actually the update date
         entity.setCreationDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST);
@@ -86,7 +112,7 @@ public class SupplierController extends AbstractMainController<Supplier, Long> {
     public ModelAndView renderListPage() {
         ResponseEntity<List<Supplier>> response = makeFetchAllRestRequest(BASE_NAME, HttpMethod.POST, new ParameterizedTypeReference<List<Supplier>>() {
         });
-        ModelAndView mv = listProcessing(response, "categories", LIST_VIEW_PAGE);
+        ModelAndView mv = listProcessing(response, "brands", LIST_VIEW_PAGE);
         return mv;
     }
 
