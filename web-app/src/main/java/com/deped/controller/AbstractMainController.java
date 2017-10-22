@@ -11,6 +11,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +39,16 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
     public ResponseEntity<List<T>> makeFetchAllRestRequest(String baseName, HttpMethod method, ParameterizedTypeReference<List<T>> typeRef) {
         return makeFetchByRangeRestRequest(baseName, method, null, typeRef);
     }
+
+    public ResponseEntity<List<?>> makeFetchGenericAllRestRequest(String baseName, HttpMethod method, ParameterizedTypeReference<List<?>> typeRef) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity httpEntity = makeHttpEntity(null);
+        String restUrl = String.format(FETCH_URL, baseName);
+        ResponseEntity<List<?>> response = restTemplate.exchange(restUrl, method, httpEntity, typeRef);
+        return response;
+    }
+
+
 
     public ResponseEntity<List<T>> makeFetchByRangeRestRequest(String baseName, HttpMethod method, Range range, ParameterizedTypeReference<List<T>> typeRef) {
         RestTemplate restTemplate = new RestTemplate();
@@ -188,6 +201,20 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
             return encodeBase64;
         }
 
+        return null;
+    }
+
+    protected Date getDate(String dateText) {
+        if (dateText == null || dateText.isEmpty()) {
+            return null;
+        }
+
+        try {
+            Date birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateText);
+            return birthDate;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 }

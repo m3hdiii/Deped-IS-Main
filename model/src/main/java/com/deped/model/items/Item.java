@@ -3,16 +3,17 @@ package com.deped.model.items;
 
 import com.deped.model.items.features.FunctionType;
 import com.deped.model.order.OrderDetails;
-import org.hibernate.annotations.DynamicInsert;
+import com.deped.model.pack.Pack;
 import org.hibernate.annotations.DynamicUpdate;
-
-import static com.deped.repository.utils.ConstantValues.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import static com.deped.repository.utils.ConstantValues.FETCH_ALL_ITEMS;
+import static com.deped.repository.utils.ConstantValues.FETCH_ALL_ITEMS_BY_TYPE;
 
 
 /**

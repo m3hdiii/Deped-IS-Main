@@ -23,6 +23,8 @@ public interface ConstantValues {
     String FETCH_ALL_CATEGORY_RANGE = "fetchCategoriesByRange";
     String FETCH_ALL_SUPPLY = "fetchAllSupplies";
     String FETCH_ALL_SUPPLY_RANGE = "fetchAllSuppliesByRange";
+    String FETCH_ALL_SUPPLIER = "fetchAllSuppliers";
+    String FETCH_ALL_SUPPLIER_RANGE = "fetchAllSuppliersByRange";
     String FETCH_ALL_SECTION = "fetchAllSections";
     String FETCH_ALL_SECTION_RANGE = "";
     String FETCH_ALL_CITIES = "fetchAllCities";
@@ -49,6 +51,8 @@ public interface ConstantValues {
     String CATEGORY_TABLE_ID = "category_id";
     String SUPPLY_TABLE = "supply";
     String SUPPLY_TABLE_ID = "supply_id";
+    String SUPPLIER_TABLE = "supplier";
+    String SUPPLIER_TABLE_ID = "supplier_id";
     String ITEM_TABLE = "item";
     String ITEM_TABLE_ID = "item_id";
     String SECTION_TABLE = "section";

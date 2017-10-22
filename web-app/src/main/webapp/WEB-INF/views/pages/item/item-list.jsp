@@ -24,7 +24,7 @@
     <c:import url="../../includes/top-nav.jsp"/>
 
     <div class="page-header">
-        <h3> Edit </h3>
+        <h3> Item List </h3>
     </div>
     <table class="table table-hover">
         <thead>

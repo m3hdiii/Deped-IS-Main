@@ -29,8 +29,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.URLConnection;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -204,14 +202,7 @@ public class UserController extends AbstractMainController<User, Long> {
         binder.registerCustomEditor(Date.class, "birthDate", new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
-                if (text != null && !text.isEmpty()) {
-                    try {
-                        Date birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(text);
-                        setValue(birthDate);
-                    } catch (ParseException e) {
-                        setValue(null);
-                    }
-                }
+                setValue(getDate(text));
             }
         });
     }

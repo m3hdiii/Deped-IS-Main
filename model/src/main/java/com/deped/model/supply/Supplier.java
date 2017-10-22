@@ -1,18 +1,25 @@
 package com.deped.model.supply;
 
-import com.deped.model.items.Item;
-
 import javax.persistence.*;
 import java.util.Date;
-import java.util.Set;
+
+import static com.deped.repository.utils.ConstantValues.FETCH_ALL_SUPPLIER;
 
 /**
  * Created by mehdi on 7/6/17.
  */
 
+
+@NamedQueries({
+        @NamedQuery(
+                name = FETCH_ALL_SUPPLIER,
+                query = "SELECT s FROM Supplier s"
+        )
+})
 @Entity
 @Table(name = "supplier")
 public class
+
 Supplier {
 
     @Column(name = "supplier_id")

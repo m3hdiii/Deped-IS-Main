@@ -1,29 +1,25 @@
-package com.deped.controller.equipment;
-
-import static com.deped.controller.ConstantController.*;
+package com.deped.controller.itemdetails;
 
 import com.deped.controller.AbstractMainController;
 import com.deped.model.Response;
-import com.deped.model.items.Item;
+import com.deped.model.items.ItemDetails;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-
 import java.util.Date;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-public class EquipmentController extends AbstractMainController<Item, Long> {
+public class ItemDetailsController extends AbstractMainController<ItemDetails, Long> {
 
-    private static final String BASE_NAME = "equipment";
+    private static final String BASE_NAME = "equipment-info";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
     private static final String RENDER_UPDATE_MAPPING = BASE_NAME + RENDER_UPDATE_PATTERN;
@@ -38,18 +34,19 @@ public class EquipmentController extends AbstractMainController<Item, Long> {
     private static final String UPDATE_VIEW_PAGE = BASE_SHOW_PAGE + UPDATE_PAGE + BASE_NAME;
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
 
+
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = GET)
-    public ModelAndView renderCreatePage(@Valid @ModelAttribute(BASE_NAME) Item entity) {
+    public ModelAndView renderCreatePage(@Valid ItemDetails entity) {
         ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE);
         return mv;
     }
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createAction(@Valid @ModelAttribute(BASE_NAME) Item entity) {
+    public ModelAndView createAction(@Valid ItemDetails entity) {
         entity.setCreationDate(new Date());
-        ResponseEntity<Item> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Item.class);
+        ResponseEntity<ItemDetails> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, ItemDetails.class);
         ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE);
         return mv;
     }
@@ -57,7 +54,7 @@ public class EquipmentController extends AbstractMainController<Item, Long> {
     @Override
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
     public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Item> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Item.class);
+        ResponseEntity<ItemDetails> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, ItemDetails.class);
         ModelAndView mv = renderProcessing(response, aLong, BASE_NAME, INFO_VIEW_PAGE);
         return mv;
     }
@@ -65,15 +62,14 @@ public class EquipmentController extends AbstractMainController<Item, Long> {
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
     public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Item> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Item.class);
-        Item item = response.getBody();
+        ResponseEntity<ItemDetails> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, ItemDetails.class);
+        ItemDetails item = response.getBody();
         return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, item);
     }
 
     @Override
-    @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @ModelAttribute(BASE_NAME) Item entity) {
-        entity.setItemId(aLong);
+    public ModelAndView updateAction(Long aLong, ItemDetails entity) {
+        entity.setItemDetailsId(aLong);
         //This is actually the update date
         entity.setCreationDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST);
@@ -96,7 +92,7 @@ public class EquipmentController extends AbstractMainController<Item, Long> {
 
     @Override
     @RequestMapping(value = REMOVE_MAPPING, method = POST)
-    public ModelAndView removeAction(@Valid Item... entity) {
+    public ModelAndView removeAction(@Valid ItemDetails... entity) {
         return null;
     }
 }
