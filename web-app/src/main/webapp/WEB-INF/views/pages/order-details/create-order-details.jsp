@@ -34,9 +34,19 @@
 
     <div class="row">
         <p>Order Number: ${order.orderId}</p>
-        <p>Order By: ${order.user.name}&nbsp;${order.user.middleName}&nbsp;${order.user.lastName}</p>
+        <p>Order By: ${order.user.firstName}&nbsp;${order.user.middleName}&nbsp;${order.user.lastName}</p>
         <p>Schedule For: ${order.orderSchedule}</p>
         <p>Budget: ${order.budgetAmount}</p>
+    </div>
+
+    <c:set var="name" value="orderBasket-OrderNo${order.orderId}"/>
+
+    <div>
+        <c:set var="orderDetails" value="orderBasket-OrderNo"/>
+        <c:if test="${not empty sessionScope[name]}">
+            <a href=""><img src="${resourceURL}/images/order/add-to-cart.png"
+                            alt="add to cart"/><span>-${fn:length(sessionScope[name])}</span></a>
+        </c:if>
     </div>
 
 
@@ -58,8 +68,8 @@
             <th>Suppliers</th>
             <th>Add To Cart</th>
             </thead>
-            <c:forEach items="${itemList}" var="item">
-                <form:form commandName="" method="post">
+            <c:forEach items="${itemList}" var="item" varStatus="loop">
+                <form:form commandName="orderDetail" method="post">
                     <tr>
                         <td>${item.name}</td>
                         <td>${item.itemType}</td>
@@ -76,7 +86,9 @@
                             </c:otherwise>
                         </c:choose>
                         <td>
-                            <form:select path="pack" items="${packs}"/>
+                            <form:select path="pack">
+                                <form:options items="${packs}" itemLabel="name" itemValue="packId"/>
+                            </form:select>
                         </td>
 
                         <td>
@@ -87,17 +99,22 @@
                             <form:input path="totalQuantityRequestNo"/>
                         </td>
                         <td>
-                            <form:select path="category" items="${categories}"/>
+                            <form:select path="category">
+                                <form:options items="${categories}" itemLabel="name" itemValue="categoryId"/>
+                            </form:select>
                         </td>
 
                         <td>
                             <form:input path="unitPrice"/>
                         </td>
                         <td>
-                            <form:select path="supplier" items="${suppliers}"/>
+                            <form:select path="supplier">
+                                <form:options items="${suppliers}" itemLabel="name" itemValue="supplierId"/>
+                            </form:select>
+
                         </td>
 
-                        <form:hidden path="order"/>
+                        <form:hidden path="order" value="${relatedOrder.orderId}"/>
 
                         <td>
                             <button class="btn btn-success btn-block">Add To Cart</button>

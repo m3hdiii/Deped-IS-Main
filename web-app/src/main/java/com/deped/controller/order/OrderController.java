@@ -73,9 +73,10 @@ public class OrderController extends AbstractMainController<Order, Long> {
         entity.setUser(user);
 
         ResponseEntity<Order> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Order.class);
-        redirectAttributes.addFlashAttribute("order", response.getBody());
+        Order order = response.getBody();
+        redirectAttributes.addFlashAttribute("order", order);
         ModelAndView mav = new ModelAndView();
-        final String redirectUrl = "redirect:/order-details/create";
+        final String redirectUrl = String.format("redirect:/order-details/create/%d", order.getOrderId());
         mav.setViewName(redirectUrl);
         return mav;
     }

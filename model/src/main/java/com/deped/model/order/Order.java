@@ -4,13 +4,14 @@ import com.deped.model.account.User;
 import com.deped.model.delivery.DeliveryInformation;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
 @Entity
 @Table(name = "order_")
-public class Order {
+public class Order implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
