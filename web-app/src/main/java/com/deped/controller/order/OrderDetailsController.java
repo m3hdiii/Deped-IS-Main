@@ -1,27 +1,25 @@
 package com.deped.controller.order;
 
 import com.deped.controller.AbstractMainController;
+import com.deped.controller.SharedData;
 import com.deped.model.category.Category;
-import com.deped.model.items.Item;
 import com.deped.model.order.Order;
 import com.deped.model.order.OrderDetails;
 import com.deped.model.pack.Pack;
 import com.deped.model.supply.Supplier;
+import com.deped.utils.SystemUtils;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import java.beans.PropertyEditorSupport;
@@ -34,7 +32,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class OrderDetailsController extends AbstractMainController<ArrayList<OrderDetails>, Long> {
     private static final String BASE_NAME = "order-details";
     private static final String BASKET = "orderBasket-OrderNo";
-    private static final String Order = "orderDetailsBasket";
+    private static final String ORDER = "orderSessionNo";
 
     //TODO TAKE NOTE THIS MAPPING IS DIFFERENT WITH OTHER CLASSES
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN + URL_SEPARATOR + ID_PATTERN;
@@ -51,6 +49,8 @@ public class OrderDetailsController extends AbstractMainController<ArrayList<Ord
     private static final String UPDATE_VIEW_PAGE = BASE_SHOW_PAGE + UPDATE_PAGE + BASE_NAME;
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
 
+    private static final String BASKET_VIEW_PAGE = BASE_NAME + URL_SEPARATOR + "basket" + URL_SEPARATOR + ID_PATTERN;
+
 
     @Override
     public ModelAndView renderCreatePage(ArrayList<OrderDetails> entity) {
@@ -58,32 +58,40 @@ public class OrderDetailsController extends AbstractMainController<ArrayList<Ord
     }
 
     @RequestMapping(value = CREATE_MAPPING, method = GET)
-    public ModelAndView renderCreatePage(@ModelAttribute("order") Order order, @PathVariable(ID_STRING_LITERAL) Long orderId, final RedirectAttributes redirectAttributes) {
+    public ModelAndView renderCreatePage(@ModelAttribute("order") Order order, @PathVariable(ID_STRING_LITERAL) Long orderId, final RedirectAttributes redirectAttributes, HttpSession httpSession) {
 
-        if (order.getOrderId() == null) {
+        if (order == null || order.getOrderId() == null || order.getOrderId() != orderId) {
             RestTemplate restTemplate = new RestTemplate();
             String restUrl = String.format(FETCH_BY_ID_URL, "order", orderId);
             ResponseEntity<Order> response = restTemplate.getForEntity(restUrl, Order.class);
             order = response.getBody();
-            if (order.getOrderDetails() != null && !order.getOrderDetails().isEmpty()) {
-                redirectAttributes.addFlashAttribute("order", response.getBody());
-                ModelAndView mav = new ModelAndView();
-                final String redirectUrl = String.format("redirect:/order-details/update/%d", order.getOrderId());
-                mav.setViewName(redirectUrl);
-                return mav;
+
+            if (order == null) {
+                final String redirectUrl = "redirect:/order/create";
+                return new ModelAndView(redirectUrl);
+            }
+
+
+            Set<OrderDetails> orderDetailsList = order.getOrderDetails();
+            if (orderDetailsList != null && !orderDetailsList.isEmpty()) {
+                httpSession.setAttribute(BASKET + order.getOrderId(), putOrderDetailsListIntoMap(orderDetailsList));
             }
         }
 
+        if (httpSession.getAttribute(ORDER + orderId) == null)
+            httpSession.setAttribute(ORDER + orderId, order);
+
         Map<String, Object> modelMap = new HashMap<>();
-        modelMap.put("relatedOrder", order);
-        modelMap.put("itemList", fetchAllItems());
-        modelMap.put("packs", fetchAllPacks());
-        modelMap.put("categories", fetchAllCategories());
-        modelMap.put("suppliers", fetchAllSuppliers());
+        modelMap.put("orderId", orderId);
+        modelMap.put("itemList", SharedData.getItems(false));
+        modelMap.put("packs", SharedData.getPacks(false));
+        modelMap.put("categories", SharedData.getCategories(false));
+        modelMap.put("suppliers", SharedData.getSuppliers(false));
         modelMap.put("orderDetail", new OrderDetails());
 
         ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
         return mv;
+
     }
 
 
@@ -93,7 +101,7 @@ public class OrderDetailsController extends AbstractMainController<ArrayList<Ord
     }
 
     @RequestMapping(value = {CREATE_MAPPING}, method = POST)
-    public ModelAndView createActionWithRedirect(@Valid @ModelAttribute("orderDetail") OrderDetails entity, final RedirectAttributes redirectAttributes, HttpSession httpSession) {
+    public ModelAndView createActionWithRedirect(@Valid @ModelAttribute("orderDetail") OrderDetails entity, @Valid @ModelAttribute("orderEntity") Order orderEntity, final RedirectAttributes redirectAttributes, HttpSession httpSession) {
 
         Order order = entity.getOrder();
         if (order == null) {
@@ -108,10 +116,11 @@ public class OrderDetailsController extends AbstractMainController<ArrayList<Ord
             orderDetailsMap = (HashMap<Integer, OrderDetails>) basketInfo;
         }
         Integer size = orderDetailsMap.size();
-        orderDetailsMap.put(size, entity);
+        orderDetailsMap.put(++size, entity);
         httpSession.setAttribute((BASKET + order.getOrderId()), orderDetailsMap);
-
-        return null;
+        String redirectUrl = String.format("redirect:/order-details/create/%d", order.getOrderId());
+        //redirectAttributes.addFlashAttribute("order", order);
+        return new ModelAndView(redirectUrl);
     }
 
 
@@ -126,6 +135,17 @@ public class OrderDetailsController extends AbstractMainController<ArrayList<Ord
 
     @Override
     public ModelAndView renderUpdatePage(Long aLong) {
+        return null;
+    }
+
+    @RequestMapping(value = BASKET_VIEW_PAGE, method = RequestMethod.GET)
+    public ModelAndView renderBasket(@PathVariable(ID_STRING_LITERAL) Long orderId, HttpSession httpSession) {
+        Object object = httpSession.getAttribute(BASKET + orderId);
+        if (object == null) {
+            String redirectUrl = String.format("redirect:/order-details/%d", orderId);
+            return new ModelAndView(redirectUrl);
+        }
+        ModelAndView mav = new ModelAndView();
         return null;
     }
 
@@ -164,8 +184,16 @@ public class OrderDetailsController extends AbstractMainController<ArrayList<Ord
         return null;
     }
 
+
+//            modelMap.put("orderId", orderId);
+//        modelMap.put("itemList", fetchAllItems());
+//        modelMap.put("packs", fetchAllPacks());
+//        modelMap.put("categories", fetchAllCategories());
+//        modelMap.put("suppliers", fetchAllSuppliers());
+//        modelMap.put("orderDetail", new OrderDetails());
+
     @InitBinder
-    public void initBinder(WebDataBinder binder, WebRequest request) {
+    public void initBinder(WebDataBinder binder, HttpServletRequest request) {
         binder.registerCustomEditor(Pack.class, "pack", new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
@@ -174,7 +202,10 @@ public class OrderDetailsController extends AbstractMainController<ArrayList<Ord
                         Long packId = Long.parseLong(text);
                         Pack pack = new Pack();
                         pack.setPackId(packId);
-                        setValue(pack);
+
+                        List<Pack> packs = SharedData.getPacks(false);
+                        Pack discoveredPack = SystemUtils.findElementInList(packs, pack);
+                        setValue(discoveredPack);
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         setValue(null);
@@ -191,7 +222,11 @@ public class OrderDetailsController extends AbstractMainController<ArrayList<Ord
                         Long supplierId = Long.parseLong(text);
                         Supplier supplier = new Supplier();
                         supplier.setSupplierId(supplierId);
-                        setValue(supplier);
+
+                        List<Supplier> suppliers = SharedData.getSuppliers(false);
+                        Supplier discoveredSupplier = SystemUtils.findElementInList(suppliers, supplier);
+
+                        setValue(discoveredSupplier);
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         setValue(null);
@@ -208,7 +243,11 @@ public class OrderDetailsController extends AbstractMainController<ArrayList<Ord
                         Long categoryId = Long.parseLong(text);
                         Category category = new Category();
                         category.setCategoryId(categoryId);
-                        setValue(category);
+
+                        List<Category> categories = SharedData.getCategories(false);
+                        Category discoveredCategories = SystemUtils.findElementInList(categories, category);
+
+                        setValue(discoveredCategories);
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         setValue(null);
@@ -221,56 +260,38 @@ public class OrderDetailsController extends AbstractMainController<ArrayList<Ord
             @Override
             public void setAsText(String text) {
                 if (text != null) {
+                    HttpSession session = request.getSession(false);
+                    Long orderId = null;
                     try {
-                        Long orderId = Long.parseLong(text);
-                        Order order = new Order();
-                        order.setOrderId(orderId);
-                        setValue(order);
+                        orderId = Long.parseLong(text);
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
                         setValue(null);
                     }
+
+                    Order order;
+                    Object orderObj = session.getAttribute(ORDER + orderId);
+                    if (orderObj != null) {
+                        order = (Order) orderObj;
+                    } else {
+                        order = new Order();
+                        order.setOrderId(orderId);
+                    }
+                    setValue(order);
+
                 }
             }
         });
     }
 
 
-    private List<Item> fetchAllItems() {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity httpEntity = makeHttpEntity(null);
-        String restUrl = String.format(FETCH_URL, "item");
-        ResponseEntity<List<Item>> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<Item>>() {
-        });
-        return response.getBody();
+    private synchronized Map<String, OrderDetails> putOrderDetailsListIntoMap(Set<OrderDetails> orderDetailsSet) {
+        Map<String, OrderDetails> orderDetailsMap = new HashMap<>();
+        int i = 0;
+        for (Iterator<OrderDetails> it = orderDetailsSet.iterator(); it.hasNext(); i++) {
+            OrderDetails orderDetails = it.next();
+            orderDetailsMap.put(SystemUtils.getRandomString(), orderDetails);
+        }
+        return orderDetailsMap;
     }
-
-    private List<Pack> fetchAllPacks() {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity httpEntity = makeHttpEntity(null);
-        String restUrl = String.format(FETCH_URL, "pack");
-        ResponseEntity<List<Pack>> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<Pack>>() {
-        });
-        return response.getBody();
-    }
-
-    private List<Category> fetchAllCategories() {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity httpEntity = makeHttpEntity(null);
-        String restUrl = String.format(FETCH_URL, "category");
-        ResponseEntity<List<Category>> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<Category>>() {
-        });
-        return response.getBody();
-    }
-
-    private List<Supplier> fetchAllSuppliers() {
-        RestTemplate restTemplate = new RestTemplate();
-        HttpEntity httpEntity = makeHttpEntity(null);
-        String restUrl = String.format(FETCH_URL, "supplier");
-        ResponseEntity<List<Supplier>> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<Supplier>>() {
-        });
-        return response.getBody();
-    }
-
-
 }

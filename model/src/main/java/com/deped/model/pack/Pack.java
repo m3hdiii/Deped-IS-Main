@@ -51,6 +51,7 @@ public class Pack implements Serializable {
     @JsonManagedReference("pack-ref")
     private List<OrderDetails> orderDetailsList;
 
+
     public Pack() {
     }
 
@@ -106,5 +107,21 @@ public class Pack implements Serializable {
 
     public void setOrderDetailsList(List<OrderDetails> orderDetailsList) {
         this.orderDetailsList = orderDetailsList;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Pack)) return false;
+
+        Pack pack = (Pack) o;
+
+        return packId.equals(pack.packId);
+    }
+
+    @Override
+    public int hashCode() {
+        return packId.hashCode();
     }
 }

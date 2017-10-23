@@ -2,6 +2,8 @@ package com.deped.utils;
 
 import org.apache.commons.text.RandomStringGenerator;
 
+import java.util.List;
+
 import static org.apache.commons.text.CharacterPredicates.DIGITS;
 import static org.apache.commons.text.CharacterPredicates.LETTERS;
 
@@ -20,5 +22,23 @@ public class SystemUtils {
 
         String random = randomText.generate(10);
         return random;
+    }
+
+
+    /**
+     * This Method will work only if you have override the equal method in related Object properly
+     *
+     * @param elements
+     * @param e
+     * @param <E>
+     * @return
+     */
+    public static <E> E findElementInList(List<E> elements, E e) {
+        for (E element : elements) {
+            if (element.equals(e)) {
+                return element;
+            }
+        }
+        return null;
     }
 }

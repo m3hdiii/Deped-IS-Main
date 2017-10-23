@@ -56,7 +56,7 @@ public class Client {
 
     private static void makeUpdateRestRequest(String baseName, List<User> users) {
         for (User user : users) {
-            ResponseEntity<Response> result = new UserController().makeUpdateRestRequest(user, baseName, HttpMethod.POST);
+            ResponseEntity<Response> result = new UserController().makeUpdateRestRequest(user, baseName, HttpMethod.POST, User.class);
             System.out.println(result.getStatusCode().toString());
             System.out.println(result.getBody().getResponseStatus().toString());
         }

@@ -102,7 +102,7 @@ public class SupplierController extends AbstractMainController<Supplier, Long> {
 
         //This is actually the update date
         entity.setCreationDate(new Date());
-        ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST);
+        ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Supplier.class);
         ModelAndView mv = updateProcessing(response, UPDATE_VIEW_PAGE);
         return mv;
     }

@@ -91,7 +91,7 @@ public class PackController extends AbstractMainController<Pack, Long> {
         entity.setPackId(aLong);
         //This is actually the update date
         entity.setCreationDate(new Date());
-        ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST);
+        ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Pack.class);
         ModelAndView mv = updateProcessing(response, UPDATE_VIEW_PAGE);
         return mv;
     }

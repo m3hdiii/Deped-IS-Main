@@ -73,7 +73,7 @@ public class BorrowRequestController extends AbstractMainController<Request, Lon
         entity.setRequestId(aLong);
         //This is actually the update date
         entity.setRequestDate(new Date());
-        ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST);
+        ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Request.class);
         ModelAndView mv = updateProcessing(response, UPDATE_VIEW_PAGE);
         return mv;
     }

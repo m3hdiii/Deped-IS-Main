@@ -1,7 +1,14 @@
 package com.deped.controller;
 
 import com.deped.model.Response;
+import com.deped.model.category.Category;
 import com.deped.model.config.client.ClientEnumKey;
+import com.deped.model.items.Item;
+import com.deped.model.location.City;
+import com.deped.model.location.Country;
+import com.deped.model.pack.Pack;
+import com.deped.model.security.Role;
+import com.deped.model.supply.Supplier;
 import com.deped.repository.utils.Range;
 import com.deped.utils.ImageUtils;
 import org.springframework.core.ParameterizedTypeReference;
@@ -11,7 +18,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -26,14 +32,16 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         HttpEntity httpEntity = makeHttpEntity(entity);
         String restUrl = String.format(CREATE_URL, baseRestName);
         ResponseEntity<T> response = restTemplate.exchange(restUrl, method, httpEntity, entityClass);
+        updateSharedEntities(entityClass);
         return response;
     }
 
-    public ResponseEntity<Response> makeUpdateRestRequest(T entity, String baseName, HttpMethod method) {
+    public ResponseEntity<Response> makeUpdateRestRequest(T entity, String baseName, HttpMethod method, Class<T> entityClass) {
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity httpEntity = makeHttpEntity(entity);
         String restUrl = String.format(UPDATE_URL, baseName);
         ResponseEntity<Response> response = restTemplate.exchange(restUrl, method, httpEntity, Response.class);
+        updateSharedEntities(entityClass);
         return response;
     }
 
@@ -80,13 +88,14 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         return response;
     }
 
-    public ResponseEntity<Boolean> makeRemoveRestRequest(T[] entities, String baseName, HttpMethod method) {
+    public ResponseEntity<Boolean> makeRemoveRestRequest(T[] entities, String baseName, HttpMethod method, Class<T> entityClass) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<T[]> httpEntity = new HttpEntity<>(entities, headers);
         String restUrl = String.format(REMOVE_URL, baseName);
         ResponseEntity<Boolean> response = restTemplate.exchange(restUrl, method, httpEntity, Boolean.class);
+        updateSharedEntities(entityClass);
         return response;
     }
 
@@ -217,5 +226,36 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
             e.printStackTrace();
         }
         return null;
+    }
+
+    private void updateSharedEntities(Class<T> entityClass) {
+        boolean isUpdated = true;
+        if (entityClass == Item.class) {
+            SharedData.getItems(isUpdated);
+        }
+
+        if (entityClass == Pack.class) {
+            SharedData.getPacks(isUpdated);
+        }
+
+        if (entityClass == Category.class) {
+            SharedData.getCategories(isUpdated);
+        }
+
+        if (entityClass == Supplier.class) {
+            SharedData.getSuppliers(isUpdated);
+        }
+
+        if (entityClass == Country.class) {
+            SharedData.getCountries(isUpdated);
+        }
+
+        if (entityClass == City.class) {
+            SharedData.getCities(isUpdated);
+        }
+
+        if (entityClass == Role.class) {
+            SharedData.getRoles(isUpdated);
+        }
     }
 }

@@ -82,4 +82,19 @@ public class Category implements Serializable {
     public void setOrderDetailsSet(Set<OrderDetails> orderDetailsSet) {
         this.orderDetailsSet = orderDetailsSet;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Category)) return false;
+
+        Category category = (Category) o;
+
+        return categoryId.equals(category.categoryId);
+    }
+
+    @Override
+    public int hashCode() {
+        return categoryId.hashCode();
+    }
 }

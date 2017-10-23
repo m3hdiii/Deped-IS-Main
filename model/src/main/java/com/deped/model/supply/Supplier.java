@@ -145,4 +145,20 @@ Supplier {
 //    public void setItems(Set<Item> items) {
 //        this.items = items;
 //    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Supplier)) return false;
+
+        Supplier supplier = (Supplier) o;
+
+        return supplierId.equals(supplier.supplierId);
+    }
+
+    @Override
+    public int hashCode() {
+        return supplierId.hashCode();
+    }
 }

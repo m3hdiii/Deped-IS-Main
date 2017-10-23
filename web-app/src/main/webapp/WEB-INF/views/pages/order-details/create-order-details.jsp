@@ -32,20 +32,25 @@
         </h3>
     </div>
 
+    <c:set var="orderName" value="orderSessionNo${orderId}"/>
+    <c:set var="relatedOrder" value="${sessionScope[orderName]}"/>
+
     <div class="row">
-        <p>Order Number: ${order.orderId}</p>
-        <p>Order By: ${order.user.firstName}&nbsp;${order.user.middleName}&nbsp;${order.user.lastName}</p>
-        <p>Schedule For: ${order.orderSchedule}</p>
-        <p>Budget: ${order.budgetAmount}</p>
+        <p>Order Number: ${relatedOrder.orderId}</p>
+        <p>Order
+            By: ${relatedOrder.user.firstName}&nbsp;${relatedOrder.user.middleName}&nbsp;${relatedOrder.user.lastName}</p>
+        <p>Schedule For: ${relatedOrder.orderSchedule}</p>
+        <p>Budget: ${relatedOrder.budgetAmount}</p>
     </div>
 
-    <c:set var="name" value="orderBasket-OrderNo${order.orderId}"/>
+    <c:set var="orderIdValue" value="${relatedOrder.orderId}"/>
+    <c:set var="basketName" value="orderBasket-OrderNo${orderIdValue}"/>
 
     <div>
-        <c:set var="orderDetails" value="orderBasket-OrderNo"/>
-        <c:if test="${not empty sessionScope[name]}">
-            <a href=""><img src="${resourceURL}/images/order/add-to-cart.png"
-                            alt="add to cart"/><span>-${fn:length(sessionScope[name])}</span></a>
+        <c:if test="${not empty sessionScope[basketName]}">
+            <a href="/order-details/basket/${orderIdValue}"><img width="16"
+                                                                 src="${resourceURL}/images/order/add-to-cart.png"
+                                                                 alt="add to cart"/><span>${fn:length(sessionScope[basketName])}</span></a>
         </c:if>
     </div>
 
