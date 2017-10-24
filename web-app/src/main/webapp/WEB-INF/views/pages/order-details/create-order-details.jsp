@@ -44,7 +44,7 @@
     </div>
 
     <c:set var="orderIdValue" value="${relatedOrder.orderId}"/>
-    <c:set var="basketName" value="orderBasket-OrderNo${orderIdValue}"/>
+    <c:set var="basketName" value="orderDetailsMap-OrderNo${orderIdValue}"/>
 
     <div>
         <c:if test="${not empty sessionScope[basketName]}">
@@ -120,6 +120,7 @@
                         </td>
 
                         <form:hidden path="order" value="${relatedOrder.orderId}"/>
+                        <form:hidden path="item" value="${item.itemId}"/>
 
                         <td>
                             <button class="btn btn-success btn-block">Add To Cart</button>

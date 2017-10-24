@@ -30,6 +30,7 @@ public interface ConstantController {
     String FETCH_URL = BASE_URL + "%s/fetch-all";
     String FETCH_RANGE_URL = BASE_URL + "%s/fetch-all/%d/%d";
     String REMOVE_URL = BASE_URL + "%s/remove";
+    String CREATE_ALL_URL = BASE_URL + "%s/create";
     String FETCH_BY_ID_URL = BASE_URL + "%s/%d";
 
 }

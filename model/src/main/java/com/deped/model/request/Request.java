@@ -43,6 +43,9 @@ public class Request {
     @JsonBackReference("requestDetails-binding")
     private Set<RequestDetails> requestingUsers;
 
+    @Column(name = "admin-notice")
+    private String adminNotice;
+
 
     public Long getRequestId() {
         return requestId;
@@ -82,5 +85,13 @@ public class Request {
 
     public void setRequestingUsers(Set<RequestDetails> requestingUsers) {
         this.requestingUsers = requestingUsers;
+    }
+
+    public String getAdminNotice() {
+        return adminNotice;
+    }
+
+    public void setAdminNotice(String adminNotice) {
+        this.adminNotice = adminNotice;
     }
 }

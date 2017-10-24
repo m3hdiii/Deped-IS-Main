@@ -55,6 +55,7 @@ public class OrderController extends AbstractMainController<Order, Long> {
     public ModelAndView renderCreatePage(@ModelAttribute("order") Order entity) {
         Map<String, Object> modelMap = new HashMap<>();
         modelMap.put("schedules", Schedule.values());
+
         ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
         return mv;
 
