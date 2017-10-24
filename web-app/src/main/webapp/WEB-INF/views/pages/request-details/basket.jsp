@@ -95,6 +95,9 @@
 
                         <form:hidden path="map['${strKey}'].request" value="${relatedRequest.requestId}"/>
                         <form:hidden path="map['${strKey}'].item" value="${requestDet.item.itemId}"/>
+                        <form:hidden path="map['${strKey}'].requestDetailsID.itemId" value="${requestDet.item.itemId}"/>
+                        <form:hidden path="map['${strKey}'].requestDetailsID.requestId"
+                                     value="${relatedRequest.requestId}"/>
 
                         <td><img src="${resourceURL}/images/edit.png"></td>
                         <td>
@@ -116,7 +119,7 @@
                     </td>
 
                     <td colspan="3">
-                        <button name="actionParam" value="ORDER_ALL">Update all and Send The Request</button>
+                        <button name="actionParam" value="REQUEST_ALL">Update all and Send The Request</button>
                     </td>
                 </tr>
             </form:form>

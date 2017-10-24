@@ -5,13 +5,14 @@ import com.deped.model.items.Item;
 import com.deped.model.tracker.RequestTracker;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
 
 @Entity
 @Table(name = "request_details")
-public class RequestDetails {
+public class RequestDetails implements Serializable {
 
     @EmbeddedId
     private RequestDetailsID requestDetailsID = new RequestDetailsID();
@@ -62,6 +63,9 @@ public class RequestDetails {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "requestDetails")
     private Set<RequestTracker> requestTrackers;
+
+    public RequestDetails() {
+    }
 
     public RequestDetailsID getRequestDetailsID() {
         return requestDetailsID;

@@ -89,8 +89,9 @@
                         </td>
 
                         <form:hidden path="item" value="${item.itemId}"/>
-
                         <form:hidden path="request" value="${requestIdValue}"/>
+                        <form:hidden path="requestDetailsID.itemId" value="${item.itemId}"/>
+                        <form:hidden path="requestDetailsID.requestId" value="${requestIdValue}"/>
 
                         <td>
                             <button class="btn btn-success btn-block">Add To Cart</button>
