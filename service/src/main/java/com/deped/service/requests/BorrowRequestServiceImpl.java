@@ -3,7 +3,7 @@ package com.deped.service.requests;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.request.Request;
-import com.deped.repository.requests.BorrowRequestRepository;
+import com.deped.repository.request.BorrowRequestRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,5 +60,10 @@ public class BorrowRequestServiceImpl implements BorrowRequestService {
         Response response = ServiceUtils.makeResponse(isRemoved, Operation.DELETE, Request.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
+    }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Request... entities) {
+        return null;
     }
 }

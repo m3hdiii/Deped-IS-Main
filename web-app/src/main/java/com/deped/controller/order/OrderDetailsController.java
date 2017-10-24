@@ -147,7 +147,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         modelMap.put("packs", SharedData.getPacks(false));
         modelMap.put("categories", SharedData.getCategories(false));
         modelMap.put("suppliers", SharedData.getSuppliers(false));
-        ModelAndView mav = new ModelAndView("pages/basket/basket", modelMap);
+        ModelAndView mav = new ModelAndView("pages/order-details/basket", modelMap);
         return mav;
     }
 
@@ -179,7 +179,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
                     return new ModelAndView("redirect:/dashboard");
                 } else {
                     message = FAILURE_MESSAGE;
-                    return new ModelAndView("pages/basket/basket", "failureMessage", message);
+                    return new ModelAndView("pages/order-details/basket", "failureMessage", message);
                 }
             case ORDER_ALL:
                 //TODO save inside database and go to render ordered information page
@@ -190,7 +190,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
                     return new ModelAndView("redirect:/dashboard", "successMessage", message);
                 } else {
                     message = FAILURE_MESSAGE;
-                    return new ModelAndView("pages/basket/basket", "failureMessage", message);
+                    return new ModelAndView("pages/order-details/basket", "failureMessage", message);
                 }
         }
 

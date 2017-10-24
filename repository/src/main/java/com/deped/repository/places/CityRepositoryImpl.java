@@ -50,6 +50,11 @@ public class CityRepositoryImpl implements CityRepository {
     }
 
     @Override
+    public Boolean createOrUpdateAll(City... entities) {
+        return null;
+    }
+
+    @Override
     public List<City> fetchAllByCountryCode(String countryCode) {
         Map<String, Object> map = new HashMap<>();
         map.put("countryCode", countryCode);

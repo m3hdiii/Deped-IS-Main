@@ -162,7 +162,7 @@ public class User implements Serializable {
     private Date employmentDate;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
-    @JsonBackReference("requests-binding")
+    @JsonBackReference("request-binding")
     private List<Request> requests;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)

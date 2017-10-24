@@ -70,6 +70,11 @@ public class ItemRestController extends AbstractMainRestController<Item, Long> {
         return response;
     }
 
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Item... entities) {
+        return null;
+    }
+
     @RequestMapping(value = FETCH_GOODS_MAPPING, method = RequestMethod.POST)
     public ResponseEntity<List<Item>> fetchAllGoods() {
         ResponseEntity<List<Item>> response = itemService.fetchAllGoods();

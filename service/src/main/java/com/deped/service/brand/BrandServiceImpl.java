@@ -62,4 +62,9 @@ public class BrandServiceImpl implements BrandService {
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
     }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Brand... entities) {
+        return null;
+    }
 }

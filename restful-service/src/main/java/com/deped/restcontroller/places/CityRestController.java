@@ -68,6 +68,11 @@ public class CityRestController extends AbstractMainRestController<City, Long> {
         return response;
     }
 
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(City... entities) {
+        return null;
+    }
+
     @RequestMapping(value = FETCH_MAPPING_BY_COUNTRY_CODE, method = RequestMethod.POST)
     public ResponseEntity<List<City>> fetchAllByCountryCode(@PathVariable(ID_STRING_LITERAL) String countryCode) {
         ResponseEntity<List<City>> response = cityService.fetchAllByCountryCode(countryCode);

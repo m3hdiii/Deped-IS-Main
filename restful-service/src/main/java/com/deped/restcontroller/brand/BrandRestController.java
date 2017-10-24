@@ -67,4 +67,9 @@ public class BrandRestController extends AbstractMainRestController<Brand, Long>
         ResponseEntity<Response> response = brandService.remove(entities);
         return response;
     }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Brand... entities) {
+        return null;
+    }
 }

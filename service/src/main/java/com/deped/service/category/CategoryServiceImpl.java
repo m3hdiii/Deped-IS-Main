@@ -61,4 +61,9 @@ public class CategoryServiceImpl implements CategoryService {
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
     }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Category... entities) {
+        return null;
+    }
 }

@@ -75,6 +75,11 @@ public class UserRestController extends AbstractMainRestController<User, Long> {
         return response;
     }
 
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(User... entities) {
+        return null;
+    }
+
     @RequestMapping(value = "user/fetch/{username}", method = RequestMethod.GET)
     public ResponseEntity<User> fetchByUsername(@PathVariable("username") String username) {
         User user = userService.fetchByUsername(username);

@@ -67,4 +67,9 @@ public class OrderRestController extends AbstractMainRestController<Order, Long>
         ResponseEntity<Response> response = orderService.remove(entities);
         return response;
     }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Order... entities) {
+        return null;
+    }
 }

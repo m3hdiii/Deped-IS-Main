@@ -45,4 +45,9 @@ public class SupplyRepositoryImpl implements SupplyRepository {
     public Boolean remove(Supply... entities) {
         return hibernateFacade.removeEntities(SUPPLY_TABLE, SUPPLY_TABLE_ID, entities);
     }
+
+    @Override
+    public Boolean createOrUpdateAll(Supply... entities) {
+        return null;
+    }
 }

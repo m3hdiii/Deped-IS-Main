@@ -55,4 +55,9 @@ public class CountryRepositoryImpl implements CountryRepository {
         return hibernateFacade.
                 removeEntities(COUNTRY_TABLE, COUNTRY_TABLE_ID, entities);
     }
+
+    @Override
+    public Boolean createOrUpdateAll(Country... entities) {
+        return null;
+    }
 }

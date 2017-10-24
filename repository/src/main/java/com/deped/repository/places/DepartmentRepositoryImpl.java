@@ -47,4 +47,9 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
         return hibernateFacade.
                 removeEntities(ConstantValues.DEPARTMENT_TABLE, ConstantValues.DEPARTMENT_TABLE_ID, entities);
     }
+
+    @Override
+    public Boolean createOrUpdateAll(Department... entities) {
+        return null;
+    }
 }

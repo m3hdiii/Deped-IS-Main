@@ -68,4 +68,9 @@ public class SupplyRestController extends AbstractMainRestController<Supply, Lon
         return response;
 
     }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Supply... entities) {
+        return null;
+    }
 }

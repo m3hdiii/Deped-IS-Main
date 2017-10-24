@@ -56,6 +56,11 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
+    public Boolean createOrUpdateAll(Item... entities) {
+        return null;
+    }
+
+    @Override
     public List<Item> fetchAllGoods() {
         Map<String, Object> parameterMap = new HashMap<>();
         parameterMap.put("itemType", ItemType.GOODS);

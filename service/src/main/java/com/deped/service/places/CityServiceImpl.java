@@ -64,6 +64,11 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
+    public ResponseEntity<Response> createOrUpdateAll(City... entities) {
+        return null;
+    }
+
+    @Override
     public ResponseEntity<List<City>> fetchAllByCountryCode(String countryCode) {
         List<City> cities = cityRepository.fetchAllByCountryCode(countryCode);
         ResponseEntity<List<City>> responseEntity = new ResponseEntity<>(cities, OK);

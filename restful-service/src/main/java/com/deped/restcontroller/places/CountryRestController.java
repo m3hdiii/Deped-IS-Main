@@ -60,4 +60,9 @@ public class CountryRestController extends AbstractMainRestController<Country, S
     public ResponseEntity<Response> remove(@RequestBody Country... entities) {
         return countryService.remove(entities);
     }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Country... entities) {
+        return null;
+    }
 }

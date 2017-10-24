@@ -66,4 +66,9 @@ public class CategoryRestController extends AbstractMainRestController<Category,
         ResponseEntity<Response> response = categoryService.remove(entities);
         return response;
     }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Category... entities) {
+        return null;
+    }
 }

@@ -66,6 +66,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public ResponseEntity<Response> createOrUpdateAll(User... entities) {
+        return null;
+    }
+
+    @Override
     public boolean isUserAlreadyExist(User user) {
         return false;
     }

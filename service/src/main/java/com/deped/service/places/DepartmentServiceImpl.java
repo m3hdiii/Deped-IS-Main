@@ -62,4 +62,9 @@ public class DepartmentServiceImpl implements DepartmentService {
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
     }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Department... entities) {
+        return null;
+    }
 }

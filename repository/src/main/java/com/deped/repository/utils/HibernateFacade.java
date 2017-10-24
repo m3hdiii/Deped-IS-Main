@@ -240,6 +240,38 @@ public class HibernateFacade {
         return entity;
     }
 
+    @Transactional
+    public <T> Boolean createOrUpdateAll(Class<T> entityClass, T... entities) {
+        Session hibernateSession;
+        try {
+            hibernateSession = getSessionFactory().openSession();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        Transaction tx = null;
+
+
+        try {
+            tx = hibernateSession.beginTransaction();
+
+            for (T elem : entities) {
+                hibernateSession.saveOrUpdate(entityClass.getSimpleName(), elem);
+            }
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null)
+                tx.rollback();
+            return false;
+        } finally {
+            if (hibernateSession != null)
+                hibernateSession.close();
+        }
+        return true;
+    }
+
     private <T> String createDeleteQuery(String tableName, String tableIdName, T... entities) {
         StringBuilder sb = new StringBuilder(String.format("DELETE FROM %s WHERE %s IN ( ", tableName, tableIdName));
         for (int i = 0; i < entities.length; i++) {

@@ -74,7 +74,6 @@
                     <c:set var="strKey" value="${basketElement.key}"/>
                     <c:set var="orderDetails" value="${basketElement.value}"/>
             --%>
-            <p style="color: red;">${fn:length(basketMap)}</p>
             <form:form commandName="orderDetailsForm" method="post">
 
                 <c:forEach items="${basketMap}" var="entry" varStatus="loop">

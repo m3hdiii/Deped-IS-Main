@@ -45,4 +45,9 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     public Boolean remove(Category... entities) {
         return hibernateFacade.removeEntities(CATEGORY_TABLE, CATEGORY_TABLE_ID, entities);
     }
+
+    @Override
+    public Boolean createOrUpdateAll(Category... entities) {
+        return null;
+    }
 }

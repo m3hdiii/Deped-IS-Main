@@ -4,6 +4,7 @@ public interface ConstantController {
 
     String URL_SEPARATOR = "/";
     String CREATE_PATTERN = URL_SEPARATOR + "create";
+    String CREATE_ALL_PATTERN = URL_SEPARATOR + "create-all";
     String UPDATE_PATTERN = URL_SEPARATOR + "update";
     String FETCH_PATTERN = URL_SEPARATOR + "fetch-all";
     String RANGE_PATTERN = URL_SEPARATOR + "{from}" + URL_SEPARATOR + "{to}";

@@ -61,4 +61,9 @@ public class OrderServiceImpl implements OrderService {
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
     }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Order... entities) {
+        return null;
+    }
 }

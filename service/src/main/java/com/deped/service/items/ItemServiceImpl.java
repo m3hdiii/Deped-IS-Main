@@ -76,6 +76,11 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    public ResponseEntity<Response> createOrUpdateAll(Item... entities) {
+        return null;
+    }
+
+    @Override
     public ResponseEntity<List<Item>> fetchAllGoods() {
         List<Item> items = itemRepository.fetchAllGoods();
         ResponseEntity<List<Item>> responseEntity = new ResponseEntity<>(items, OK);

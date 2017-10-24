@@ -61,4 +61,9 @@ public class SupplyServiceImpl implements SupplyService {
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
     }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Supply... entities) {
+        return null;
+    }
 }

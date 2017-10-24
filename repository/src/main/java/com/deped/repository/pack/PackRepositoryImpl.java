@@ -51,4 +51,9 @@ public class PackRepositoryImpl implements PackRepository {
         Boolean isRemoved = hibernateFacade.removeEntities(PACK_TABLE, PACK_TABLE_ID, entities);
         return isRemoved;
     }
+
+    @Override
+    public Boolean createOrUpdateAll(Pack... entities) {
+        return null;
+    }
 }

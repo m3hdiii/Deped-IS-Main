@@ -20,4 +20,6 @@ public interface MainRestController<T, ID> extends ConstantController {
     ResponseEntity<T> fetchById(ID id);
 
     ResponseEntity<Response> remove(T... entities);
+
+    ResponseEntity<Response> createOrUpdateAll(T... entities);
 }

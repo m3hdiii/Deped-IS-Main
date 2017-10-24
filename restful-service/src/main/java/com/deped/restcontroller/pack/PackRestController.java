@@ -66,4 +66,9 @@ public class PackRestController extends AbstractMainRestController<Pack, Long> {
         ResponseEntity<Response> response = packService.remove(entities);
         return response;
     }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Pack... entities) {
+        return null;
+    }
 }

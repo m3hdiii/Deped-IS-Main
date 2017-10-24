@@ -69,4 +69,9 @@ public class DepartmentRestController extends AbstractMainRestController<Departm
         ResponseEntity<Response> response = departmentService.remove(entities);
         return response;
     }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Department... entities) {
+        return null;
+    }
 }

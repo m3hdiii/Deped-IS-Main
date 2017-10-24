@@ -2,6 +2,7 @@ package com.deped.utils;
 
 import org.apache.commons.text.RandomStringGenerator;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.apache.commons.text.CharacterPredicates.DIGITS;
@@ -20,7 +21,10 @@ public class SystemUtils {
                 .filteredBy(LETTERS, DIGITS)
                 .build();
 
-        String random = randomText.generate(10);
+        String random =
+                randomText.generate(10)
+                        .concat("-")
+                        .concat(String.valueOf(new Date().getTime()));
         return random;
     }
 

@@ -61,4 +61,9 @@ public class PackServiceImpl implements PackService {
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
     }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Pack... entities) {
+        return null;
+    }
 }

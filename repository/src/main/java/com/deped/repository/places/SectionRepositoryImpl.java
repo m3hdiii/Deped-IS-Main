@@ -53,4 +53,9 @@ public class SectionRepositoryImpl implements SectionRepository {
         Boolean isDeleted = hibernateFacade.removeEntities(SECTION_TABLE, SECTION_TABLE_ID, entities);
         return isDeleted;
     }
+
+    @Override
+    public Boolean createOrUpdateAll(Section... entities) {
+        return null;
+    }
 }

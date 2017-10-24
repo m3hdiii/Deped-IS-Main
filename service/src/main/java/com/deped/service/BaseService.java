@@ -21,4 +21,6 @@ public interface BaseService<T> {
     ResponseEntity<T> fetchById(Object id);
 
     ResponseEntity<Response> remove(T... entities);
+
+    ResponseEntity<Response> createOrUpdateAll(T... entities);
 }

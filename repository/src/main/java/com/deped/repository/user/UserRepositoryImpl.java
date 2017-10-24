@@ -59,6 +59,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
+    public Boolean createOrUpdateAll(User... entities) {
+        return null;
+    }
+
+    @Override
     public User loginUser(User userInfo, LoginMethod loginMethod) {
         Session hibernateSession = null;
         try {

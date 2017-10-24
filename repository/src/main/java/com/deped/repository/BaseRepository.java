@@ -17,4 +17,6 @@ public interface BaseRepository<T> {
     T fetchById(Object id);
 
     Boolean remove(T... entities);
+
+    Boolean createOrUpdateAll(T... entities);
 }

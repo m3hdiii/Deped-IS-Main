@@ -61,4 +61,9 @@ public class SectionServiceImpl implements SectionService {
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
     }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Section... entities) {
+        return null;
+    }
 }

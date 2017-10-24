@@ -32,6 +32,11 @@ public interface ConstantValues {
     String FETCH_ALL_CITIES_BY_COUNTRY_CODE = "fetchAllCitiesByCountryCode";
     String FETCH_ALL_COUNTRIES = "fetchAllCountries";
     String FETCH_ALL_COUNTRIES_RANGES = "fetchAllCountriesByRange";
+    String FETCH_ALL_REQUESTS = "fetchAllRequests";
+    String FETCH_ALL_REQUESTS_RANGES = "fetchAllRequestsByRange";
+    String FETCH_ALL_REQUESTS_DETAILS = "fetchAllRequestDetails";
+    String FETCH_ALL_REQUESTS_DETAILS_RANGES = "fetchAllRequestDetailsByRange";
+
 
 
     //Tables and TableId Name
@@ -61,4 +66,9 @@ public interface ConstantValues {
     String CITY_TABLE_ID = "city_id";
     String COUNTRY_TABLE = "country";
     String COUNTRY_TABLE_ID = "country_code";
+    String REQUEST_TABLE = "request";
+    String REQUEST_TABLE_ID = "request_id";
+    String REQUEST_DETAILS_TABLE = "request_details";
+    String REQUEST_DETAILS_TABLE_ID = "request_id";
+
 }

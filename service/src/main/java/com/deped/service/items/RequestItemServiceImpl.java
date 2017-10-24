@@ -38,4 +38,9 @@ public class RequestItemServiceImpl implements RequestItemService {
     public ResponseEntity<Response> remove(Item... entities) {
         return null;
     }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Item... entities) {
+        return null;
+    }
 }

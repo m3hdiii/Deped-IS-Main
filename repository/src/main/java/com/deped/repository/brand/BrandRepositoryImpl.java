@@ -4,6 +4,7 @@ import com.deped.model.brand.Brand;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
@@ -11,7 +12,8 @@ import static com.deped.repository.utils.ConstantValues.BRAND_TABLE;
 import static com.deped.repository.utils.ConstantValues.BRAND_TABLE_ID;
 import static com.deped.repository.utils.ConstantValues.FETCH_ALL_BRANDS;
 
-public class BrandRepositoryImpl implements BrandRepositoryInt {
+@Repository
+public class BrandRepositoryImpl implements BrandRepository {
 
     @Autowired
     private HibernateFacade hibernateFacade;
@@ -44,5 +46,10 @@ public class BrandRepositoryImpl implements BrandRepositoryInt {
     @Override
     public Boolean remove(Brand... entities) {
         return hibernateFacade.removeEntities(BRAND_TABLE, BRAND_TABLE_ID, entities);
+    }
+
+    @Override
+    public Boolean createOrUpdateAll(Brand... entities) {
+        return null;
     }
 }

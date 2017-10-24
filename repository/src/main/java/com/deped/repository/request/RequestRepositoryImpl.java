@@ -1,4 +1,4 @@
-package com.deped.repository.requests;
+package com.deped.repository.request;
 
 import com.deped.model.request.Request;
 import com.deped.repository.utils.HibernateFacade;
@@ -8,8 +8,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+import static com.deped.repository.utils.ConstantValues.*;
+
 @Repository
-public class BorrowRequestRepositoryImpl implements BorrowRequestRepository {
+public class RequestRepositoryImpl implements RequestRepository {
 
     @Autowired
     private HibernateFacade hibernateFacade;
@@ -24,15 +26,15 @@ public class BorrowRequestRepositoryImpl implements BorrowRequestRepository {
         return hibernateFacade.updateEntity(entity);
     }
 
+
     @Override
     public List<Request> fetchAll() {
-        List<Request> query = hibernateFacade.fetchAllEntity("fetchAll", Request.class);
-        return query;
+        return hibernateFacade.fetchAllEntity(FETCH_ALL_REQUESTS, Request.class);
     }
 
     @Override
     public List<Request> fetchByRange(Range range) {
-        return hibernateFacade.fetchAllEntity("", range, Request.class);
+        return hibernateFacade.fetchAllEntity(FETCH_ALL_REQUESTS, range, Request.class);
     }
 
     @Override
@@ -42,6 +44,11 @@ public class BorrowRequestRepositoryImpl implements BorrowRequestRepository {
 
     @Override
     public Boolean remove(Request... entities) {
-        return hibernateFacade.removeEntities("borrow_request", "borrow_request_id", entities);
+        return hibernateFacade.removeEntities(REQUEST_TABLE, REQUEST_TABLE_ID, entities);
+    }
+
+    @Override
+    public Boolean createOrUpdateAll(Request... entities) {
+        return null;
     }
 }

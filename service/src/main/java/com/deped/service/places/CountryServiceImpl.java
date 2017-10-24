@@ -61,4 +61,9 @@ public class CountryServiceImpl implements CountryService {
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
     }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Country... entities) {
+        return null;
+    }
 }

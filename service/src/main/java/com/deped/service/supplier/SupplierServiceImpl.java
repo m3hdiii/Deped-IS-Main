@@ -72,4 +72,9 @@ public class SupplierServiceImpl implements SupplierService {
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
     }
+
+    @Override
+    public ResponseEntity<Response> createOrUpdateAll(Supplier... entities) {
+        return null;
+    }
 }

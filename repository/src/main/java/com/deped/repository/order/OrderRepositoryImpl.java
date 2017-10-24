@@ -51,4 +51,9 @@ public class OrderRepositoryImpl implements OrderRepository {
         Boolean isOrderDeleted = hibernateFacade.removeEntities(ITEM_TABLE, ITEM_TABLE_ID, entities);
         return isOrderDeleted;
     }
+
+    @Override
+    public Boolean createOrUpdateAll(Order... entities) {
+        return null;
+    }
 }
