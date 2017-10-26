@@ -4,6 +4,10 @@ package com.deped.model.items;
 import com.deped.model.items.features.FunctionType;
 import com.deped.model.order.OrderDetails;
 import com.deped.model.pack.Pack;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -32,6 +36,9 @@ import static com.deped.repository.utils.ConstantValues.FETCH_ALL_ITEMS_BY_TYPE;
 @Entity
 @Table(name = "item")
 @DynamicUpdate
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "itemId", scope = Serializable.class)
 public class Item implements Serializable {
 
     @Id
@@ -73,8 +80,8 @@ public class Item implements Serializable {
     @Transient
     private String pictureBase64;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY,mappedBy = "item")
-    private Set<OrderDetails> orderItems;
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER,mappedBy = "item")
+//    private Set<OrderDetails> orderItems;
 
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.item", cascade=CascadeType.ALL)
 //    private Set<RequestItem> requestItems;
@@ -178,13 +185,13 @@ public class Item implements Serializable {
         this.itemDetails = itemDetails;
     }
 
-    public Set<OrderDetails> getOrderItems() {
-        return orderItems;
-    }
-
-    public void setOrderItems(Set<OrderDetails> orderItems) {
-        this.orderItems = orderItems;
-    }
+//    public Set<OrderDetails> getOrderItems() {
+//        return orderItems;
+//    }
+//
+//    public void setOrderItems(Set<OrderDetails> orderItems) {
+//        this.orderItems = orderItems;
+//    }
 
     @Override
     public boolean equals(Object o) {

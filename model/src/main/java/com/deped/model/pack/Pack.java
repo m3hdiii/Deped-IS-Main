@@ -1,6 +1,7 @@
 package com.deped.model.pack;
 
 import com.deped.model.order.OrderDetails;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -24,9 +25,9 @@ import static com.deped.repository.utils.ConstantValues.FETCH_ALL_PACKS;
 })
 @Entity
 @Table(name = "pack")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "packId", scope = Pack.class)
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "packId", scope = Serializable.class)
 public class Pack implements Serializable {
 
     @Id
@@ -47,9 +48,8 @@ public class Pack implements Serializable {
     @Column(name = "creation_date")
     private Date creationDate;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "pack")
-    @JsonManagedReference("pack-ref")
-    private List<OrderDetails> orderDetailsList;
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "pack")
+//    private List<OrderDetails> orderDetailsList;
 
 
     public Pack() {
@@ -100,15 +100,6 @@ public class Pack implements Serializable {
     public void setCapacity(Integer capacity) {
         this.capacity = capacity;
     }
-
-    public List<OrderDetails> getOrderDetailsList() {
-        return orderDetailsList;
-    }
-
-    public void setOrderDetailsList(List<OrderDetails> orderDetailsList) {
-        this.orderDetailsList = orderDetailsList;
-    }
-
 
     @Override
     public boolean equals(Object o) {

@@ -3,6 +3,7 @@ package com.deped.controller.order;
 import com.deped.controller.AbstractMainController;
 import com.deped.controller.SharedData;
 import com.deped.form.OrderDetailsForm;
+import com.deped.model.Response;
 import com.deped.model.category.Category;
 import com.deped.model.items.Item;
 import com.deped.model.order.Order;
@@ -113,7 +114,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         orderDetailsMap.put(SystemUtils.getRandomString(), entity);
         httpSession.setAttribute((BASKET + order.getOrderId()), orderDetailsMap);
         String redirectUrl = String.format("redirect:/order-details/create/%d", order.getOrderId());
-        //redirectAttributes.addFlashAttribute("order", order);
+        redirectAttributes.addFlashAttribute("order", order);
         return new ModelAndView(redirectUrl);
     }
 
@@ -154,7 +155,8 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
     @RequestMapping(value = BASKET_VIEW_PAGE, method = POST)
     public ModelAndView actionOnBasket(@PathVariable(ID_STRING_LITERAL) Long orderId, @RequestParam ActionParam actionParam, @ModelAttribute("orderDetailsForm") OrderDetailsForm orderDetailsForm, HttpSession httpSession) {
         Object object = httpSession.getAttribute(BASKET + orderId);
-        String orderPage = String.format("redirect:/order-details/create/%d", orderId);
+        final String orderPage = String.format("redirect:/order-details/create/%d", orderId);
+        final String dashboardPage = "redirect:/dashboard";
 
         if (object == null) {
             return new ModelAndView(orderPage);
@@ -166,7 +168,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         switch (actionParam) {
             case UPDATE_ALL:
                 httpSession.setAttribute(BASKET + orderId, formOrderDetailsMap);
-                return new ModelAndView("redirect:/order-details/create/%d" + orderId);
+                return new ModelAndView(orderPage);
             case DELETE_ALL:
                 sessionOrderDetailsMap.clear();
                 return new ModelAndView(orderPage);
@@ -176,7 +178,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
                 if (isSaved) {
                     message = SUCCESS_MESSAGE;
                     httpSession.removeAttribute(BASKET + orderId);
-                    return new ModelAndView("redirect:/dashboard");
+                    return new ModelAndView(dashboardPage);
                 } else {
                     message = FAILURE_MESSAGE;
                     return new ModelAndView("pages/order-details/basket", "failureMessage", message);
@@ -199,21 +201,28 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
     private boolean saveOrderDetails(Map<String, OrderDetails> map, boolean isForSaveOnly) {
         List<OrderDetails> list = new ArrayList<>(map.values());
+        Order order = null;
+        if (list != null && !list.isEmpty()) {
+            order = list.get(0).getOrder();
+        }
+
+        if (isForSaveOnly) {
+            order.setOrderState(OrderState.ORDERING);
+        } else {
+            order.setOrderState(OrderState.ORDERS_REGISTERED);
+        }
+
         for (OrderDetails od : list) {
-            if (isForSaveOnly) {
-                od.setOrderState(OrderState.REGISTERED);
-            } else { //is for order
-                od.setOrderState(OrderState.ORDERING);
-            }
+            od.setOrder(order);
         }
 
         OrderDetails[] orderDetails = list.toArray(new OrderDetails[list.size()]);
-        ResponseEntity<Boolean> response = makeCreateAllRestRequest(orderDetails, BASE_NAME, HttpMethod.POST, OrderDetails.class);
-        Boolean body = response.getBody();
+        ResponseEntity<Response> response = makeCreateAllRestRequest(orderDetails, BASE_NAME, HttpMethod.POST, OrderDetails.class);
+        Response body = response.getBody();
         if (body == null) {
             return false;
         }
-        return body;
+        return true;
 
     }
 

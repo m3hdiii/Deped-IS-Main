@@ -137,6 +137,10 @@
 
                         <form:hidden path="map['${strKey}'].order" value="${relatedOrder.orderId}"/>
                         <form:hidden path="map['${strKey}'].item" value="${orderDet.item.itemId}"/>
+                        <form:hidden path="map['${strKey}'].orderDetailsID.categoryId"
+                                     value="${orderDet.category.categoryId}"/>
+                        <form:hidden path="map['${strKey}'].orderDetailsID.orderId" value="${orderDet.order.orderId}"/>
+                        <form:hidden path="map['${strKey}'].orderDetailsID.itemId" value="${orderDet.item.itemId}"/>
 
                         <td><img src="${resourceURL}/images/edit.png"></td>
                         <td>

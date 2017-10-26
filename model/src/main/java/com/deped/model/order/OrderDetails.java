@@ -12,28 +12,33 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "order_details")
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "orderDetailsID", scope = OrderDetails.class)
 public class OrderDetails implements Serializable {
 
 
     @EmbeddedId
     private OrderDetailsID orderDetailsID = new OrderDetailsID();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "order_order_id")
     @MapsId("orderId")
+    @JsonBackReference(value = "order-orderDetails")
     private Order order;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("itemId")
+    @JoinColumn(name = "item_item_id")
     private Item item;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("categoryId")
-    @JsonBackReference
+    @JoinColumn(name = "category_category_id")
     private Category category;
 
     @ManyToOne
     @JoinColumn(name = "pack_id")
-    @JsonBackReference("pack-ref")
     private Pack pack;
 
     @Column(name = "item_unit_price")
@@ -49,12 +54,18 @@ public class OrderDetails implements Serializable {
     private Integer totalQuantityArrivedNo;
 
     @Enumerated(value = EnumType.STRING)
-    @Column(name = "order_state")
-    private OrderState orderState;
+    @Column(name = "order_details_state")
+    private OrderDetailsState orderState;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
+
+    @Column(name = "disapproval_message")
+    private String disapprovalMessage;
+
+    @Column(name = "not_arrival_message")
+    private String notArrivalMessage;
 
     public Order getOrder() {
         return order;
@@ -128,11 +139,11 @@ public class OrderDetails implements Serializable {
         this.totalQuantityArrivedNo = totalQuantityArrivedNo;
     }
 
-    public OrderState getOrderState() {
+    public OrderDetailsState getOrderState() {
         return orderState;
     }
 
-    public void setOrderState(OrderState orderState) {
+    public void setOrderState(OrderDetailsState orderState) {
         this.orderState = orderState;
     }
 
@@ -144,4 +155,19 @@ public class OrderDetails implements Serializable {
         this.supplier = supplier;
     }
 
+    public String getDisapprovalMessage() {
+        return disapprovalMessage;
+    }
+
+    public void setDisapprovalMessage(String disapprovalMessage) {
+        this.disapprovalMessage = disapprovalMessage;
+    }
+
+    public String getNotArrivalMessage() {
+        return notArrivalMessage;
+    }
+
+    public void setNotArrivalMessage(String notArrivalMessage) {
+        this.notArrivalMessage = notArrivalMessage;
+    }
 }

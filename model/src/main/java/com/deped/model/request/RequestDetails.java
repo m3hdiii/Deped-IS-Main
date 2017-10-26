@@ -12,6 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "request_details")
+
 public class RequestDetails implements Serializable {
 
     @EmbeddedId

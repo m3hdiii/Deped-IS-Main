@@ -2,6 +2,7 @@ package com.deped.model.order;
 
 import com.deped.model.account.User;
 import com.deped.model.delivery.DeliveryInformation;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,6 +12,9 @@ import java.util.Set;
 
 @Entity
 @Table(name = "order_")
+//@JsonIdentityInfo(
+//        generator = ObjectIdGenerators.PropertyGenerator.class,
+//        property = "orderId", scope = Order.class)
 public class Order implements Serializable {
 
     @Id
@@ -37,11 +41,19 @@ public class Order implements Serializable {
     @Column(name = "budget_amount")
     private Double budgetAmount;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "order")
+    @JsonManagedReference(value = "order-orderDetails")
     private Set<OrderDetails> orderDetails;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
     private List<DeliveryInformation> deliveryInformation;
+
+    @Column(name = "order_state")
+    @Enumerated(value = EnumType.STRING)
+    private OrderState orderState;
+
+    @Column(name = "arrival_description")
+    private String arrivalDescription;
 
     public Long getOrderId() {
         return orderId;
@@ -106,5 +118,21 @@ public class Order implements Serializable {
 
     public void setDeliveryInformation(List<DeliveryInformation> deliveryInformation) {
         this.deliveryInformation = deliveryInformation;
+    }
+
+    public OrderState getOrderState() {
+        return orderState;
+    }
+
+    public void setOrderState(OrderState orderState) {
+        this.orderState = orderState;
+    }
+
+    public String getArrivalDescription() {
+        return arrivalDescription;
+    }
+
+    public void setArrivalDescription(String arrivalDescription) {
+        this.arrivalDescription = arrivalDescription;
     }
 }

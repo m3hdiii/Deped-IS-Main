@@ -3,6 +3,7 @@ package com.deped.controller.request;
 import com.deped.controller.AbstractMainController;
 import com.deped.controller.SharedData;
 import com.deped.form.RequestDetailsForm;
+import com.deped.model.Response;
 import com.deped.model.items.Item;
 import com.deped.model.request.Request;
 import com.deped.model.request.RequestDetails;
@@ -202,12 +203,12 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         }
 
         RequestDetails[] requestDetails = list.toArray(new RequestDetails[list.size()]);
-        ResponseEntity<Boolean> response = makeCreateAllRestRequest(requestDetails, BASE_NAME, HttpMethod.POST, RequestDetails.class);
-        Boolean body = response.getBody();
+        ResponseEntity<Response> response = makeCreateAllRestRequest(requestDetails, BASE_NAME, HttpMethod.POST, RequestDetails.class);
+        Response body = response.getBody();
         if (body == null) {
             return false;
         }
-        return body;
+        return true;
 
     }
 

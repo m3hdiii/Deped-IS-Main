@@ -166,7 +166,7 @@ public class Launcher {
 
     private static OrderDetails createOrderDetails() {
         OrderDetails orderDetails = new OrderDetails();
-        orderDetails.setOrderState(OrderState.ORDERING);
+        orderDetails.setOrderState(OrderDetailsState.WAITING);
         //FIXME
 //        orderDetails.setPackCapacity(12);
 

@@ -88,24 +88,24 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         return response;
     }
 
-    public ResponseEntity<Boolean> makeRemoveRestRequest(T[] entities, String baseName, HttpMethod method, Class<T> entityClass) {
+    public ResponseEntity<Response> makeRemoveRestRequest(T[] entities, String baseName, HttpMethod method, Class<T> entityClass) {
         String restUrl = String.format(REMOVE_URL, baseName);
-        ResponseEntity<Boolean> response = makeGenericListRestRequest(restUrl, entities, baseName, method, entityClass);
+        ResponseEntity<Response> response = makeGenericListRestRequest(restUrl, entities, baseName, method, entityClass);
         return response;
     }
 
-    public ResponseEntity<Boolean> makeCreateAllRestRequest(T[] entities, String baseName, HttpMethod method, Class<T> entityClass) {
+    public ResponseEntity<Response> makeCreateAllRestRequest(T[] entities, String baseName, HttpMethod method, Class<T> entityClass) {
         String restUrl = String.format(CREATE_ALL_URL, baseName);
-        ResponseEntity<Boolean> response = makeGenericListRestRequest(restUrl, entities, baseName, method, entityClass);
+        ResponseEntity<Response> response = makeGenericListRestRequest(restUrl, entities, baseName, method, entityClass);
         return response;
     }
 
-    private ResponseEntity<Boolean> makeGenericListRestRequest(String restUrl, T[] entities, String baseName, HttpMethod method, Class<T> entityClass) {
+    private ResponseEntity<Response> makeGenericListRestRequest(String restUrl, T[] entities, String baseName, HttpMethod method, Class<T> entityClass) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<T[]> httpEntity = new HttpEntity<>(entities, headers);
-        ResponseEntity<Boolean> response = restTemplate.exchange(restUrl, method, httpEntity, Boolean.class);
+        ResponseEntity<Response> response = restTemplate.exchange(restUrl, method, httpEntity, Response.class);
         updateSharedEntities(entityClass);
         return response;
     }

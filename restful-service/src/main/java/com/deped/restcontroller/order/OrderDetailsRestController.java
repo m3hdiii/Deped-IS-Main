@@ -76,7 +76,7 @@ public class OrderDetailsRestController extends AbstractMainRestController<Order
 
     @Override
     @RequestMapping(value = CREATE_ALL_MAPPING, method = RequestMethod.POST)
-    public ResponseEntity<Response> createOrUpdateAll(OrderDetails... entities) {
+    public ResponseEntity<Response> createOrUpdateAll(@RequestBody OrderDetails... entities) {
         ResponseEntity<Response> response = orderDetailsService.createOrUpdateAll(entities);
         return response;
     }
