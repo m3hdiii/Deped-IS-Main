@@ -23,78 +23,185 @@
 
     <c:import url="../../includes/top-nav.jsp"/>
 
-    <div class="page-header">
-        <h3> Edit </h3>
-    </div>
+    <div class="warper container-fluid">
 
-    <p>
-        JSP location:
-    </p>
-    <p style="color: red; font-weight: bold;">
-        WEB-INF/views/<c:out value="${jspLocation}"/>.jsp
-    </p>
-    <hr>
-    <p>
-        Controller Class:
-    </p>
-    <p style="color: red; font-weight: bold;">
-        ${controllerClazz}
-    </p>
-    <hr>
-    <p>
-        Method Name:
-    </p>
-    <p style="color: red; font-weight: bold;">
-        ${methodName}
-    </p>
+        <div class="page-header">
+            <h1>Manage Users
+                <small>DepEd-Baguio City Division Office</small>
+            </h1>
 
-    <div class="row">
-        <div class="col col-lg-3"/>
-        <div class="col col-lg-3">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>User ID</th>
-                    <th>Username</th>
-                    <th>Account Status</th>
-                    <th>First Name</th>
-                    <th>Lastname</th>
-                    <th>Middle Name</th>
-                    <th>Email Address</th>
-                    <th>Contact No</th>
-                    <th>Contact No 2</th>
-                    <th>Gender</th>
-                    <th>Birthdate</th>
-                    <th>Employment Date</th>
-                    <th>Position</th>
-                    <th>Address</th>
-                    <th>Website</th>
-                </tr>
-                </thead>
-                <tbody>
-                <c:forEach items="${user}" var="user">
-                    <tr>
-                        <td>${user.userId}</td>
-                        <td>${user.username}</td>
-                        <td>${user.accountStatus}</td>
-                        <td>${user.firstName}</td>
-                        <td>${user.lastName}</td>
-                        <td>${user.middleName}</td>
-                        <td>${user.emailAddress}</td>
-                        <td>${user.phoneNo1}</td>
-                        <td>${user.phoneNo2}</td>
-                        <td>${user.gender}</td>
-                        <td>${user.birthDate}</td>
-                        <td>${user.employmentDate}</td>
-                        <td>${user.position}</td>
-                        <td>${user.address}</td>
-                        <td>${user.website}</td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
         </div>
+
+
+        <div class="row item-body">
+            <div class="panel no-padd">
+                <div class="panel-heading">
+                    <h3 class="text-center"><i class="fa fa-users"></i>  Users Account</h3>
+                    <label>Show</label>
+                </div>
+                <div class="panel-body">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>User</th>
+                            <th></th>
+                            <th>Birthdate</th>
+                            <th>Contact Number</th>
+                            <th>Department</th>
+                            <th>Section</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <c:forEach items="${user}" var="user">
+                            <tr>
+                                <c:choose>
+                                    <c:when test="${not empty user.picUrl}">
+                                        <c:choose>
+                                            <c:when test="${(user.accountStatus) eq ('EXPIRED')}">
+                                                <td>
+                                                   <div class="user-status invisibled pull-left">
+                                                       <img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>
+                                                   </div>
+                                                </td>
+                                            </c:when>
+                                            <c:when test="${(user.accountStatus) eq ('LOCKED')}">
+                                                <td>
+                                                    <div class="user-status busy pull-left">
+                                                        <img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>
+                                                    </div>
+                                                </td>
+                                            </c:when>
+                                            <c:when test="${(user.accountStatus) eq ('NOT_ACTIVE')}">
+                                                <td>
+                                                    <div class="user-status offline pull-left">
+                                                        <img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>
+                                                    </div>
+                                                </td>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <td>
+                                                    <div class="user-status online pull-left">
+                                                        <img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>
+                                                    </div>
+                                                </td>
+                                            </c:otherwise>
+                                        </c:choose>
+
+
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:when test="${(user.accountStatus) eq ('EXPIRED')}">
+                                            <td>
+                                                <div class="user-status invisibled pull-left">
+                                                    <img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>
+                                                </div>
+                                            </td>
+                                        </c:when>
+                                        <c:when test="${(user.accountStatus) eq ('LOCKED')}">
+                                            <td>
+                                                <div class="user-status busy pull-left">
+                                                    <img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>
+                                                </div>
+                                            </td>
+                                        </c:when>
+                                        <c:when test="${(user.accountStatus) eq ('NOT_ACTIVE')}">
+                                            <td>
+                                                <div class="user-status offline pull-left">
+                                                    <img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>
+                                                </div>
+                                            </td>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <td>
+                                                <div class="user-status online pull-left">
+                                                    <img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>
+                                                </div>
+                                            </td>
+                                        </c:otherwise>
+
+                                    </c:otherwise>
+                                </c:choose>
+                                 <!-- <td>
+                                    <div class="user-status busy pull-left">
+                                        <img src="../../assets/images/avtar/user.png" class="img-circle" alt="User#1" width="50px" height="50px">
+                                    </div>
+                                </td> -->
+                                <td>
+                                    <div class="name">
+                                        ${user.firstName} ${user.middleName} ${user.lastName}
+                                    </div>
+                                    <div class="email">
+                                        <a href="#">${user.emailAddress}</a>
+                                    </div>
+                                </td>
+                                <td>${user.birthDate}</td>
+                                <td>
+                                    <div class="fa phone1">
+                                        <i class="fa-mobile"></i>
+                                        <a href="#">
+                                            <u>${user.phoneNo1}</u>
+                                        </a>
+                                    </div>
+                                    <div class="fa phone2">
+                                        <i class="fa-phone"></i>
+                                        <a href="#">
+                                            <u>${user.phoneNo2}</u>
+                                        </a>
+                                    </div>
+                                </td>
+                                <td>${user.position}</td>
+                                <td>${user.section}</td>
+
+                                <td>
+                                    <button class="btn btn-primary" data-toggle="modal" data-target="#view-user-modal"><i class="fa fa-eye"></i></button>
+                                </td>
+                                <td class="text-nowrap">
+                                    <button class="btn btn-purple" data-toggle="modal" data-target="#"><i class="fa fa-pencil"></i></button>
+                                </td>
+                            </tr>
+                        </c:forEach>
+
+                        </tbody>
+                    </table>
+                    <hr>
+                    <div class="user-table-pagination">
+
+                        <nav>
+                            <ul class="pagination pagination-sm">
+
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Previous">
+                                        <span aria-hidden="true">&laquo;</span>
+                                        <span class="sr-only">Previous</span>
+                                    </a>
+                                </li>
+                                <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" aria-label="Next">
+                                        <span aria-hidden="true">&raquo;</span>
+                                        <span class="sr-only">Next</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+        </div>
+
     </div>
+    <!-- Warper Ends Here (working area) -->
+
 
     <c:import url="../../modals/cart.jsp"/>
 </section>

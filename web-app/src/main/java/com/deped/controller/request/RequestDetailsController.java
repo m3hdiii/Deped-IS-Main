@@ -3,6 +3,7 @@ package com.deped.controller.request;
 import com.deped.controller.AbstractMainController;
 import com.deped.controller.SharedData;
 import com.deped.form.RequestDetailsForm;
+import com.deped.model.config.client.ClientEnumKey;
 import com.deped.model.items.Item;
 import com.deped.model.request.Request;
 import com.deped.model.request.RequestDetails;
@@ -87,6 +88,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         modelMap.put("requestId", requestId);
         modelMap.put("itemList", SharedData.getItems(false));
         modelMap.put("requestDetails", new RequestDetails());
+        modelMap.put("baseUrl", SharedData.getClientConfigsMap(false).get(ClientEnumKey.RESOURCE_BASE_URL));
 
         ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
         return mv;
@@ -134,15 +136,17 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     @RequestMapping(value = BASKET_VIEW_PAGE, method = RequestMethod.GET)
     public ModelAndView renderBasket(@PathVariable(ID_STRING_LITERAL) Long requestId, HttpSession httpSession) {
         Object object = httpSession.getAttribute(BASKET + requestId);
-        if (object == null) {
+        /* if (object == null) {
             String redirectUrl = String.format("redirect:/request-details/create/%d", requestId);
             return new ModelAndView(redirectUrl);
         }
-
+        */
         Map<String, Object> modelMap = new HashMap<>();
         modelMap.put("requestId", requestId);
         modelMap.put("itemList", SharedData.getItems(false));
         modelMap.put("requestDetailsForm", new RequestDetailsForm());
+        modelMap.put("baseUrl", SharedData.getClientConfigsMap(false).get(ClientEnumKey.RESOURCE_BASE_URL));
+
         ModelAndView mav = new ModelAndView("pages/request-details/basket", modelMap);
         return mav;
     }

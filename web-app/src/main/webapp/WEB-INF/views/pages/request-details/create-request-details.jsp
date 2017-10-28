@@ -42,17 +42,24 @@
         <p>Creation Date: ${relatedRequest.requestDate}</p>
     </div>
 
-    <c:set var="requestIdValue" value="${relatedRequest.requestId}"/>
-    <c:set var="basketName" value="requestDetailsMap-RequestNo${requestIdValue}"/>
+     <c:set var="requestIdValue" value="${relatedRequest.requestId}"/>
+     <c:set var="basketName" value="requestDetailsMap-RequestNo${requestIdValue}"/>  <!-- Better IF we put this in Topnav -->
 
     <div>
-        <c:if test="${not empty sessionScope[basketName]}">
-            <a href="/request-details/basket/${requestIdValue}"><img width="16"
-                                                                     src="${resourceURL}/images/request/add-to-cart.png"
-                                                                     alt="add to cart"/><span>${fn:length(sessionScope[basketName])}</span></a>
-        </c:if>
-    </div>
+        <c:choose>
+            <c:when test="${not empty sessionScope[basketName]}">
+                <a href="/request-details/basket/${requestIdValue}"><img width="16"
+                                                                         src="${resourceURL}/images/request/add-to-cart.png"
+                                                                         alt="add to cart"/><span>${fn:length(sessionScope[basketName])}</span></a>
+            </c:when>
+            <c:otherwise>
+                <a href="/request-details/basket/${requestIdValue}"><img width="16"
+                                                                         src="${resourceURL}/images/request/add-to-cart.png"
+                                                                         alt="add to cart"/></a>
+            </c:otherwise>
+        </c:choose>
 
+    </div>
 
     <hr class="style13">
 
