@@ -105,7 +105,7 @@
                         </td>
                         <td>
                             <form:select path="category">
-                                <form:options items="${categories}" itemLabel="name" itemValue="categoryId"/>
+                                <form:options items="${categories}"  itemLabel="name" itemValue="categoryId"/>
                             </form:select>
                         </td>
 
