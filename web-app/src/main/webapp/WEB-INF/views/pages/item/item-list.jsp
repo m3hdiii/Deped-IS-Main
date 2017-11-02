@@ -1,3 +1,4 @@
+
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -26,7 +27,7 @@
     <c:import url="../../includes/top-nav.jsp"/>
     <div class="warper container-fluid">
         <div class="page-header">
-            <h1>Items
+            <h1>Manage Items
                 <small>DepEd-Baguio City Division Office</small>
             </h1>
 
@@ -34,31 +35,77 @@
 
         <div class="row item-body">
 
-            <c:forEach items="${itemList}" var="item">
-                <div class='col-xs-3 thumbnail item-content-thumbnail'>
 
-                    <c:choose>
-                        <c:when test="${not empty item.picName}">
-                            <img width="304px" height="236px" src="${baseUrl}${item.picName}" alt="item image"/>
-                        </c:when>
-                        <c:otherwise>
-                            <img width="304px" height="236px" src="${resourceURL}/images/shared-images/no-item.png"
-                                 alt="item image"/>
-                        </c:otherwise>
-                    </c:choose>
-                    <div class="item-infomation text-center">
-                        <h4>${item.name}</h4>
-                        <label>Description:</label>
-                        <p>${item.description}</p>
-                        <label>Item Type:</label>
-                        <p>${item.itemType}</p>
-                        <label>Quantity:</label>
-                        <p>${item.quantity}</p>
-                        <button class="btn btn-md btn-purple">Add to cart</button>
-                        <button class="btn btn-md btn-danger">Check out</button>
+            <div class="panel panel-default">
+                <h3 class="text-center">Created Items</h3>
+                <div class="panel-body">
+                    <div class="nav">
+                        <a href="/item/create" class="btn btn-sm btn-default text-right" data-toggle="tooltips" title="Add New Item">
+                            <i class="fa fa-plus text-green"></i>
+                        </a>
+                        <button class="btn btn-sm btn-default text-right" data-toggle="tooltips" title="Delete Item">
+                            <i class="fa fa-trash text-danger"></i>
+                        </button>
                     </div>
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>
+                                <label class="checkbox checkbox-inline">
+                                    <input type="checkbox"/>
+                                </label>
+                            </th>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Brand</th>
+                            <th class="col-xs-2">Description</th>
+                            <th >Item Type</th>
+                            <th >QTY</th>
+                            <th>Activated</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="${itemList}" var="item">
+                                <tr>
+                                    <td>
+                                        <label class="checkbox checkbox-inline">
+                                            <input type="checkbox">
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${not empty item.picName}">
+                                                <img width="104px" height="76px" src="${baseUrl}${item.picName}" alt="item image"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img width="104px" height="76px" src="${resourceURL}/images/shared-images/no-item.png"
+                                                     alt="item image"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <th>${item.name}</th>
+                                    <td>SONY</td>
+                                    <td>${item.description}</td>
+                                    <td>${item.itemType}</td>
+                                    <td>${item.quantity}</td>
+                                    <td>
+                                            <%-- This is not yet implemented....--%>
+                                        <label class="switch">
+                                            <input type="checkbox">
+                                            <span class="slider slider-round"></span>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        <a href="/item/update/${item.itemId}" class="btn btn-purple"><i class="fa fa-pencil"></i></a>
+                                        <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
                 </div>
-            </c:forEach>
+            </div>
         </div>
         <%--
             <a href="/item/${item.itemId}">
@@ -77,6 +124,7 @@
 </section>
 </body>
 </html>
+
 
 
 

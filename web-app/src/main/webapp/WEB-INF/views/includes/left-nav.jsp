@@ -71,7 +71,7 @@
                     class="nav-label leftNavHeader">Items</span></a>
                 <ul class="list-unstyled">
                     <li><a href="/item/create">Create Item</a></li>
-                    <li><a href="/item-list">All Items</a></li>
+                    <li><a href="/item/list">All Items</a></li>
                 </ul>
             </li>
 

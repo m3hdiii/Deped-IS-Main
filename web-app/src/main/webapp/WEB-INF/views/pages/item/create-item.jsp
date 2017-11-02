@@ -113,7 +113,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <a href="#" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i> Back</a>
+                                <a href="/item/list" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i> Back</a>
                                 <div class="button-footer pull-right">
                                     <button type="reset" class="btn btn-default">Clear</button>
                                     <button type="submit" class="btn btn-primary">Create</button>
