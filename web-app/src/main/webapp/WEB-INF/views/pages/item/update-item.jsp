@@ -27,132 +27,114 @@
 <section class="content">
     <c:import url="../../includes/top-nav.jsp"/>
 
-    <div class="page-header">
-        <h3>&nbsp;&nbsp;&nbspItem Update&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipments</small>
-        </h3>
-    </div>
+    <div class="warper container-fluid">
 
-    <c:if test="${not empty item.picName}">
-        <div class="row col-md-12">
-            <p class="text-center"><img width="400" src="${baseUrl}${item.picName}" alt="item image"/></p>
+        <div class="page-header">
+            <h1>Edit Item
+                <small>DepEd-Baguio City Division Office</small>
+            </h1>
         </div>
-    </c:if>
 
-    <div class="row">
-
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">Item Information</div>
-                <div class="panel-body">
-                    <form:form commandName="item" method="post" class="form-horizontal" role="form"
-                               enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Name</label>
-                            <div class="col-sm-7">
-                                <form:input path="name" class="form-control typeahead" placeholder=""/>
+        <div class="row new-item-body">
+            <div class="col-md-12">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="panel panel-default">
+                        <form:form commandName="item" method="post" class="form-horizontal" role="form"
+                                   enctype="multipart/form-data">
+                            <div class="item-image text-center">
+                                <h3>Update Item Info</h3>
                             </div>
-                        </div>
-                        <hr class="style13">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Description</label>
-                            <div class="col-lg-7">
-                                <form:textarea path="description" class="col-sm-7 form-control typeahead"
-                                               placeholder="enter description here..." rows="7"></form:textarea>
+
+                            <div class="panel-body">
+                                <div class="col-md-10 col-sm-offset-1">
+                                    <div class="text-center form-group">
+
+                                        <c:if test="${not empty item.picName}">
+                                            <div class="row col-md-12">
+                                                <p class="text-center"><img width="180" height="150"
+                                                                            src="${baseUrl}${item.picName}"
+                                                                            alt="item image"/></p>
+                                            </div>
+                                        </c:if>
+
+                                        <button class="btn btn-purple btn-sm" type="file"><i class="fa fa-pencil"></i>
+                                        </button>
+
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="updateItemName">Name</label>
+                                        <form:input path="name" type="text" class="form-control" id="updateItemName"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="updateItemBrand">Brand</label>
+                                        <select id="updateItemBrand" class="form-control">
+                                            <option disabled selected>Choose...</option>
+                                            <option>Generic</option>
+                                            <option>Sand Disk</option>
+                                            <option selected>Bosch</option>
+                                            <option>Standard</option>
+                                            <option>SONY</option>
+                                            <option>SAMSUNG</option>
+                                        </select>
+                                    </div>
+                                    <div class="text-right">
+                                        <button class="btn btn-purple btn-xs" data-toggle="modal"
+                                                data-target="#new-brand-modal"><i class="fa fa-plus-circle"> Add
+                                            Brand</i></button>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="updateItemDesc">Description</label>
+                                        <form:textarea path="description" type="text" class="form-control limit-char-45"
+                                                       cols="3" rows="3" id="updateItemDesc"
+                                                       maxlength="100"></form:textarea>
+                                        <!--<span class="word-count">0</span> / <span class="word-left">100</span>-->
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="updateItemThresh">Threshold</label>
+                                        <form:input path="threshold" type="number" class="form-control"
+                                                    id="updateItemThresh"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="updateItemType">Item Type</label>
+                                        <form:select path="itemType" id="updateItemType"
+                                                     class="form-control chosen-select"
+                                                     data-placeholder="Select a Category">
+                                            <!-- <option>Select a Category</option> -->
+                                            <form:option value="GOODS">Goods</form:option>
+                                            <form:option value="SEMI_EXPENDABLE">Semi-Expendables</form:option>
+                                            <form:option value="EQUIPMENT">Equipment</form:option>
+                                        </form:select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="updateFunctionType">Function Type</label>
+                                        <form:select path="functionType" id="updateFunctionType"
+                                                     class="form-control chosen-select"
+                                                     data-placeholder="Select a Category">
+                                            <form:option value="ELECTRICAL">Electrical</form:option>
+                                            <form:option value="NON_ELECTRICAL">Non Electrical</form:option>
+                                        </form:select>
+                                    </div>
+
+                                    <form:hidden path="quantity"/>
+                                    <form:hidden path="picName"/>
+                                </div>
                             </div>
-                        </div>
-                        <hr class="style13">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Item Type</label>
-                            <div class="col-sm-7">
-                                <form:select path="itemType" class="form-control chosen-select"
-                                             data-placeholder="Select a Category">
-                                    <!-- <option>Select a Category</option> -->
-                                    <form:option value="GOODS">Goods</form:option>
-                                    <form:option value="SEMI_EXPENDABLE">Semi-Expendables</form:option>
-                                    <form:option value="EQUIPMENT">Equipment</form:option>
-                                </form:select>
+                            <div class="modal-footer">
+                                <a href="#" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i>
+                                    Back</a>
+                                <div class="button-footer pull-right">
+                                    <input type="button" class="btn btn-default" value="Clear"/>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </div>
                             </div>
-                        </div>
-                        <hr class="style13">
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Item Type</label>
-                            <div class="col-sm-7">
-                                <form:select path="functionType" class="form-control chosen-select"
-                                             data-placeholder="Select a Category">
-                                    <form:option value="ELECTRICAL">Electrical</form:option>
-                                    <form:option value="NON_ELECTRICAL">Non Electrical</form:option>
-                                </form:select>
-                            </div>
-                        </div>
-                        <%--
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">Visibility</label>
-                                                </div>
-
-
-                                                                        <div class="form-group">
-                                                                            <label class="col-sm-4 control-label">Supply Officer</label>
-                                                                            <div class="col-sm-1">
-                                                                                <form:checkbox path="visibility" class="form-control"/>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class="form-group">
-                                                                            <label class="col-sm-4 control-label">Chief</label>
-                                                                            <div class="col-sm-1">
-                                                                                <form:checkbox path="visibility" class="form-control"/>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class="form-group">
-                                                                            <label class="col-sm-4 control-label">Personnel</label>
-                                                                            <div class="col-sm-1">
-                                                                                <form:checkbox path="visibility"  class="form-control"/>
-                                                                            </div>
-                                                                        </div> --%>
-
-                        <hr class="style13">
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Threshold</label>
-                            <div class="col-sm-2">
-                                <form:input path="threshold" type="number" class="form-control"/>
-                            </div>
-                        </div>
-
-                        <input type="file" name="itemPic" id="profilePicture" class="form-control file"/>
-
-                        <%--
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Quantity</label>
-                            <div class="col-sm-2">
-                                <form:input path="quantity" type="number" class="form-control"/>
-                            </div>
-                        </div>
-                        --%>
-
-                        <hr class="style13">
-                        <form:hidden path="quantity"/>
-                        <form:hidden path="picName"/>
-
-                        <div class="btn-group-sm row">
-                            <div class="col-sm-2">
-                                <button type="submit" class="btn btn-success btn-block">Confirm</button>
-                            </div>
-                            <div class="form-group col-sm-2">
-                                <button type="reset" class="btn btn-primary btn-block">Reset Fields</button>
-                            </div>
-                        </div>
-
-                        <hr class="style13">
-
-                    </form:form>
+                        </form:form>
+                    </div>
                 </div>
-            </div>
+            </div> <!-- New Item Body closing -->
         </div>
-
-    </div>
+    </div> <!-- Warper Ends Here (working area) -->
 
 
     <c:import url="../../modals/cart.jsp"/>
