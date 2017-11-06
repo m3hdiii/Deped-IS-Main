@@ -7,5 +7,6 @@ public enum RequestDetailsStatus {
     WAITING,
     APPROVED,
     DISAPPROVED,
-    RELEASED
+    RELEASED,
+    CANCELED
 }

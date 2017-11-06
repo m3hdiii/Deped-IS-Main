@@ -3,8 +3,10 @@ package com.deped.controller.request;
 import com.deped.controller.AbstractMainController;
 import com.deped.model.account.User;
 import com.deped.model.request.Request;
+import com.deped.model.request.RequestStatus;
 import com.deped.security.UserDetailsServiceImpl;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -22,7 +25,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.validation.Valid;
 import java.beans.PropertyEditorSupport;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -36,6 +41,9 @@ public class RequestController extends AbstractMainController<Request, Long> {
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
     private static final String RENDER_UPDATE_MAPPING = BASE_NAME + RENDER_UPDATE_PATTERN;
     private static final String RENDER_LIST_MAPPING = BASE_NAME + FETCH_PATTERN;
+    private static final String RENDER_LIST_APPROVAL_MAPPING = BASE_NAME + "/approval-list";
+    private static final String RENDER_LIST_RELEASE_MAPPING = BASE_NAME + "/release-list";
+    private static final String RENDER_LIST_USER_MAPPING = BASE_NAME + FETCH_PATTERN + "/user" + FETCH_BY_ID_PATTERN;
     private static final String RENDER_LIST_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String RENDER_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
@@ -46,6 +54,9 @@ public class RequestController extends AbstractMainController<Request, Long> {
     private static final String UPDATE_VIEW_PAGE = BASE_SHOW_PAGE + UPDATE_PAGE + BASE_NAME;
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
 
+    private static final String OPERATION_LIST = BASE_SHOW_PAGE + BASE_NAME + "-selected" + LIST_PAGE;
+    private static final String ISSUE_LIST = "";
+
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = GET)
@@ -54,6 +65,61 @@ public class RequestController extends AbstractMainController<Request, Long> {
         return mv;
 
     }
+
+    @RequestMapping(value = RENDER_LIST_APPROVAL_MAPPING, method = GET)
+    public ModelAndView approvalListRender() {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity httpEntity = makeHttpEntity(null);
+        String restUrl = String.format(FETCH_URL, BASE_NAME).concat("/").concat(RequestStatus.PENDING.ordinal() + "");
+        ResponseEntity<List<Request>> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<Request>>() {
+        });
+
+        List<Request> requests = response.getBody();
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("requests", requests);
+        modelMap.put("requestUrl", "/request-details/approval/");
+        modelMap.put("anchorName", "Approval");
+        ModelAndView mav = new ModelAndView(OPERATION_LIST, modelMap);
+        return mav;
+
+    }
+
+    @RequestMapping(value = RENDER_LIST_RELEASE_MAPPING, method = GET)
+    public ModelAndView releaseListRender() {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity httpEntity = makeHttpEntity(null);
+        String restUrl = String.format(FETCH_URL, BASE_NAME).concat("/").concat(RequestStatus.CONSIDERED.ordinal() + "");
+        ResponseEntity<List<Request>> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<Request>>() {
+        });
+
+        List<Request> requests = response.getBody();
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("requests", requests);
+        modelMap.put("requestUrl", "/request-details/issue/");
+        modelMap.put("anchorName", "Release");
+        ModelAndView mav = new ModelAndView(OPERATION_LIST, modelMap);
+        return mav;
+
+    }
+
+    @RequestMapping(value = RENDER_LIST_USER_MAPPING, method = GET)
+    public ModelAndView userListRender(@PathVariable(ID_STRING_LITERAL) Long userId) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity httpEntity = makeHttpEntity(null);
+        String restUrl = String.format(FETCH_URL, BASE_NAME).concat("/").concat("user").concat("/").concat(userId + "");
+        ResponseEntity<List<Request>> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<Request>>() {
+        });
+
+        List<Request> requests = response.getBody();
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("requests", requests);
+        modelMap.put("requestUrl", "/request-details/");
+        modelMap.put("anchorName", "More Info");
+        ModelAndView mav = new ModelAndView(OPERATION_LIST, modelMap);
+        return mav;
+
+    }
+
 
     @RequestMapping(value = {CREATE_MAPPING}, method = POST)
     public ModelAndView createActionWithRedirect(@Valid @ModelAttribute("request") Request entity, final RedirectAttributes redirectAttributes) {

@@ -2,6 +2,7 @@ package com.deped.restcontroller.request;
 
 import com.deped.model.Response;
 import com.deped.model.request.Request;
+import com.deped.model.request.RequestStatus;
 import com.deped.repository.utils.Range;
 import com.deped.restcontroller.AbstractMainRestController;
 import com.deped.service.request.RequestService;
@@ -18,6 +19,8 @@ public class RequestRestController extends AbstractMainRestController<Request, L
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
     private static final String FETCH_MAPPING = BASE_NAME + FETCH_PATTERN;
+    private static final String FETCH_MAPPING_BY_OPERATION = BASE_NAME + FETCH_PATTERN + FETCH_BY_ID_PATTERN;
+    private static final String FETCH_MAPPING_BY_USER = BASE_NAME + FETCH_PATTERN + "/user" + FETCH_BY_ID_PATTERN;
     private static final String FETCH_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String FETCH_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
@@ -44,6 +47,30 @@ public class RequestRestController extends AbstractMainRestController<Request, L
     @RequestMapping(value = FETCH_MAPPING, method = RequestMethod.POST)
     public ResponseEntity<List<Request>> fetchAll() {
         ResponseEntity<List<Request>> response = requestService.fetchAll();
+        return response;
+    }
+
+
+    @RequestMapping(value = FETCH_MAPPING_BY_OPERATION, method = RequestMethod.POST)
+    public ResponseEntity<List<Request>> fetchAllByOperation(@PathVariable(ID_STRING_LITERAL) int statusOrdinal) {
+        RequestStatus status = RequestStatus.values()[statusOrdinal];
+
+        switch (status) {
+            case FINALIZED:
+            case SAVED:
+                return null;
+            case PENDING:
+            case CONSIDERED:
+                break;
+        }
+
+        ResponseEntity<List<Request>> response = requestService.fetchAllByRequestStatus(status);
+        return response;
+    }
+
+    @RequestMapping(value = FETCH_MAPPING_BY_USER, method = RequestMethod.POST)
+    public ResponseEntity<List<Request>> fetchAllByUserId(@PathVariable(ID_STRING_LITERAL) Long userId) {
+        ResponseEntity<List<Request>> response = requestService.fetchAllByUserId(userId);
         return response;
     }
 

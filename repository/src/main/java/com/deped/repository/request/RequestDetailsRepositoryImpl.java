@@ -1,9 +1,6 @@
 package com.deped.repository.request;
 
-import com.deped.model.request.Request;
-import com.deped.model.request.RequestDetails;
-import com.deped.model.request.RequestDetailsID;
-import com.deped.model.request.RequestDetailsStatus;
+import com.deped.model.request.*;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
 import org.hibernate.Session;
@@ -21,6 +18,24 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
 
     @Autowired
     private HibernateFacade hibernateFacade;
+
+    private class StatusUpdateBean {
+        private String query;
+        private Map<String, Object> parameterMap;
+
+        public StatusUpdateBean(String query, Map<String, Object> parameterMap) {
+            this.query = query;
+            this.parameterMap = parameterMap;
+        }
+
+        public String getQuery() {
+            return query;
+        }
+
+        public Map<String, Object> getParameterMap() {
+            return parameterMap;
+        }
+    }
 
     @Override
     public RequestDetails create(RequestDetails entity) {
@@ -99,10 +114,110 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
         return true;
     }
 
+
     @Override
     public boolean updateRequestStatus(RequestDetails[] entities) {
-        final String baseQuery = "UPDATE request_details SET request_details_state = :requestDetailsState "
-                .concat("WHERE (request_request_id, item_item_id, category_category_id) IN (");
+        List<StatusUpdateBean> statusUpdateBeanList = makeStatusUpdateBeanList(entities);
+        Session hibernateSession;
+        try {
+            hibernateSession = hibernateFacade.getSessionFactory().openSession();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        Transaction tx = null;
+        int effectedRows = -1;
+        try {
+            tx = hibernateSession.beginTransaction();
+
+            RequestDetailsStatus requestDetailsStatus = entities[0].getRequestDetailsStatus();
+            RequestStatus nextRequestStatus = null;
+            switch (requestDetailsStatus) {
+                case APPROVED:
+                case DISAPPROVED:
+                    nextRequestStatus = RequestStatus.CONSIDERED;
+                    break;
+                case RELEASED:
+                    nextRequestStatus = RequestStatus.FINALIZED;
+                    break;
+            }
+
+            String requestStatusQuery = "UPDATE request SET request_status = :requestStatus WHERE request_id = :requestId";
+            NativeQuery<Request> requestNativeQuery = hibernateSession.createNativeQuery(requestStatusQuery, Request.class);
+            requestNativeQuery.setParameter("requestStatus", nextRequestStatus.toString());
+            requestNativeQuery.setParameter("requestId", entities[0].getRequestDetailsID().getRequestId());
+            int requestRowEffected = requestNativeQuery.executeUpdate();
+            if (requestRowEffected <= 0) {
+                throw new Exception("Sql update operation encountered a problem");
+            }
+
+
+            for (StatusUpdateBean sub : statusUpdateBeanList) {
+                NativeQuery<RequestDetails> nativeQuery = hibernateSession.createNativeQuery(sub.getQuery(), RequestDetails.class);
+                for (Map.Entry<String, Object> entry : sub.getParameterMap().entrySet()) {
+                    nativeQuery.setParameter(entry.getKey(), entry.getValue());
+                }
+                effectedRows = nativeQuery.executeUpdate();
+                if (effectedRows <= 0) {
+                    throw new Exception("Sql update operation encountered a problem");
+                }
+            }
+
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null)
+                tx.rollback();
+        } finally {
+            if (hibernateSession != null)
+                hibernateSession.close();
+        }
+
+        return false;
+    }
+
+    @Override
+    public List<RequestDetails> fetchAllById(Long requestId) {
+        Map<String, Object> parameterMap = new HashMap<>();
+        parameterMap.put("requestId", requestId);
+        String sqlQuery = "SELECT * FROM request_details WHERE request_request_id = :requestId AND request_details_status != 'DISAPPROVED'";
+        List<RequestDetails> list = hibernateFacade.fetchAllEntityBySqlQuery(sqlQuery, null, RequestDetails.class, parameterMap);
+        return list;
+    }
+
+    private void setMap(Map<String, Object> parameterMap, RequestDetails temp, String requestIdMapKey, String itemIdMapKey) {
+        parameterMap.put(requestIdMapKey, temp.getRequestDetailsID().getRequestId());
+        parameterMap.put(itemIdMapKey, temp.getRequestDetailsID().getItemId());
+    }
+
+    public static void main(String[] args) {
+        RequestDetails[] requestDetailsList = new RequestDetails[10];
+        for (int i = 0; i < 10; i++) {
+            if (i % 2 == 0) {
+                RequestDetails od = new RequestDetails();
+                Long id = Long.parseLong(i + "");
+                od.setRequestDetailsID(new RequestDetailsID(id, id));
+                od.setRequestDetailsStatus(RequestDetailsStatus.APPROVED);
+                requestDetailsList[i] = od;
+            } else {
+                RequestDetails od = new RequestDetails();
+                Long id = Long.parseLong(i + "");
+                od.setRequestDetailsID(new RequestDetailsID(id, id));
+                od.setRequestDetailsStatus(RequestDetailsStatus.DISAPPROVED);
+                requestDetailsList[i] = od;
+            }
+        }
+
+        new RequestDetailsRepositoryImpl().updateRequestStatus(requestDetailsList);
+    }
+
+    private List<StatusUpdateBean> makeStatusUpdateBeanList(RequestDetails[] entities) {
+
+        List<StatusUpdateBean> statusUpdateBeanList = new ArrayList<>();
+
+        final String baseQuery = "UPDATE request_details SET request_details_status = :requestDetailsState "
+                .concat("WHERE (request_request_id, item_item_id) IN (");
 
         List<RequestDetails> requestDetailsList = Arrays.asList(entities);
         Collections.sort(requestDetailsList, Comparator.comparing(RequestDetails::getRequestDetailsStatus));
@@ -139,59 +254,16 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
 
             if (isLastElement || nextIndexStatus != firstElementState) {
                 parameterMap.put("requestDetailsState", firstElementState.toString());
-                doUpdate(sb.toString(), parameterMap);
-                parameterMap.clear();
+                String query = sb.toString();
+                query = query.substring(0, query.lastIndexOf(",")).concat(")");
+                statusUpdateBeanList.add(new StatusUpdateBean(query, parameterMap));
+                parameterMap = new HashMap<>();
                 sb.setLength(0);
                 sb.append(baseQuery);
                 firstElementState = nextIndexStatus;
             }
         }
 
-
-        return false;
-    }
-
-    @Override
-    public List<RequestDetails> fetchAllById(Long requestId) {
-        Map<String, Object> parameterMap = new HashMap<>();
-        parameterMap.put("requestId", requestId);
-        String sqlQuery = "SELECT * FROM request_details WHERE request_request_id = :requestId";
-        List<RequestDetails> list = hibernateFacade.fetchAllEntityBySqlQuery(sqlQuery, null, RequestDetails.class, parameterMap);
-        return list;
-    }
-
-    private void setMap(Map<String, Object> parameterMap, RequestDetails temp, String requestIdMapKey, String itemIdMapKey) {
-        parameterMap.put(requestIdMapKey, temp.getRequestDetailsID().getRequestId());
-        parameterMap.put(itemIdMapKey, temp.getRequestDetailsID().getItemId());
-    }
-
-    private boolean doUpdate(String query, Map<String, Object> parameterMap) {
-        query = query.substring(0, query.lastIndexOf(",")).concat(")");
-//
-//        int numberOfRowEffected = hibernateFacade.updateEntitySqlQuery(query, RequestDetails.class, parameterMap);
-//        return numberOfRowEffected != -1;
-
-        return false;
-    }
-
-    public static void main(String[] args) {
-        RequestDetails[] requestDetailsList = new RequestDetails[10];
-        for (int i = 0; i < 10; i++) {
-            if (i % 2 == 0) {
-                RequestDetails od = new RequestDetails();
-                Long id = Long.parseLong(i + "");
-                od.setRequestDetailsID(new RequestDetailsID(id, id));
-                od.setRequestDetailsStatus(RequestDetailsStatus.APPROVED);
-                requestDetailsList[i] = od;
-            } else {
-                RequestDetails od = new RequestDetails();
-                Long id = Long.parseLong(i + "");
-                od.setRequestDetailsID(new RequestDetailsID(id, id));
-                od.setRequestDetailsStatus(RequestDetailsStatus.DISAPPROVED);
-                requestDetailsList[i] = od;
-            }
-        }
-
-        new RequestDetailsRepositoryImpl().updateRequestStatus(requestDetailsList);
+        return statusUpdateBeanList;
     }
 }

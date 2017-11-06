@@ -3,6 +3,7 @@ package com.deped.service.request;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.request.Request;
+import com.deped.model.request.RequestStatus;
 import com.deped.repository.request.RequestRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
@@ -66,5 +67,19 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public ResponseEntity<Response> createOrUpdateAll(Request... entities) {
         return null;
+    }
+
+    @Override
+    public ResponseEntity<List<Request>> fetchAllByRequestStatus(RequestStatus requestStatus) {
+        List<Request> requests = requestRepository.fetchAllByRequestStatus(requestStatus);
+        ResponseEntity<List<Request>> responseEntity = new ResponseEntity<>(requests, OK);
+        return responseEntity;
+    }
+
+    @Override
+    public ResponseEntity<List<Request>> fetchAllByUserId(Long userId) {
+        List<Request> requests = requestRepository.fetchAllByUserId(userId);
+        ResponseEntity<List<Request>> responseEntity = new ResponseEntity<>(requests, OK);
+        return responseEntity;
     }
 }

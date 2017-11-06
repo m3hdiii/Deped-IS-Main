@@ -7,7 +7,9 @@ import com.deped.repository.utils.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.deped.repository.utils.ConstantValues.*;
 
@@ -56,4 +58,24 @@ public class RequestRepositoryImpl implements RequestRepository {
     public Boolean createOrUpdateAll(Request... entities) {
         return null;
     }
+
+    @Override
+    public List<Request> fetchAllByRequestStatus(RequestStatus requestStatus) {
+        String nativeQuery = "SELECT * FROM request WHERE request_status = :requestStatus";
+        Map<String, Object> parameterMap = new HashMap<>();
+        parameterMap.put("requestStatus", requestStatus.toString());
+        List<Request> requests = hibernateFacade.fetchAllEntityBySqlQuery(nativeQuery, null, Request.class, parameterMap);
+        return requests;
+    }
+
+    @Override
+    public List<Request> fetchAllByUserId(Long userId) {
+        String nativeQuery = "SELECT * FROM request WHERE user_id = :userId";
+        Map<String, Object> parameterMap = new HashMap<>();
+        parameterMap.put("userId", userId);
+        List<Request> requests = hibernateFacade.fetchAllEntityBySqlQuery(nativeQuery, null, Request.class, parameterMap);
+        return requests;
+    }
+
+
 }

@@ -3,6 +3,7 @@ package com.deped.model.request;
 import com.deped.model.account.User;
 import com.deped.model.items.Item;
 import com.deped.model.tracker.RequestTracker;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "request_details")
+@DynamicUpdate
 public class RequestDetails implements Serializable {
 
     @EmbeddedId
@@ -45,7 +47,7 @@ public class RequestDetails implements Serializable {
 
     @Column(name = "request_details_status")
     @Enumerated(EnumType.STRING)
-    private RequestDetailsStatus requestDetailsStatus;
+    private RequestDetailsStatus requestDetailsStatus = RequestDetailsStatus.WAITING;
 
     @Column(name = "cancellation_reason")
     private String cancellationReason;

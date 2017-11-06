@@ -125,7 +125,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     }
 
 
-    @RequestMapping(value = {CREATE_MAPPING}, method = POST)
+    @RequestMapping(value = CREATE_MAPPING, method = POST)
     public ModelAndView createActionWithRedirect(@Valid @ModelAttribute("requestDetail") RequestDetails entity, @Valid @ModelAttribute("requestEntity") Request requestEntity, final RedirectAttributes redirectAttributes, HttpSession httpSession) {
 
         Request request = entity.getRequest();
@@ -267,24 +267,59 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         return new ModelAndView(LIST_VIEW_PAGE);
     }
 
+    //Administrative Tasks
     @RequestMapping(value = APPROVAL_PAGE, method = GET)
-    public ModelAndView approvalActionRender(@ModelAttribute("request") Request order, @PathVariable(ID_STRING_LITERAL) Long orderId) {
-        return renderActions(order,
-                orderId,
-                new RequestStatus[]{RequestStatus.PENDING},
-                new RequestDetailsStatus[]{RequestDetailsStatus.APPROVED, RequestDetailsStatus.DISAPPROVED}
+    public ModelAndView approvalActionRender(@PathVariable(ID_STRING_LITERAL) Long requestId) {
+        Request request = fetchRequest(requestId);
+        ModelAndView requestChecking = requestChecking(request, RequestStatus.PENDING);
+        if (requestChecking != null) {
+            return requestChecking;
+        }
+
+        List<RequestDetails> requestDetailsList = fetchRequestDetails(requestId);
+        ModelAndView requestDetailsChecking = requestDetailsChecking(requestDetailsList);
+        if (requestDetailsChecking != null) {
+            return requestDetailsChecking;
+        }
+
+        RequestDetailsStatus[] nextRequestDetailsStatuses = new RequestDetailsStatus[]{RequestDetailsStatus.APPROVED, RequestDetailsStatus.DISAPPROVED, RequestDetailsStatus.CANCELED};
+        return renderActions(
+                request,
+                new HashSet<>(requestDetailsList),
+                nextRequestDetailsStatuses
         );
     }
 
     @RequestMapping(value = APPROVAL_PAGE, method = POST)
     public ModelAndView approvalActionSubmit(@ModelAttribute("requestDetailsForm") RequestDetailsForm orderDetailsForm) {
         ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm);
+        ModelAndView mav = new ModelAndView();
         return null;
     }
 
+    //Administrative Tasks
     @RequestMapping(value = RELEASED_PAGE, method = GET)
-    public ModelAndView arrivalActionRender(@ModelAttribute("request") Request order, @PathVariable(ID_STRING_LITERAL) Long orderId) {
-        return renderActions(order, orderId, new RequestStatus[]{RequestStatus.CONSIDERED}, new RequestDetailsStatus[]{RequestDetailsStatus.RELEASED});
+    public ModelAndView arrivalActionRender(@PathVariable(ID_STRING_LITERAL) Long requestId) {
+
+        Request request = fetchRequest(requestId);
+        ModelAndView requestChecking = requestChecking(request, RequestStatus.CONSIDERED);
+        if (requestChecking != null) {
+            return requestChecking;
+        }
+
+        List<RequestDetails> requestDetailsList = fetchRequestDetails(requestId);
+        ModelAndView requestDetailsChecking = requestDetailsChecking(requestDetailsList);
+        if (requestDetailsChecking != null) {
+            return requestDetailsChecking;
+        }
+        RequestDetailsStatus[] nextRequestDetailsStatuses = new RequestDetailsStatus[]{RequestDetailsStatus.RELEASED, RequestDetailsStatus.CANCELED};
+
+        return renderActions(
+                request,
+                new HashSet<>(requestDetailsList),
+                nextRequestDetailsStatuses
+        );
+
     }
 
     @RequestMapping(value = RELEASED_PAGE, method = POST)
@@ -293,57 +328,67 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         return null;
     }
 
-    private ModelAndView renderActions(Request request, Long orderId, RequestStatus[] currentStatuses, RequestDetailsStatus[] nextStatuses) {
-        Set<RequestDetails> requestDetailsList;
-        RestTemplate restTemplate = new RestTemplate();
-        String restUrl = String.format(FETCH_BY_ID_URL, "request", orderId);
-
-        if (request == null || request.getRequestId() == null || request.getRequestId() != orderId) {
-            ResponseEntity<Request> response = restTemplate.getForEntity(restUrl, Request.class);
-            request = response.getBody();
-        }
-
-        final String redirectUrl = "redirect:/dashboard";
+    private ModelAndView requestChecking(Request request, RequestStatus mustBeInStatus) {
+        String newRequestRedirectUrl;
         if (request == null) {
-            return new ModelAndView(redirectUrl);
+            //TODO message this request does not exist
+            newRequestRedirectUrl = "redirect:/dashboard";
+            return new ModelAndView(newRequestRedirectUrl);
         }
 
+        RequestStatus requestStatus = request.getRequestStatus();
+        if (requestStatus != mustBeInStatus) {
+            //TODO message this request is not in proper state as of now
+            newRequestRedirectUrl = "redirect:/dashboard";
+            return new ModelAndView(newRequestRedirectUrl);
+        }
+        return null;
+    }
 
+    private ModelAndView requestDetailsChecking(List<RequestDetails> requestDetailsList) {
+        String newRequestRedirectUrl;
+        if (requestDetailsList == null || requestDetailsList.isEmpty()) {
+            //TODO message this request does not have any request details which is wrong ...
+            newRequestRedirectUrl = "redirect:/dashboard";
+            return new ModelAndView(newRequestRedirectUrl);
+        }
+
+        return null;
+    }
+
+
+    private Request fetchRequest(Long requestId) {
+        RestTemplate restTemplate = new RestTemplate();
+        String restUrl = String.format(FETCH_BY_ID_URL, "request", requestId);
+        ResponseEntity<Request> response = restTemplate.getForEntity(restUrl, Request.class);
+        Request request = response.getBody();
+        return request;
+    }
+
+    private List<RequestDetails> fetchRequestDetails(Long requestId) {
+        RestTemplate restTemplate = new RestTemplate();
         //get RequestDetails if there is any
         HttpEntity httpEntity = makeHttpEntity(null);
-        restUrl = String.format(FETCH_URL, "request-details").concat("/").concat(request.getRequestId() + "");
+        String restUrl = String.format(FETCH_URL, "request-details").concat("/").concat(requestId + "");
         ResponseEntity<List<RequestDetails>> responseDetails = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<RequestDetails>>() {
         });
+        List<RequestDetails> requestDetailsList = responseDetails.getBody();
+        return requestDetailsList;
+    }
 
-        requestDetailsList = new HashSet<>(responseDetails.getBody());
-        if (requestDetailsList == null || requestDetailsList.isEmpty()) {
-            return new ModelAndView(redirectUrl);
-        }
-
-        boolean isRightState = false;
-        for (RequestStatus rs : currentStatuses) {
-            if (request.getRequestStatus() == rs) {
-                isRightState = true;
-                break;
-            }
-        }
-        if (!isRightState) {
-            return new ModelAndView(redirectUrl);
-        }
+    private ModelAndView renderActions(Request request, Set<RequestDetails> requestDetailsList, RequestDetailsStatus[] nextStatuses) {
 
         Map<String, Object> modelMap = new HashMap<>();
-
-
-        modelMap.put("requestId", orderId);
-        modelMap.put("relatedRequest", request);
-        modelMap.put("nextRequestDetailsStatuses", nextStatuses);
 
         RequestDetailsForm orderDetailsForm = new RequestDetailsForm();
         orderDetailsForm.setMap(putRequestDetailsListIntoMap(requestDetailsList));
         modelMap.put("requestDetailsForm", orderDetailsForm);
+
+        modelMap.put("requestId", request.getRequestId());
+        modelMap.put("relatedRequest", request);
+        modelMap.put("nextRequestDetailsStatuses", nextStatuses);
         ModelAndView mv = new ModelAndView(FLOW_VIEW_PAGE, modelMap);
         return mv;
-
     }
 
 
