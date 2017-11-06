@@ -129,7 +129,7 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         Map<String, Object> responseMap = new HashMap<>();
         ModelAndView mv = new ModelAndView();
 
-        if (response != null || response.getBody() != null) {
+        if (response == null || response.getBody() == null) {
             responseMap.put(NOT_CREATED_KEY, FAILURE_MESSAGE);
             responseMap.put(modelName, oldObject);
         } else {
