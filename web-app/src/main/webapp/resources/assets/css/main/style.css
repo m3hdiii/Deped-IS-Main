@@ -7,7 +7,9 @@
 }
 
 /* Hide default HTML checkbox */
-.switch input {display:none;}
+.switch input {
+    display: none;
+}
 
 /* The slider */
 .slider {
@@ -57,7 +59,6 @@ input:checked + .slider:before {
     border-radius: 50%;
 }
 
-
 /*     Rounded Checkbox          */
 .round {
     position: relative;
@@ -103,16 +104,16 @@ input:checked + .slider:before {
 }
 
 /* --------  Circle Pagination ------------*/
-*,*:after,*:before{
+*, *:after, *:before {
     box-sizing: border-box;
 }
 
-.pagination-circle ul{
+.pagination-circle ul {
     margin: 0;
     padding: 0;
 }
 
-.pagination-circle > li{
+.pagination-circle > li {
     overflow: hidden;
     position: relative;
     margin-top: 25px;
@@ -121,11 +122,13 @@ input:checked + .slider:before {
     list-style: none;
     padding: 0;
 }
-.pagination-circle > li p{
+
+.pagination-circle > li p {
     color: #000;
     line-height: 3;
 }
-.pagination-circle > li > a{
+
+.pagination-circle > li > a {
     line-height: 50px;
     text-decoration: none;
     color: #000;
@@ -135,12 +138,14 @@ input:checked + .slider:before {
 }
 
 /*positon the circle*/
-.pagination-circle > li > a:before{
-    content:'';
+.pagination-circle > li > a:before {
+    content: '';
     position: absolute;
     z-index: -1;
-    width: 50px; height: 50px;
-    left: 50%; margin-left: -25px;
+    width: 50px;
+    height: 50px;
+    left: 50%;
+    margin-left: -25px;
     border-radius: 100%;
     border: 3px solid #7c38bc;
     transition: all .2s;
@@ -148,42 +153,47 @@ input:checked + .slider:before {
 
 /*positioning the line*/
 .pagination-circle > li:not(:last-of-type):after,
-.pagination-circle > li:not(:first-of-type):before{
+.pagination-circle > li:not(:first-of-type):before {
     content: '';
     position: absolute;
     background: #7c38bc;
     top: 25px;
     height: 3px;
 }
-.pagination-circle > li:first-of-type:after{
+
+.pagination-circle > li:first-of-type:after {
     left: 50%;
     right: 0;
     margin-left: 25px;
 }
-.pagination-circle > li:not(:first-of-type):before{
+
+.pagination-circle > li:not(:first-of-type):before {
     left: 0;
     right: 50%;
     margin-right: 25px;
 }
-.pagination-circle > li:not(:first-of-type):after{
+
+.pagination-circle > li:not(:first-of-type):after {
     right: 0;
     left: 50%;
     margin-left: 25px;
 }
 
 /*hover stuff*/
-.pagination-circle > li:hover a{
+.pagination-circle > li:hover a {
     color: #fff;
 }
-.pagination-circle > li:hover a:before{
+
+.pagination-circle > li:hover a:before {
     background: #7a43b6;
 }
 
 /*pagination active*/
-.pagination-active > a:before{
+.pagination-active > a:before {
     border: 4px solid #7c38bc !important;
 }
-.pagination-active > a{
+
+.pagination-active > a {
     color: #7c38bc !important;
 }
 

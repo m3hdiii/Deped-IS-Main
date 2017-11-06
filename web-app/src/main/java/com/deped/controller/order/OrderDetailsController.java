@@ -8,13 +8,13 @@ import com.deped.model.category.Category;
 import com.deped.model.items.Item;
 import com.deped.model.order.Order;
 import com.deped.model.order.OrderDetails;
+import com.deped.model.order.OrderDetailsState;
 import com.deped.model.order.OrderState;
 import com.deped.model.pack.Pack;
 import com.deped.model.supply.Supplier;
 import com.deped.utils.SystemUtils;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -41,18 +41,25 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN + URL_SEPARATOR + ID_PATTERN;
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
     private static final String RENDER_UPDATE_MAPPING = BASE_NAME + RENDER_UPDATE_PATTERN;
-    private static final String RENDER_LIST_MAPPING = BASE_NAME + FETCH_PATTERN;
-    private static final String RENDER_LIST_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
+    private static final String RENDER_LIST_MAPPING = BASE_NAME + FETCH_PATTERN + URL_SEPARATOR + ID_PATTERN;
+    private static final String RENDER_LIST_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + URL_SEPARATOR + ID_PATTERN + RANGE_PATTERN;
     private static final String RENDER_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
 
     private static final String BASE_SHOW_PAGE = JSP_PAGES + URL_SEPARATOR + BASE_NAME + URL_SEPARATOR;
     private static final String CREATE_VIEW_PAGE = BASE_SHOW_PAGE + CREATE_PAGE + BASE_NAME;
     private static final String INFO_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + INFO_PAGE;
+    private static final String FLOW_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + "-flow";
+
     private static final String UPDATE_VIEW_PAGE = BASE_SHOW_PAGE + UPDATE_PAGE + BASE_NAME;
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
 
     private static final String BASKET_VIEW_PAGE = BASE_NAME + URL_SEPARATOR + "basket" + URL_SEPARATOR + ID_PATTERN;
+    private static final String APPROVAL_PAGE = BASE_NAME + URL_SEPARATOR + "approval" + URL_SEPARATOR + ID_PATTERN;
+    private static final String ORDERED_PAGE = BASE_NAME + URL_SEPARATOR + "ordered" + URL_SEPARATOR + ID_PATTERN;
+    private static final String ARRIVAL_PAGE = BASE_NAME + URL_SEPARATOR + "arrival" + URL_SEPARATOR + ID_PATTERN;
+
+    private static final String UPDATE_STATUS_REST = BASE_NAME + URL_SEPARATOR + "update-status";
 
     public enum ActionParam {
         UPDATE_ALL, DELETE_ALL, SAVE_ALL, ORDER_ALL
@@ -197,6 +204,101 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         }
 
         return null;
+    }
+
+    @RequestMapping(value = APPROVAL_PAGE, method = GET)
+    public ModelAndView approvalActionRender(@ModelAttribute("order") Order order, @PathVariable(ID_STRING_LITERAL) Long orderId) {
+        return renderActions(order, orderId, new OrderState[]{OrderState.ORDERS_REGISTERED}, new OrderDetailsState[]{OrderDetailsState.APPROVED, OrderDetailsState.DISAPPROVED});
+    }
+
+    @RequestMapping(value = APPROVAL_PAGE, method = POST)
+    public ModelAndView approvalActionSubmit(@ModelAttribute("orderDetailsForm") OrderDetailsForm orderDetailsForm) {
+        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm);
+        return null;
+    }
+
+    @RequestMapping(value = ORDERED_PAGE, method = GET)
+    public ModelAndView orderedActionRender(@ModelAttribute("order") Order order, @PathVariable(ID_STRING_LITERAL) Long orderId) {
+        return renderActions(order, orderId, new OrderState[]{OrderState.ALL_APPROVED, OrderState.PARTIALLY_APPROVED}, null);
+    }
+
+    @RequestMapping(value = ORDERED_PAGE, method = POST)
+    public ModelAndView orderedActionSubmit(@ModelAttribute("orderDetailsForm") OrderDetailsForm orderDetailsForm) {
+        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm);
+        return null;
+    }
+
+    @RequestMapping(value = ARRIVAL_PAGE, method = GET)
+    public ModelAndView arrivalActionRender(@ModelAttribute("order") Order order, @PathVariable(ID_STRING_LITERAL) Long orderId) {
+        return renderActions(order, orderId, new OrderState[]{OrderState.ORDERED}, new OrderDetailsState[]{OrderDetailsState.ARRIVED, OrderDetailsState.NOT_ARRIVED});
+    }
+
+    @RequestMapping(value = ARRIVAL_PAGE, method = POST)
+    public ModelAndView arrivalActionSubmit(@ModelAttribute("orderDetailsForm") OrderDetailsForm orderDetailsForm) {
+        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm);
+        return null;
+    }
+
+    private ModelAndView renderActions(Order order, Long orderId, OrderState[] currentStates, OrderDetailsState[] nextStates) {
+        Set<OrderDetails> orderDetailsList;
+
+        if (order == null || order.getOrderId() == null || order.getOrderId() != orderId) {
+            RestTemplate restTemplate = new RestTemplate();
+            String restUrl = String.format(FETCH_BY_ID_URL, "order", orderId);
+            ResponseEntity<Order> response = restTemplate.getForEntity(restUrl, Order.class);
+            order = response.getBody();
+        }
+
+        final String redirectUrl = "redirect:/dashboard";
+        if (order == null) {
+            return new ModelAndView(redirectUrl);
+        }
+
+        orderDetailsList = order.getOrderDetails();
+        if (orderDetailsList == null || orderDetailsList.isEmpty()) {
+            return new ModelAndView(redirectUrl);
+        }
+
+        boolean isRightState = false;
+        for (OrderState os : currentStates) {
+            if (order.getOrderState() == os) {
+                isRightState = true;
+                break;
+            }
+        }
+        if (!isRightState) {
+            return new ModelAndView(redirectUrl);
+        }
+
+        Map<String, Object> modelMap = new HashMap<>();
+
+
+        modelMap.put("orderId", orderId);
+        modelMap.put("relatedOrder", order);
+        modelMap.put("nextOrderDetailsStates", nextStates);
+
+        OrderDetailsForm orderDetailsForm = new OrderDetailsForm();
+        orderDetailsForm.setMap(putOrderDetailsListIntoMap(orderDetailsList));
+        modelMap.put("orderDetailsForm", orderDetailsForm);
+        ModelAndView mv = new ModelAndView(FLOW_VIEW_PAGE, modelMap);
+        return mv;
+
+    }
+
+
+    private ResponseEntity<Response> updateStatusAction(OrderDetailsForm orderDetailsForm) {
+        Map<String, OrderDetails> map = orderDetailsForm.getMap();
+        Collection<OrderDetails> orderDetailsCollection = map.values();
+        OrderDetails[] orderDetailsArray = orderDetailsCollection.toArray(new OrderDetails[orderDetailsCollection.size()]);
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<OrderDetails[]> httpEntity = new HttpEntity<>(orderDetailsArray, headers);
+        String restUrl = BASE_URL + UPDATE_STATUS_REST;
+
+        ResponseEntity<Response> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, Response.class);
+        return response;
     }
 
     private boolean saveOrderDetails(Map<String, OrderDetails> map, boolean isForSaveOnly) {

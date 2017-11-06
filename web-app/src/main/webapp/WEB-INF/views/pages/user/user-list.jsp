@@ -36,7 +36,7 @@
         <div class="row item-body">
             <div class="panel no-padd">
                 <div class="panel-heading">
-                    <h3 class="text-center"><i class="fa fa-users"></i>  Users Account</h3>
+                    <h3 class="text-center"><i class="fa fa-users"></i> Users Account</h3>
                     <label>Show</label>
                 </div>
                 <div class="panel-body">
@@ -62,29 +62,33 @@
                                         <c:choose>
                                             <c:when test="${(user.accountStatus) eq ('EXPIRED')}">
                                                 <td>
-                                                   <div class="user-status invisibled pull-left">
-                                                       <img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>
-                                                   </div>
+                                                    <div class="user-status invisibled pull-left">
+                                                        <img src="${baseUrl}${user.picUrl}" class="img-circle"
+                                                             alt="user image" width="50px" height="50px"/>
+                                                    </div>
                                                 </td>
                                             </c:when>
                                             <c:when test="${(user.accountStatus) eq ('LOCKED')}">
                                                 <td>
                                                     <div class="user-status busy pull-left">
-                                                        <img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>
+                                                        <img src="${baseUrl}${user.picUrl}" class="img-circle"
+                                                             alt="user image" width="50px" height="50px"/>
                                                     </div>
                                                 </td>
                                             </c:when>
                                             <c:when test="${(user.accountStatus) eq ('NOT_ACTIVE')}">
                                                 <td>
                                                     <div class="user-status offline pull-left">
-                                                        <img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>
+                                                        <img src="${baseUrl}${user.picUrl}" class="img-circle"
+                                                             alt="user image" width="50px" height="50px"/>
                                                     </div>
                                                 </td>
                                             </c:when>
                                             <c:otherwise>
                                                 <td>
                                                     <div class="user-status online pull-left">
-                                                        <img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>
+                                                        <img src="${baseUrl}${user.picUrl}" class="img-circle"
+                                                             alt="user image" width="50px" height="50px"/>
                                                     </div>
                                                 </td>
                                             </c:otherwise>
@@ -96,42 +100,46 @@
                                         <c:when test="${(user.accountStatus) eq ('EXPIRED')}">
                                             <td>
                                                 <div class="user-status invisibled pull-left">
-                                                    <img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>
+                                                    <img src="${baseUrl}${user.picUrl}" class="img-circle"
+                                                         alt="user image" width="50px" height="50px"/>
                                                 </div>
                                             </td>
                                         </c:when>
                                         <c:when test="${(user.accountStatus) eq ('LOCKED')}">
                                             <td>
                                                 <div class="user-status busy pull-left">
-                                                    <img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>
+                                                    <img src="${baseUrl}${user.picUrl}" class="img-circle"
+                                                         alt="user image" width="50px" height="50px"/>
                                                 </div>
                                             </td>
                                         </c:when>
                                         <c:when test="${(user.accountStatus) eq ('NOT_ACTIVE')}">
                                             <td>
                                                 <div class="user-status offline pull-left">
-                                                    <img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>
+                                                    <img src="${baseUrl}${user.picUrl}" class="img-circle"
+                                                         alt="user image" width="50px" height="50px"/>
                                                 </div>
                                             </td>
                                         </c:when>
                                         <c:otherwise>
                                             <td>
                                                 <div class="user-status online pull-left">
-                                                    <img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>
+                                                    <img src="${baseUrl}${user.picUrl}" class="img-circle"
+                                                         alt="user image" width="50px" height="50px"/>
                                                 </div>
                                             </td>
                                         </c:otherwise>
 
                                     </c:otherwise>
                                 </c:choose>
-                                 <!-- <td>
-                                    <div class="user-status busy pull-left">
-                                        <img src="../../assets/images/avtar/user.png" class="img-circle" alt="User#1" width="50px" height="50px">
-                                    </div>
-                                </td> -->
+                                <!-- <td>
+                                   <div class="user-status busy pull-left">
+                                       <img src="../../assets/images/avtar/user.png" class="img-circle" alt="User#1" width="50px" height="50px">
+                                   </div>
+                               </td> -->
                                 <td>
                                     <div class="name">
-                                        ${user.firstName} ${user.middleName} ${user.lastName}
+                                            ${user.firstName} ${user.middleName} ${user.lastName}
                                     </div>
                                     <div class="email">
                                         <a href="#">${user.emailAddress}</a>
@@ -156,10 +164,12 @@
                                 <td>${user.section}</td>
 
                                 <td>
-                                    <button class="btn btn-primary" data-toggle="modal" data-target="#view-user-modal"><i class="fa fa-eye"></i></button>
+                                    <button class="btn btn-primary" data-toggle="modal" data-target="#view-user-modal">
+                                        <i class="fa fa-eye"></i></button>
                                 </td>
                                 <td class="text-nowrap">
-                                    <button class="btn btn-purple" data-toggle="modal" data-target="#"><i class="fa fa-pencil"></i></button>
+                                    <button class="btn btn-purple" data-toggle="modal" data-target="#"><i
+                                            class="fa fa-pencil"></i></button>
                                 </td>
                             </tr>
                         </c:forEach>

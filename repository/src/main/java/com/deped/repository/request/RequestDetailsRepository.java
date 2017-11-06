@@ -4,4 +4,7 @@ import com.deped.model.request.RequestDetails;
 import com.deped.repository.BaseRepository;
 
 public interface RequestDetailsRepository extends BaseRepository<RequestDetails> {
+    Boolean requestAll(RequestDetails... entities);
+
+    boolean updateRequestStatus(RequestDetails[] entities);
 }

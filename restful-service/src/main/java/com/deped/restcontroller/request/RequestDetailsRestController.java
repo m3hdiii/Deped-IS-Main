@@ -17,11 +17,14 @@ public class RequestDetailsRestController extends AbstractMainRestController<Req
     private static final String BASE_NAME = "request-details";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
     private static final String CREATE_ALL_MAPPING = BASE_NAME + CREATE_ALL_PATTERN;
+    private static final String REQUEST_ALL_MAPPING = BASE_NAME + URL_SEPARATOR + "request-all";
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
     private static final String FETCH_MAPPING = BASE_NAME + FETCH_PATTERN;
     private static final String FETCH_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String FETCH_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
+
+    private static final String UPDATE_STATUS_MAPPING = BASE_NAME + URL_SEPARATOR + "update-status";
 
 
     @Autowired
@@ -78,6 +81,18 @@ public class RequestDetailsRestController extends AbstractMainRestController<Req
     @RequestMapping(value = CREATE_ALL_MAPPING, method = RequestMethod.POST)
     public ResponseEntity<Response> createOrUpdateAll(@RequestBody RequestDetails... entities) {
         ResponseEntity<Response> response = requestDetailsService.createOrUpdateAll(entities);
+        return response;
+    }
+
+    @RequestMapping(value = REQUEST_ALL_MAPPING, method = RequestMethod.POST)
+    public ResponseEntity<Response> requestAll(@RequestBody RequestDetails... entities) {
+        ResponseEntity<Response> response = requestDetailsService.requestAll(entities);
+        return response;
+    }
+
+    @RequestMapping(value = UPDATE_STATUS_MAPPING, method = RequestMethod.POST)
+    public ResponseEntity<Response> updateOrderStatus(@RequestBody RequestDetails... entities) {
+        ResponseEntity<Response> response = requestDetailsService.updateRequestStatus(entities);
         return response;
     }
 }

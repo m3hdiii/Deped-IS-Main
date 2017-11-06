@@ -22,6 +22,7 @@ public class OrderDetailsRestController extends AbstractMainRestController<Order
     private static final String FETCH_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String FETCH_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
+    private static final String UPDATE_STATUS_MAPPING = BASE_NAME + URL_SEPARATOR + "update-status";
 
 
     @Autowired
@@ -78,6 +79,12 @@ public class OrderDetailsRestController extends AbstractMainRestController<Order
     @RequestMapping(value = CREATE_ALL_MAPPING, method = RequestMethod.POST)
     public ResponseEntity<Response> createOrUpdateAll(@RequestBody OrderDetails... entities) {
         ResponseEntity<Response> response = orderDetailsService.createOrUpdateAll(entities);
+        return response;
+    }
+
+    @RequestMapping(value = UPDATE_STATUS_MAPPING, method = RequestMethod.POST)
+    public ResponseEntity<Response> updateOrderStatus(@RequestBody OrderDetails... entities) {
+        ResponseEntity<Response> response = orderDetailsService.updateOrderStatus(entities);
         return response;
     }
 }

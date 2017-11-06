@@ -55,7 +55,7 @@ public class OrderDetails implements Serializable {
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "order_details_state")
-    private OrderDetailsState orderState;
+    private OrderDetailsState orderDetailsState;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "supplier_id")
@@ -139,12 +139,12 @@ public class OrderDetails implements Serializable {
         this.totalQuantityArrivedNo = totalQuantityArrivedNo;
     }
 
-    public OrderDetailsState getOrderState() {
-        return orderState;
+    public OrderDetailsState getOrderDetailsState() {
+        return orderDetailsState;
     }
 
-    public void setOrderState(OrderDetailsState orderState) {
-        this.orderState = orderState;
+    public void setOrderDetailsState(OrderDetailsState orderDetailsState) {
+        this.orderDetailsState = orderDetailsState;
     }
 
     public Supplier getSupplier() {

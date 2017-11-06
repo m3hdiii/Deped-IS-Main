@@ -3,6 +3,8 @@ package com.deped.model.request;
 import com.deped.model.account.User;
 import com.deped.model.items.Item;
 import com.deped.model.tracker.RequestTracker;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,17 +14,18 @@ import java.util.Set;
 
 @Entity
 @Table(name = "request_details")
-
 public class RequestDetails implements Serializable {
 
     @EmbeddedId
     private RequestDetailsID requestDetailsID = new RequestDetailsID();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @MapsId("requestId")
+    @JoinColumn(name = "request_request_id")
+    @JsonBackReference(value = "requestDetailsRequest")
     private Request request;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("itemId")
     private Item item;
 
@@ -43,9 +46,9 @@ public class RequestDetails implements Serializable {
     @Column(name = "release_date")
     private Date releaseDate;
 
-    @Column(name = "request_status")
+    @Column(name = "request_details_status")
     @Enumerated(EnumType.STRING)
-    private RequestStatus requestStatus;
+    private RequestDetailsStatus requestDetailsStatus;
 
     @Column(name = "cancellation_reason")
     private String cancellationReason;
@@ -53,13 +56,16 @@ public class RequestDetails implements Serializable {
     @Column(name = "supply_office_remark")
     private String supplyOfficeRemark;
 
-    @Column(name = "approver_user_id")
+    @JoinColumn(name = "approver_user_id")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User approverUser;
 
-    @Column(name = "issuer_user_id")
+    @JoinColumn(name = "issuer_user_id")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User issuerUser;
 
-    @Column(name = "receiver_user_id")
+    @JoinColumn(name = "receiver_user_id")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User receiverUser;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "requestDetails")
@@ -108,12 +114,12 @@ public class RequestDetails implements Serializable {
         this.releaseDate = releaseDate;
     }
 
-    public RequestStatus getRequestStatus() {
-        return requestStatus;
+    public RequestDetailsStatus getRequestDetailsStatus() {
+        return requestDetailsStatus;
     }
 
-    public void setRequestStatus(RequestStatus requestStatus) {
-        this.requestStatus = requestStatus;
+    public void setRequestDetailsStatus(RequestDetailsStatus requestDetailsStatus) {
+        this.requestDetailsStatus = requestDetailsStatus;
     }
 
     public String getCancellationReason() {

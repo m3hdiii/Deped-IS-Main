@@ -1,29 +1,30 @@
 /* --------- Css of cart-menu ---------- */
 
-.cart-menu a{
+.cart-menu a {
     margin-right: 14px;
     color: #d3d3db;
     background: transparent;
 }
 
-.cart-menu a:hover{
+.cart-menu a:hover {
     color: inherit;
 }
 
 /*------------  Css for Items image-thumnails ------------*/
 
-.item-body .item-content-thumbnail{
+.item-body .item-content-thumbnail {
     margin-right: 6px;
     width: 24%;
     height: 390px;
 }
-.item-body .item-content-thumbnail img{
+
+.item-body .item-content-thumbnail img {
     height: 135px;
 }
 
 /*------------  Css for cart modal ------------*/
 
-.item-quantity{
+.item-quantity {
     -webkit-appearance: none;
     -moz-appearance: none;
     apperance: none;
@@ -35,16 +36,16 @@
 }
 
 #item-cart-modal .modal-body
-select{
+select {
     background: #fff;
     border: 1px solid #ccc;
-    font-family: Helvetica,Arial,sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
     font-size: 12px;
     text-align: center;
     margin: 0;
 }
 
-.up-down-select{
+.up-down-select {
     height: 25px;
     line-height: 25px;
     display: inline-block;
@@ -55,13 +56,13 @@ select{
     border: 1px solid #e3e3e3;
 }
 
-.up-down-select .btn-up-down{
+.up-down-select .btn-up-down {
     position: absolute;
     top: 0;
     width: 25px;
     height: 25px;
     display: inline-block;
-    float:left;
+    float: left;
     font-size: 16px;
     line-height: 16px;
     cursor: pointer;
@@ -73,25 +74,25 @@ select{
 }
 
 .up-down-select .btn-up-down.down {
-    left:0;
+    left: 0;
     border-right: 1px solid #e3e3e3;
 }
 
 .up-down-select .btn-up-down.up {
-    right:0;
+    right: 0;
     border-left: 1px solid #e3e3e3;
 }
 
-.up-down-select .btn-up-down .up-down-icon{
+.up-down-select .btn-up-down .up-down-icon {
     position: absolute;
     top: 50%;
     left: 50%;
-    -ms-transform: translate(-50%,-50%);
-    transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
     font-size: 55%;
 }
 
-.modal-header .close{
+.modal-header .close {
     position: absolute;
     top: 20px;
     right: 20px;

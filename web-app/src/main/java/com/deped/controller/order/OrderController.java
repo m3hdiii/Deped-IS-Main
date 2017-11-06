@@ -114,6 +114,7 @@ public class OrderController extends AbstractMainController<Order, Long> {
         return mv;
     }
 
+
     @Override
     @RequestMapping(value = RENDER_LIST_BY_RANGE_MAPPING, method = GET)
     public ModelAndView renderListPage(@PathVariable(FROM_STRING_LITERAL) int from, @PathVariable(TO_STRING_LITERAL) int to) {

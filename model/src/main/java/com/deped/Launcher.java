@@ -20,9 +20,12 @@ import com.deped.model.pack.Pack;
 import com.deped.model.request.Request;
 import com.deped.model.request.RequestDetails;
 import com.deped.model.request.RequestDetailsID;
-import com.deped.model.request.RequestStatus;
+import com.deped.model.request.RequestDetailsStatus;
 import com.deped.model.tracker.RequestTracker;
 import com.deped.model.tracker.TrackingStatus;
+import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -30,17 +33,51 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.query.NativeQuery;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class Launcher {
     public static void main(String[] args) {
-        bindLeftAssociationFacadeMethod();
+        requestDetails();
+
+        //bindLeftAssociationFacadeMethod();
         //bindLeftAssociationFacadeMethod();
         //orderBindings();
-        OrderDetailsWithRequestTracker();
+        //OrderDetailsWithRequestTracker();
+
+    }
+
+
+    private static void requestDetails() {
+        Session session = Launcher.getSessionFactory().openSession();
+        Transaction tr = session.beginTransaction();
+        NativeQuery<Request> nativeQuery = session.createNativeQuery("SELECT * FROM request WHERE request_id = 19", Request.class);
+        List<Request> requests = nativeQuery.list();
+        tr.commit();
+        ObjectMapper mapper = new ObjectMapper();
+
+        //For testing
+
+        try {
+            //Convert object to JSON string and save into file directly
+
+            //Convert object to JSON string
+            String jsonInString = mapper.writeValueAsString(requests.get(0));
+            System.out.println(jsonInString);
+
+
+        } catch (JsonGenerationException e) {
+            e.printStackTrace();
+        } catch (JsonMappingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -76,7 +113,7 @@ public class Launcher {
         RequestDetails requestDetails = new RequestDetails();
         requestDetails.setItem(equipment);
         requestDetails.setRequest(request);
-        requestDetails.setRequestStatus(RequestStatus.PENDING);
+        requestDetails.setRequestDetailsStatus(RequestDetailsStatus.WAITING);
         requestDetails.setRequestQuantity(100);
         requestDetails.setRequestDetailsID(new RequestDetailsID(request.getRequestId(), equipment.getItemId()));
         session.save("RequestDetails", requestDetails);
@@ -166,7 +203,7 @@ public class Launcher {
 
     private static OrderDetails createOrderDetails() {
         OrderDetails orderDetails = new OrderDetails();
-        orderDetails.setOrderState(OrderDetailsState.WAITING);
+        orderDetails.setOrderDetailsState(OrderDetailsState.WAITING);
         //FIXME
 //        orderDetails.setPackCapacity(12);
 

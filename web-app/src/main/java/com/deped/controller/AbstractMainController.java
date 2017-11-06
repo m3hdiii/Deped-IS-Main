@@ -90,17 +90,17 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
 
     public ResponseEntity<Response> makeRemoveRestRequest(T[] entities, String baseName, HttpMethod method, Class<T> entityClass) {
         String restUrl = String.format(REMOVE_URL, baseName);
-        ResponseEntity<Response> response = makeGenericListRestRequest(restUrl, entities, baseName, method, entityClass);
+        ResponseEntity<Response> response = makeGenericListRestRequest(restUrl, entities, method, entityClass);
         return response;
     }
 
     public ResponseEntity<Response> makeCreateAllRestRequest(T[] entities, String baseName, HttpMethod method, Class<T> entityClass) {
         String restUrl = String.format(CREATE_ALL_URL, baseName);
-        ResponseEntity<Response> response = makeGenericListRestRequest(restUrl, entities, baseName, method, entityClass);
+        ResponseEntity<Response> response = makeGenericListRestRequest(restUrl, entities, method, entityClass);
         return response;
     }
 
-    private ResponseEntity<Response> makeGenericListRestRequest(String restUrl, T[] entities, String baseName, HttpMethod method, Class<T> entityClass) {
+    public ResponseEntity<Response> makeGenericListRestRequest(String restUrl, T[] entities, HttpMethod method, Class<T> entityClass) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);

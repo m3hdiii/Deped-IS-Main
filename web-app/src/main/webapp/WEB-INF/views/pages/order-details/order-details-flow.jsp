@@ -61,7 +61,7 @@
             <td>Status</td>
             </thead>
 
-            <c:set var="basketMap" value="${orderDetailsForm.map}" />
+            <c:set var="basketMap" value="${orderDetailsForm.map}"/>
 
             <form:form commandName="orderDetailsForm" method="post">
 
@@ -109,7 +109,7 @@
 
                         <td>
                             <form:select multiple="single" path="map['${strKey}'].orderDetailsState">
-                                <form:options items="${nextOrderDetailsStates}" />
+                                <form:options items="${nextOrderDetailsStates}"/>
                             </form:select>
                         </td>
 
@@ -121,7 +121,7 @@
                 </c:forEach>
                 <tr>
                     <td colspan="3">
-                        <button >Approve</button>
+                        <button>Approve</button>
                     </td>
                 </tr>
             </form:form>

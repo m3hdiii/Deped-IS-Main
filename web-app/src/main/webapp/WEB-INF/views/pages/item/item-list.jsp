@@ -40,7 +40,8 @@
                 <h3 class="text-center">Created Items</h3>
                 <div class="panel-body">
                     <div class="nav">
-                        <a href="/item/create" class="btn btn-sm btn-default text-right" data-toggle="tooltips" title="Add New Item">
+                        <a href="/item/create" class="btn btn-sm btn-default text-right" data-toggle="tooltips"
+                           title="Add New Item">
                             <i class="fa fa-plus text-green"></i>
                         </a>
                         <button class="btn btn-sm btn-default text-right" data-toggle="tooltips" title="Delete Item">
@@ -59,49 +60,52 @@
                             <th>Name</th>
                             <th>Brand</th>
                             <th class="col-xs-2">Description</th>
-                            <th >Item Type</th>
-                            <th >QTY</th>
+                            <th>Item Type</th>
+                            <th>QTY</th>
                             <th>Activated</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
                         <tbody>
-                            <c:forEach items="${itemList}" var="item">
-                                <tr>
-                                    <td>
-                                        <label class="checkbox checkbox-inline">
-                                            <input type="checkbox">
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${not empty item.picName}">
-                                                <img width="104px" height="76px" src="${baseUrl}${item.picName}" alt="item image"/>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <img width="104px" height="76px" src="${resourceURL}/images/shared-images/no-item.png"
-                                                     alt="item image"/>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <th>${item.name}</th>
-                                    <td>SONY</td>
-                                    <td>${item.description}</td>
-                                    <td>${item.itemType}</td>
-                                    <td>${item.quantity}</td>
-                                    <td>
-                                            <%-- This is not yet implemented....--%>
-                                        <label class="switch">
-                                            <input type="checkbox">
-                                            <span class="slider slider-round"></span>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        <a href="/item/update/${item.itemId}" class="btn btn-purple"><i class="fa fa-pencil"></i></a>
-                                        <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
-                                    </td>
-                                </tr>
-                            </c:forEach>
+                        <c:forEach items="${itemList}" var="item">
+                            <tr>
+                                <td>
+                                    <label class="checkbox checkbox-inline">
+                                        <input type="checkbox">
+                                    </label>
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${not empty item.picName}">
+                                            <img width="104px" height="76px" src="${baseUrl}${item.picName}"
+                                                 alt="item image"/>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img width="104px" height="76px"
+                                                 src="${resourceURL}/images/shared-images/no-item.png"
+                                                 alt="item image"/>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <th>${item.name}</th>
+                                <td>SONY</td>
+                                <td>${item.description}</td>
+                                <td>${item.itemType}</td>
+                                <td>${item.quantity}</td>
+                                <td>
+                                        <%-- This is not yet implemented....--%>
+                                    <label class="switch">
+                                        <input type="checkbox">
+                                        <span class="slider slider-round"></span>
+                                    </label>
+                                </td>
+                                <td>
+                                    <a href="/item/update/${item.itemId}" class="btn btn-purple"><i
+                                            class="fa fa-pencil"></i></a>
+                                    <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </c:forEach>
                         </tbody>
                     </table>
                 </div>

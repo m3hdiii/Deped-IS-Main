@@ -42,8 +42,8 @@
         <p>Creation Date: ${relatedRequest.requestDate}</p>
     </div>
 
-     <c:set var="requestIdValue" value="${relatedRequest.requestId}"/>
-     <c:set var="basketName" value="requestDetailsMap-RequestNo${requestIdValue}"/>
+    <c:set var="requestIdValue" value="${relatedRequest.requestId}"/>
+    <c:set var="basketName" value="requestDetailsMap-RequestNo${requestIdValue}"/>
 
     <div>
         <c:choose>

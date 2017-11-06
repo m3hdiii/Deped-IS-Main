@@ -70,4 +70,21 @@ public class RequestDetailsServiceImpl implements RequestDetailsService {
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
     }
+
+    @Override
+    public ResponseEntity<Response> requestAll(RequestDetails... entities) {
+        Boolean isCreated = requestDetailsRepository.requestAll(entities);
+        Response response = ServiceUtils.makeResponse(isCreated, Operation.CREATE, RequestDetails.class);
+        ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
+        return responseEntity;
+    }
+
+    @Override
+    public ResponseEntity<Response> updateRequestStatus(RequestDetails[] entities) {
+        Boolean isUpdated = requestDetailsRepository.updateRequestStatus(entities);
+        Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, RequestDetails.class);
+        ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
+        return responseEntity;
+
+    }
 }

@@ -1,4 +1,8 @@
 package com.deped.model.request;
 
-public class RequestStatus {
+public enum RequestStatus {
+    SAVED,
+    PENDING,
+    CONSIDERED,
+    FINALIZED
 }

@@ -23,7 +23,6 @@
     <c:import url="../../includes/top-nav.jsp"/>
 
 
-
     <div class="warper container-fluid">
 
         <div class="page-header">
@@ -48,13 +47,14 @@
                 <c:forEach items="${brands}" var="brand">
                     <div class='col-xs-4 thumbnail brand-content-thumbnail padd-md'>
                         <div class="round">
-                            <input class="pull-left" type="checkbox" id="checkbox ${brand.brandId}" />
+                            <input class="pull-left" type="checkbox" id="checkbox ${brand.brandId}"/>
                             <label for="checkbox ${brand.brandId}"></label>
                         </div>
                         <div class="dropdown pull-right">
                             <a href="#" data-toggle="dropdown"><i class="fa fa-ellipsis-v text-purple"></i></a>
                             <ul class="dropdown-menu">
-                                <li><a href="/brand/update/${brand.brandId}"><i class="fa fa-pencil text-primary"></i> Edit</a></li>
+                                <li><a href="/brand/update/${brand.brandId}"><i class="fa fa-pencil text-primary"></i>
+                                    Edit</a></li>
                                 <li><a href="#"><i class="fa fa-trash text-danger"></i> Delete</a></li>
                             </ul>
                         </div>
@@ -86,7 +86,6 @@
             </div>
 
 
-
             <!-- PAGINATION FOR THE ITEMS -->
 
             <div class="items-pagination col-md-12 text-center">
@@ -98,7 +97,7 @@
                                 <span class="sr-only">Previous</span>
                             </a>
                         </li>
-                        <li class="page-item active" ><a class="page-link" href="#">1</a></li>
+                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
                         <li class="page-item"><a class="page-link" href="#">2</a></li>
                         <li class="page-item"><a class="page-link" href="#">3</a></li>
                         <li class="page-item">

@@ -177,6 +177,79 @@ public class HibernateFacade {
         return rows;
     }
 
+    @Transactional
+    public <T> List<T> fetchAllEntityBySqlQuery(String sqlQuery, Class<T> entityClass) {
+        return fetchAllEntityBySqlQuery(sqlQuery, null, entityClass);
+    }
+
+    @Transactional
+    public <T> List<T> fetchAllEntityBySqlQuery(String sqlQuery, Range range, Class<T> entityClass) {
+        Session hibernateSession;
+        try {
+            hibernateSession = getSessionFactory().openSession();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        Transaction tx = null;
+
+        List<T> rows;
+
+        try {
+            tx = hibernateSession.beginTransaction();
+            NativeQuery<T> namedQuery = hibernateSession.createNativeQuery(sqlQuery, entityClass).setParameter("", "");
+            setRange(range, namedQuery);
+
+            rows = namedQuery.list();
+
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null)
+                tx.rollback();
+            return null;
+        } finally {
+//            if (hibernateSession != null)
+//                hibernateSession.close();
+        }
+        return rows;
+    }
+
+    public <T> int updateEntitySqlQuery(String sqlQuery, Class<T> entityClass, Map<String, Object> parameterMap) {
+        Session hibernateSession;
+        try {
+            hibernateSession = getSessionFactory().openSession();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
+        }
+
+        Transaction tx = null;
+
+        int effectedRows = -1;
+
+        try {
+            tx = hibernateSession.beginTransaction();
+            NativeQuery<T> nativeQuery = hibernateSession.createNativeQuery(sqlQuery, entityClass);
+
+            for (Map.Entry<String, Object> entry : parameterMap.entrySet()) {
+                nativeQuery.setParameter(entry.getKey(), entry.getValue());
+            }
+            effectedRows = nativeQuery.executeUpdate();
+
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null)
+                tx.rollback();
+        } finally {
+//            if (hibernateSession != null)
+//                hibernateSession.close();
+        }
+        return effectedRows;
+    }
+
     public <T> Boolean removeEntities(String tableName, String tableIdName, T... entities) {
         Session hibernateSession;
         try {
@@ -237,6 +310,7 @@ public class HibernateFacade {
 //            if (hibernateSession != null)
 //                hibernateSession.close();
         }
+
         return entity;
     }
 

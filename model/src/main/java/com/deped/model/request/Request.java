@@ -4,9 +4,12 @@ package com.deped.model.request;
 import com.deped.model.account.User;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
@@ -25,10 +28,8 @@ import static com.deped.repository.utils.ConstantValues.FETCH_ALL_REQUESTS;
 })
 @Entity
 @Table(name = "request")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "requestId", scope = Request.class)
-public class Request {
+@JsonSerialize
+public class Request implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,13 +43,17 @@ public class Request {
     @Column(name = "request_date")
     private Date requestDate;
 
+    @OneToMany(mappedBy = "request", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference(value = "requestDetailsRequest")
+    private Set<RequestDetails> requestDetails;
+
+    @Column(name = "request_status")
+    @Enumerated(EnumType.STRING)
+    private RequestStatus requestStatus;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "request", cascade=CascadeType.ALL)
-    @JsonBackReference("requestDetails-binding")
-    private Set<RequestDetails> requestDetails;
 
     @Column(name = "admin_notice")
     private String adminNotice;
@@ -100,5 +105,13 @@ public class Request {
 
     public void setAdminNotice(String adminNotice) {
         this.adminNotice = adminNotice;
+    }
+
+    public RequestStatus getRequestStatus() {
+        return requestStatus;
+    }
+
+    public void setRequestStatus(RequestStatus requestStatus) {
+        this.requestStatus = requestStatus;
     }
 }

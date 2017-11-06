@@ -30,16 +30,14 @@
     <c:import url="../../includes/top-nav.jsp"/>
 
     <div class="page-header">
-        <h3>&nbsp;&nbsp;&nbspOrder Request&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
+        <h3>&nbsp;&nbsp;&nbsprequest Request&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
         </h3>
     </div>
 
     <div class="row">
-        <p>Order Number: ${relatedOrder.orderId}</p>
-        <p>Order
-            By: ${relatedOrder.user.firstName}&nbsp;${relatedOrder.user.middleName}&nbsp;${relatedOrder.user.lastName}</p>
-        <p>Schedule For: ${relatedOrder.orderSchedule}</p>
-        <p>Budget: ${relatedOrder.budgetAmount}</p>
+        <p>Request Number: ${relatedRequest.requestId}</p>
+        <p>Requested
+            By: ${relatedRequest.user.firstName}&nbsp;${relatedRequest.user.middleName}&nbsp;${relatedRequest.user.lastName}</p>
     </div>
 
     <hr class="style13">
@@ -52,31 +50,26 @@
             <th>Item Type</th>
             <th>Available Quantity</th>
             <th>Item Picture</th>
-            <th>Packages</th>
-            <th>Package Capacity</th>
-            <th>Quantity Request</th>
-            <th>Category</th>
-            <th>Unit Price</th>
-            <th>Suppliers</th>
+            <th>Request Quantity</th>
             <td>Status</td>
             </thead>
 
-            <c:set var="basketMap" value="${orderDetailsForm.map}" />
+            <c:set var="basketMap" value="${requestDetailsForm.map}"/>
 
-            <form:form commandName="orderDetailsForm" method="post">
+            <form:form commandName="requestDetailsForm" method="post">
 
                 <c:forEach items="${basketMap}" var="entry" varStatus="loop">
                     <c:set var="strKey" value="${entry.key}"/>
-                    <c:set var="orderDet" value="${entry.value}"/>
+                    <c:set var="requestDet" value="${entry.value}"/>
 
                     <tr>
-                        <td>${orderDet.item.name}</td>
-                        <td>${orderDet.item.itemType}</td>
-                        <td>${orderDet.item.quantity}</td>
+                        <td>${requestDet.item.name}</td>
+                        <td>${requestDet.item.itemType}</td>
+                        <td>${requestDet.item.quantity}</td>
 
                         <c:choose>
-                            <c:when test="${not empty orderDet.item.picName}">
-                                <td><img width="64" src="${baseUrl}${orderDet.item.picName}" alt="item image"/></td>
+                            <c:when test="${not empty requestDet.item.picName}">
+                                <td><img width="64" src="${baseUrl}${requestDet.item.picName}" alt="item image"/></td>
                             </c:when>
                             <c:otherwise>
                                 <td><img width="64" src="${resourceURL}/images/shared-images/no-item.png"
@@ -86,42 +79,22 @@
                         </c:choose>
 
                         <td>
-                                ${orderDet.pack}
-                        </td>
-
-                        <td>
-                                ${orderDet.packCapacity}
-                        </td>
-
-                        <td>
-                                ${orderDet.totalQuantityRequestNo}
+                                ${requestDet.requestQuantity}
                         </td>
                         <td>
-                                ${orderDet.category.name}
-                        </td>
-
-                        <td>
-                                ${orderDet.unitPrice}
-                        </td>
-                        <td>
-                                ${orderDet.supplier.name}
-                        </td>
-
-                        <td>
-                            <form:select multiple="single" path="map['${strKey}'].orderDetailsState">
-                                <form:options items="${nextOrderDetailsStates}" />
+                            <form:select multiple="single" path="map['${strKey}'].requestDetailsStatus">
+                                <form:options items="${nextRequestDetailsStatuses}"/>
                             </form:select>
                         </td>
 
-                        <form:hidden path="map['${strKey}'].orderDetailsID.categoryId"
-                                     value="${orderDet.category.categoryId}"/>
-                        <form:hidden path="map['${strKey}'].orderDetailsID.orderId" value="${orderDet.order.orderId}"/>
-                        <form:hidden path="map['${strKey}'].orderDetailsID.itemId" value="${orderDet.item.itemId}"/>
+                        <form:hidden path="map['${strKey}'].requestDetailsID.requestId"
+                                     value="${requestDet.request.requestId}"/>
+                        <form:hidden path="map['${strKey}'].requestDetailsID.itemId" value="${requestDet.item.itemId}"/>
                     </tr>
                 </c:forEach>
                 <tr>
                     <td colspan="3">
-                        <button >Approve</button>
+                        <button>Approve</button>
                     </td>
                 </tr>
             </form:form>
@@ -134,7 +107,7 @@
 </section>
 <section class="content">
     <c:import url="../../includes/footer.jsp"/>
-    <script type="text/javascript" src="${resourceURL}/js/additional/order.js"></script>
+    <script type="text/javascript" src="${resourceURL}/js/additional/request.js"></script>
 </section>
 </body>
 </html>

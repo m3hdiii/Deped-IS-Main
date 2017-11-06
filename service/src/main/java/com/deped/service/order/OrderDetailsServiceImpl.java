@@ -69,4 +69,12 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
     }
+
+    @Override
+    public ResponseEntity<Response> updateOrderStatus(OrderDetails[] entities) {
+        Boolean isUpdated = orderDetailsRepository.updateOrderStatus(entities);
+        Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, OrderDetails.class);
+        ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
+        return responseEntity;
+    }
 }

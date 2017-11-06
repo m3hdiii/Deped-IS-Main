@@ -30,7 +30,20 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public List<Order> fetchAll() {
-        List<Order> items = hibernateFacade.fetchAllEntity(FETCH_ALL_ITEMS, Order.class);
+        StringBuilder sb = new StringBuilder();
+        sb
+                .append("SELECT * FROM order_ ")
+                .append("ORDER BY CASE ")
+                .append("WHEN order_state='ORDERING' THEN 0 ")
+                .append("WHEN order_state='ORDERS_REGISTERED' THEN 1 ")
+                .append("WHEN order_state='ALL_APPROVED' THEN 2 ")
+                .append("WHEN order_state='PARTIALLY_APPROVED' THEN 3 ")
+                .append("WHEN order_state='ORDERED' THEN 4 ")
+                .append("WHEN order_state='ALL_ARRIVED' THEN 5 ")
+                .append("WHEN order_state='PARTIALLY_ARRIVED' THEN 6 ")
+                .append("WHEN order_state='NOT_ARRIVED' THEN 7 ")
+                .append("END ASC");
+        List<Order> items = hibernateFacade.fetchAllEntityBySqlQuery(sb.toString(), Order.class);
         return items;
     }
 
