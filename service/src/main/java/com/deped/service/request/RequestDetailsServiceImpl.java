@@ -87,4 +87,11 @@ public class RequestDetailsServiceImpl implements RequestDetailsService {
         return responseEntity;
 
     }
+
+    @Override
+    public ResponseEntity<List<RequestDetails>> fetchAllById(Long requestId) {
+        List<RequestDetails> brands = requestDetailsRepository.fetchAllById(requestId);
+        ResponseEntity<List<RequestDetails>> responseEntity = new ResponseEntity<>(brands, OK);
+        return responseEntity;
+    }
 }

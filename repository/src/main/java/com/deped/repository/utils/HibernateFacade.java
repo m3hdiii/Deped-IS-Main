@@ -145,6 +145,11 @@ public class HibernateFacade {
 
     @Transactional
     public <T> List<T> fetchAllEntity(String nameQuery, Range range, Class<T> entityClass) {
+        return fetchAllEntity(nameQuery, range, entityClass, null);
+    }
+
+    @Transactional
+    public <T> List<T> fetchAllEntity(String nameQuery, Range range, Class<T> entityClass, Map<String, Object> parameterMap) {
         Session hibernateSession;
         try {
             hibernateSession = getSessionFactory().openSession();
@@ -160,6 +165,12 @@ public class HibernateFacade {
         try {
             tx = hibernateSession.beginTransaction();
             Query<T> namedQuery = hibernateSession.createNamedQuery(nameQuery, entityClass);
+
+            if (parameterMap != null) {
+                for (Map.Entry<String, Object> entry : parameterMap.entrySet()) {
+                    namedQuery.setParameter(entry.getKey(), entry.getValue());
+                }
+            }
 
             setRange(range, namedQuery);
 
@@ -184,6 +195,11 @@ public class HibernateFacade {
 
     @Transactional
     public <T> List<T> fetchAllEntityBySqlQuery(String sqlQuery, Range range, Class<T> entityClass) {
+        return fetchAllEntityBySqlQuery(sqlQuery, range, entityClass, null);
+    }
+
+    @Transactional
+    public <T> List<T> fetchAllEntityBySqlQuery(String sqlQuery, Range range, Class<T> entityClass, Map<String, Object> parameterMap) {
         Session hibernateSession;
         try {
             hibernateSession = getSessionFactory().openSession();
@@ -198,10 +214,17 @@ public class HibernateFacade {
 
         try {
             tx = hibernateSession.beginTransaction();
-            NativeQuery<T> namedQuery = hibernateSession.createNativeQuery(sqlQuery, entityClass).setParameter("", "");
-            setRange(range, namedQuery);
+            NativeQuery<T> nativeQuery = hibernateSession.createNativeQuery(sqlQuery, entityClass);
+            if (range != null)
+                setRange(range, nativeQuery);
 
-            rows = namedQuery.list();
+            if (parameterMap != null) {
+                for (Map.Entry<String, Object> entry : parameterMap.entrySet()) {
+                    nativeQuery.setParameter(entry.getKey(), entry.getValue());
+                }
+            }
+
+            rows = nativeQuery.list();
 
             tx.commit();
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package com.deped.repository.request;
 
+import com.deped.model.request.Request;
 import com.deped.model.request.RequestDetails;
 import com.deped.model.request.RequestDetailsID;
 import com.deped.model.request.RequestDetailsStatus;
@@ -148,6 +149,15 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
 
 
         return false;
+    }
+
+    @Override
+    public List<RequestDetails> fetchAllById(Long requestId) {
+        Map<String, Object> parameterMap = new HashMap<>();
+        parameterMap.put("requestId", requestId);
+        String sqlQuery = "SELECT * FROM request_details WHERE request_request_id = :requestId";
+        List<RequestDetails> list = hibernateFacade.fetchAllEntityBySqlQuery(sqlQuery, null, RequestDetails.class, parameterMap);
+        return list;
     }
 
     private void setMap(Map<String, Object> parameterMap, RequestDetails temp, String requestIdMapKey, String itemIdMapKey) {

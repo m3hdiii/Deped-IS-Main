@@ -130,15 +130,11 @@
                                         </div>
 
                                     </td> -->
-                                    <p>requestItem is : ${requestDet.item.itemId}</p>
                                     <form:hidden path="map['${strKey}'].request"
                                                  value="${relatedRequest.requestId}"/>
-
                                     <form:hidden path="map['${strKey}'].item" value="${requestDet.item.itemId}"/>
-
                                     <form:hidden path="map['${strKey}'].requestDetailsID.itemId"
                                                  value="${requestDet.item.itemId}"/>
-
                                     <form:hidden path="map['${strKey}'].requestDetailsID.requestId"
                                                  value="${relatedRequest.requestId}"/>
 
@@ -177,10 +173,11 @@
                             </table>
                             </div>
                             <div class=" modal-footer ">
-                                <a href="#" name="actionParam" value="UPDATE_ALL" class="pull-left"
-                                   data-toggle="tooltip"
-                                   title="Update the data and Request more"><i class="fa fa-arrow-left"></i> <strong>Request
-                                    more</strong></a>
+                                <button name="actionParam" value="UPDATE_ALL" class="pull-left btn btn-link"
+                                        data-toggle="tooltip" title="Update the data and Request more"><i
+                                        class="fa fa-arrow-left"></i> <strong>Request
+                                    more</strong></button>
+
                                 <button name="actionParam" value="DELETE_ALL" class="btn btn-danger"
                                         data-toggle="tooltip"
                                         title="Delete the list and re-request">Delete All

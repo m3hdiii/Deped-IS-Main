@@ -1,6 +1,7 @@
 package com.deped.repository.request;
 
 import com.deped.model.request.Request;
+import com.deped.model.request.RequestStatus;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +19,11 @@ public class RequestRepositoryImpl implements RequestRepository {
 
     @Override
     public Request create(Request entity) {
-        return hibernateFacade.saveEntity(Request.class, entity);
+        if (entity.getRequestStatus() == null)
+            entity.setRequestStatus(RequestStatus.SAVED);
+
+        Request request = hibernateFacade.saveEntity(Request.class, entity);
+        return request;
     }
 
     @Override

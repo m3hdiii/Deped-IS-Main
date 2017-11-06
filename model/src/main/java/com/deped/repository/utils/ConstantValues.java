@@ -35,6 +35,7 @@ public interface ConstantValues {
     String FETCH_ALL_REQUESTS = "fetchAllRequests";
     String FETCH_ALL_REQUESTS_RANGES = "fetchAllRequestsByRange";
     String FETCH_ALL_REQUESTS_DETAILS = "fetchAllRequestDetails";
+    String FETCH_ALL_REQUESTS_DETAILS_BY_REQUEST_ID = "fetchAllRequestDetailsByRequestID";
     String FETCH_ALL_REQUESTS_DETAILS_RANGES = "fetchAllRequestDetailsByRange";
 
 

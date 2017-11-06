@@ -113,6 +113,9 @@ public class Pack implements Serializable {
 
     @Override
     public int hashCode() {
-        return packId.hashCode();
+        if (packId == null || packId == 0L)
+            return super.hashCode();
+        else
+            return packId.hashCode();
     }
 }

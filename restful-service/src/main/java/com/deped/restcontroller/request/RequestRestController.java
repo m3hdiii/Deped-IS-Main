@@ -71,7 +71,6 @@ public class RequestRestController extends AbstractMainRestController<Request, L
     @Override
     public @RequestMapping(value = CREATE_ALL_PATTERN, method = RequestMethod.POST)
     ResponseEntity<Response> createOrUpdateAll(@RequestBody Request... entities) {
-        ResponseEntity<Response> response = requestService.remove(entities);
-        return response;
+        return null;
     }
 }

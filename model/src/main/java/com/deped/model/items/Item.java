@@ -189,4 +189,22 @@ public class Item implements Serializable {
 //        this.orderItems = orderItems;
 //    }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Item)) return false;
+
+        Item item = (Item) o;
+
+        return itemId != null ? itemId.equals(item.itemId) : item.itemId == null;
+    }
+
+    @Override
+    public int hashCode() {
+        if (itemId == null || itemId == 0L)
+            return super.hashCode();
+        else
+            return itemId.hashCode();
+    }
 }

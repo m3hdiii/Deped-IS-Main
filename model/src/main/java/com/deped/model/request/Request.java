@@ -43,9 +43,9 @@ public class Request implements Serializable {
     @Column(name = "request_date")
     private Date requestDate;
 
-    @OneToMany(mappedBy = "request", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JsonManagedReference(value = "requestDetailsRequest")
-    private Set<RequestDetails> requestDetails;
+//    @OneToMany(mappedBy = "request", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//    @JsonManagedReference(value = "requestDetailsRequest")
+//    private Set<RequestDetails> requestDetails;
 
     @Column(name = "request_status")
     @Enumerated(EnumType.STRING)
@@ -91,13 +91,13 @@ public class Request implements Serializable {
         this.user = user;
     }
 
-    public Set<RequestDetails> getRequestDetails() {
-        return requestDetails;
-    }
-
-    public void setRequestDetails(Set<RequestDetails> requestDetails) {
-        this.requestDetails = requestDetails;
-    }
+//    public Set<RequestDetails> getRequestDetails() {
+//        return requestDetails;
+//    }
+//
+//    public void setRequestDetails(Set<RequestDetails> requestDetails) {
+//        this.requestDetails = requestDetails;
+//    }
 
     public String getAdminNotice() {
         return adminNotice;

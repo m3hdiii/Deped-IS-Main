@@ -20,6 +20,7 @@ public class RequestDetailsRestController extends AbstractMainRestController<Req
     private static final String REQUEST_ALL_MAPPING = BASE_NAME + URL_SEPARATOR + "request-all";
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
     private static final String FETCH_MAPPING = BASE_NAME + FETCH_PATTERN;
+    private static final String FETCH_MAPPING_BY_REQUEST_ID = BASE_NAME + FETCH_PATTERN + FETCH_BY_ID_PATTERN;
     private static final String FETCH_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String FETCH_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
@@ -50,6 +51,14 @@ public class RequestDetailsRestController extends AbstractMainRestController<Req
         ResponseEntity<List<RequestDetails>> response = requestDetailsService.fetchAll();
         return response;
     }
+
+
+    @RequestMapping(value = FETCH_MAPPING_BY_REQUEST_ID, method = RequestMethod.POST)
+    public ResponseEntity<List<RequestDetails>> fetchAllByRequestId(@PathVariable(ID_STRING_LITERAL) Long id) {
+        ResponseEntity<List<RequestDetails>> response = requestDetailsService.fetchAllById(id);
+        return response;
+    }
+
 
     @Override
     @RequestMapping(value = FETCH_BY_RANGE_MAPPING, method = RequestMethod.POST)

@@ -3,14 +3,11 @@ package com.deped.model.request;
 import com.deped.model.account.User;
 import com.deped.model.items.Item;
 import com.deped.model.tracker.RequestTracker;
-import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
-
 
 @Entity
 @Table(name = "request_details")
@@ -19,13 +16,13 @@ public class RequestDetails implements Serializable {
     @EmbeddedId
     private RequestDetailsID requestDetailsID = new RequestDetailsID();
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @MapsId("requestId")
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "request_request_id")
-    @JsonBackReference(value = "requestDetailsRequest")
+    @MapsId("requestId")
     private Request request;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "item_item_id")
     @MapsId("itemId")
     private Item item;
 
