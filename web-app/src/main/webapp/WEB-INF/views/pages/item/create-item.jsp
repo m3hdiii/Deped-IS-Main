@@ -93,21 +93,20 @@
                                         <form:input path="threshold" type="number" class="form-control" id="newItemThresh"/>
                                     </div>
                                     <div class="form-group">
-                                        <label for="newItemType">Type</label>
+                                        <label for="newItemType">Item Type</label>
+
                                         <form:select path="itemType" id="newItemType" class="form-control chosen-select"
                                                      data-placeholder="Select a Type">
-                                            <!-- <option>Select a Category</option> -->
-                                            <form:option value="GOODS">Goods</form:option>
-                                            <form:option value="SEMI_EXPENDABLE">Semi-Expendables</form:option>
-                                            <form:option value="EQUIPMENT">Equipment</form:option>
+                                            <form:option value="-" label="--Please Select"/>
+                                            <form:options items="${itemType}" />
                                         </form:select>
                                     </div>
                                     <div class="form-group">
-                                        <label for="newItemCategory">Type</label>
+                                        <label for="newItemCategory">Function Type</label>
                                         <form:select path="functionType" id="newItemCategory" class="form-control chosen-select"
                                                      data-placeholder="Select a Category">
-                                            <form:option value="ELECTRICAL">Electrical</form:option>
-                                            <form:option value="NON_ELECTRICAL">Non Electrical</form:option>
+                                            <form:option value="-" label="--Please Select"/>
+                                            <form:options items="${functionType}" />
                                         </form:select>
                                     </div>
                                 </div>
