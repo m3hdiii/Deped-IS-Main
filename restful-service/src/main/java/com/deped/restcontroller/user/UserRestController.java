@@ -47,7 +47,7 @@ public class UserRestController extends AbstractMainRestController<User, Long> {
     }
 
     @Override
-    @RequestMapping(value = FETCH_MAPPING)
+    @RequestMapping(value = FETCH_MAPPING, method = RequestMethod.POST)
     public ResponseEntity<List<User>> fetchAll() {
         ResponseEntity<List<User>> response = userService.fetchAll();
         return response;

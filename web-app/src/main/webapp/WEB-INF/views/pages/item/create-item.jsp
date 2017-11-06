@@ -27,141 +27,104 @@
 <section class="content">
     <c:import url="../../includes/top-nav.jsp"/>
 
-    <div class="page-header">
-        <h3>&nbsp;&nbsp;&nbspItem Registration&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
-        </h3>
-    </div>
+    <div class="warper container-fluid">
 
-    <div>
-
-
-        <c:choose>
-            <c:when test="${not empty notCreated}">
-                <p style="color: red;">${notCreated}</p>
-            </c:when>
-
-
-            <c:when test="${not empty successfullyCreated}">
-                <p style="color: green;">${successfullyCreated}</p>
-                &nbsp;&nbsp;<a href="/goods/create">Create New Goods</a>
-            </c:when>
-
-        </c:choose>
-    </div>
-
-    <div class="row">
-
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">Item Information</div>
-                <div class="panel-body">
-                    <form:form commandName="item" method="post" class="form-horizontal" role="form"
-                               enctype="multipart/form-data">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Name</label>
-                            <div class="col-sm-7">
-                                <form:input path="name" class="form-control typeahead" placeholder=""/>
-                            </div>
-                        </div>
-                        <hr class="style13">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Description</label>
-                            <div class="col-lg-7">
-                                <form:textarea path="description" class="col-sm-7 form-control typeahead"
-                                               placeholder="enter description here..." rows="7"></form:textarea>
-                            </div>
-                        </div>
-                        <hr class="style13">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Item Type</label>
-                            <div class="col-sm-7">
-                                <form:select path="itemType" class="form-control chosen-select"
-                                             data-placeholder="Select a Category">
-                                    <!-- <option>Select a Category</option> -->
-                                    <form:option value="GOODS">Goods</form:option>
-                                    <form:option value="SEMI_EXPENDABLE">Semi-Expendables</form:option>
-                                    <form:option value="EQUIPMENT">Equipment</form:option>
-                                </form:select>
-                            </div>
-                        </div>
-                        <hr class="style13">
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Item Type</label>
-                            <div class="col-sm-7">
-                                <form:select path="functionType" class="form-control chosen-select"
-                                             data-placeholder="Select a Category">
-                                    <form:option value="ELECTRICAL">Electrical</form:option>
-                                    <form:option value="NON_ELECTRICAL">Non Electrical</form:option>
-                                </form:select>
-                            </div>
-                        </div>
-                        <%--
-                                                <div class="form-group">
-                                                    <label class="col-sm-2 control-label">Visibility</label>
-                                                </div>
-
-
-                                                                        <div class="form-group">
-                                                                            <label class="col-sm-4 control-label">Supply Officer</label>
-                                                                            <div class="col-sm-1">
-                                                                                <form:checkbox path="visibility" class="form-control"/>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class="form-group">
-                                                                            <label class="col-sm-4 control-label">Chief</label>
-                                                                            <div class="col-sm-1">
-                                                                                <form:checkbox path="visibility" class="form-control"/>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <div class="form-group">
-                                                                            <label class="col-sm-4 control-label">Personnel</label>
-                                                                            <div class="col-sm-1">
-                                                                                <form:checkbox path="visibility"  class="form-control"/>
-                                                                            </div>
-                                                                        </div> --%>
-
-                        <hr class="style13">
-
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Threshold</label>
-                            <div class="col-sm-2">
-                                <form:input path="threshold" type="number" class="form-control"/>
-                            </div>
-                        </div>
-
-                        <input type="file" name="itemPic" id="profilePicture" class="form-control file"/>
-
-                        <%--
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Quantity</label>
-                            <div class="col-sm-2">
-                                <form:input path="quantity" type="number" class="form-control"/>
-                            </div>
-                        </div>
-                        --%>
-
-                        <hr class="style13">
-
-                        <div class="btn-group-sm row">
-                            <div class="col-sm-2">
-                                <button type="submit" class="btn btn-success btn-block">Confirm</button>
-                            </div>
-                            <div class="form-group col-sm-2">
-                                <button type="reset" class="btn btn-primary btn-block">Reset Fields</button>
-                            </div>
-                        </div>
-
-                        <hr class="style13">
-
-                    </form:form>
-                </div>
-            </div>
+        <div class="page-header">
+            <h3>&nbsp;&nbsp;&nbspItem Registration&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
+            </h3>
         </div>
 
-    </div>
+        <div>
+            <c:choose>
+                <c:when test="${not empty notCreated}">
+                    <p style="color: red;">${notCreated}</p>
+                </c:when>
+
+
+                <c:when test="${not empty successfullyCreated}">
+                    <p style="color: green;">${successfullyCreated}</p>
+                    &nbsp;&nbsp;<a href="/goods/create">Create New Goods</a>
+                </c:when>
+
+            </c:choose>
+        </div>
+
+        <div class="row new-item-body">
+
+            <div class="col-md-12">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="panel panel-default">
+                        <form:form commandName="item" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
+                            <h3 class="text-center">Add New Item</h3>
+                            <div class="panel-body">
+                                <div class="col-md-10 col-sm-offset-1">
+                                    <div class="form-group">
+                                        <label for="newItemName">Name</label>
+                                        <form:input path="name" class="form-control typeahead" placeholder="" id="newItemName"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newItemBrand">Brand</label>
+                                        <select id="newItemBrand" class="form-control">
+                                            <option disabled selected>Choose...</option>
+                                            <option>Generic</option>
+                                            <option>Sand Disk</option>
+                                            <option>Bosch</option>
+                                            <option>Standard</option>
+                                            <option>SONY</option>
+                                            <option>SAMSUNG</option>
+                                        </select>
+                                    </div>
+                                    <div class="text-right">
+                                        <button class="btn btn-purple btn-xs" data-toggle="modal" data-target="#new-brand-modal"><i class="fa fa-plus-circle"> Add Brand</i></button>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newItemDesc">Description</label>
+                                        <form:textarea type="text" path="description" class="form-control typeahead"
+                                                   placeholder="enter description here..." cols="3" rows="3" id="newItemDesc" maxlength="100"></form:textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newItemImg">Image</label>
+                                        <input name="itemPic" type="file" class="form-control-file text-danger" id="newItemImg" aria-describedby="fileHelp">
+                                        <small id="fileHelp" class="form-text text-muted"></small>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="newItemThresh">Threshold</label>
+                                        <form:input path="threshold" type="number" class="form-control" id="newItemThresh"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newItemType">Type</label>
+                                        <form:select path="itemType" id="newItemType" class="form-control chosen-select"
+                                                     data-placeholder="Select a Type">
+                                            <!-- <option>Select a Category</option> -->
+                                            <form:option value="GOODS">Goods</form:option>
+                                            <form:option value="SEMI_EXPENDABLE">Semi-Expendables</form:option>
+                                            <form:option value="EQUIPMENT">Equipment</form:option>
+                                        </form:select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newItemCategory">Type</label>
+                                        <form:select path="functionType" id="newItemCategory" class="form-control chosen-select"
+                                                     data-placeholder="Select a Category">
+                                            <form:option value="ELECTRICAL">Electrical</form:option>
+                                            <form:option value="NON_ELECTRICAL">Non Electrical</form:option>
+                                        </form:select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <a href="/item/list" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i> Back</a>
+                                <div class="button-footer pull-right">
+                                    <button type="reset" class="btn btn-default">Clear</button>
+                                    <button type="submit" class="btn btn-primary">Create</button>
+                                </div>
+                            </div>
+                        </form:form>
+                    </div>
+                </div>
+            </div>
+        </div><!-- New Item Body closing -->
+    </div><!-- Warper Ends Here (working area) -->
 
     <c:import url="../../modals/cart.jsp"/>
 </section>

@@ -17,11 +17,13 @@
 %>
 <c:url value="/public" var="resourceURL" scope="request"/>
 <c:url value="/" var="routePath" scope="request"/>
+
+<html>
 <c:import url="../../includes/head.jsp">
     <c:param name="title" value="Item Registration"/>
     <c:param name="description" value="Item Registration Page"/>
 </c:import>
-<html>
+
 <body>
 <c:import url="../../includes/left-nav.jsp"/>
 <section class="content">
@@ -32,9 +34,6 @@
         </h3>
     </div>
 
-    <c:set var="orderName" value="orderSessionNo${orderId}"/>
-    <c:set var="relatedOrder" value="${sessionScope[orderName]}"/>
-
     <div class="row">
         <p>Order Number: ${relatedOrder.orderId}</p>
         <p>Order
@@ -42,18 +41,6 @@
         <p>Schedule For: ${relatedOrder.orderSchedule}</p>
         <p>Budget: ${relatedOrder.budgetAmount}</p>
     </div>
-
-    <c:set var="orderIdValue" value="${relatedOrder.orderId}"/>
-    <c:set var="basketName" value="orderDetailsMap-OrderNo${orderIdValue}"/>
-
-    <div>
-        <c:if test="${not empty sessionScope[basketName]}">
-            <a href="/order-details/basket/${orderIdValue}"><img width="16"
-                                                                 src="${resourceURL}/images/order/add-to-cart.png"
-                                                                 alt="add to cart"/><span>${fn:length(sessionScope[basketName])}</span></a>
-        </c:if>
-    </div>
-
 
     <hr class="style13">
 
@@ -71,18 +58,25 @@
             <th>Category</th>
             <th>Unit Price</th>
             <th>Suppliers</th>
-            <th>Add To Cart</th>
+            <td>Status</td>
             </thead>
-            <c:forEach items="${itemList}" var="item" varStatus="loop">
-                <form:form commandName="orderDetail" method="post">
+
+            <c:set var="basketMap" value="${orderDetailsForm.map}" />
+
+            <form:form commandName="orderDetailsForm" method="post">
+
+                <c:forEach items="${basketMap}" var="entry" varStatus="loop">
+                    <c:set var="strKey" value="${entry.key}"/>
+                    <c:set var="orderDet" value="${entry.value}"/>
+
                     <tr>
-                        <td>${item.name}</td>
-                        <td>${item.itemType}</td>
-                        <td>${item.quantity}</td>
+                        <td>${orderDet.item.name}</td>
+                        <td>${orderDet.item.itemType}</td>
+                        <td>${orderDet.item.quantity}</td>
 
                         <c:choose>
-                            <c:when test="${not empty item.picName}">
-                                <td><img width="64" src="${baseUrl}${item.picName}" alt="item image"/></td>
+                            <c:when test="${not empty orderDet.item.picName}">
+                                <td><img width="64" src="${baseUrl}${orderDet.item.picName}" alt="item image"/></td>
                             </c:when>
                             <c:otherwise>
                                 <td><img width="64" src="${resourceURL}/images/shared-images/no-item.png"
@@ -90,53 +84,57 @@
                                 </td>
                             </c:otherwise>
                         </c:choose>
+
                         <td>
-                            <form:select path="pack">
-                                <form:options items="${packs}" itemLabel="name" itemValue="packId"/>
+                                ${orderDet.pack}
+                        </td>
+
+                        <td>
+                                ${orderDet.packCapacity}
+                        </td>
+
+                        <td>
+                                ${orderDet.totalQuantityRequestNo}
+                        </td>
+                        <td>
+                                ${orderDet.category.name}
+                        </td>
+
+                        <td>
+                                ${orderDet.unitPrice}
+                        </td>
+                        <td>
+                                ${orderDet.supplier.name}
+                        </td>
+
+                        <td>
+                            <form:select multiple="single" path="map['${strKey}'].orderDetailsState">
+                                <form:options items="${nextOrderDetailsStates}" />
                             </form:select>
                         </td>
 
-                        <td>
-                            <form:input path="packCapacity"/>
-                        </td>
-
-                        <td>
-                            <form:input path="totalQuantityRequestNo"/>
-                        </td>
-                        <td>
-                            <form:select path="category">
-                                <form:options items="${categories}"  itemLabel="name" itemValue="categoryId"/>
-                            </form:select>
-                        </td>
-
-                        <td>
-                            <form:input path="unitPrice"/>
-                        </td>
-                        <td>
-                            <form:select path="supplier">
-                                <form:options items="${suppliers}" itemLabel="name" itemValue="supplierId"/>
-                            </form:select>
-
-                        </td>
-
-                        <form:hidden path="order" value="${relatedOrder.orderId}"/>
-                        <form:hidden path="item" value="${item.itemId}"/>
-
-                        <td>
-                            <button class="btn btn-success btn-block">Add To Cart</button>
-                        </td>
+                        <form:hidden path="map['${strKey}'].orderDetailsID.categoryId"
+                                     value="${orderDet.category.categoryId}"/>
+                        <form:hidden path="map['${strKey}'].orderDetailsID.orderId" value="${orderDet.order.orderId}"/>
+                        <form:hidden path="map['${strKey}'].orderDetailsID.itemId" value="${orderDet.item.itemId}"/>
                     </tr>
-                </form:form>
-            </c:forEach>
+                </c:forEach>
+                <tr>
+                    <td colspan="3">
+                        <button >Approve</button>
+                    </td>
+                </tr>
+            </form:form>
 
         </table>
     </div>
+
 
     <c:import url="../../modals/cart.jsp"/>
 </section>
 <section class="content">
     <c:import url="../../includes/footer.jsp"/>
+    <script type="text/javascript" src="${resourceURL}/js/additional/order.js"></script>
 </section>
 </body>
 </html>
-

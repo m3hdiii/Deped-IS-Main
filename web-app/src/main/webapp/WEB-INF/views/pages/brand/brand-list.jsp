@@ -20,50 +20,99 @@
 <c:import url="../../includes/left-nav.jsp"/>
 
 <section class="content">
-
     <c:import url="../../includes/top-nav.jsp"/>
 
-    <div class="page-header">
-        <h3> &nbsp; Brand List </h3>
-    </div>
 
-    <div class="row">
-        <div class="col col-lg-3"/>
-        <div class="col col-lg-9">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th class="col-md-5">Name</th>
-                    <th class="col-md-5">Description</th>
-                    <th class="col-md-5">Contact Number</th>
-                    <th class="col-md-5">Contact Number 2</th>
-                    <th class="col-md-5">Contact Office Address</th>
-                    <th class="col-md-5">Service Center Address</th>
-                    <th class="col-md-5">Creation Date</th>
-                    <th class="col-md-2">Edit</th>
-                    <th class="col-md-2">Delete</th>
 
-                </tr>
-                </thead>
-                <tbody>
-                <c:forEach items="${brands}" var="brand">
-                    <tr>
-                        <td class="col-md-2"><a href="/brand/${brand.brandId}">${brand.name}</a></td>
-                        <td class="col-md-2">${brand.description}</td>
-                        <td class="col-md-2">${brand.contactNumber}</td>
-                        <td class="col-md-2">${brand.contactNumber2}</td>
-                        <td class="col-md-2">${brand.centralOfficeAddress}</td>
-                        <td class="col-md-2">${brand.serviceCenterAddress}</td>
-                        <td class="col-md-2">${brand.creationDate}</td>
-                        <td><a href="/brand/update/${brand.brandId}"><img src="${resourceURL}/images/edit.png"
-                                                                          width="16"/></a></td>
-                        <td><img src="${resourceURL}/images/delete.png" width="16"/></td>
-                    </tr>
-                </c:forEach>
-                </tbody>
-            </table>
+    <div class="warper container-fluid">
+
+        <div class="page-header">
+            <h1>Brand List
+                <small>DepEd-Baguio City Division Office</small>
+            </h1>
         </div>
-    </div>
+
+
+        <div class="row item-body">
+
+            <div role="toolbar" class="btn-toolbar">
+                <div class="pull-left">
+                    <button class="btn btn-purple btn-sm">Select All</button>
+                    <a href="/brand/create" class="btn btn-default btn-sm"><i class="fa fa-plus text-success"></i></a>
+                    <button class="btn btn-default btn-sm"><i class="fa fa-trash text-danger"></i></button>
+                </div>
+            </div>
+
+            <div class="brand-list-body padd-t-lg">
+                <!-- Brand-thumbnail-and-content-of-the-brand-thumbnail -->
+                <c:forEach items="${brands}" var="brand">
+                    <div class='col-xs-4 thumbnail brand-content-thumbnail padd-md'>
+                        <div class="round">
+                            <input class="pull-left" type="checkbox" id="checkbox ${brand.brandId}" />
+                            <label for="checkbox ${brand.brandId}"></label>
+                        </div>
+                        <div class="dropdown pull-right">
+                            <a href="#" data-toggle="dropdown"><i class="fa fa-ellipsis-v text-purple"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="/brand/update/${brand.brandId}"><i class="fa fa-pencil text-primary"></i> Edit</a></li>
+                                <li><a href="#"><i class="fa fa-trash text-danger"></i> Delete</a></li>
+                            </ul>
+                        </div>
+
+                        <div class="item-infomation text-center">
+                            <h3>${brand.name}</h3>
+                            <!-- <small>The .img-thumbnail class creates a thumbnail of the image:</small> -->
+                            <hr size="30">
+                            <div class="address col-xs-6">
+                                <details>
+                                    <summary class="officeAddress">Office Address</summary>
+                                    <small>${brand.centralOfficeAddress}</small>
+                                </details>
+                                <details>
+                                    <summary class="serviceCenter">Service Center Address</summary>
+                                    <small>${brand.serviceCenterAddress}</small>
+                                </details>
+                            </div>
+
+                            <div class="col-xs-6 contacts">
+                                <p><label><i class="fa fa-mobile-phone"></i></label>${brand.contactNumber}</p>
+                                <p><label><i class="fa fa-phone"></i></label>${brand.contactNumber2}</p>
+                            </div>
+
+                        </div>
+                    </div>
+                </c:forEach>
+
+            </div>
+
+
+
+            <!-- PAGINATION FOR THE ITEMS -->
+
+            <div class="items-pagination col-md-12 text-center">
+                <nav aria-label="Pagination-for-items">
+                    <ul class="pagination">
+                        <li class="page-item disabled">
+                            <a class="page-link" href="#" aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                        </li>
+                        <li class="page-item active" ><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item">
+                            <a class="page-link" href="#" aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+
+    </div> <!-- Warper Ends Here (working area) -->
 
     <c:import url="../../modals/cart.jsp"/>
 </section>

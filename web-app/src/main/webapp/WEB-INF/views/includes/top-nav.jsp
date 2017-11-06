@@ -31,12 +31,22 @@
         </ul>
     </nav>
 
+    <c:set var="requestIdValue" value="${relatedRequest.requestId}"/>
+    <c:set var="basketName" value="requestDetailsMap-RequestNo${requestIdValue}"/>
+
     <ul class="nav-toolbar">
-        <li class="sub-toolbar">
-            <div class="cart-menu">
-                <a href="#" data-toggle="modal" data-target="#item-cart-modal"><i class="fa fa-shopping-cart fa-2x" aria-hidden="true"></i>
-                    <span class="badge bg-warning">3</span></a>
-            </div>
+        <li class="cart-menu">
+            <a href="#"><i class="fa fa-shopping-cart"></i>
+                <span class="badge bg-warning">2</span></a>
+            <%-- <c:choose>
+                <c:when test="${not empty sessionScope[basketName]}">
+                    <a href="/request-details/basket/${requestIdValue}"><i class="fa fa-shopping-cart"></i>
+                        <span class="badge bg-warning">${fn:length(sessionScope[basketName])}</span></a>
+                </c:when>
+                <c:otherwise>
+                    <a href="/request-details/basket/${requestIdValue}"><i class="fa fa-shopping-cart"></i></a>
+                </c:otherwise>
+            </c:choose> --%>
         </li>
         <li class="dropdown"><a href="#" data-toggle="dropdown"><i class="fa fa-comments-o"></i> <span
                 class="badge bg-warning">7</span></a>

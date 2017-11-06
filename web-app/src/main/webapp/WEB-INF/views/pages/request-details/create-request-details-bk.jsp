@@ -32,28 +32,34 @@
         </h3>
     </div>
 
-    <c:set var="orderName" value="orderSessionNo${orderId}"/>
-    <c:set var="relatedOrder" value="${sessionScope[orderName]}"/>
+    <c:set var="requestName" value="requestSessionNo${requestId}"/>
+    <c:set var="relatedRequest" value="${sessionScope[requestName]}"/>
 
     <div class="row">
-        <p>Order Number: ${relatedOrder.orderId}</p>
-        <p>Order
-            By: ${relatedOrder.user.firstName}&nbsp;${relatedOrder.user.middleName}&nbsp;${relatedOrder.user.lastName}</p>
-        <p>Schedule For: ${relatedOrder.orderSchedule}</p>
-        <p>Budget: ${relatedOrder.budgetAmount}</p>
+        <p>Request Number: ${relatedRequest.requestId}</p>
+        <p>Request
+            By: ${relatedRequest.user.firstName}&nbsp;${relatedRequest.user.middleName}&nbsp;${relatedOrder.user.lastName}</p>
+        <p>Creation Date: ${relatedRequest.requestDate}</p>
     </div>
 
-    <c:set var="orderIdValue" value="${relatedOrder.orderId}"/>
-    <c:set var="basketName" value="orderDetailsMap-OrderNo${orderIdValue}"/>
+     <c:set var="requestIdValue" value="${relatedRequest.requestId}"/>
+     <c:set var="basketName" value="requestDetailsMap-RequestNo${requestIdValue}"/>
 
     <div>
-        <c:if test="${not empty sessionScope[basketName]}">
-            <a href="/order-details/basket/${orderIdValue}"><img width="16"
-                                                                 src="${resourceURL}/images/order/add-to-cart.png"
-                                                                 alt="add to cart"/><span>${fn:length(sessionScope[basketName])}</span></a>
-        </c:if>
-    </div>
+        <c:choose>
+            <c:when test="${not empty sessionScope[basketName]}">
+                <a href="/request-details/basket/${requestIdValue}"><img width="16"
+                                                                         src="${resourceURL}/images/request/add-to-cart.png"
+                                                                         alt="add to cart"/><span>${fn:length(sessionScope[basketName])}</span></a>
+            </c:when>
+            <c:otherwise>
+                <a href="/request-details/basket/${requestIdValue}"><img width="16"
+                                                                         src="${resourceURL}/images/request/add-to-cart.png"
+                                                                         alt="add to cart"/></a>
+            </c:otherwise>
+        </c:choose>
 
+    </div>
 
     <hr class="style13">
 
@@ -65,16 +71,11 @@
             <th>Item Type</th>
             <th>Available Quantity</th>
             <th>Item Picture</th>
-            <th>Packages</th>
-            <th>Package Capacity</th>
             <th>Quantity Request</th>
-            <th>Category</th>
-            <th>Unit Price</th>
-            <th>Suppliers</th>
             <th>Add To Cart</th>
             </thead>
             <c:forEach items="${itemList}" var="item" varStatus="loop">
-                <form:form commandName="orderDetail" method="post">
+                <form:form commandName="requestDetails" method="post">
                     <tr>
                         <td>${item.name}</td>
                         <td>${item.itemType}</td>
@@ -91,36 +92,13 @@
                             </c:otherwise>
                         </c:choose>
                         <td>
-                            <form:select path="pack">
-                                <form:options items="${packs}" itemLabel="name" itemValue="packId"/>
-                            </form:select>
+                            <form:input path="requestQuantity"/>
                         </td>
 
-                        <td>
-                            <form:input path="packCapacity"/>
-                        </td>
-
-                        <td>
-                            <form:input path="totalQuantityRequestNo"/>
-                        </td>
-                        <td>
-                            <form:select path="category">
-                                <form:options items="${categories}"  itemLabel="name" itemValue="categoryId"/>
-                            </form:select>
-                        </td>
-
-                        <td>
-                            <form:input path="unitPrice"/>
-                        </td>
-                        <td>
-                            <form:select path="supplier">
-                                <form:options items="${suppliers}" itemLabel="name" itemValue="supplierId"/>
-                            </form:select>
-
-                        </td>
-
-                        <form:hidden path="order" value="${relatedOrder.orderId}"/>
                         <form:hidden path="item" value="${item.itemId}"/>
+                        <form:hidden path="request" value="${requestIdValue}"/>
+                        <form:hidden path="requestDetailsID.itemId" value="${item.itemId}"/>
+                        <form:hidden path="requestDetailsID.requestId" value="${requestIdValue}"/>
 
                         <td>
                             <button class="btn btn-success btn-block">Add To Cart</button>

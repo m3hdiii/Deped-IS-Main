@@ -5,9 +5,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Priority;
 import org.apache.log4j.spi.LoggingEvent;
 
-/**
- * Colour-coded console appender for Log4J.
- */
+
 public class ANSIConsoleAppender extends ConsoleAppender {
 
     private static final int NORMAL = 0;
