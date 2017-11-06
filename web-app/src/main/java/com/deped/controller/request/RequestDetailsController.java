@@ -114,11 +114,10 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         }
 
 
-        Map<String, Object> modelMap = new HashMap<>();
+        Map<String, Object> modelMap = new HashMap<>(getConfigMap());
         modelMap.put("requestId", requestId);
         modelMap.put("itemList", SharedData.getItems(false));
         modelMap.put("requestDetails", new RequestDetails());
-
         ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
         return mv;
 

@@ -56,9 +56,9 @@
                                                                             alt="item image"/></p>
                                             </div>
                                         </c:if>
-
-                                        <button class="btn btn-purple btn-sm" type="file"><i class="fa fa-pencil"></i>
-                                        </button>
+                                        <input class="btn btn-purple btn-sm" type="file"/>
+                                        <%--<button class="btn btn-purple btn-sm" type="file"><i class="fa fa-pencil"></i>--%>
+                                        </input>
 
                                     </div>
 
