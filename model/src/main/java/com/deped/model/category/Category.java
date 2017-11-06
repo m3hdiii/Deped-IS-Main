@@ -1,8 +1,12 @@
 package com.deped.model.category;
 
+import com.deped.model.order.OrderDetails;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Set;
 
 import static com.deped.repository.utils.ConstantValues.FETCH_ALL_CATEGORY;
 
@@ -18,9 +22,6 @@ import static com.deped.repository.utils.ConstantValues.FETCH_ALL_CATEGORY;
 })
 @Entity
 @Table(name = "category")
-//@JsonIdentityInfo(
-//        generator = ObjectIdGenerators.PropertyGenerator.class,
-//        property = "categoryId", scope = Serializable.class)
 public class Category implements Serializable {
 
     @Id
@@ -37,8 +38,9 @@ public class Category implements Serializable {
     @Column(name = "creation_date")
     private Date creationDate;
 
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "category")
-//    private Set<OrderDetails> orderDetailsSet;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "category")
+    @JsonManagedReference
+    private Set<OrderDetails> orderDetailsSet;
 
 
     public Long getCategoryId() {
@@ -73,13 +75,13 @@ public class Category implements Serializable {
         this.creationDate = creationDate;
     }
 
-//    public Set<OrderDetails> getOrderDetailsSet() {
-//        return orderDetailsSet;
-//    }
-//
-//    public void setOrderDetailsSet(Set<OrderDetails> orderDetailsSet) {
-//        this.orderDetailsSet = orderDetailsSet;
-//    }
+    public Set<OrderDetails> getOrderDetailsSet() {
+        return orderDetailsSet;
+    }
+
+    public void setOrderDetailsSet(Set<OrderDetails> orderDetailsSet) {
+        this.orderDetailsSet = orderDetailsSet;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -93,6 +95,9 @@ public class Category implements Serializable {
 
     @Override
     public int hashCode() {
-        return categoryId.hashCode();
+        if (categoryId != null)
+            return categoryId.hashCode();
+        else
+            return super.hashCode();
     }
 }

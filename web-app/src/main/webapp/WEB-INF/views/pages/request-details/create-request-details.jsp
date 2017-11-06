@@ -42,8 +42,8 @@
         <p>Creation Date: ${relatedRequest.requestDate}</p>
     </div>
 
-    <c:set var="requestIdValue" value="${relatedRequest.requestId}"/>
-    <c:set var="basketName" value="requestDetailsMap-RequestNo${requestIdValue}"/>
+     <c:set var="requestIdValue" value="${relatedRequest.requestId}"/>
+     <c:set var="basketName" value="requestDetailsMap-RequestNo${requestIdValue}"/>
 
     <div>
         <c:choose>
@@ -111,6 +111,7 @@
                 </li>
 
 
+
             </ul>
         </nav>
 
@@ -121,7 +122,7 @@
                 <form:form class='col-xs-3 thumbnail item-content-thumbnail' commandName="requestDetails" method="post">
                     <c:choose>
                         <c:when test="${not empty item.picName}">
-                            <img src="${baseUrl}${item.picName}" alt="item image" width="304px""/>
+                            <img  src="${baseUrl}${item.picName}" alt="item image" width="304px"/>
                         </c:when>
                         <c:otherwise>
                             <img src="${resourceURL}/images/shared-images/no-item.png" alt="item image" width="304px"/>
@@ -131,14 +132,12 @@
                     <div class="item-infomation text-center">
                         <h4>${item.name}</h4>
                         <div class="form-group">
-                            <label>Available QTY:</label>
-                            <p>${item.quantity} 123</p>
+                            <label>Available QTY:</label><p>${item.quantity} 123</p>
                         </div>
                         <div class="form-group clearfix">
                             <label for="itemReqQty${item.itemId}" class="col-md-12">Request QTY:</label>
                             <div class="col-md-6 col-md-push-3">
-                                <form:input path="requestQuantity" class="form-control input-sm text-center no-padd"
-                                            type="number" id="itemReqQty${item.itemId}" min="0" value="0"/>
+                                <form:input path="requestQuantity" class="form-control input-sm text-center no-padd" type="number" id="itemReqQty${item.itemId}" min="0" value="0"/>
                             </div>
                         </div>
                         <div class="form-group">
@@ -169,7 +168,7 @@
                                 <span class="sr-only">Previous</span>
                             </a>
                         </li>
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item active" ><a class="page-link" href="#">1</a></li>
                         <li class="page-item"><a class="page-link" href="#">2</a></li>
                         <li class="page-item"><a class="page-link" href="#">3</a></li>
                         <li class="page-item">
