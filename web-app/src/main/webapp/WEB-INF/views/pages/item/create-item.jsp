@@ -33,31 +33,32 @@
             <h3>&nbsp;&nbsp;&nbspItem Registration&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
             </h3>
         </div>
-
-        <div>
-            <c:choose>
-                <c:when test="${not empty notCreated}">
-                    <p style="color: red;">${notCreated}</p>
-                </c:when>
-
-
-                <c:when test="${not empty successfullyCreated}">
-                    <p style="color: green;">${successfullyCreated}</p>
-                    &nbsp;&nbsp;<a href="/goods/create">Create New Goods</a>
-                </c:when>
-
-            </c:choose>
-        </div>
-
         <div class="row new-item-body">
 
             <div class="col-md-12">
                 <div class="col-md-8 col-md-offset-2">
                     <div class="panel panel-default">
+
                         <form:form commandName="item" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
                             <h3 class="text-center">Add New Item</h3>
                             <div class="panel-body">
                                 <div class="col-md-10 col-sm-offset-1">
+                                    <c:choose>
+                                        <c:when test="${not empty notCreated}">
+                                            <div class="alert alert-danger alert-dismissable fade in">
+                                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                <strong>Failed!</strong> ${notCreated}.
+                                            </div>
+                                        </c:when>
+                                        <c:when test="${not empty successfullyCreated}">
+                                            <div class="alert alert-success alert-dismissable fade in">
+                                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                <strong>Success!</strong> ${successfullyCreated}.
+                                            </div>
+                                            &nbsp;&nbsp;<a href="/goods/create">Create New Items</a>
+                                        </c:when>
+                                    </c:choose>
+
                                     <div class="form-group">
                                         <label for="newItemName">Name</label>
                                         <form:input path="name" class="form-control typeahead" placeholder="" id="newItemName"/>

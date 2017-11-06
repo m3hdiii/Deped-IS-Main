@@ -39,7 +39,6 @@
                     <form:form commandName="brand" method="post" class="form-horizontal"
                                enctype="multipart/form-data">
                         <div class="panel panel-default">
-
                             <h3 class="text-center">Add New Brand</h3>
                             <div class="panel-body">
                                 <div class="col-md-10 col-sm-offset-1">

@@ -87,7 +87,7 @@
 
                         <div class="button-group col-md-12 text-center">
                             <button class="btn btn-primary btn-md btn-purple" data-toggle="modal" data-target="#change-pass-modal" type="button">Change Password</button>
-                            <a class="btn btn-primary btn-md btn-purple" href="/user/update/${userId}">Update Information</a>
+                            <a class="btn btn-primary btn-md btn-purple" href="/userInfo/update/${userInfo.userId}">Update Information</a>
                         </div>
 
                     </div>

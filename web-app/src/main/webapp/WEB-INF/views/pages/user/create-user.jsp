@@ -64,7 +64,7 @@
 
     <form:select path="position">
         <form:option value="-" label="--Please Select"/>
-        <form:options items="${positions}"/>
+        <form:options items="${positions}" />
     </form:select>
 
     <select onchange="getCities(this)">
