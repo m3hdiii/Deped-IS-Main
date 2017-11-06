@@ -47,7 +47,7 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, L
     public ModelAndView createAction(@Valid ItemDetails entity) {
         entity.setCreationDate(new Date());
         ResponseEntity<ItemDetails> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, ItemDetails.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE);
+        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "", entity, new ItemDetails());
         return mv;
     }
 

@@ -13,6 +13,7 @@ import org.hibernate.annotations.Formula;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -75,7 +76,7 @@ public class User implements Serializable {
     private Long userId;
 
     //    @NotNull(message = "There should be at least one username for a personnel")
-//    @Length(min = 3, max = 254, message = "Your username can not be more than 254 character")
+//    @Length(min = 3, max = 254, message = "Your username can not be less than three ot more than 254 character")
     @Column(name = "username")
     private String username;
 

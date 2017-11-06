@@ -56,7 +56,7 @@ public class BrandController extends AbstractMainController<Brand, Long> {
         return null;
     }
 
-    @RequestMapping(value = {CREATE_MAPPING}, method = POST)
+    @RequestMapping(value = CREATE_MAPPING, method = POST)
     public ModelAndView createActionWithPic(@RequestParam MultipartFile brandPic, @Valid @ModelAttribute("brand") Brand entity) {
         entity.setCreationDate(new Date());
         String base64Encoded = null;
@@ -70,7 +70,8 @@ public class BrandController extends AbstractMainController<Brand, Long> {
         entity.setLogoPic(base64Encoded);
 //        Base64.getDecoder().decode(str)
         ResponseEntity<Brand> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Brand.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE);
+        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "brand", entity, new Brand());
+
         return mv;
     }
 

@@ -47,7 +47,7 @@ public class SupplyController extends AbstractMainController<Supply, Long> {
     public ModelAndView createAction(@Valid Supply entity) {
         entity.setCreationDate(new Date());
         ResponseEntity<Supply> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Supply.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE);
+        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "entity", entity, new Supply());
         return mv;
     }
 

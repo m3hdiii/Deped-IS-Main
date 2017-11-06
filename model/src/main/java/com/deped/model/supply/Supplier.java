@@ -159,6 +159,8 @@ Supplier {
 
     @Override
     public int hashCode() {
-        return supplierId.hashCode();
+        if (supplierId != null)
+            return supplierId.hashCode();
+        else return super.hashCode();
     }
 }

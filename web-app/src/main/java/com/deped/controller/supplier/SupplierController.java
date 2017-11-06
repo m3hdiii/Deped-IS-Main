@@ -61,7 +61,7 @@ public class SupplierController extends AbstractMainController<Supplier, Long> {
         String base64Encoded = getBase64String(supplyPic);
         entity.setPictureBase64(base64Encoded);
         ResponseEntity<Supplier> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Supplier.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE);
+        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Supplier());
         return mv;
     }
 

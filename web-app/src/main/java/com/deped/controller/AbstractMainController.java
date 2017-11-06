@@ -125,14 +125,16 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         return new ModelAndView(jspLocation, map);
     }
 
-    public ModelAndView createProcessing(ResponseEntity response, String createViewPage) {
-        Map<String, String> responseMap = new HashMap<>();
+    public ModelAndView createProcessing(ResponseEntity response, String createViewPage, String modelName, T oldObject, T freshObject) {
+        Map<String, Object> responseMap = new HashMap<>();
         ModelAndView mv = new ModelAndView();
 
-        if (response == null || response.getBody() == null) {
+        if (response != null || response.getBody() != null) {
             responseMap.put(NOT_CREATED_KEY, FAILURE_MESSAGE);
+            responseMap.put(modelName, oldObject);
         } else {
             responseMap.put(SUCCESSFULLY_CREATED_KEY, SUCCESS_MESSAGE);
+            responseMap.put(modelName, freshObject);
         }
 
         mv.addAllObjects(responseMap);

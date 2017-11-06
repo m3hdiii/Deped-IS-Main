@@ -59,7 +59,7 @@ public class SectionController extends AbstractMainController<Section, Long> {
     public ModelAndView createAction(@Valid @ModelAttribute(BASE_NAME) Section entity) {
         entity.setCreationDate(new Date());
         ResponseEntity<Section> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Section.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE);
+        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Section());
         return mv;
     }
 

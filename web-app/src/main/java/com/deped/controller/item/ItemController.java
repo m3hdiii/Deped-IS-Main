@@ -75,7 +75,7 @@ public class ItemController extends AbstractMainController<Item, Long> {
         }
 
         ResponseEntity<Item> response = makeCreateRestRequest(entity, BASE_ENTITY_URL_NAME, HttpMethod.POST, Item.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE);
+        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "item", entity, new Item());
         return mv;
     }
 

@@ -51,7 +51,7 @@ public class CategoryController extends AbstractMainController<Category, Long> {
     public ModelAndView createAction(@Valid @ModelAttribute(BASE_NAME) Category entity) {
         entity.setCreationDate(new Date());
         ResponseEntity<Category> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Category.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE);
+        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Category());
         return mv;
     }
 

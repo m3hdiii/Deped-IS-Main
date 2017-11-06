@@ -47,7 +47,7 @@ public class BorrowRequestController extends AbstractMainController<Request, Lon
     public ModelAndView createAction(@Valid Request entity) {
         entity.setRequestDate(new Date());
         ResponseEntity<Request> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Request.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE);
+        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "", entity, new Request());
         return mv;
     }
 

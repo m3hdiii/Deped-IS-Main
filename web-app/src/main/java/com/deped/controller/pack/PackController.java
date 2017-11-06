@@ -61,7 +61,7 @@ public class PackController extends AbstractMainController<Pack, Long> {
     public ModelAndView createAction(@Valid @ModelAttribute("pack") Pack entity) {
         entity.setCreationDate(new Date());
         ResponseEntity<Pack> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Pack.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE);
+        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "pack", entity, new Pack());
         return mv;
     }
 
