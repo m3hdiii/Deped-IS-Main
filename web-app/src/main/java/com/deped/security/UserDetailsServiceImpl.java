@@ -1,5 +1,6 @@
 package com.deped.security;
 
+import com.deped.controller.ConstantController;
 import com.deped.model.account.User;
 import com.deped.model.security.Privilege;
 import com.deped.model.security.Role;
@@ -74,7 +75,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public ResponseEntity<User> makeFetchByUsernameRequest(String baseName, String username, Class<User> entityClass) {
         RestTemplate restTemplate = new RestTemplate();
-        String restUrl = String.format("http://localhost:8074/rest/%s/fetch/%s", baseName, username);
+        String restUrl = String.format(ConstantController.BASE_URL + "%s/fetch/%s", baseName, username);
         ResponseEntity<User> response = restTemplate.getForEntity(restUrl, entityClass);
         return response;
     }
