@@ -4,14 +4,18 @@ import com.deped.controller.AbstractMainController;
 import com.deped.controller.SharedData;
 import com.deped.form.RequestDetailsForm;
 import com.deped.model.Response;
+import com.deped.model.account.User;
 import com.deped.model.items.Item;
 import com.deped.model.request.Request;
 import com.deped.model.request.RequestDetails;
 import com.deped.model.request.RequestDetailsStatus;
 import com.deped.model.request.RequestStatus;
+import com.deped.security.UserDetailsServiceImpl;
 import com.deped.utils.SystemUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -59,7 +63,8 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     private static final String APPROVAL_PAGE = BASE_NAME + URL_SEPARATOR + "approval" + URL_SEPARATOR + ID_PATTERN;
     private static final String RELEASED_PAGE = BASE_NAME + URL_SEPARATOR + "issue" + URL_SEPARATOR + ID_PATTERN;
 
-    private static final String UPDATE_STATUS_REST = BASE_NAME + URL_SEPARATOR + "update-status";
+    private static final String UPDATE_STATUS_REST = BASE_NAME + URL_SEPARATOR + "update-status/user/%d/status/%d";
+
 
     @RequestMapping(value = CREATE_MAPPING, method = GET)
     public ModelAndView renderCreatePage(@ModelAttribute("request") Request request, @PathVariable(ID_STRING_LITERAL) Long requestId, final RedirectAttributes redirectAttributes, HttpSession httpSession) {
@@ -281,7 +286,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
 
     @RequestMapping(value = APPROVAL_PAGE, method = POST)
     public ModelAndView approvalActionSubmit(@ModelAttribute("requestDetailsForm") RequestDetailsForm orderDetailsForm) {
-        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm);
+        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, RequestDetailsStatus.APPROVED);
         ModelAndView mav = new ModelAndView();
         return null;
     }
@@ -313,7 +318,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
 
     @RequestMapping(value = RELEASED_PAGE, method = POST)
     public ModelAndView arrivalActionSubmit(@ModelAttribute("requestDetailsForm") RequestDetailsForm orderDetailsForm) {
-        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm);
+        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, RequestDetailsStatus.RELEASED);
         return null;
     }
 
@@ -381,7 +386,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     }
 
 
-    private ResponseEntity<Response> updateStatusAction(RequestDetailsForm requestDetailsForm) {
+    private ResponseEntity<Response> updateStatusAction(RequestDetailsForm requestDetailsForm, RequestDetailsStatus status) {
         Map<String, RequestDetails> map = requestDetailsForm.getMap();
         Collection<RequestDetails> requestDetailsCollection = map.values();
         RequestDetails[] requestDetailsArray = requestDetailsCollection.toArray(new RequestDetails[requestDetailsCollection.size()]);
@@ -390,7 +395,11 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<RequestDetails[]> httpEntity = new HttpEntity<>(requestDetailsArray, headers);
-        String restUrl = BASE_URL + UPDATE_STATUS_REST;
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = ((UserDetailsServiceImpl.CustomSpringSecurityUser) authentication.getPrincipal()).getUser();
+        Long userId = user.getUserId();
+        String restUrl = String.format((BASE_URL + UPDATE_STATUS_REST), userId, status.ordinal());
 
         ResponseEntity<Response> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, Response.class);
         return response;

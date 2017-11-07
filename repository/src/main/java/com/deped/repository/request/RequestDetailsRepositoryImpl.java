@@ -116,7 +116,7 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
 
 
     @Override
-    public boolean updateRequestStatus(RequestDetails[] entities) {
+    public boolean updateRequestStatus(Long userId, RequestDetailsStatus requestDetailsStatus, RequestDetails[] entities) {
         List<StatusUpdateBean> statusUpdateBeanList = makeStatusUpdateBeanList(entities);
         Session hibernateSession;
         try {
@@ -131,7 +131,7 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
         try {
             tx = hibernateSession.beginTransaction();
 
-            RequestDetailsStatus requestDetailsStatus = entities[0].getRequestDetailsStatus();
+
             RequestStatus nextRequestStatus = null;
             switch (requestDetailsStatus) {
                 case APPROVED:
@@ -164,6 +164,22 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
                 }
             }
 
+
+            String cancellationReasonQuery = "UPDATE request_details SET cancellation_reason = :reason WHERE request_request_id = :requestId AND item_item_id = :itemId";
+            String disapprovalReasonQuery = "UPDATE request_details SET disapproval_message = :reason WHERE request_request_id = :requestId AND item_item_id = :itemId";
+            for (RequestDetails rd : entities) {
+                String cancellationReason = rd.getCancellationReason();
+                String disapprovalMessage = rd.getDisapprovalMessage();
+                if (cancellationReason != null && !cancellationReason.isEmpty()) {
+                    cancellationOrDisapprovalProcessor(rd, cancellationReason, hibernateSession, cancellationReasonQuery);
+                }
+
+                if (disapprovalMessage != null && !disapprovalMessage.isEmpty()) {
+                    cancellationOrDisapprovalProcessor(rd, disapprovalMessage, hibernateSession, disapprovalReasonQuery);
+                }
+            }
+
+
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -175,6 +191,14 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
         }
 
         return false;
+    }
+
+    private void cancellationOrDisapprovalProcessor(RequestDetails rd, String reason, Session hibernateSession, String query) {
+        NativeQuery<RequestDetails> updateCancellationReason = hibernateSession.createNativeQuery(query, RequestDetails.class);
+        updateCancellationReason.setParameter("requestId", rd.getRequestDetailsID().getRequestId());
+        updateCancellationReason.setParameter("itemId", rd.getRequestDetailsID().getItemId());
+        updateCancellationReason.setParameter("reason", reason);
+        updateCancellationReason.executeUpdate();
     }
 
     @Override
@@ -209,7 +233,7 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
             }
         }
 
-        new RequestDetailsRepositoryImpl().updateRequestStatus(requestDetailsList);
+        new RequestDetailsRepositoryImpl().updateRequestStatus(0L, null, requestDetailsList);
     }
 
     private List<StatusUpdateBean> makeStatusUpdateBeanList(RequestDetails[] entities) {

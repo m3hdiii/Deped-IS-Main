@@ -1,14 +1,12 @@
 function processReason(requestDetailsStatusId, key) {
 
-    var selectElement = document.getElementById(requestDetailsStatusId);
-    var selectValue = selectElement.options[selectElement.selectedIndex].value;
-    alert(selectValue);
+    let selectElement = document.getElementById(requestDetailsStatusId);
+    let selectValue = selectElement.options[selectElement.selectedIndex].value;
 
-
-    var textAreaElement = document.getElementById(key);
-    var disApprovalField = ".disapprovalMessage";
-    var cancellationField = ".cancellationReason";
-    var textAreaName = "map['" + key + "']";
+    let textAreaElement = document.getElementById(key);
+    let disApprovalField = ".disapprovalMessage";
+    let cancellationField = ".cancellationReason";
+    let textAreaName = "map['" + key + "']";
     if (selectValue == "DISAPPROVED") {
         textAreaName += disApprovalField;
         textAreaElement.name = textAreaName;

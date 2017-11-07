@@ -3,6 +3,7 @@ package com.deped.restcontroller.request;
 import com.deped.model.Response;
 import com.deped.model.request.RequestDetails;
 import com.deped.model.request.RequestDetailsID;
+import com.deped.model.request.RequestDetailsStatus;
 import com.deped.repository.utils.Range;
 import com.deped.restcontroller.AbstractMainRestController;
 import com.deped.service.request.RequestDetailsService;
@@ -25,7 +26,7 @@ public class RequestDetailsRestController extends AbstractMainRestController<Req
     private static final String FETCH_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
 
-    private static final String UPDATE_STATUS_MAPPING = BASE_NAME + URL_SEPARATOR + "update-status";
+    private static final String UPDATE_STATUS_MAPPING = BASE_NAME + "/update-status/user" + FETCH_BY_ID_PATTERN + "/status/{state}";
 
 
     @Autowired
@@ -100,8 +101,9 @@ public class RequestDetailsRestController extends AbstractMainRestController<Req
     }
 
     @RequestMapping(value = UPDATE_STATUS_MAPPING, method = RequestMethod.POST)
-    public ResponseEntity<Response> updateOrderStatus(@RequestBody RequestDetails... entities) {
-        ResponseEntity<Response> response = requestDetailsService.updateRequestStatus(entities);
+    public ResponseEntity<Response> updateOrderStatus(@PathVariable(ID_STRING_LITERAL) Long userId, @PathVariable("state") Integer orderDetailsState, @RequestBody RequestDetails... entities) {
+        RequestDetailsStatus status = RequestDetailsStatus.values()[orderDetailsState];
+        ResponseEntity<Response> response = requestDetailsService.updateRequestStatus(userId, status, entities);
         return response;
     }
 }

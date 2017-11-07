@@ -3,6 +3,7 @@ package com.deped.service.request;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.request.RequestDetails;
+import com.deped.model.request.RequestDetailsStatus;
 import com.deped.repository.request.RequestDetailsRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
@@ -80,8 +81,8 @@ public class RequestDetailsServiceImpl implements RequestDetailsService {
     }
 
     @Override
-    public ResponseEntity<Response> updateRequestStatus(RequestDetails[] entities) {
-        Boolean isUpdated = requestDetailsRepository.updateRequestStatus(entities);
+    public ResponseEntity<Response> updateRequestStatus(Long userId, RequestDetailsStatus requestDetailsStatus, RequestDetails[] entities) {
+        Boolean isUpdated = requestDetailsRepository.updateRequestStatus(userId, requestDetailsStatus, entities);
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, RequestDetails.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
