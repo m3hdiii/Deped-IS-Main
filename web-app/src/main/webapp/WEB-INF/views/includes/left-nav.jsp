@@ -30,103 +30,61 @@
     </div>
 
 
-    <li class="has-submenu"><a href="#"><i class="fa fa-file-text-o"></i> <span
-            class="nav-label leftNavHeader">Brand</span></a>
-        <ul class="list-unstyled">
-            <li><a href="/brand/create">Create Brand</a></li>
-            <li><a href="/brand/list">All Brands</a></li>
-        </ul>
-    </li>
-
-    <li class="has-submenu"><a href="#"><i class="fa fa-file-text-o"></i> <span
-            class="nav-label leftNavHeader">Category</span></a>
-        <ul class="list-unstyled">
-            <li><a href="/category/create">Create Category</a></li>
-            <li><a href="/category/list">Category List</a></li>
-        </ul>
-    </li>
-
-    <li class="has-submenu"><a href="#"><i class="fa fa-file-text-o"></i> <span
-            class="nav-label leftNavHeader">Pack</span></a>
-        <ul class="list-unstyled">
-            <li><a href="/pack/create">Create Pack</a></li>
-            <li><a href="/pack/list">Pack List</a></li>
-        </ul>
-    </li>
-
     <nav class="navigation">
         <ul class="list-unstyled">
-            <li class="active"><a href="/dashboard"><span
-                    class="nav-label leftNavHeader">Dashboard</span></a>
-            </li>
-            <li class="has-submenu"><a href="#"><span class="nav-label leftNavHeader">Profile</span></a>
-                <ul class="list-unstyled">
-                    <li><a href="/user/${currentUser.userId}">User Profile</a></li>
-                    <li><a href="/user/update/${currentUser.userId}">Update User Profile</a></li>
-                    <li><a href="/user/list">Search a User</a></li>
-                </ul>
-            </li>
-
-            <li class="has-submenu"><a href="#"><i class="fa fa-file-text-o"></i> <span
-                    class="nav-label leftNavHeader">Items</span></a>
-                <ul class="list-unstyled">
-                    <li><a href="/item/create">Create Item</a></li>
-                    <li><a href="/item/list">All Items</a></li>
-                </ul>
-            </li>
-
-            <li class="has-submenu"><a href="#"><i class="fa fa-file-text-o"></i> <span
-                    class="nav-label leftNavHeader">Order Items</span></a>
-                <ul class="list-unstyled">
-                    <li><a href="/order/create">Create Orders</a></li>
-                    <li><a href="/order/add-items">Add Items</a></li>
-                    <li><a href="/order/list">All Orders</a></li>
-                    <li><a href="/order/manage">Manage Orders</a></li>
-                </ul>
-            </li>
-
-
-            <li class="has-submenu"><a href="#"><i class="fa fa-file-text-o"></i> <span
-                    class="nav-label leftNavHeader">Request Items</span></a>
-                <ul class="list-unstyled">
-                    <li><a href="/request/create">Create Request</a></li>
-                    <li><a href="/request/add-items">Add Items</a></li>
-                    <li><a href="/request/list">All Requests</a></li>
-                    <li><a href="/request/manage">Manage Requests</a></li>
-                </ul>
-            </li>
-
-            <li class="has-submenu"><a href="#"><span
-                    class="nav-label leftNavHeader">User Management</span></a>
-                <ul class="list-unstyled">
-                    <li><a href="/user/create">Create User</a></li>
-                    <li><a href="/user/list">List of Users</a></li>
-                </ul>
-            </li>
-            <li class="has-submenu"><a href="#"><span class="nav-label leftNavHeader">Departments</span></a>
-                <ul class="list-unstyled">
-                    <li><a href="/department/create">Create Department</a></li>
-                    <li><a href="/department/list">All Departments</a></li>
-                </ul>
+            <li class="active">
+                <a href="/dashboard"><i class="fa fa-dashboard"></i><span class="nav-label leftNavHeader">Dashboard</span></a>
             </li>
 
             <li class="has-submenu">
-                <a href="#"><span class="nav-label leftNavHeader">Sections</span></a>
+                <a href="#"><i class="fa fa-archive"></i><span class="nav-label leftNavHeader">Manage Items</span></a>
                 <ul class="list-unstyled">
-                    <li><a href="/section/create">Create Section</a></li>
-                    <li><a href="/section/list">All Sections</a></li>
+                    <li><a href="/item/list"></i><span>List of Item</span></a></li>
+                    <li><a href="/item/create"></i><span>Create Item</span></a></li>
+                    <div class="brand-list-pages">
+                        <li><a href="/brand/list"><span>Brand List</span></a></li>
+                        <li><a href="/brand/create"><span>Create Brand</span></a></li>
+                        <li><a href="/category/list"><span>Category List</span></a></li>
+                        <li><a href="/category/create"><span>Create Category</span></a></li>
+                    </div>
                 </ul>
             </li>
 
 
-            <li class="has-submenu"><a href="#"> <span class="nav-label leftNavHeader">Request Management</span></a>
+            <li class="has-submenu"><a href="#"><i class="fa fa-truck"></i> <span
+                    class="nav-label leftNavHeader">Manage Orders</span></a>
                 <ul class="list-unstyled">
-                    <li><a href="/borrow-request/create">Request for an Equipment</a></li>
-                    <li><a href="/request-item/create">Request for Goods</a></li>
-                    <li><a href="/request-item/create">Request for Semi-Expendables</a></li>
-                    <li><a href="/request-item/update">Manage an Item Request</a></li>
-                    <li><a href="/request-item/1">View Item Request Info</a></li>
-                    <li><a href="/request-item/list">List of all Item Requests</a></li>
+                    <li><a href="/order/approval-list"><span>List of Order</span></a></li>
+                    <li><a href="/order/approval-list"><span>Arrived Order</span></a></li>
+                    <li><a href="/pack/list"><span>Pack List</span></a></li>
+                    <li><a href="/pack/create"><span>Create Pack</span></a></li>
+                </ul>
+            </li>
+
+            <li class="has-submenu"><a href="#"><i class="fa fa-cube"></i> <span
+                    class="nav-label leftNavHeader">Manage Requests</span></a>
+                <ul class="list-unstyled">
+                    <li><a href="/request/approval-list">List of Request</a></li>
+                    <li><a href="/request-details/list"><span>Approved Request</span></a> </li>
+                </ul>
+            </li>
+
+            <li class="has-submenu"><a href="/order/create"><i class="fa fa-file-text-o"></i> <span
+                    class="nav-label leftNavHeader">Order Items</span></a>
+            </li>
+
+
+            <li class="has-submenu"><a href="/request/create"><i class="fa fa-file-text-o"></i> <span
+                    class="nav-label leftNavHeader">Request Items</span></a>
+            </li>
+
+            <li class="has-submenu"><a href="/user/list"><i class="fa fa-users"></i><span class="nav-label leftNavHeader">Manage User</span></a>
+                <ul class="list-unstyled">
+                    <li><a href="/user/create"><span> Create User</span></a></li>
+                    <li><a href="/department/list"><span> Department List</span></a></li>
+                    <li><a href="/department/create"><span> Create Department</span></a></li>
+                    <li><a href="/section/list"><span> Section List</span></a></li>
+                    <li><a href="/section/create"><span> Create Section</span></a></li>
                 </ul>
             </li>
 
@@ -134,4 +92,85 @@
             </li>
         </ul>
     </nav>
+
+    <%--<nav class="navigation">--%>
+        <%--<ul class="list-unstyled">--%>
+            <%--<li class="active"><a href="/dashboard"><span--%>
+                    <%--class="nav-label leftNavHeader">Dashboard</span></a>--%>
+            <%--</li>--%>
+            <%--<li class="has-submenu"><a href="#"><span class="nav-label leftNavHeader">Profile</span></a>--%>
+                <%--<ul class="list-unstyled">--%>
+                    <%--<li><a href="/user/${currentUser.userId}">User Profile</a></li>--%>
+                    <%--<li><a href="/user/update/${currentUser.userId}">Update User Profile</a></li>--%>
+                    <%--<li><a href="/user/list">Search a User</a></li>--%>
+                <%--</ul>--%>
+            <%--</li>--%>
+
+            <%--<li class="has-submenu"><a href="#"><i class="fa fa-file-text-o"></i> <span--%>
+                    <%--class="nav-label leftNavHeader">Items</span></a>--%>
+                <%--<ul class="list-unstyled">--%>
+                    <%--<li><a href="/item/create">Create Item</a></li>--%>
+                    <%--<li><a href="/item/list">All Items</a></li>--%>
+                <%--</ul>--%>
+            <%--</li>--%>
+
+            <%--<li class="has-submenu"><a href="#"><i class="fa fa-file-text-o"></i> <span--%>
+                    <%--class="nav-label leftNavHeader">Order Items</span></a>--%>
+                <%--<ul class="list-unstyled">--%>
+                    <%--<li><a href="/order/create">Create Orders</a></li>--%>
+                    <%--<li><a href="/order/add-items">Add Items</a></li>--%>
+                    <%--<li><a href="/order/list">All Orders</a></li>--%>
+                    <%--<li><a href="/order/manage">Manage Orders</a></li>--%>
+                <%--</ul>--%>
+            <%--</li>--%>
+
+
+            <%--<li class="has-submenu"><a href="#"><i class="fa fa-file-text-o"></i> <span--%>
+                    <%--class="nav-label leftNavHeader">Request Items</span></a>--%>
+                <%--<ul class="list-unstyled">--%>
+                    <%--<li><a href="/request/create">Create Request</a></li>--%>
+                    <%--<li><a href="/request/add-items">Add Items</a></li>--%>
+                    <%--<li><a href="/request/list">All Requests</a></li>--%>
+                    <%--<li><a href="/request/manage">Manage Requests</a></li>--%>
+                <%--</ul>--%>
+            <%--</li>--%>
+
+            <%--<li class="has-submenu"><a href="#"><span--%>
+                    <%--class="nav-label leftNavHeader">User Management</span></a>--%>
+                <%--<ul class="list-unstyled">--%>
+                    <%--<li><a href="/user/create">Create User</a></li>--%>
+                    <%--<li><a href="/user/list">List of Users</a></li>--%>
+                <%--</ul>--%>
+            <%--</li>--%>
+            <%--<li class="has-submenu"><a href="#"><span class="nav-label leftNavHeader">Departments</span></a>--%>
+                <%--<ul class="list-unstyled">--%>
+                    <%--<li><a href="/department/create">Create Department</a></li>--%>
+                    <%--<li><a href="/department/list">All Departments</a></li>--%>
+                <%--</ul>--%>
+            <%--</li>--%>
+
+            <%--<li class="has-submenu">--%>
+                <%--<a href="#"><span class="nav-label leftNavHeader">Sections</span></a>--%>
+                <%--<ul class="list-unstyled">--%>
+                    <%--<li><a href="/section/create">Create Section</a></li>--%>
+                    <%--<li><a href="/section/list">All Sections</a></li>--%>
+                <%--</ul>--%>
+            <%--</li>--%>
+
+
+            <%--<li class="has-submenu"><a href="#"> <span class="nav-label leftNavHeader">Request Management</span></a>--%>
+                <%--<ul class="list-unstyled">--%>
+                    <%--<li><a href="/borrow-request/create">Request for an Equipment</a></li>--%>
+                    <%--<li><a href="/request-item/create">Request for Goods</a></li>--%>
+                    <%--<li><a href="/request-item/create">Request for Semi-Expendables</a></li>--%>
+                    <%--<li><a href="/request-item/update">Manage an Item Request</a></li>--%>
+                    <%--<li><a href="/request-item/1">View Item Request Info</a></li>--%>
+                    <%--<li><a href="/request-item/list">List of all Item Requests</a></li>--%>
+                <%--</ul>--%>
+            <%--</li>--%>
+
+            <%--<li class="has-submenu"><a href="#"><i class="fa fa-sign-out"></i> <span class="nav-label leftNavHeader">Logout</span></a>--%>
+            <%--</li>--%>
+        <%--</ul>--%>
+    <%--</nav>--%>
 </aside>
