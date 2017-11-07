@@ -54,8 +54,8 @@
             <li class="has-submenu"><a href="#"><i class="fa fa-truck"></i> <span
                     class="nav-label leftNavHeader">Manage Orders</span></a>
                 <ul class="list-unstyled">
-                    <li><a href="/order/approval-list"><span>List of Order</span></a></li>
-                    <li><a href="/order/approval-list"><span>Arrived Order</span></a></li>
+                    <li><a href="/order/approval-list"><span>Approve Order</span></a></li>
+                    <li><a href="/order/arrival-list"><span>Arrived Order</span></a></li>
                     <li><a href="/pack/list"><span>Pack List</span></a></li>
                     <li><a href="/pack/create"><span>Create Pack</span></a></li>
                 </ul>
@@ -64,8 +64,8 @@
             <li class="has-submenu"><a href="#"><i class="fa fa-cube"></i> <span
                     class="nav-label leftNavHeader">Manage Requests</span></a>
                 <ul class="list-unstyled">
-                    <li><a href="/request/approval-list">List of Request</a></li>
-                    <li><a href="/request-details/list"><span>Approved Request</span></a> </li>
+                    <li><a href="/request/approval-list">Approve Request</a></li>
+                    <li><a href="/request/release-list"><span>Release Request</span></a> </li>
                 </ul>
             </li>
 
