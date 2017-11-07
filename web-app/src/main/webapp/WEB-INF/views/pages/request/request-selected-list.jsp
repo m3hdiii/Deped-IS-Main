@@ -29,37 +29,49 @@
 <section class="content">
     <c:import url="../../includes/top-nav.jsp"/>
 
-    <div class="page-header">
-        <h3>&nbsp;&nbsp;&nbsprequest Request&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
-        </h3>
-    </div>
+    <div class="warper container-fluid">
 
-    <hr class="style13">
+        <div class="page-header">
+            <h1>Approve Request
+                <small>DepEd-Baguio City Division Office</small>
+            </h1>
 
+        </div>
 
-    <div class="row">
-        <table class="table table-hover">
-            <thead>
-            <th>Request Id</th>
-            <th>User Message</th>
-            <th>Request Date</th>
-            <th>Request Status</th
-            <th>Consideration</th>
-            </thead>
-            <c:forEach items="${requests}" var="request">
+        <div class="row item-body">
+            <div class="panel panel-default">
+                <h3 class="text-center">Request Info</h3>
+                <div class="panel-body">
 
-                <tr>
-                    <td>${request.requestId}</td>
-                    <td>${request.user.firstName} ${request.user.lastName}</td>
-                    <td>${request.requestDate}</td>
-                    <td>${request.requestStatus}</td>
-                    <td><a href="${requestUrl}${request.requestId}">${anchorName}</a></td>
-                </tr>
-            </c:forEach>
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Reason</th>
+                            <th>Date Requested</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="${requests}" var="request">
+                                <tr>
+                                    <th>${request.user.firstName} ${request.user.middleName} ${request.user.lastName}</th>
+                                    <td>${request.userMessage}</td>
+                                    <td>${request.requestDate}</td>
+                                    <td>${request.requestStatus}</td>
+                                    <td>
+                                        <a href="${requestUrl}${request.requestId}" class="btn btn-primary btn-sm">${anchorName}</a>
+                                    </td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
-        </table>
-    </div>
-
+        </div>
+    </div> <!-- Warper Ends Here (working area) -->
 
     <c:import url="../../modals/cart.jsp"/>
 </section>

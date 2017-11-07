@@ -29,84 +29,104 @@
 <section class="content">
     <c:import url="../../includes/top-nav.jsp"/>
 
-    <div class="page-header">
-        <h3>&nbsp;&nbsp;&nbsprequest Request&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
-        </h3>
-    </div>
+    <div class="warper container-fluid">
 
-    <div class="row">
-        <p>Request Number: ${relatedRequest.requestId}</p>
-        <p>Requested
-            By: ${relatedRequest.user.firstName}&nbsp;${relatedRequest.user.middleName}&nbsp;${relatedRequest.user.lastName}</p>
-    </div>
+        <div class="page-header">
+            <h1>Approve Request
+                <small>DepEd-Baguio City Division Office</small>
+            </h1>
 
-    <hr class="style13">
+        </div>
 
-
-    <div class="row">
-        <table class="table table-hover">
-            <thead>
-            <th>Name</th>
-            <th>Item Type</th>
-            <th>Available Quantity</th>
-            <th>Item Picture</th>
-            <th>Request Quantity</th>
-            <th>Reason</th>
-            <td>Status</td>
-            </thead>
-
+        <div class="row item-body">
             <c:set var="basketMap" value="${requestDetailsForm.map}"/>
 
             <form:form commandName="requestDetailsForm" method="post">
+                <div class="panel panel-default">
+                    <h3 class="text-center">Requested Items</h3>
+                    <div class="panel-body">
 
-                <c:forEach items="${basketMap}" var="entry" varStatus="loop">
-                    <c:set var="strKey" value="${entry.key}"/>
-                    <c:set var="requestDet" value="${entry.value}"/>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th>
+                                    <label class="checkbox checkbox-inline">
+                                        <input type="checkbox"/>
+                                    </label>
+                                </th>
+                                <th>Image</th>
+                                <th>Name</th>
+                                <th data-toggle="tooltip" title="Quantity of Available Item">Available QTY</th>
+                                <th data-toggle="tooltip" title="Quantity of Request">Requested QTY</th>
+                                <th>Item Type</th>
+                                <th>Note</th>
+                                <th>State</th>
+                            </tr>
+                            </thead>
+                            <tbody>
 
-                    <tr>
-                        <td>${requestDet.item.name}</td>
-                        <td>${requestDet.item.itemType}</td>
-                        <td>${requestDet.item.quantity}</td>
+                                <c:forEach items="${basketMap}" var="entry" varStatus="loop">
+                                    <c:set var="strKey" value="${entry.key}"/>
+                                    <c:set var="requestDet" value="${entry.value}"/>
+                                    <tr>
+                                        <td>
+                                            <label class="checkbox checkbox-inline">
+                                                <input type="checkbox">
+                                            </label>
+                                        </td>
+                                        <td>
+                                            <c:choose>
+                                                <c:when test="${not empty requestDet.item.picName}">
+                                                    <img src="${baseUrl}${requestDet.item.picName}" alt="item image" width="76px" height="50px"/>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img src="${resourceURL}/images/shared-images/no-item.png"
+                                                             alt="item image" width="76px" height="50px"/>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <th><div>
+                                                ${requestDet.item.name}
+                                            </div>
+                                            <div>
+                                                <small>SONY</small>
+                                            </div>
+                                        </th>
 
-                        <c:choose>
-                            <c:when test="${not empty requestDet.item.picName}">
-                                <td><img width="64" src="${baseUrl}${requestDet.item.picName}" alt="item image"/></td>
-                            </c:when>
-                            <c:otherwise>
-                                <td><img width="64" src="${resourceURL}/images/shared-images/no-item.png"
-                                         alt="item image"/>
-                                </td>
-                            </c:otherwise>
-                        </c:choose>
+                                        <td>${requestDet.item.quantity}</td>
+                                        <td>${requestDet.requestQuantity}</td>
+                                        <td>${requestDet.item.itemType}</td>
+                                        <td>
+                                            <input type="textarea" id="${strKey}" disabled/>
+                                        </td>
+                                        <td>
+                                            <form:select id="requestDetailsStatus${loop.index}" multiple="single"
+                                                         path="map['${strKey}'].requestDetailsStatus"
+                                                         onchange="processReason('requestDetailsStatus${loop.index}', '${strKey}')">
+                                                <form:options items="${nextRequestDetailsStatuses}"/>
+                                            </form:select>
+                                        </td>
 
-                        <td>
-                                ${requestDet.requestQuantity}
-                        </td>
-                        <th>
-                            <input type="textarea" id="${strKey}" disabled/>
-                        </th>
-                        <td>
-                            <form:select id="requestDetailsStatus${loop.index}" multiple="single"
-                                         path="map['${strKey}'].requestDetailsStatus"
-                                         onchange="processReason('requestDetailsStatus${loop.index}', '${strKey}')">
-                                <form:options items="${nextRequestDetailsStatuses}"/>
-                            </form:select>
-                        </td>
+                                        <form:hidden path="map['${strKey}'].requestDetailsID.requestId"
+                                                     value="${requestDet.request.requestId}"/>
+                                        <form:hidden path="map['${strKey}'].requestDetailsID.itemId" value="${requestDet.item.itemId}"/>
 
-                        <form:hidden path="map['${strKey}'].requestDetailsID.requestId"
-                                     value="${requestDet.request.requestId}"/>
-                        <form:hidden path="map['${strKey}'].requestDetailsID.itemId" value="${requestDet.item.itemId}"/>
-                    </tr>
-                </c:forEach>
-                <tr>
-                    <td colspan="3">
-                        <button>Approve</button>
-                    </td>
-                </tr>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i><span> Back</span></a>
+                        <button type="submit" class="btn btn-purple pull-right">Confirm</button>
+                    </div>
+                </div>
             </form:form>
 
-        </table>
-    </div>
+        </div>
+
+    </div> <!-- Warper Ends Here (working area) -->
+
 
 
     <c:import url="../../modals/cart.jsp"/>
