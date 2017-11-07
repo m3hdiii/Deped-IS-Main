@@ -56,11 +56,11 @@ public class RequestDetails implements Serializable {
     private String supplyOfficeRemark;
 
     @JoinColumn(name = "considered_by_user_id")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User consideredByUser;
 
     @JoinColumn(name = "issued_by_user_id")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User issuedByUser;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "requestDetails")

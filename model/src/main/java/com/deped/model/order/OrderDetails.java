@@ -56,7 +56,7 @@ public class OrderDetails implements Serializable {
     @Column(name = "order_details_state")
     private OrderDetailsState orderDetailsState;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "supplier_id")
     private Supplier supplier;
 
