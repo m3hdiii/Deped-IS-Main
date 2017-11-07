@@ -1,12 +1,15 @@
 package com.deped.repository.order;
 
 import com.deped.model.order.Order;
+import com.deped.model.order.OrderState;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.deped.repository.utils.ConstantValues.*;
 
@@ -18,6 +21,9 @@ public class OrderRepositoryImpl implements OrderRepository {
 
     @Override
     public Order create(Order entity) {
+        if (entity.getOrderState() == null)
+            entity.setOrderState(OrderState.SAVED);
+
         Order savedOrder = hibernateFacade.saveEntity(Order.class, entity);
         return savedOrder;
     }
@@ -68,5 +74,23 @@ public class OrderRepositoryImpl implements OrderRepository {
     @Override
     public Boolean createOrUpdateAll(Order... entities) {
         return null;
+    }
+
+    @Override
+    public List<Order> fetchAllByOrderState(OrderState orderState) {
+        String nativeQuery = "SELECT * FROM order_ WHERE order_state = :orderState";
+        Map<String, Object> parameterMap = new HashMap<>();
+        parameterMap.put("orderState", orderState.toString());
+        List<Order> requests = hibernateFacade.fetchAllEntityBySqlQuery(nativeQuery, null, Order.class, parameterMap);
+        return requests;
+    }
+
+    @Override
+    public List<Order> fetchAllByUserId(Long userId) {
+        String nativeQuery = "SELECT * FROM order_ WHERE user_id = :userId";
+        Map<String, Object> parameterMap = new HashMap<>();
+        parameterMap.put("userId", userId);
+        List<Order> requests = hibernateFacade.fetchAllEntityBySqlQuery(nativeQuery, null, Order.class, parameterMap);
+        return requests;
     }
 }

@@ -4,6 +4,7 @@ import com.deped.controller.AbstractMainController;
 import com.deped.controller.SharedData;
 import com.deped.form.OrderDetailsForm;
 import com.deped.model.Response;
+import com.deped.model.account.User;
 import com.deped.model.category.Category;
 import com.deped.model.items.Item;
 import com.deped.model.order.Order;
@@ -12,9 +13,12 @@ import com.deped.model.order.OrderDetailsState;
 import com.deped.model.order.OrderState;
 import com.deped.model.pack.Pack;
 import com.deped.model.supply.Supplier;
+import com.deped.security.UserDetailsServiceImpl;
 import com.deped.utils.SystemUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
@@ -56,10 +60,10 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
     private static final String BASKET_VIEW_PAGE = BASE_NAME + URL_SEPARATOR + "basket" + URL_SEPARATOR + ID_PATTERN;
     private static final String APPROVAL_PAGE = BASE_NAME + URL_SEPARATOR + "approval" + URL_SEPARATOR + ID_PATTERN;
-    private static final String ORDERED_PAGE = BASE_NAME + URL_SEPARATOR + "ordered" + URL_SEPARATOR + ID_PATTERN;
+    private static final String ORDER_PAGE = BASE_NAME + URL_SEPARATOR + "order" + URL_SEPARATOR + ID_PATTERN;
     private static final String ARRIVAL_PAGE = BASE_NAME + URL_SEPARATOR + "arrival" + URL_SEPARATOR + ID_PATTERN;
 
-    private static final String UPDATE_STATUS_REST = BASE_NAME + URL_SEPARATOR + "update-status";
+    private static final String UPDATE_STATE_REST = BASE_NAME + URL_SEPARATOR + "update-state/user/%d/state/%d";
 
     public enum ActionParam {
         UPDATE_ALL, DELETE_ALL, SAVE_ALL, ORDER_ALL
@@ -67,27 +71,40 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
     @RequestMapping(value = CREATE_MAPPING, method = GET)
     public ModelAndView renderCreatePage(@ModelAttribute("order") Order order, @PathVariable(ID_STRING_LITERAL) Long orderId, final RedirectAttributes redirectAttributes, HttpSession httpSession) {
-
         if (order == null || order.getOrderId() == null || order.getOrderId() != orderId) {
-            RestTemplate restTemplate = new RestTemplate();
-            String restUrl = String.format(FETCH_BY_ID_URL, "order", orderId);
-            ResponseEntity<Order> response = restTemplate.getForEntity(restUrl, Order.class);
-            order = response.getBody();
-
+            order = fetchOrder(orderId);
+            String redirectUrl = null;
             if (order == null) {
-                final String redirectUrl = "redirect:/order/create";
+                redirectUrl = "redirect:/order/create";
                 return new ModelAndView(redirectUrl);
             }
 
+            OrderState orderState = order.getOrderState();
 
-            Set<OrderDetails> orderDetailsList = order.getOrderDetails();
+            switch (orderState) {
+                case SAVED:
+                    break;
+                case PENDING:
+                    //You have to Wait For Approval
+                    redirectUrl = "redirect:/order/create";
+                    return new ModelAndView(redirectUrl);
+                case CONSIDERED:
+                    //You can Now Order It
+                    redirectUrl = "redirect:/order/create";
+                case FINALIZED:
+                    //This Order has been Arrived properly before
+                    redirectUrl = "redirect:/order/create";
+                    return new ModelAndView(redirectUrl);
+
+            }
+
+            List<OrderDetails> orderDetailsList = fetchRequestDetails(orderId);
             if (orderDetailsList != null && !orderDetailsList.isEmpty()) {
-                httpSession.setAttribute(BASKET + order.getOrderId(), putOrderDetailsListIntoMap(orderDetailsList));
+                httpSession.setAttribute(BASKET + order.getOrderId(), putOrderDetailsListIntoMap(new HashSet<>(orderDetailsList)));
             }
         }
+        httpSession.setAttribute(ORDER + orderId, order);
 
-        if (httpSession.getAttribute(ORDER + orderId) == null)
-            httpSession.setAttribute(ORDER + orderId, order);
 
         Map<String, Object> modelMap = new HashMap<>();
         modelMap.put("orderId", orderId);
@@ -185,6 +202,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
                 if (isSaved) {
                     message = SUCCESS_MESSAGE;
                     httpSession.removeAttribute(BASKET + orderId);
+                    httpSession.removeAttribute(ORDER + orderId);
                     return new ModelAndView(dashboardPage);
                 } else {
                     message = FAILURE_MESSAGE;
@@ -208,85 +226,157 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
     @RequestMapping(value = APPROVAL_PAGE, method = GET)
     public ModelAndView approvalActionRender(@ModelAttribute("order") Order order, @PathVariable(ID_STRING_LITERAL) Long orderId) {
-        return renderActions(order, orderId, new OrderState[]{OrderState.ORDERS_REGISTERED}, new OrderDetailsState[]{OrderDetailsState.APPROVED, OrderDetailsState.DISAPPROVED});
+
+        Order request = fetchOrder(orderId);
+        ModelAndView requestChecking = orderChecking(request, OrderState.PENDING);
+        if (requestChecking != null) {
+            return requestChecking;
+        }
+
+        List<OrderDetails> requestDetailsList = fetchRequestDetails(orderId);
+        ModelAndView requestDetailsChecking = orderDetailsChecking(requestDetailsList);
+        if (requestDetailsChecking != null) {
+            return requestDetailsChecking;
+        }
+
+        OrderDetailsState[] nextRequestDetailsStatuses = new OrderDetailsState[]{OrderDetailsState.APPROVED, OrderDetailsState.DISAPPROVED, OrderDetailsState.CANCELLED};
+        return renderActions(
+                request,
+                new HashSet<>(requestDetailsList),
+                nextRequestDetailsStatuses
+        );
     }
 
     @RequestMapping(value = APPROVAL_PAGE, method = POST)
     public ModelAndView approvalActionSubmit(@ModelAttribute("orderDetailsForm") OrderDetailsForm orderDetailsForm) {
-        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm);
+        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, OrderDetailsState.APPROVED);
         return null;
     }
 
-    @RequestMapping(value = ORDERED_PAGE, method = GET)
+    @RequestMapping(value = ORDER_PAGE, method = GET)
     public ModelAndView orderedActionRender(@ModelAttribute("order") Order order, @PathVariable(ID_STRING_LITERAL) Long orderId) {
-        return renderActions(order, orderId, new OrderState[]{OrderState.ALL_APPROVED, OrderState.PARTIALLY_APPROVED}, null);
+
+        Order request = fetchOrder(orderId);
+        ModelAndView requestChecking = orderChecking(request, OrderState.CONSIDERED);
+        if (requestChecking != null) {
+            return requestChecking;
+        }
+
+        List<OrderDetails> requestDetailsList = fetchRequestDetails(orderId);
+        ModelAndView requestDetailsChecking = orderDetailsChecking(requestDetailsList);
+        if (requestDetailsChecking != null) {
+            return requestDetailsChecking;
+        }
+
+        OrderDetailsState[] nextRequestDetailsStatuses = new OrderDetailsState[]{OrderDetailsState.ORDERED, OrderDetailsState.CANCELLED};
+        return renderActions(
+                request,
+                new HashSet<>(requestDetailsList),
+                nextRequestDetailsStatuses
+        );
     }
 
-    @RequestMapping(value = ORDERED_PAGE, method = POST)
+    @RequestMapping(value = ORDER_PAGE, method = POST)
     public ModelAndView orderedActionSubmit(@ModelAttribute("orderDetailsForm") OrderDetailsForm orderDetailsForm) {
-        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm);
+        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, OrderDetailsState.ORDERED);
         return null;
     }
 
     @RequestMapping(value = ARRIVAL_PAGE, method = GET)
     public ModelAndView arrivalActionRender(@ModelAttribute("order") Order order, @PathVariable(ID_STRING_LITERAL) Long orderId) {
-        return renderActions(order, orderId, new OrderState[]{OrderState.ORDERED}, new OrderDetailsState[]{OrderDetailsState.ARRIVED, OrderDetailsState.NOT_ARRIVED});
+        Order request = fetchOrder(orderId);
+        ModelAndView requestChecking = orderChecking(request, OrderState.CONSIDERED);
+        if (requestChecking != null) {
+            return requestChecking;
+        }
+
+        List<OrderDetails> requestDetailsList = fetchRequestDetails(orderId);
+        ModelAndView requestDetailsChecking = orderDetailsChecking(requestDetailsList);
+        if (requestDetailsChecking != null) {
+            return requestDetailsChecking;
+        }
+
+        OrderDetailsState[] nextRequestDetailsStatuses = new OrderDetailsState[]{OrderDetailsState.ARRIVED, OrderDetailsState.NOT_ARRIVED, OrderDetailsState.CANCELLED};
+        return renderActions(
+                request,
+                new HashSet<>(requestDetailsList),
+                nextRequestDetailsStatuses
+        );
     }
 
     @RequestMapping(value = ARRIVAL_PAGE, method = POST)
     public ModelAndView arrivalActionSubmit(@ModelAttribute("orderDetailsForm") OrderDetailsForm orderDetailsForm) {
-        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm);
+        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, OrderDetailsState.ARRIVED);
         return null;
     }
 
-    private ModelAndView renderActions(Order order, Long orderId, OrderState[] currentStates, OrderDetailsState[] nextStates) {
-        Set<OrderDetails> orderDetailsList;
+    private Order fetchOrder(Long requestId) {
+        RestTemplate restTemplate = new RestTemplate();
+        String restUrl = String.format(FETCH_BY_ID_URL, "order", requestId);
+        ResponseEntity<Order> response = restTemplate.getForEntity(restUrl, Order.class);
+        Order order = response.getBody();
+        return order;
+    }
 
-        if (order == null || order.getOrderId() == null || order.getOrderId() != orderId) {
-            RestTemplate restTemplate = new RestTemplate();
-            String restUrl = String.format(FETCH_BY_ID_URL, "order", orderId);
-            ResponseEntity<Order> response = restTemplate.getForEntity(restUrl, Order.class);
-            order = response.getBody();
-        }
+    private List<OrderDetails> fetchRequestDetails(Long requestId) {
+        RestTemplate restTemplate = new RestTemplate();
+        //get RequestDetails if there is any
+        HttpEntity httpEntity = makeHttpEntity(null);
+        String restUrl = String.format(FETCH_URL, "order-details").concat("/").concat(requestId + "");
+        ResponseEntity<List<OrderDetails>> responseDetails = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<OrderDetails>>() {
+        });
+        List<OrderDetails> requestDetailsList = responseDetails.getBody();
+        return requestDetailsList;
+    }
 
-        final String redirectUrl = "redirect:/dashboard";
+    private ModelAndView orderChecking(Order order, OrderState mustBeInStatus) {
+        String newRequestRedirectUrl;
         if (order == null) {
-            return new ModelAndView(redirectUrl);
+            //TODO message this order does not exist
+            newRequestRedirectUrl = "redirect:/dashboard";
+            return new ModelAndView(newRequestRedirectUrl);
         }
 
-        orderDetailsList = order.getOrderDetails();
+        OrderState orderState = order.getOrderState();
+        if (orderState != mustBeInStatus) {
+            //TODO message this order is not in proper state as of now
+            newRequestRedirectUrl = "redirect:/dashboard";
+            return new ModelAndView(newRequestRedirectUrl);
+        }
+        return null;
+    }
+
+    private ModelAndView orderDetailsChecking(List<OrderDetails> orderDetailsList) {
+        String newRequestRedirectUrl;
         if (orderDetailsList == null || orderDetailsList.isEmpty()) {
-            return new ModelAndView(redirectUrl);
+            //TODO message this request does not have any request details which is wrong ...
+            newRequestRedirectUrl = "redirect:/dashboard";
+            return new ModelAndView(newRequestRedirectUrl);
         }
 
-        boolean isRightState = false;
-        for (OrderState os : currentStates) {
-            if (order.getOrderState() == os) {
-                isRightState = true;
-                break;
-            }
-        }
-        if (!isRightState) {
-            return new ModelAndView(redirectUrl);
-        }
+        return null;
+    }
+
+    private ModelAndView renderActions(Order order, Set<OrderDetails> orderDetailsList, OrderDetailsState[] nextStates) {
 
         Map<String, Object> modelMap = new HashMap<>();
-
-
-        modelMap.put("orderId", orderId);
-        modelMap.put("relatedOrder", order);
-        modelMap.put("nextOrderDetailsStates", nextStates);
 
         OrderDetailsForm orderDetailsForm = new OrderDetailsForm();
         orderDetailsForm.setMap(putOrderDetailsListIntoMap(orderDetailsList));
         modelMap.put("orderDetailsForm", orderDetailsForm);
+
+        modelMap.put("orderId", order.getOrderId());
+        modelMap.put("relatedOrder", order);
+        modelMap.put("nextOrderDetailsStates", nextStates);
+
+
         ModelAndView mv = new ModelAndView(FLOW_VIEW_PAGE, modelMap);
         return mv;
 
     }
 
 
-    private ResponseEntity<Response> updateStatusAction(OrderDetailsForm orderDetailsForm) {
+    private ResponseEntity<Response> updateStatusAction(OrderDetailsForm orderDetailsForm, OrderDetailsState state) {
         Map<String, OrderDetails> map = orderDetailsForm.getMap();
         Collection<OrderDetails> orderDetailsCollection = map.values();
         OrderDetails[] orderDetailsArray = orderDetailsCollection.toArray(new OrderDetails[orderDetailsCollection.size()]);
@@ -294,8 +384,13 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+
         HttpEntity<OrderDetails[]> httpEntity = new HttpEntity<>(orderDetailsArray, headers);
-        String restUrl = BASE_URL + UPDATE_STATUS_REST;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User user = ((UserDetailsServiceImpl.CustomSpringSecurityUser) authentication.getPrincipal()).getUser();
+        Long userId = user.getUserId();
+
+        String restUrl = String.format((BASE_URL + UPDATE_STATE_REST), userId, state.ordinal());
 
         ResponseEntity<Response> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, Response.class);
         return response;
@@ -303,29 +398,20 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
     private boolean saveOrderDetails(Map<String, OrderDetails> map, boolean isForSaveOnly) {
         List<OrderDetails> list = new ArrayList<>(map.values());
-        Order order = null;
-        if (list != null && !list.isEmpty()) {
-            order = list.get(0).getOrder();
-        }
-
-        if (isForSaveOnly) {
-            order.setOrderState(OrderState.ORDERING);
+        String restUrl;
+        if (!isForSaveOnly) {
+            restUrl = BASE_URL + BASE_NAME + "/order-all";
         } else {
-            order.setOrderState(OrderState.ORDERS_REGISTERED);
+            restUrl = String.format(CREATE_ALL_URL, BASE_NAME);
         }
 
-        for (OrderDetails od : list) {
-            od.setOrder(order);
-        }
-
-        OrderDetails[] orderDetails = list.toArray(new OrderDetails[list.size()]);
-        ResponseEntity<Response> response = makeCreateAllRestRequest(orderDetails, BASE_NAME, HttpMethod.POST, OrderDetails.class);
+        OrderDetails[] requestDetails = list.toArray(new OrderDetails[list.size()]);
+        ResponseEntity<Response> response = makeGenericListRestRequest(restUrl, requestDetails, HttpMethod.POST, OrderDetails.class);
         Response body = response.getBody();
         if (body == null) {
             return false;
         }
         return true;
-
     }
 
     @Override

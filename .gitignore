@@ -6,3 +6,4 @@
 /META-INF
 /META-INF/*
 nb-configuration.xml
+hibernate.configs.xml

@@ -63,55 +63,45 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
 
     @RequestMapping(value = CREATE_MAPPING, method = GET)
     public ModelAndView renderCreatePage(@ModelAttribute("request") Request request, @PathVariable(ID_STRING_LITERAL) Long requestId, final RedirectAttributes redirectAttributes, HttpSession httpSession) {
-        Request sessionRequest = (Request) httpSession.getAttribute(REQUEST + requestId);
-        if (sessionRequest == null) {
-            if (request == null || request.getRequestId() == null || request.getRequestId() != requestId) {
 
-                RestTemplate restTemplate = new RestTemplate();
-                String restUrl = String.format(FETCH_BY_ID_URL, "request", requestId);
-                ResponseEntity<Request> responseRequest = restTemplate.getForEntity(restUrl, Request.class);
-                request = responseRequest.getBody();
+        if (request == null || request.getRequestId() == null || request.getRequestId() != requestId) {
 
-                String redirectUrl = null;
-                //get Request
-                if (request == null) {
+            RestTemplate restTemplate = new RestTemplate();
+            String restUrl = String.format(FETCH_BY_ID_URL, "request", requestId);
+            ResponseEntity<Request> responseRequest = restTemplate.getForEntity(restUrl, Request.class);
+            request = responseRequest.getBody();
+
+            String redirectUrl = null;
+            if (request == null) {
+                redirectUrl = "redirect:/request/create";
+                return new ModelAndView(redirectUrl);
+            }
+
+            RequestStatus status = request.getRequestStatus();
+
+            switch (status) {
+                case SAVED:
+                    break;
+                case PENDING:
+                    //You have to Wait For Approval
                     redirectUrl = "redirect:/request/create";
                     return new ModelAndView(redirectUrl);
-                }
-
-                RequestStatus status = request.getRequestStatus();
-
-                switch (status) {
-                    case SAVED:
-                        break;
-                    case PENDING:
-                        //You have to Wait For Approval
-                        redirectUrl = "redirect:/request/create";
-                        return new ModelAndView(redirectUrl);
-                    case CONSIDERED:
-                        //You can check the status of your request
-                        redirectUrl = "redirect:/request/create";
-                        return new ModelAndView(redirectUrl);
-                    case FINALIZED:
-                        //This request has been processed properly before
-                        redirectUrl = "redirect:/request/create";
-                        return new ModelAndView(redirectUrl);
-                }
-
-
-                //get RequestDetails if there is any
-                HttpEntity httpEntity = makeHttpEntity(null);
-                restUrl = String.format(FETCH_URL, "request-details").concat("/").concat(requestId + "");
-                ResponseEntity<List<RequestDetails>> responseDetails = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<RequestDetails>>() {
-                });
-
-                List<RequestDetails> requestDetailsList = responseDetails.getBody();
-                if (requestDetailsList != null && !requestDetailsList.isEmpty()) {
-                    httpSession.setAttribute(BASKET + request.getRequestId(), putRequestDetailsListIntoMap(new HashSet<>(requestDetailsList)));
-                }
+                case CONSIDERED:
+                    //You can check the status of your request
+                    redirectUrl = "redirect:/request/create";
+                    return new ModelAndView(redirectUrl);
+                case FINALIZED:
+                    //This request has been processed properly before
+                    redirectUrl = "redirect:/request/create";
+                    return new ModelAndView(redirectUrl);
             }
-            httpSession.setAttribute(REQUEST + requestId, request);
+
+            List<RequestDetails> requestDetailsList = fetchRequestDetails(requestId);
+            if (requestDetailsList != null && !requestDetailsList.isEmpty()) {
+                httpSession.setAttribute(BASKET + request.getRequestId(), putRequestDetailsListIntoMap(new HashSet<>(requestDetailsList)));
+            }
         }
+        httpSession.setAttribute(REQUEST + requestId, request);
 
 
         Map<String, Object> modelMap = new HashMap<>(getConfigMap());

@@ -2,20 +2,15 @@ package com.deped.model.order;
 
 import com.deped.model.account.User;
 import com.deped.model.delivery.DeliveryInformation;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 
 @Entity
 @Table(name = "order_")
-//@JsonIdentityInfo(
-//        generator = ObjectIdGenerators.PropertyGenerator.class,
-//        property = "orderId", scope = Order.class)
 public class Order implements Serializable {
 
     @Id
@@ -42,9 +37,9 @@ public class Order implements Serializable {
     @Column(name = "budget_amount")
     private Double budgetAmount;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "order")
-    @JsonManagedReference(value = "order-orderDetails")
-    private Set<OrderDetails> orderDetails;
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "order")
+//    @JsonManagedReference(value = "order-orderDetails")
+//    private Set<OrderDetails> orderDetails;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
     private List<DeliveryInformation> deliveryInformation;
@@ -97,13 +92,13 @@ public class Order implements Serializable {
         this.budgetAmount = budgetAmount;
     }
 
-    public Set<OrderDetails> getOrderDetails() {
-        return orderDetails;
-    }
-
-    public void setOrderDetails(Set<OrderDetails> orderDetails) {
-        this.orderDetails = orderDetails;
-    }
+//    public Set<OrderDetails> getOrderDetails() {
+//        return orderDetails;
+//    }
+//
+//    public void setOrderDetails(Set<OrderDetails> orderDetails) {
+//        this.orderDetails = orderDetails;
+//    }
 
     public Date getRequiredDate() {
         return requiredDate;

@@ -1,10 +1,11 @@
 package com.deped.model.order;
 
+import com.deped.model.account.User;
 import com.deped.model.category.Category;
 import com.deped.model.items.Item;
 import com.deped.model.pack.Pack;
 import com.deped.model.supply.Supplier;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,27 +13,25 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "order_details")
-//@JsonIdentityInfo(
-//        generator = ObjectIdGenerators.PropertyGenerator.class,
-//        property = "orderDetailsID", scope = OrderDetails.class)
+@DynamicUpdate
 public class OrderDetails implements Serializable {
 
 
     @EmbeddedId
     private OrderDetailsID orderDetailsID = new OrderDetailsID();
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "order_order_id")
     @MapsId("orderId")
-    @JsonBackReference(value = "order-orderDetails")
+//    @JsonBackReference(value = "order-orderDetails")
     private Order order;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @MapsId("itemId")
     @JoinColumn(name = "item_item_id")
     private Item item;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @MapsId("categoryId")
     @JoinColumn(name = "category_category_id")
     private Category category;
@@ -66,6 +65,21 @@ public class OrderDetails implements Serializable {
 
     @Column(name = "not_arrival_message")
     private String notArrivalMessage;
+
+    @Transient
+    private OrderDetailsState transientUpdateState;
+
+    @JoinColumn(name = "approved_by_user_id")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private User approvedByUser;
+
+    @JoinColumn(name = "ordered_by_user_id")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private User orderedByUser;
+
+    @JoinColumn(name = "received_by_user_id")
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private User receivedByUser;
 
     public Order getOrder() {
         return order;
@@ -169,5 +183,37 @@ public class OrderDetails implements Serializable {
 
     public void setNotArrivalMessage(String notArrivalMessage) {
         this.notArrivalMessage = notArrivalMessage;
+    }
+
+    public OrderDetailsState getTransientUpdateState() {
+        return transientUpdateState;
+    }
+
+    public void setTransientUpdateState(OrderDetailsState transientUpdateState) {
+        this.transientUpdateState = transientUpdateState;
+    }
+
+    public User getApprovedByUser() {
+        return approvedByUser;
+    }
+
+    public void setApprovedByUser(User approvedByUser) {
+        this.approvedByUser = approvedByUser;
+    }
+
+    public User getOrderedByUser() {
+        return orderedByUser;
+    }
+
+    public void setOrderedByUser(User orderedByUser) {
+        this.orderedByUser = orderedByUser;
+    }
+
+    public User getReceivedByUser() {
+        return receivedByUser;
+    }
+
+    public void setReceivedByUser(User receivedByUser) {
+        this.receivedByUser = receivedByUser;
     }
 }

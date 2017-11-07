@@ -3,9 +3,11 @@ package com.deped.controller.order;
 import com.deped.controller.AbstractMainController;
 import com.deped.model.account.User;
 import com.deped.model.order.Order;
+import com.deped.model.order.OrderState;
 import com.deped.model.order.Schedule;
 import com.deped.security.UserDetailsServiceImpl;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -39,6 +42,11 @@ public class OrderController extends AbstractMainController<Order, Long> {
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
     private static final String RENDER_UPDATE_MAPPING = BASE_NAME + RENDER_UPDATE_PATTERN;
     private static final String RENDER_LIST_MAPPING = BASE_NAME + FETCH_PATTERN;
+
+    private static final String RENDER_LIST_APPROVAL_MAPPING = BASE_NAME + "/approval-list";
+    private static final String RENDER_LIST_RELEASE_MAPPING = BASE_NAME + "/release-list";
+    private static final String RENDER_LIST_USER_MAPPING = BASE_NAME + FETCH_PATTERN + "/user" + FETCH_BY_ID_PATTERN;
+
     private static final String RENDER_LIST_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String RENDER_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
@@ -48,6 +56,8 @@ public class OrderController extends AbstractMainController<Order, Long> {
     private static final String INFO_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + INFO_PAGE;
     private static final String UPDATE_VIEW_PAGE = BASE_SHOW_PAGE + UPDATE_PAGE + BASE_NAME;
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
+
+    private static final String OPERATION_LIST = BASE_SHOW_PAGE + BASE_NAME + "-selected" + LIST_PAGE;
 
 
     @Override
@@ -80,6 +90,58 @@ public class OrderController extends AbstractMainController<Order, Long> {
         final String redirectUrl = String.format("redirect:/order-details/create/%d", order.getOrderId());
         mav.setViewName(redirectUrl);
         return mav;
+    }
+
+    @RequestMapping(value = RENDER_LIST_APPROVAL_MAPPING, method = GET)
+    public ModelAndView approvalListRender() {
+        List<Order> requests = fetchByState(OrderState.PENDING);
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("orders", requests);
+        modelMap.put("orderUrl", "/order-details/approval/");
+        modelMap.put("anchorName", "Approval");
+        ModelAndView mav = new ModelAndView(OPERATION_LIST, modelMap);
+        return mav;
+
+    }
+
+    @RequestMapping(value = RENDER_LIST_RELEASE_MAPPING, method = GET)
+    public ModelAndView releaseListRender() {
+        List<Order> requests = fetchByState(OrderState.CONSIDERED);
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("orders", requests);
+        modelMap.put("orderUrl", "/order-details/issue/");
+        modelMap.put("anchorName", "Release");
+        ModelAndView mav = new ModelAndView(OPERATION_LIST, modelMap);
+        return mav;
+
+    }
+
+    private List<Order> fetchByState(OrderState orderState) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity httpEntity = makeHttpEntity(null);
+        String restUrl = String.format(FETCH_URL, BASE_NAME).concat("/").concat(orderState.ordinal() + "");
+        ResponseEntity<List<Order>> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<Order>>() {
+        });
+        return response.getBody();
+    }
+
+
+    @RequestMapping(value = RENDER_LIST_USER_MAPPING, method = GET)
+    public ModelAndView userListRender(@PathVariable(ID_STRING_LITERAL) Long userId) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity httpEntity = makeHttpEntity(null);
+        String restUrl = String.format(FETCH_URL, BASE_NAME).concat("/").concat("user").concat("/").concat(userId + "");
+        ResponseEntity<List<Order>> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<Order>>() {
+        });
+
+        List<Order> requests = response.getBody();
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("requests", requests);
+        modelMap.put("orderUrll", "/order-details/");
+        modelMap.put("anchorName", "More Info");
+        ModelAndView mav = new ModelAndView(OPERATION_LIST, modelMap);
+        return mav;
+
     }
 
 

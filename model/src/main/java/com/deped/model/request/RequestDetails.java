@@ -55,17 +55,17 @@ public class RequestDetails implements Serializable {
     @Column(name = "supply_office_remark")
     private String supplyOfficeRemark;
 
-    @JoinColumn(name = "approver_user_id")
+    @JoinColumn(name = "approved_by_user_id")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private User approverUser;
+    private User approvedByUser;
 
-    @JoinColumn(name = "issuer_user_id")
+    @JoinColumn(name = "issued_by_user_id")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private User issuerUser;
+    private User issuedByUser;
 
-    @JoinColumn(name = "receiver_user_id")
+    @JoinColumn(name = "received_by_user_id")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private User receiverUser;
+    private User receivedByUser;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "requestDetails")
     private Set<RequestTracker> requestTrackers;
@@ -161,28 +161,28 @@ public class RequestDetails implements Serializable {
         this.item = item;
     }
 
-    public User getApproverUser() {
-        return approverUser;
+    public User getApprovedByUser() {
+        return approvedByUser;
     }
 
-    public void setApproverUser(User approverUser) {
-        this.approverUser = approverUser;
+    public void setApprovedByUser(User approvedByUser) {
+        this.approvedByUser = approvedByUser;
     }
 
-    public User getIssuerUser() {
-        return issuerUser;
+    public User getIssuedByUser() {
+        return issuedByUser;
     }
 
-    public void setIssuerUser(User issuerUser) {
-        this.issuerUser = issuerUser;
+    public void setIssuedByUser(User issuedByUser) {
+        this.issuedByUser = issuedByUser;
     }
 
-    public User getReceiverUser() {
-        return receiverUser;
+    public User getReceivedByUser() {
+        return receivedByUser;
     }
 
-    public void setReceiverUser(User receiverUser) {
-        this.receiverUser = receiverUser;
+    public void setReceivedByUser(User receivedByUser) {
+        this.receivedByUser = receivedByUser;
     }
 
     public Set<RequestTracker> getRequestTrackers() {

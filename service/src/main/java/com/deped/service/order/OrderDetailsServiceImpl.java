@@ -3,6 +3,7 @@ package com.deped.service.order;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.order.OrderDetails;
+import com.deped.model.order.OrderDetailsState;
 import com.deped.repository.order.OrderDetailsRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
@@ -71,10 +72,25 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
     }
 
     @Override
-    public ResponseEntity<Response> updateOrderStatus(OrderDetails[] entities) {
-        Boolean isUpdated = orderDetailsRepository.updateOrderStatus(entities);
+    public ResponseEntity<Response> updateOrderState(Long userId, OrderDetailsState orderDetailsState, OrderDetails... entities) {
+        Boolean isUpdated = orderDetailsRepository.updateOrderState(userId, orderDetailsState, entities);
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, OrderDetails.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
+        return responseEntity;
+    }
+
+    @Override
+    public ResponseEntity<Response> orderAll(OrderDetails... entities) {
+        Boolean isCreated = orderDetailsRepository.orderAll(entities);
+        Response response = ServiceUtils.makeResponse(isCreated, Operation.CREATE, OrderDetails.class);
+        ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
+        return responseEntity;
+    }
+
+    @Override
+    public ResponseEntity<List<OrderDetails>> fetchAllById(Long requestId) {
+        List<OrderDetails> brands = orderDetailsRepository.fetchAllById(requestId);
+        ResponseEntity<List<OrderDetails>> responseEntity = new ResponseEntity<>(brands, OK);
         return responseEntity;
     }
 }

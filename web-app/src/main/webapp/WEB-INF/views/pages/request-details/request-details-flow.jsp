@@ -51,6 +51,7 @@
             <th>Available Quantity</th>
             <th>Item Picture</th>
             <th>Request Quantity</th>
+            <th>Reason</th>
             <td>Status</td>
             </thead>
 
@@ -81,8 +82,13 @@
                         <td>
                                 ${requestDet.requestQuantity}
                         </td>
+                        <th>
+                            <input type="textarea" id="${strKey}" disabled/>
+                        </th>
                         <td>
-                            <form:select multiple="single" path="map['${strKey}'].requestDetailsStatus">
+                            <form:select id="requestDetailsStatus${loop.index}" multiple="single"
+                                         path="map['${strKey}'].requestDetailsStatus"
+                                         onchange="processReason('requestDetailsStatus${loop.index}', '${strKey}')">
                                 <form:options items="${nextRequestDetailsStatuses}"/>
                             </form:select>
                         </td>
@@ -107,7 +113,7 @@
 </section>
 <section class="content">
     <c:import url="../../includes/footer.jsp"/>
-    <script type="text/javascript" src="${resourceURL}/js/additional/request.js"></script>
+    <script type="text/javascript" src="${resourceURL}/js/additional/request-operation.js"></script>
 </section>
 </body>
 </html>

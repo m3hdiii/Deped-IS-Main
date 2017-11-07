@@ -40,20 +40,24 @@
     <div class="row">
         <table class="table table-hover">
             <thead>
-            <th>Request Id</th>
+            <th>Order Id</th>
             <th>User Message</th>
-            <th>Request Date</th>
-            <th>Request Status</th
+            <th>Order Date</th>
+            <th>Required Date</th>
+            <th>Order State</th>
+            <th>Budget Amount</th>
             <th>Consideration</th>
             </thead>
-            <c:forEach items="${requests}" var="request">
+            <c:forEach items="${orders}" var="order">
 
                 <tr>
-                    <td>${request.requestId}</td>
-                    <td>${request.user.firstName} ${request.user.lastName}</td>
-                    <td>${request.requestDate}</td>
-                    <td>${request.requestStatus}</td>
-                    <td><a href="${requestUrl}${request.requestId}">${anchorName}</a></td>
+                    <td>${order.orderId}</td>
+                    <td>${order.user.firstName} ${order.user.lastName}</td>
+                    <td>${order.orderDate}</td>
+                    <td>${order.requiredDate}</td>
+                    <td>${order.orderState}</td>
+                    <td>${order.budgetAmount}</td>
+                    <td><a href="${orderUrl}${order.orderId}">${anchorName}</a></td>
                 </tr>
             </c:forEach>
 
@@ -65,7 +69,7 @@
 </section>
 <section class="content">
     <c:import url="../../includes/footer.jsp"/>
-    <script type="text/javascript" src="${resourceURL}/js/additional/request.js"></script>
+    <script type="text/javascript" src="${resourceURL}/js/additional/order.js"></script>
 </section>
 </body>
 </html>

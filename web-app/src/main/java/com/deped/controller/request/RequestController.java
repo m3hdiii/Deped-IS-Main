@@ -55,7 +55,6 @@ public class RequestController extends AbstractMainController<Request, Long> {
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
 
     private static final String OPERATION_LIST = BASE_SHOW_PAGE + BASE_NAME + "-selected" + LIST_PAGE;
-    private static final String ISSUE_LIST = "";
 
 
     @Override

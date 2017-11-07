@@ -38,10 +38,6 @@ public class Category implements Serializable {
     @Column(name = "creation_date")
     private Date creationDate;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "category")
-    @JsonManagedReference
-    private Set<OrderDetails> orderDetailsSet;
-
 
     public Long getCategoryId() {
         return categoryId;
@@ -73,14 +69,6 @@ public class Category implements Serializable {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
-    }
-
-    public Set<OrderDetails> getOrderDetailsSet() {
-        return orderDetailsSet;
-    }
-
-    public void setOrderDetailsSet(Set<OrderDetails> orderDetailsSet) {
-        this.orderDetailsSet = orderDetailsSet;
     }
 
     @Override
