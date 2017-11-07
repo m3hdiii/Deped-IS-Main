@@ -44,7 +44,7 @@ public class OrderController extends AbstractMainController<Order, Long> {
     private static final String RENDER_LIST_MAPPING = BASE_NAME + FETCH_PATTERN;
 
     private static final String RENDER_LIST_APPROVAL_MAPPING = BASE_NAME + "/approval-list";
-    private static final String RENDER_LIST_RELEASE_MAPPING = BASE_NAME + "/release-list";
+    private static final String RENDER_LIST_ARRIVAL_MAPPING = BASE_NAME + "/arrival-list";
     private static final String RENDER_LIST_USER_MAPPING = BASE_NAME + FETCH_PATTERN + "/user" + FETCH_BY_ID_PATTERN;
 
     private static final String RENDER_LIST_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
@@ -104,12 +104,12 @@ public class OrderController extends AbstractMainController<Order, Long> {
 
     }
 
-    @RequestMapping(value = RENDER_LIST_RELEASE_MAPPING, method = GET)
+    @RequestMapping(value = RENDER_LIST_ARRIVAL_MAPPING, method = GET)
     public ModelAndView releaseListRender() {
         List<Order> requests = fetchByState(OrderState.CONSIDERED);
         Map<String, Object> modelMap = new HashMap<>();
         modelMap.put("orders", requests);
-        modelMap.put("orderUrl", "/order-details/issue/");
+        modelMap.put("orderUrl", "/order-details/arrival/");
         modelMap.put("anchorName", "Release");
         ModelAndView mav = new ModelAndView(OPERATION_LIST, modelMap);
         return mav;

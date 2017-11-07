@@ -117,7 +117,7 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
 
     @Override
     public boolean updateRequestStatus(Long userId, RequestDetailsStatus requestDetailsStatus, RequestDetails[] entities) {
-        List<StatusUpdateBean> statusUpdateBeanList = makeStatusUpdateBeanList(entities);
+        List<StatusUpdateBean> statusUpdateBeanList = makeStatusUpdateBeanList(entities, userId, requestDetailsStatus);
         Session hibernateSession;
         try {
             hibernateSession = hibernateFacade.getSessionFactory().openSession();
@@ -236,13 +236,24 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
         new RequestDetailsRepositoryImpl().updateRequestStatus(0L, null, requestDetailsList);
     }
 
-    private List<StatusUpdateBean> makeStatusUpdateBeanList(RequestDetails[] entities) {
+    private List<StatusUpdateBean> makeStatusUpdateBeanList(RequestDetails[] entities, Long userId, RequestDetailsStatus requestDetailsStatus) {
 
         List<StatusUpdateBean> statusUpdateBeanList = new ArrayList<>();
+        String stitch = "";
+        switch (requestDetailsStatus) {
+            case APPROVED:
+            case DISAPPROVED:
+                stitch = ", considered_by_user_id = :userId";
+                break;
+            case RELEASED:
+                stitch = ", issued_by_user_id = :userId";
+                break;
+        }
 
-        final String baseQuery = "UPDATE request_details SET request_details_status = :requestDetailsState "
+        final String strFormat = "UPDATE request_details SET request_details_status = :requestDetailsState %s "
                 .concat("WHERE (request_request_id, item_item_id) IN (");
 
+        final String baseQuery = String.format(strFormat, stitch);
         List<RequestDetails> requestDetailsList = Arrays.asList(entities);
         Collections.sort(requestDetailsList, Comparator.comparing(RequestDetails::getRequestDetailsStatus));
 
@@ -278,6 +289,8 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
 
             if (isLastElement || nextIndexStatus != firstElementState) {
                 parameterMap.put("requestDetailsState", firstElementState.toString());
+                parameterMap.put("userId", userId);
+
                 String query = sb.toString();
                 query = query.substring(0, query.lastIndexOf(",")).concat(")");
                 statusUpdateBeanList.add(new StatusUpdateBean(query, parameterMap));

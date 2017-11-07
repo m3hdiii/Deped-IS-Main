@@ -1,6 +1,7 @@
 package com.deped.repository.order;
 
 import com.deped.model.order.*;
+import com.deped.model.request.RequestDetailsStatus;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
 import org.hibernate.Session;
@@ -167,6 +168,21 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
                 }
             }
 
+
+            String notArrivalReasonQuery = "UPDATE order_details SET not_arrival_message = :reason WHERE order_order_id = :orderId AND item_item_id = :itemId AND category_category_id = :categoryId";
+            String disapprovalReasonQuery = "UPDATE order_details SET disapproval_message = :reason WHERE order_order_id = :orderId AND item_item_id = :itemId AND category_category_id = :categoryId";
+            for (OrderDetails od : entities) {
+                String notArrivalReason = od.getNotArrivalMessage();
+                String disapprovalMessage = od.getDisapprovalMessage();
+                if (notArrivalReason != null && !notArrivalReason.isEmpty()) {
+                    notArrivalOrDisapprovalProcessor(od, notArrivalReason, hibernateSession, notArrivalReasonQuery);
+                }
+
+                if (disapprovalMessage != null && !disapprovalMessage.isEmpty()) {
+                    notArrivalOrDisapprovalProcessor(od, disapprovalMessage, hibernateSession, disapprovalReasonQuery);
+                }
+            }
+
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
@@ -179,6 +195,15 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
 
         return false;
 
+    }
+
+    private void notArrivalOrDisapprovalProcessor(OrderDetails orderDetails, String reason, Session hibernateSession, String query) {
+        NativeQuery<OrderDetails> updateMessagesNativeQuery = hibernateSession.createNativeQuery(query, OrderDetails.class);
+        updateMessagesNativeQuery.setParameter("orderId", orderDetails.getOrderDetailsID().getOrderId());
+        updateMessagesNativeQuery.setParameter("itemId", orderDetails.getOrderDetailsID().getItemId());
+        updateMessagesNativeQuery.setParameter("categoryId", orderDetails.getOrderDetailsID().getCategoryId());
+        updateMessagesNativeQuery.setParameter("reason", reason);
+        updateMessagesNativeQuery.executeUpdate();
     }
 
     @Override
@@ -276,18 +301,18 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
         switch (orderDetailsState) {
             case APPROVED:
             case DISAPPROVED:
-                stitch = "approved_by_user_id = :userId , ";
+                stitch = ", considered_by_user_id = :userId";
                 break;
             case ORDERED:
-                stitch = "ordered_by_user_id = :userId";
+                stitch = ", ordered_by_user_id = :userId";
                 break;
             case ARRIVED:
             case NOT_ARRIVED:
-                stitch = "received_by_user_id = :userId";
+                stitch = ", received_by_user_id = :userId";
                 break;
         }
 
-        String strFormat = "UPDATE order_details SET order_details_state = :orderDetailsState , %s "
+        String strFormat = "UPDATE order_details SET order_details_state = :orderDetailsState %s "
                 .concat("WHERE (order_order_id, item_item_id, category_category_id) IN (");
 
         final String baseQuery = String.format(strFormat, stitch);

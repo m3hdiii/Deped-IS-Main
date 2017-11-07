@@ -55,17 +55,13 @@ public class RequestDetails implements Serializable {
     @Column(name = "supply_office_remark")
     private String supplyOfficeRemark;
 
-    @JoinColumn(name = "approved_by_user_id")
+    @JoinColumn(name = "considered_by_user_id")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private User approvedByUser;
+    private User consideredByUser;
 
     @JoinColumn(name = "issued_by_user_id")
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User issuedByUser;
-
-    @JoinColumn(name = "received_by_user_id")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private User receivedByUser;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "requestDetails")
     private Set<RequestTracker> requestTrackers;
@@ -161,12 +157,12 @@ public class RequestDetails implements Serializable {
         this.item = item;
     }
 
-    public User getApprovedByUser() {
-        return approvedByUser;
+    public User getConsideredByUser() {
+        return consideredByUser;
     }
 
-    public void setApprovedByUser(User approvedByUser) {
-        this.approvedByUser = approvedByUser;
+    public void setConsideredByUser(User consideredByUser) {
+        this.consideredByUser = consideredByUser;
     }
 
     public User getIssuedByUser() {
@@ -175,14 +171,6 @@ public class RequestDetails implements Serializable {
 
     public void setIssuedByUser(User issuedByUser) {
         this.issuedByUser = issuedByUser;
-    }
-
-    public User getReceivedByUser() {
-        return receivedByUser;
-    }
-
-    public void setReceivedByUser(User receivedByUser) {
-        this.receivedByUser = receivedByUser;
     }
 
     public Set<RequestTracker> getRequestTrackers() {

@@ -69,16 +69,16 @@ public class OrderDetails implements Serializable {
     @Transient
     private OrderDetailsState transientUpdateState;
 
-    @JoinColumn(name = "approved_by_user_id")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private User approvedByUser;
+    @JoinColumn(name = "considered_by_user_id")
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private User consideredByUser;
 
     @JoinColumn(name = "ordered_by_user_id")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User orderedByUser;
 
     @JoinColumn(name = "received_by_user_id")
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User receivedByUser;
 
     public Order getOrder() {
@@ -193,12 +193,12 @@ public class OrderDetails implements Serializable {
         this.transientUpdateState = transientUpdateState;
     }
 
-    public User getApprovedByUser() {
-        return approvedByUser;
+    public User getConsideredByUser() {
+        return consideredByUser;
     }
 
-    public void setApprovedByUser(User approvedByUser) {
-        this.approvedByUser = approvedByUser;
+    public void setConsideredByUser(User consideredByUser) {
+        this.consideredByUser = consideredByUser;
     }
 
     public User getOrderedByUser() {

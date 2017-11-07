@@ -2,21 +2,13 @@ package com.deped.model.account;
 
 import com.deped.model.location.City;
 import com.deped.model.location.office.Section;
-import com.deped.model.order.Order;
-import com.deped.model.request.Request;
 import com.deped.model.security.Role;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.annotations.Formula;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import static com.deped.repository.utils.ConstantValues.*;
@@ -65,9 +57,6 @@ import static com.deped.repository.utils.ConstantValues.*;
 
 @Entity
 @Table(name = "user")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "userId", scope = User.class)
 public class User implements Serializable {
 
     @Id
@@ -161,14 +150,6 @@ public class User implements Serializable {
     @Temporal(TemporalType.DATE)
     @Column(name = "employment_date")
     private Date employmentDate;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
-    @JsonBackReference("request-binding")
-    private List<Request> requests;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
-    @JsonBackReference("orders-binding")
-    private List<Order> orders;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "city_of_born")
@@ -423,23 +404,6 @@ public class User implements Serializable {
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
-
-    public List<Request> getRequests() {
-        return requests;
-    }
-
-    public void setRequests(List<Request> requests) {
-        this.requests = requests;
-    }
-
-    public List<Order> getOrders() {
-        return orders;
-    }
-
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
-    }
-
 
     public City getCityOfBorn() {
         return cityOfBorn;
