@@ -132,12 +132,15 @@
                     <div class="item-infomation text-center">
                         <h4>${item.name}</h4>
                         <div class="form-group">
-                            <label>Available QTY:</label><p>${item.quantity} 123</p>
+                            <label>Available QTY:</label>
+                            <p>${item.quantity}</p>
                         </div>
                         <div class="form-group clearfix">
                             <label for="itemReqQty${item.itemId}" class="col-md-12">Request QTY:</label>
                             <div class="col-md-6 col-md-push-3">
-                                <form:input path="requestQuantity" class="form-control input-sm text-center no-padd" type="number" id="itemReqQty${item.itemId}" min="0" value="0"/>
+                                <form:input path="requestQuantity" class="form-control input-sm text-center no-padd"
+                                            type="number" id="itemReqQty${item.itemId}" min="0" max="${item.quantity}"
+                                            value="0"/>
                             </div>
                         </div>
                         <div class="form-group">

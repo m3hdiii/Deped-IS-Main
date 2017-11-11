@@ -61,7 +61,8 @@
             <th>Item Picture</th>
             <th>Packages</th>
             <th>Package Capacity</th>
-            <th>Quantity Request</th>
+            <th>No of Packs</th>
+            <th>Total Capacity</th>
             <th>Category</th>
             <th>Unit Price</th>
             <th>Suppliers</th>
@@ -110,9 +111,15 @@
                         </td>
 
                         <td>
+                            <form:input path="map['${strKey}'].noOfPacks"
+                                        value="${orderDet.totalQuantityRequestNo}"/>
+                        </td>
+
+                        <td>
                             <form:input path="map['${strKey}'].totalQuantityRequestNo"
                                         value="${orderDet.totalQuantityRequestNo}"/>
                         </td>
+
                         <td>
                             <form:select multiple="single" path="map['${strKey}'].category">
                                 <form:option value="${orderDet.category.categoryId}" selected="true"

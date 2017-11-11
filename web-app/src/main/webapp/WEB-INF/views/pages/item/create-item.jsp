@@ -112,6 +112,7 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="modal-footer">
                                 <a href="/item/list" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i> Back</a>
                                 <div class="button-footer pull-right">

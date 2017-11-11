@@ -20,8 +20,8 @@
 
 <html>
 <c:import url="../../includes/head.jsp">
-    <c:param name="title" value="Item Registration"/>
-    <c:param name="description" value="Item Registration Page"/>
+    <c:param name="title" value="${pageTitle}"/>
+    <c:param name="description" value="${topHeading}"/>
 </c:import>
 
 <body>
@@ -30,7 +30,7 @@
     <c:import url="../../includes/top-nav.jsp"/>
 
     <div class="page-header">
-        <h3>&nbsp;&nbsp;&nbspOrder Request&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
+        <h3>&nbsp;&nbsp;&nbspOrder ${h1Placeholder}&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
         </h3>
     </div>
 
@@ -54,7 +54,11 @@
             <th>Item Picture</th>
             <th>Packages</th>
             <th>Package Capacity</th>
+            <th>No of Packs</th>
             <th>Quantity Request</th>
+            <c:if test="${currentOrderDetailsState eq 'ARRIVED'}">
+                <th>Quantity Arrived</th>
+            </c:if>
             <th>Category</th>
             <th>Unit Price</th>
             <th>Suppliers</th>
@@ -93,9 +97,20 @@
                                 ${orderDet.packCapacity}
                         </td>
 
+                        <th>
+                                ${orderDet.noOfPacks}
+                        </th>
+
                         <td>
                                 ${orderDet.totalQuantityRequestNo}
                         </td>
+
+                        <c:if test="${currentOrderDetailsState eq 'ARRIVED'}">
+                            <th>
+                                <form:input path="map['${strKey}'].totalQuantityArrivedNo"
+                                            value="${orderDet.totalQuantityRequestNo}"/>
+                            </th>
+                        </c:if>
                         <td>
                                 ${orderDet.category.name}
                         </td>
@@ -121,7 +136,7 @@
                 </c:forEach>
                 <tr>
                     <td colspan="3">
-                        <button>Approve</button>
+                        <button>Submit My Decision!</button>
                     </td>
                 </tr>
             </form:form>

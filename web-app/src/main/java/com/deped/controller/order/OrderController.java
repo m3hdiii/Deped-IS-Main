@@ -44,6 +44,7 @@ public class OrderController extends AbstractMainController<Order, Long> {
     private static final String RENDER_LIST_MAPPING = BASE_NAME + FETCH_PATTERN;
 
     private static final String RENDER_LIST_APPROVAL_MAPPING = BASE_NAME + "/approval-list";
+    private static final String RENDER_LIST_REQUISITION_MAPPING = BASE_NAME + "/requisition-list";
     private static final String RENDER_LIST_ARRIVAL_MAPPING = BASE_NAME + "/arrival-list";
     private static final String RENDER_LIST_USER_MAPPING = BASE_NAME + FETCH_PATTERN + "/user" + FETCH_BY_ID_PATTERN;
 
@@ -57,7 +58,7 @@ public class OrderController extends AbstractMainController<Order, Long> {
     private static final String UPDATE_VIEW_PAGE = BASE_SHOW_PAGE + UPDATE_PAGE + BASE_NAME;
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
 
-    private static final String OPERATION_LIST = BASE_SHOW_PAGE + BASE_NAME + "-selected" + LIST_PAGE;
+    private static final String ORDER_CONSIDERATION_PAGE = BASE_SHOW_PAGE + BASE_NAME + "-selected" + LIST_PAGE;
 
 
     @Override
@@ -94,27 +95,66 @@ public class OrderController extends AbstractMainController<Order, Long> {
 
     @RequestMapping(value = RENDER_LIST_APPROVAL_MAPPING, method = GET)
     public ModelAndView approvalListRender() {
-        List<Order> requests = fetchByState(OrderState.PENDING);
-        Map<String, Object> modelMap = new HashMap<>();
-        modelMap.put("orders", requests);
-        modelMap.put("orderUrl", "/order-details/approval/");
-        modelMap.put("anchorName", "Approval");
-        ModelAndView mav = new ModelAndView(OPERATION_LIST, modelMap);
-        return mav;
+        List<Order> orderList = fetchByState(OrderState.PENDING);
 
+        ModelAndView mav = createListModelMapping(
+                orderList,
+                ORDER_CONSIDERATION_PAGE,
+                "/order-details/approval/",
+                "Check inside",
+                "Approval List Page",
+                "Approval List Page For Orders",
+                "Approval"
+        );
+
+        return mav;
+    }
+
+    @RequestMapping(value = RENDER_LIST_REQUISITION_MAPPING, method = GET)
+    public ModelAndView requisitionListRender() {
+        List<Order> orderList = fetchByState(OrderState.CONSIDERED);
+        ModelAndView mav = createListModelMapping(
+                orderList,
+                ORDER_CONSIDERATION_PAGE,
+                "/order-details/requisition/",
+                "Check inside",
+                "Requisition List Page",
+                "Requisition List Page For Orders",
+                "Requisition"
+        );
+
+        return mav;
     }
 
     @RequestMapping(value = RENDER_LIST_ARRIVAL_MAPPING, method = GET)
     public ModelAndView releaseListRender() {
-        List<Order> requests = fetchByState(OrderState.CONSIDERED);
-        Map<String, Object> modelMap = new HashMap<>();
-        modelMap.put("orders", requests);
-        modelMap.put("orderUrl", "/order-details/arrival/");
-        modelMap.put("anchorName", "Release");
-        ModelAndView mav = new ModelAndView(OPERATION_LIST, modelMap);
+        List<Order> orderList = fetchByState(OrderState.ORDERED);
+        ModelAndView mav = createListModelMapping(
+                orderList,
+                ORDER_CONSIDERATION_PAGE,
+                "/order-details/arrival/",
+                "Check inside",
+                "Arrival List Page",
+                "Arrival List Page For Orders",
+                "Arrival"
+        );
+
         return mav;
 
     }
+
+    private ModelAndView createListModelMapping(List<Order> orderList, String jspPagePath, String detailsInfoLinkName, String anchorName, String pageTitle, String topHeading, String h1Placeholder) {
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("orders", orderList);
+        modelMap.put("orderUrl", detailsInfoLinkName);
+        modelMap.put("anchorName", anchorName);
+        modelMap.put("pageTitle", pageTitle);
+        modelMap.put("topHeading", topHeading);
+        modelMap.put("h1Placeholder", h1Placeholder);
+        ModelAndView mav = new ModelAndView(ORDER_CONSIDERATION_PAGE, modelMap);
+        return mav;
+    }
+
 
     private List<Order> fetchByState(OrderState orderState) {
         RestTemplate restTemplate = new RestTemplate();
@@ -139,7 +179,7 @@ public class OrderController extends AbstractMainController<Order, Long> {
         modelMap.put("requests", requests);
         modelMap.put("orderUrll", "/order-details/");
         modelMap.put("anchorName", "More Info");
-        ModelAndView mav = new ModelAndView(OPERATION_LIST, modelMap);
+        ModelAndView mav = new ModelAndView(ORDER_CONSIDERATION_PAGE, modelMap);
         return mav;
 
     }

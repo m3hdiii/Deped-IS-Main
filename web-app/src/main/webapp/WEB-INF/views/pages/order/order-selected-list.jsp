@@ -20,8 +20,8 @@
 
 <html>
 <c:import url="../../includes/head.jsp">
-    <c:param name="title" value="Item Registration"/>
-    <c:param name="description" value="Item Registration Page"/>
+    <c:param name="title" value="${pageTitle}"/>
+    <c:param name="description" value="${topHeading}"/>
 </c:import>
 
 <body>
@@ -30,7 +30,7 @@
     <c:import url="../../includes/top-nav.jsp"/>
 
     <div class="page-header">
-        <h3>&nbsp;&nbsp;&nbsprequest Request&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
+        <h3>&nbsp;&nbsp; Order ${h1Placeholder} Page&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
         </h3>
     </div>
 
