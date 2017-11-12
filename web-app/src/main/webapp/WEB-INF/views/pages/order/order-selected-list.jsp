@@ -20,8 +20,8 @@
 
 <html>
 <c:import url="../../includes/head.jsp">
-    <c:param name="title" value="Item Registration"/>
-    <c:param name="description" value="Item Registration Page"/>
+    <c:param name="title" value="${pageTitle}"/>
+    <c:param name="description" value="${topHeading}"/>
 </c:import>
 
 <body>
@@ -29,52 +29,40 @@
 <section class="content">
     <c:import url="../../includes/top-nav.jsp"/>
 
-    <div class="warper container-fluid">
+    <div class="page-header">
+        <h3>&nbsp;&nbsp; Order ${h1Placeholder} Page&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
+        </h3>
+    </div>
 
-        <div class="page-header">
-            <h1>Manage Order
-                <small>DepEd-Baguio City Division Office</small>
-            </h1>
+    <hr class="style13">
 
-        </div>
 
-        <div class="row item-body">
-            <div class="panel panel-default">
-                <h3 class="text-center">Order Info</h3>
-                <div class="panel-body">
+    <div class="row">
+        <table class="table table-hover">
+            <thead>
+            <th>Order Id</th>
+            <th>User Message</th>
+            <th>Order Date</th>
+            <th>Required Date</th>
+            <th>Order State</th>
+            <th>Budget Amount</th>
+            <th>Consideration</th>
+            </thead>
+            <c:forEach items="${orders}" var="order">
 
-                    <table class="table table-hover">
-                        <thead>
-                        <tr>
-                            <th>User</th>
-                            <th>Date Ordered</th>
-                            <th>Date Required</th>
-                            <th>Order State</th>
-                            <th>Budget Amount</th>
-                            <th>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach items="${orders}" var="order">
-                            <tr>
-                                <th>${order.user.firstName} ${order.user.middleName} ${order.user.lastName}</th>
-                                <td>${order.orderDate}</td>
-                                <td>${order.requiredDate}</td>
-                                <td>${order.orderState}</td>
-                                <td>${order.budgetAmount}</td>
-                                <td>
-                                    <a href="${orderUrl}${order.orderId}" class="btn btn-primary btn-sm">${anchorName}</a>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                <tr>
+                    <td>${order.orderId}</td>
+                    <td>${order.user.firstName} ${order.user.lastName}</td>
+                    <td>${order.orderDate}</td>
+                    <td>${order.requiredDate}</td>
+                    <td>${order.orderState}</td>
+                    <td>${order.budgetAmount}</td>
+                    <td><a href="${orderUrl}${order.orderId}">${anchorName}</a></td>
+                </tr>
+            </c:forEach>
 
-        </div>
-    </div> <!-- Warper Ends Here (working area) -->
-
+        </table>
+    </div>
 
 
     <c:import url="../../modals/cart.jsp"/>

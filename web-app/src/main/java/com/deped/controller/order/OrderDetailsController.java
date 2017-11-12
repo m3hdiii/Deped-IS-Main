@@ -1,9 +1,11 @@
 package com.deped.controller.order;
 
+import com.deped.ResultBean;
 import com.deped.controller.AbstractMainController;
 import com.deped.controller.SharedData;
 import com.deped.form.OrderDetailsForm;
 import com.deped.model.Response;
+import com.deped.model.ResponseStatus;
 import com.deped.model.account.User;
 import com.deped.model.category.Category;
 import com.deped.model.items.Item;
@@ -60,7 +62,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
     private static final String BASKET_VIEW_PAGE = BASE_NAME + URL_SEPARATOR + "basket" + URL_SEPARATOR + ID_PATTERN;
     private static final String APPROVAL_PAGE = BASE_NAME + URL_SEPARATOR + "approval" + URL_SEPARATOR + ID_PATTERN;
-    private static final String ORDER_PAGE = BASE_NAME + URL_SEPARATOR + "order" + URL_SEPARATOR + ID_PATTERN;
+    private static final String REQUISITION_PAGE = BASE_NAME + URL_SEPARATOR + "requisition" + URL_SEPARATOR + ID_PATTERN;
     private static final String ARRIVAL_PAGE = BASE_NAME + URL_SEPARATOR + "arrival" + URL_SEPARATOR + ID_PATTERN;
 
     private static final String UPDATE_STATE_REST = BASE_NAME + URL_SEPARATOR + "update-state/user/%d/state/%d";
@@ -243,6 +245,10 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         return renderActions(
                 request,
                 new HashSet<>(requestDetailsList),
+                "Approval Page",
+                "Approving Registered Order Page",
+                "Approval",
+                OrderDetailsState.APPROVED,
                 nextRequestDetailsStatuses
         );
     }
@@ -250,10 +256,20 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
     @RequestMapping(value = APPROVAL_PAGE, method = POST)
     public ModelAndView approvalActionSubmit(@ModelAttribute("orderDetailsForm") OrderDetailsForm orderDetailsForm) {
         ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, OrderDetailsState.APPROVED);
-        return null;
+        Response response = updateResponse.getBody();
+
+        String headTagTitle = "Approval Result";
+        String headTagDescription = "Approval Result Summary";
+        String heading = "Operation Result";
+        String successMessage = response.getResponseStatus() == ResponseStatus.SUCCESSFUL ? "You Successfully Processed The Approval Process" : null;
+        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "Something Went Wrong In Approval Process" : null;
+
+        ResultBean resultBean = new ResultBean(headTagTitle, headTagDescription, heading, successMessage, failureMessage);
+        ModelAndView mav = createResultPage(resultBean);
+        return mav;
     }
 
-    @RequestMapping(value = ORDER_PAGE, method = GET)
+    @RequestMapping(value = REQUISITION_PAGE, method = GET)
     public ModelAndView orderedActionRender(@ModelAttribute("order") Order order, @PathVariable(ID_STRING_LITERAL) Long orderId) {
 
         Order request = fetchOrder(orderId);
@@ -272,20 +288,34 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         return renderActions(
                 request,
                 new HashSet<>(requestDetailsList),
+                "Requisition Order Page",
+                "Requisition Page for Approved Items",
+                "Requisition",
+                OrderDetailsState.ORDERED,
                 nextRequestDetailsStatuses
         );
     }
 
-    @RequestMapping(value = ORDER_PAGE, method = POST)
+    @RequestMapping(value = REQUISITION_PAGE, method = POST)
     public ModelAndView orderedActionSubmit(@ModelAttribute("orderDetailsForm") OrderDetailsForm orderDetailsForm) {
         ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, OrderDetailsState.ORDERED);
-        return null;
+        Response response = updateResponse.getBody();
+
+        String headTagTitle = "Order Result";
+        String headTagDescription = "Order Result Summary";
+        String heading = "Operation Result";
+        String successMessage = response.getResponseStatus() == ResponseStatus.SUCCESSFUL ? "You Successfully Process The Ordering Process" : null;
+        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "Something Went Wrong In Ordering Process" : null;
+
+        ResultBean resultBean = new ResultBean(headTagTitle, headTagDescription, heading, successMessage, failureMessage);
+        ModelAndView mav = createResultPage(resultBean);
+        return mav;
     }
 
     @RequestMapping(value = ARRIVAL_PAGE, method = GET)
     public ModelAndView arrivalActionRender(@ModelAttribute("order") Order order, @PathVariable(ID_STRING_LITERAL) Long orderId) {
         Order request = fetchOrder(orderId);
-        ModelAndView requestChecking = orderChecking(request, OrderState.CONSIDERED);
+        ModelAndView requestChecking = orderChecking(request, OrderState.ORDERED);
         if (requestChecking != null) {
             return requestChecking;
         }
@@ -300,6 +330,10 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         return renderActions(
                 request,
                 new HashSet<>(requestDetailsList),
+                "Arrival Page",
+                "Arrival Page for Ordered Items",
+                "Arrival",
+                OrderDetailsState.ARRIVED,
                 nextRequestDetailsStatuses
         );
     }
@@ -307,7 +341,21 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
     @RequestMapping(value = ARRIVAL_PAGE, method = POST)
     public ModelAndView arrivalActionSubmit(@ModelAttribute("orderDetailsForm") OrderDetailsForm orderDetailsForm) {
         ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, OrderDetailsState.ARRIVED);
-        return null;
+        Response response = updateResponse.getBody();
+
+        String headTagTitle = "Arrival Result";
+        String headTagDescription = "Arrival Result Summary";
+        String heading = "Operation Result";
+        String successMessage = response.getResponseStatus() == ResponseStatus.SUCCESSFUL ? "You Successfully Process The Arrival Process" : null;
+        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "Something Went Wrong In Arrival Process" : null;
+
+        if (response.getResponseStatus() == ResponseStatus.SUCCESSFUL) {
+            SharedData.getItems(true);
+        }
+
+        ResultBean resultBean = new ResultBean(headTagTitle, headTagDescription, heading, successMessage, failureMessage);
+        ModelAndView mav = createResultPage(resultBean);
+        return mav;
     }
 
     private Order fetchOrder(Long requestId) {
@@ -357,7 +405,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         return null;
     }
 
-    private ModelAndView renderActions(Order order, Set<OrderDetails> orderDetailsList, OrderDetailsState[] nextStates) {
+    private ModelAndView renderActions(Order order, Set<OrderDetails> orderDetailsList, String pageTitle, String topHeading, String h1Placeholder, OrderDetailsState currentState, OrderDetailsState[] nextStates) {
 
         Map<String, Object> modelMap = new HashMap<>();
 
@@ -367,8 +415,11 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
         modelMap.put("orderId", order.getOrderId());
         modelMap.put("relatedOrder", order);
+        modelMap.put("currentOrderDetailsState", currentState);
         modelMap.put("nextOrderDetailsStates", nextStates);
-
+        modelMap.put("pageTitle", pageTitle);
+        modelMap.put("topHeading", topHeading);
+        modelMap.put("h1Placeholder", h1Placeholder);
 
         ModelAndView mv = new ModelAndView(FLOW_VIEW_PAGE, modelMap);
         return mv;

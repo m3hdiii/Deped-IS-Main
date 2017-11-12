@@ -59,6 +59,7 @@ public class OrderRestController extends AbstractMainRestController<Order, Long>
             case SAVED:
                 return null;
             case PENDING:
+            case ORDERED:
             case CONSIDERED:
                 break;
         }

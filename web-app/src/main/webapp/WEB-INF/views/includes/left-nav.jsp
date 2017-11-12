@@ -54,8 +54,9 @@
             <li class="has-submenu"><a href="#"><i class="fa fa-truck"></i> <span
                     class="nav-label leftNavHeader">Manage Orders</span></a>
                 <ul class="list-unstyled">
-                    <li><a href="/order/approval-list"><span>Approve Order</span></a></li>
-                    <li><a href="/order/arrival-list"><span>Arrived Order</span></a></li>
+                    <li><a href="/order/approval-list"><span>Order Approval List</span></a></li>
+                    <li><a href="/order/requisition-list"><span>Order Requisition List</span></a></li>
+                    <li><a href="/order/arrival-list"><span>Arrived Checking List</span></a></li>
                     <li><a href="/pack/list"><span>Pack List</span></a></li>
                     <li><a href="/pack/create"><span>Create Pack</span></a></li>
                 </ul>

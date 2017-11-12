@@ -1,5 +1,6 @@
 package com.deped.repository.order;
 
+import com.deped.model.items.Item;
 import com.deped.model.order.*;
 import com.deped.model.request.RequestDetailsStatus;
 import com.deped.repository.utils.HibernateFacade;
@@ -140,6 +141,9 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
                 case DISAPPROVED:
                     nextOrderState = OrderState.CONSIDERED;
                     break;
+                case ORDERED:
+                    nextOrderState = OrderState.ORDERED;
+                    break;
                 case ARRIVED:
                 case NOT_ARRIVED:
                 case CANCELLED:
@@ -183,17 +187,30 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
                 }
             }
 
+            String updateItemQuantityQuery = "UPDATE item SET quantity = quantity + :newQuantity WHERE item_id = :itemId";
+            if (orderDetailsState == OrderDetailsState.ARRIVED) {
+                for (OrderDetails od : entities) {
+                    if (od.getOrderDetailsState() == OrderDetailsState.ARRIVED) {
+                        NativeQuery<Item> nativeQuery = hibernateSession.createNativeQuery(updateItemQuantityQuery, Item.class);
+                        nativeQuery.setParameter("newQuantity", od.getTotalQuantityArrivedNo());
+                        nativeQuery.setParameter("itemId", od.getOrderDetailsID().getItemId());
+                        nativeQuery.executeUpdate();
+                    }
+                }
+            }
+
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
             if (tx != null)
                 tx.rollback();
+            return false;
         } finally {
             if (hibernateSession != null)
                 hibernateSession.close();
         }
 
-        return false;
+        return true;
 
     }
 
@@ -273,6 +290,11 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
     }
 
     public static void main(String[] args) {
+
+        for (int i = 1; i <= 254; i++) {
+            System.out.println("192.168.0." + i);
+        }
+
         OrderDetails[] orderDetailsList = new OrderDetails[10];
         for (int i = 0; i < 10; i++) {
             if (i % 2 == 0) {

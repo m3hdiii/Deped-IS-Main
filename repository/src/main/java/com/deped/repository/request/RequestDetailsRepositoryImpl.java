@@ -185,12 +185,13 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
             e.printStackTrace();
             if (tx != null)
                 tx.rollback();
+            return false;
         } finally {
             if (hibernateSession != null)
                 hibernateSession.close();
         }
 
-        return false;
+        return true;
     }
 
     private void cancellationOrDisapprovalProcessor(RequestDetails rd, String reason, Session hibernateSession, String query) {

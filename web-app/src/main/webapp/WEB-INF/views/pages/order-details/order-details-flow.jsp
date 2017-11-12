@@ -20,8 +20,8 @@
 
 <html>
 <c:import url="../../includes/head.jsp">
-    <c:param name="title" value="Item Registration"/>
-    <c:param name="description" value="Item Registration Page"/>
+    <c:param name="title" value="${pageTitle}"/>
+    <c:param name="description" value="${topHeading}"/>
 </c:import>
 
 <body>
@@ -29,97 +29,120 @@
 <section class="content">
     <c:import url="../../includes/top-nav.jsp"/>
 
-    <div class="warper container-fluid">
+    <div class="page-header">
+        <h3>&nbsp;&nbsp;&nbspOrder ${h1Placeholder}&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
+        </h3>
+    </div>
 
-        <div class="page-header">
-            <h1>Manage Order
-                <small>DepEd-Baguio City Division Office</small>
-            </h1>
-        </div>
+    <div class="row">
+        <p>Order Number: ${relatedOrder.orderId}</p>
+        <p>Order
+            By: ${relatedOrder.user.firstName}&nbsp;${relatedOrder.user.middleName}&nbsp;${relatedOrder.user.lastName}</p>
+        <p>Schedule For: ${relatedOrder.orderSchedule}</p>
+        <p>Budget: ${relatedOrder.budgetAmount}</p>
+    </div>
 
-        <div class="row">
-            <p>Order Number: ${relatedOrder.orderId}</p>
-            <p>Order
-                By: ${relatedOrder.user.firstName}&nbsp;${relatedOrder.user.middleName}&nbsp;${relatedOrder.user.lastName}</p>
-            <p>Schedule For: ${relatedOrder.orderSchedule}</p>
-            <p>Budget: ${relatedOrder.budgetAmount}</p>
-        </div>
+    <hr class="style13">
 
-        <div class="row item-body">
+
+    <div class="row">
+        <table class="table table-hover">
+            <thead>
+            <th>Name</th>
+            <th>Item Type</th>
+            <th>Available Quantity</th>
+            <th>Item Picture</th>
+            <th>Packages</th>
+            <th>Package Capacity</th>
+            <th>No of Packs</th>
+            <th>Quantity Request</th>
+            <c:if test="${currentOrderDetailsState eq 'ARRIVED'}">
+                <th>Quantity Arrived</th>
+            </c:if>
+            <th>Category</th>
+            <th>Unit Price</th>
+            <th>Suppliers</th>
+            <td>Status</td>
+            </thead>
+
             <c:set var="basketMap" value="${orderDetailsForm.map}"/>
 
             <form:form commandName="orderDetailsForm" method="post">
-                <div class="panel panel-default">
-                    <h3 class="text-center">Ordered Items</h3>
-                    <div class="panel-body">
 
-                        <table class="table table-hover">
-                            <thead>
-                            <tr>
-                                <th>Image</th>
-                                <th>Name</th>
-                                <th>Available QTY</th>
-                                <th>Packages</th>
-                                <th>Pack Capacity</th>
-                                <th>Ordered QTY</th>
-                                <th>Category</th>
-                                <th>Unit Price</th>
-                                <th>Suppliers</th>
-                                <th>Item Type</th>
-                                <th>State</th>
-                            </tr>
-                            </thead>
-                            <tbody>
+                <c:forEach items="${basketMap}" var="entry" varStatus="loop">
+                    <c:set var="strKey" value="${entry.key}"/>
+                    <c:set var="orderDet" value="${entry.value}"/>
 
-                            <c:forEach items="${basketMap}" var="entry" varStatus="loop">
-                                <c:set var="strKey" value="${entry.key}"/>
-                                <c:set var="orderDet" value="${entry.value}"/>
-                                <tr>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${not empty orderDet.item.picName}">
-                                                <img src="${baseUrl}${orderDet.item.picName}" alt="item image" width="76px" height="50px"/>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <img src="${resourceURL}/images/shared-images/no-item.png"
-                                                     alt="item image" width="76px" height="50px"/>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <th>${orderDet.item.name}</th>
-                                    <td>${orderDet.item.quantity}</td>
-                                    <td>${orderDet.pack.name}</td>
-                                    <td>${orderDet.packCapacity}</td>
-                                    <td>${orderDet.totalQuantityRequestNo}</td>
-                                    <td>${orderDet.category.name}</td>
-                                    <td>${orderDet.unitPrice}</td>
-                                    <td>${orderDet.supplier.name}</td>
-                                    <td>${orderDet.item.itemType}</td>
-                                    <td>
-                                        <form:select multiple="single" path="map['${strKey}'].orderDetailsState">
-                                            <form:options items="${nextOrderDetailsStates}"/>
-                                        </form:select>
-                                    </td>
+                    <tr>
+                        <td>${orderDet.item.name}</td>
+                        <td>${orderDet.item.itemType}</td>
+                        <td>${orderDet.item.quantity}</td>
 
-                                    <form:hidden path="map['${strKey}'].orderDetailsID.categoryId"
-                                                 value="${orderDet.category.categoryId}"/>
-                                    <form:hidden path="map['${strKey}'].orderDetailsID.orderId" value="${orderDet.order.orderId}"/>
-                                    <form:hidden path="map['${strKey}'].orderDetailsID.itemId" value="${orderDet.item.itemId}"/>
-                                </tr>
-                            </c:forEach>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="modal-footer">
-                        <a href="#" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i><span> Back</span></a>
-                        <button type="submit" class="btn btn-purple pull-right">Confirm</button>
-                    </div>
-                </div>
+                        <c:choose>
+                            <c:when test="${not empty orderDet.item.picName}">
+                                <td><img width="64" src="${baseUrl}${orderDet.item.picName}" alt="item image"/></td>
+                            </c:when>
+                            <c:otherwise>
+                                <td><img width="64" src="${resourceURL}/images/shared-images/no-item.png"
+                                         alt="item image"/>
+                                </td>
+                            </c:otherwise>
+                        </c:choose>
+
+                        <td>
+                                ${orderDet.pack}
+                        </td>
+
+                        <td>
+                                ${orderDet.packCapacity}
+                        </td>
+
+                        <th>
+                                ${orderDet.noOfPacks}
+                        </th>
+
+                        <td>
+                                ${orderDet.totalQuantityRequestNo}
+                        </td>
+
+                        <c:if test="${currentOrderDetailsState eq 'ARRIVED'}">
+                            <th>
+                                <form:input path="map['${strKey}'].totalQuantityArrivedNo"
+                                            value="${orderDet.totalQuantityRequestNo}"/>
+                            </th>
+                        </c:if>
+                        <td>
+                                ${orderDet.category.name}
+                        </td>
+
+                        <td>
+                                ${orderDet.unitPrice}
+                        </td>
+                        <td>
+                                ${orderDet.supplier.name}
+                        </td>
+
+                        <td>
+                            <form:select multiple="single" path="map['${strKey}'].orderDetailsState">
+                                <form:options items="${nextOrderDetailsStates}"/>
+                            </form:select>
+                        </td>
+
+                        <form:hidden path="map['${strKey}'].orderDetailsID.categoryId"
+                                     value="${orderDet.category.categoryId}"/>
+                        <form:hidden path="map['${strKey}'].orderDetailsID.orderId" value="${orderDet.order.orderId}"/>
+                        <form:hidden path="map['${strKey}'].orderDetailsID.itemId" value="${orderDet.item.itemId}"/>
+                    </tr>
+                </c:forEach>
+                <tr>
+                    <td colspan="3">
+                        <button>Submit My Decision!</button>
+                    </td>
+                </tr>
             </form:form>
 
-        </div>
-
-    </div> <!-- Warper Ends Here (working area) -->
+        </table>
+    </div>
 
 
     <c:import url="../../modals/cart.jsp"/>

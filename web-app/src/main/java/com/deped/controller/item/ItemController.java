@@ -60,6 +60,7 @@ public class ItemController extends AbstractMainController<Item, Long> {
     public ModelAndView createActionWithPic(@PathVariable MultipartFile itemPic, @Valid @ModelAttribute("item") Item entity) {
 
         entity.setCreationDate(new Date());
+        entity.setQuantity(0);
         byte[] fileBytes;
         try {
             if (itemPic != null && (fileBytes = itemPic.getBytes()) != null && fileBytes.length != 0) {

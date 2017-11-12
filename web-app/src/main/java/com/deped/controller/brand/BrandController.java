@@ -43,6 +43,13 @@ public class BrandController extends AbstractMainController<Brand, Long> {
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
 
 
+    @RequestMapping(value = CREATE_MAPPING + "/1", method = GET)
+    public ModelAndView renderCreatePage1() {
+        ModelAndView mv = new ModelAndView("test");
+        return mv;
+
+    }
+
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = GET)
     public ModelAndView renderCreatePage(@ModelAttribute("brand") Brand entity) {

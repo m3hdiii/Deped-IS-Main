@@ -1,5 +1,6 @@
 package com.deped.controller;
 
+import com.deped.ResultBean;
 import com.deped.model.Response;
 import com.deped.model.category.Category;
 import com.deped.model.config.client.ClientEnumKey;
@@ -36,6 +37,14 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         return response;
     }
 
+    public ModelAndView createResultPage(ResultBean resultBean) {
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("result", resultBean);
+        ModelAndView mav = new ModelAndView("result", modelMap);
+        return mav;
+
+    }
+
     public ResponseEntity<Response> makeUpdateRestRequest(T entity, String baseName, HttpMethod method, Class<T> entityClass) {
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity httpEntity = makeHttpEntity(entity);
@@ -56,7 +65,6 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         ResponseEntity<List<?>> response = restTemplate.exchange(restUrl, method, httpEntity, typeRef);
         return response;
     }
-
 
 
     public ResponseEntity<List<T>> makeFetchByRangeRestRequest(String baseName, HttpMethod method, Range range, ParameterizedTypeReference<List<T>> typeRef) {

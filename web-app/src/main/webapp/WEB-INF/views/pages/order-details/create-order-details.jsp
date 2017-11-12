@@ -67,6 +67,7 @@
             <th>Item Picture</th>
             <th>Packages</th>
             <th>Package Capacity</th>
+            <th>No of Packs</th>
             <th>Quantity Request</th>
             <th>Category</th>
             <th>Unit Price</th>
@@ -98,6 +99,10 @@
 
                         <td>
                             <form:input path="packCapacity"/>
+                        </td>
+
+                        <td>
+                            <form:input path="noOfPacks"/>
                         </td>
 
                         <td>

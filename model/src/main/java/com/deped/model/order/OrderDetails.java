@@ -46,6 +46,9 @@ public class OrderDetails implements Serializable {
     @Column(name = "package_capacity")
     private Integer packCapacity;
 
+    @Column(name = "no_of_packs")
+    private Integer noOfPacks;
+
     @Column(name = "total_quantity_requested_no")
     private Integer totalQuantityRequestNo;
 
@@ -135,6 +138,14 @@ public class OrderDetails implements Serializable {
 
     public void setPackCapacity(Integer packCapacity) {
         this.packCapacity = packCapacity;
+    }
+
+    public Integer getNoOfPacks() {
+        return noOfPacks;
+    }
+
+    public void setNoOfPacks(Integer noOfPacks) {
+        this.noOfPacks = noOfPacks;
     }
 
     public Integer getTotalQuantityRequestNo() {
