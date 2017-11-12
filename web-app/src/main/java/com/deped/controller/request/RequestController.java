@@ -110,7 +110,7 @@ public class RequestController extends AbstractMainController<Request, Long> {
         });
 
         List<Request> requests = response.getBody();
-        Map<String, Object> modelMap = new HashMap<>();
+        Map<String, Object> modelMap = new HashMap<>(getConfigMap());
         modelMap.put("requests", requests);
         modelMap.put("requestUrl", "/request-details/");
         modelMap.put("anchorName", "More Info");

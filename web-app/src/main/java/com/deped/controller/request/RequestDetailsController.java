@@ -165,7 +165,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
             return new ModelAndView(redirectUrl);
         }
 
-        Map<String, Object> modelMap = new HashMap<>();
+        Map<String, Object> modelMap = new HashMap<>(getConfigMap());
         modelMap.put("requestId", requestId);
         modelMap.put("itemList", SharedData.getItems(false));
         modelMap.put("requestDetailsForm", new RequestDetailsForm());
@@ -372,7 +372,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
 
     private ModelAndView renderActions(Request request, Set<RequestDetails> requestDetailsList, RequestDetailsStatus[] nextStatuses) {
 
-        Map<String, Object> modelMap = new HashMap<>();
+        Map<String, Object> modelMap = new HashMap<>(getConfigMap());
 
         RequestDetailsForm orderDetailsForm = new RequestDetailsForm();
         orderDetailsForm.setMap(putRequestDetailsListIntoMap(requestDetailsList));

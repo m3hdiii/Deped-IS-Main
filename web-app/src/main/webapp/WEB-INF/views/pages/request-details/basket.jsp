@@ -53,16 +53,17 @@
 
             <nav class="clearfix">
                 <div class="dropdown pull-right">
-                    <button id="exportTo" class="btn btn-default btn-sm dropdown-toggle" type="button"
+                    <button disabled id="exportTo" class="btn btn-default btn-sm dropdown-toggle" type="button"
                             data-toggle="dropdown"><span class="glyphicon glyphicon-export"></span> Export <span
-                            class="caret"></span></button>
+                            class="caret"></span>
+                    </button>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="exportTo">
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><i
                                 class="fa fa-file-excel-o text-green"></i> Excel</a></li>
                         <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><i
                                 class="fa fa-file-pdf-o text-red"></i> PDF</a></li>
                     </ul>
-                    <button class="btn btn-purple btn-sm"><i class="fa fa-print"></i> Print</button>
+                    <button disabled class="btn btn-purple btn-sm"><i class="fa fa-print"></i> Print</button>
                 </div>
             </nav>
 

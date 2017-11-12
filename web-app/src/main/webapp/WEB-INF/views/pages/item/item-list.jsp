@@ -62,7 +62,6 @@
                             <th class="col-xs-2">Description</th>
                             <th>Item Type</th>
                             <th>QTY</th>
-                            <th>Activated</th>
                             <th>Actions</th>
                         </tr>
                         </thead>
@@ -92,12 +91,6 @@
                                 <td>${item.description}</td>
                                 <td>${item.itemType}</td>
                                 <td>${item.quantity}</td>
-                                <td>
-                                        <%-- This is not yet implemented....--%>
-                                    <label class="switch">
-                                        <input type="checkbox">
-                                        <span class="slider slider-round"></span>
-                                    </label>
                                 </td>
                                 <td>
                                     <a href="/item/update/${item.itemId}" class="btn btn-purple"><i

@@ -61,34 +61,34 @@
 
                                     <div class="form-group">
                                         <label for="newBrandName">Name</label>
-                                        <form:input path="name" type="text" class="form-control" id="newBrandName"/>
+                                        <form:input path="name" type="text" class="form-control" id="newBrandName" placeholder="Name of the Brand"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="newBrandDesc">Description</label>
                                         <form:textarea path="description" type="text" class="form-control limit-char-45"
-                                                       cols="3" rows="3" id="newBrandDesc" maxlength="100"/>
+                                                       cols="3" rows="3" id="newBrandDesc" maxlength="100" placeholder="Enter Description Here..."/>
                                         <!--<span class="word-count">0</span> / <span class="word-left">100</span>-->
                                     </div>
 
                                     <div class="form-group">
                                         <label for="newBrandPhone">Phone Number</label>
                                         <form:input path="contactNumber" type="number" class="form-control"
-                                                    id="newBrandPhone"/>
+                                                    id="newBrandPhone" placeholder="ex. 09123456789"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="newBrandTelephone">Telephone Number</label>
                                         <form:input path="contactNumber2" type="number" class="form-control"
-                                                    id="newBrandTelephone"/>
+                                                    id="newBrandTelephone" placeholder="ex. 477-2380-32"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="newOfficeAddress">Central Office Address</label>
                                         <form:input path="centralOfficeAddress" type="text" class="form-control"
-                                                    id="newOfficeAddress"/>
+                                                    id="newOfficeAddress" placeholder="Brand Central Office"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="newServiceAddress">Service Center Address</label>
                                         <form:input path="serviceCenterAddress" type="text" class="form-control"
-                                                    id="newServiceAddress"/>
+                                                    id="newServiceAddress" placeholder="Brand Service Center"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="newBrandPic">Brand Logo</label>

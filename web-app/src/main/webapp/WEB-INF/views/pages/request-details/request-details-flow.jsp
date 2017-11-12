@@ -32,7 +32,7 @@
     <div class="warper container-fluid">
 
         <div class="page-header">
-            <h1>Approve Request
+            <h1>Manage Request
                 <small>DepEd-Baguio City Division Office</small>
             </h1>
 

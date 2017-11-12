@@ -10,7 +10,7 @@
     <nav class=" navbar-default hidden-xs" role="navigation">
         <ul class="nav navbar-nav">
             <li><a href="/dashboard">Home</a></li>
-            <li><a href="/profile">Profile</a></li>
+            <li><a href="/user/">Profile</a></li>
             <li class="dropdown">
                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">Search & Filter <span
                         class="caret"></span></a>

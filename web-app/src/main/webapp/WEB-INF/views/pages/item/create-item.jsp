@@ -61,7 +61,7 @@
 
                                     <div class="form-group">
                                         <label for="newItemName">Name</label>
-                                        <form:input path="name" class="form-control typeahead" placeholder="" id="newItemName"/>
+                                        <form:input path="name" class="form-control typeahead" placeholder="Name of the item" id="newItemName"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="newItemBrand">Brand</label>
@@ -76,12 +76,12 @@
                                         </select>
                                     </div>
                                     <div class="text-right">
-                                        <button class="btn btn-purple btn-xs" data-toggle="modal" data-target="#new-brand-modal"><i class="fa fa-plus-circle"> Add Brand</i></button>
+                                        <a href="/brand/create" class="btn btn-purple btn-xs"><i class="fa fa-plus-circle"> Add Brand</i></a>
                                     </div>
                                     <div class="form-group">
                                         <label for="newItemDesc">Description</label>
                                         <form:textarea type="text" path="description" class="form-control typeahead"
-                                                   placeholder="enter description here..." cols="3" rows="3" id="newItemDesc" maxlength="100"></form:textarea>
+                                                   placeholder="Item Description Here..." cols="3" rows="3" id="newItemDesc" maxlength="100"></form:textarea>
                                     </div>
                                     <div class="form-group">
                                         <label for="newItemImg">Image</label>
@@ -91,7 +91,7 @@
 
                                     <div class="form-group">
                                         <label for="newItemThresh">Threshold</label>
-                                        <form:input path="threshold" type="number" class="form-control" id="newItemThresh"/>
+                                        <form:input path="threshold" min="0" type="number" class="form-control" id="newItemThresh"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="newItemType">Item Type</label>

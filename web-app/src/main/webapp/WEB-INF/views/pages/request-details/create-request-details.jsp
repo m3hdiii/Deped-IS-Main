@@ -110,6 +110,24 @@
                     </div>
                 </li>
 
+                <li>
+                    <div>
+                        <c:choose>
+                            <c:when test="${not empty sessionScope[basketName]}">
+                                <a href="/request-details/basket/${requestIdValue}"><img width="16"
+                                                                                         src="${resourceURL}/images/request/add-to-cart.png"
+                                                                                         alt="add to cart"/><span>${fn:length(sessionScope[basketName])}</span></a>
+                            </c:when>
+                            <c:otherwise>
+                                <a href="/request-details/basket/${requestIdValue}"><img width="16"
+                                                                                         src="${resourceURL}/images/request/add-to-cart.png"
+                                                                                         alt="add to cart"/></a>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+
+                </li>
+
 
 
             </ul>
@@ -149,9 +167,8 @@
                         <form:hidden path="requestDetailsID.itemId" value="${item.itemId}"/>
                         <form:hidden path="requestDetailsID.requestId" value="${requestIdValue}"/>
 
-                        <div class="button-group form-group">
-                            <button class="btn btn-md btn-purple" type="submit">Add to cart</button>
-                            <button class="btn btn-md btn-danger">Check out</button>
+                        <div class="form-group">
+                            <button class="btn btn-md btn-purple" type="submit">Add to Request</button>
                         </div>
                     </div>
                 </form:form>

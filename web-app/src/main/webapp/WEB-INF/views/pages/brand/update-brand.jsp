@@ -23,91 +23,93 @@
 
     <c:import url="../../includes/top-nav.jsp"/>
 
-    <div class="page-header">
-        <h3> &nbsp; Update Brand </h3>
-    </div>
+    <div class="warper container-fluid">
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <c:choose>
-                        <c:when test="${not empty notUpdated}">
-                            <p style="color: red;">${notUpdated}</p>
-                        </c:when>
-                        <c:when test="${not empty successfullyUpdated}">
-                            <p style="color: green;">${successfullyUpdated}</p>
-                            &nbsp;&nbsp;<a href="/brand/create">Create New Brand</a>
-                        </c:when>
-                    </c:choose>
+        <div class="page-header">
+            <h1>Update Brand
+                <small>DepEd-Baguio City Division Office</small>
+            </h1>
 
-                    <form:form commandName="brand" method="post" class="form-horizontal" enctype="multipart/form-data">
+        </div>
 
-                        <p>
-                        <div class="form-group">
-                            <label class="col-sm-2"> Name: </label>
-                            <form:input path="name" class="col-md-4"/>
-                        </div>
-                        </p>
+        <div class="row new-item-body">
+            <div class="col-md-12">
+                <div class="col-md-8 col-md-offset-2">
+                    <form:form commandName="brand" method="post" class="form-horizontal"
+                               enctype="multipart/form-data">
+                        <div class="panel panel-default">
+                            <h3 class="text-center">Brand Info</h3>
+                            <div class="panel-body">
+                                <div class="col-md-10 col-sm-offset-1">
 
-                        <p>
-                        <div class="form-group">
-                            <label class="col-sm-2"> Description: </label>
-                            <form:textarea path="description" class="col-md-4"/>
-                        </div>
-                        </p>
+                                    <c:choose>
+                                        <c:when test="${not empty notUpdated}">
+                                            <div class="alert alert-danger alert-dismissable fade in">
+                                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                <strong>Failed!</strong> ${notUpdated}.
+                                            </div>
+                                        </c:when>
+                                        <c:when test="${not empty successfullyUpdated}">
+                                            <div class="alert alert-success alert-dismissable fade in">
+                                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                <strong>Success!</strong> ${successfullyUpdated}.
+                                            </div>
+                                            &nbsp;&nbsp;<a href="/brand/create">Create New Brand</a>
+                                        </c:when>
+                                    </c:choose>
 
-                        <p>
-                        <div class="form-group">
-                            <label class="col-sm-2"> Contact Number: </label>
-                            <form:input path="contactNumber" class="col-md-3"/>
-                        </div>
-                        </p>
+                                    <div class="form-group">
+                                        <label for="newBrandName">Name</label>
+                                        <form:input path="name" type="text" class="form-control" id="newBrandName" placeholder="Name of the Brand"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newBrandDesc">Description</label>
+                                        <form:textarea path="description" type="text" class="form-control limit-char-45"
+                                                       cols="3" rows="3" id="newBrandDesc" maxlength="100" placeholder="Enter Description Here..."/>
+                                        <!--<span class="word-count">0</span> / <span class="word-left">100</span>-->
+                                    </div>
 
-                        <p>
-                        <div class="form-group">
-                            <label class="col-sm-2"> Contact Number 2: </label>
-                            <form:input path="contactNumber2" class="col-md-3"/>
-                        </div>
-                        </p>
+                                    <div class="form-group">
+                                        <label for="newBrandPhone">Phone Number</label>
+                                        <form:input path="contactNumber" type="number" class="form-control"
+                                                    id="newBrandPhone" placeholder="ex. 09123456789"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newBrandTelephone">Telephone Number</label>
+                                        <form:input path="contactNumber2" type="number" class="form-control"
+                                                    id="newBrandTelephone" placeholder="ex. 477-2380-32"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newOfficeAddress">Central Office Address</label>
+                                        <form:input path="centralOfficeAddress" type="text" class="form-control"
+                                                    id="newOfficeAddress" placeholder="Brand Central Office"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newServiceAddress">Service Center Address</label>
+                                        <form:input path="serviceCenterAddress" type="text" class="form-control"
+                                                    id="newServiceAddress" placeholder="Brand Service Center"/>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="newBrandPic">Brand Logo</label>
+                                        <input type="file" name="brandPic" id="newBrandPic"/>
+                                    </div>
+                                </div>
+                            </div><!-- New Brand Body closing -->
 
-                        <p>
-                        <div class="form-group">
-                            <label class="col-sm-2"> Central Office Address: </label>
-                            <form:input path="centralOfficeAddress" class="col-md-4"/>
-                        </div>
-                        </p>
-
-                        <p>
-                        <div class="form-group">
-                            <label class="col-sm-2"> Service Center Address: </label>
-                            <form:input path="serviceCenterAddress" class="col-md-4"/>
-                        </div>
-                        </p>
-
-                        <p>
-                        <div>
-                            <label class="col-sm-2">Brand Picture: </label>
-                            <input type="file" name="brandPic" id="brandPicture" class="col-md-4"/>
-                        </div>
-                        </p>
-
-                        <p>
-                        <div class="form-group">
-                            <div class="col-md-2">
-                                <button type="submit" class="btn btn-green"> Update Brand</button>
+                            <div class="modal-footer">
+                                <a href="/brand/list" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i>
+                                    Back</a>
+                                <div class="button-footer pull-right">
+                                    <button type="button" type="reset" class="btn btn-default">Reset</button>
+                                    <button type="submit" class="btn btn-primary">Create</button>
+                                </div>
                             </div>
-                            <div class="col-md-2">
-                                <button type="reset" class="btn btn-green"> Reset</button>
-                            </div>
                         </div>
-                        </p>
-
                     </form:form>
                 </div>
             </div>
         </div>
-    </div>
+    </div> <!-- Warper Ends Here (working area) -->
 
     <c:import url="../../modals/cart.jsp"/>
 </section>
