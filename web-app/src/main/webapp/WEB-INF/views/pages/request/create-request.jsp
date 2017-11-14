@@ -27,61 +27,101 @@
 <section class="content">
     <c:import url="../../includes/top-nav.jsp"/>
 
-    <div class="page-header">
-        <h3>&nbsp;&nbsp;&nbspOrder Request&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
-        </h3>
-    </div>
+    <div class="warper container-fluid">
 
-    <div>
-
-
-        <c:choose>
-            <c:when test="${not empty notCreated}">
-                <p style="color: red;">${notCreated}</p>
-            </c:when>
-
-
-            <c:when test="${not empty successfullyCreated}">
-                <p style="color: green;">${successfullyCreated}</p>
-                &nbsp;&nbsp;<a href="/order-details/create">Add Item to YourOrder</a>
-            </c:when>
-
-        </c:choose>
-    </div>
-
-    <div class="row">
-
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-heading">Item Information</div>
-                <div class="panel-body">
-                    <form:form commandName="request" method="post" class="form-horizontal" role="form">
-                        <div class="form-group">
-                            <label class="col-sm-2 control-label">Explain Your Reason For Requesting</label>
-                            <div class="col-sm-2">
-                                <form:textarea path="userMessage" class="form-control"/>
-                            </div>
-                        </div>
-
-                        <hr class="style13">
-
-                        <div class="btn-group-sm row">
-                            <div class="col-sm-2">
-                                <button type="submit" class="btn btn-success btn-block">Confirm</button>
-                            </div>
-                            <div class="form-group col-sm-2">
-                                <button type="reset" class="btn btn-primary btn-block">Reset Fields</button>
-                            </div>
-                        </div>
-
-                        <hr class="style13">
-
-                    </form:form>
-                </div>
-            </div>
+        <div class="page-header">
+            <h3>Request Item&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
+            </h3>
         </div>
 
+
+        <div class="row new-item-body">
+            <div class="col-md-12">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="panel panel-default">
+
+                        <form:form commandName="request" method="post" class="form-horizontal" role="form">
+
+                            <h3 class="text-center">Create Request</h3>
+                            <div class="panel-body">
+                                <div class="col-md-10 col-sm-offset-1">
+
+                                    <div class="form-group">
+                                        <label for="newReason">Explain Your Reason For Requesting</label>
+                                            <form:textarea path="userMessage" class="form-control" id="newReason"/>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="button-footer pull-right">
+                                    <input type="reset" class="btn btn-default" value="Clear"/>
+                                    <button type="submit" class="btn btn-primary">Next</button>
+                                </div>
+                            </div>
+                        </form:form>
+                    </div>
+                </div>
+            </div> <!-- New Item Body closing -->
+        </div>
     </div>
+    <!-- Warper Ends Here (working area) -->
+
+    <%--<div class="page-header">--%>
+        <%--<h3>Create Request&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>--%>
+        <%--</h3>--%>
+    <%--</div>--%>
+
+    <%--<div>--%>
+
+
+        <%--<c:choose>--%>
+            <%--<c:when test="${not empty notCreated}">--%>
+                <%--<p style="color: red;">${notCreated}</p>--%>
+            <%--</c:when>--%>
+
+
+            <%--<c:when test="${not empty successfullyCreated}">--%>
+                <%--<p style="color: green;">${successfullyCreated}</p>--%>
+                <%--&nbsp;&nbsp;<a href="/order-details/create">Add Item to YourOrder</a>--%>
+            <%--</c:when>--%>
+
+        <%--</c:choose>--%>
+    <%--</div>--%>
+
+    <%--<div class="row">--%>
+
+        <%--<div class="col-md-12">--%>
+            <%--<div class="panel panel-default">--%>
+                <%--<div class="panel-heading">Item Information</div>--%>
+                <%--<div class="panel-body">--%>
+                    <%--<form:form commandName="request" method="post" class="form-horizontal" role="form">--%>
+                        <%--<div class="form-group">--%>
+                            <%--<label class="col-sm-2 control-label">Explain Your Reason For Requesting</label>--%>
+                            <%--<div class="col-sm-2">--%>
+                                <%--<form:textarea path="userMessage" class="form-control"/>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
+
+                        <%--<hr class="style13">--%>
+
+                        <%--<div class="btn-group-sm row">--%>
+                            <%--<div class="col-sm-2">--%>
+                                <%--<button type="submit" class="btn btn-success btn-block">Confirm</button>--%>
+                            <%--</div>--%>
+                            <%--<div class="form-group col-sm-2">--%>
+                                <%--<button type="reset" class="btn btn-primary btn-block">Reset Fields</button>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
+
+                        <%--<hr class="style13">--%>
+
+                    <%--</form:form>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+        <%--</div>--%>
+
+    <%--</div>--%>
 
     <c:import url="../../modals/cart.jsp"/>
 </section>

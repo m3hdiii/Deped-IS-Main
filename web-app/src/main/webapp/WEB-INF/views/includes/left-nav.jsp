@@ -40,7 +40,7 @@
                     <li><a href="/order/create">Create Order</a></li>
                 </ul>
             </li>
-            <li class="has-submenu" data-toggle="tooltip" title="Item Manager"><a href="#"><i class="fa fa-archive"></i> <span class="nav-label">Item Manager</span></a>
+            <li class="has-submenu" data-toggle="tooltip" title="Item Manager"><a href="#"><i class="fa fa-cubes"></i> <span class="nav-label">Item Manager</span></a>
                 <ul class="list-unstyled">
                     <li><a href="/item/list">List of Item</a></li>
                     <li><a href="/item/create">Create Item</a></li>
@@ -53,7 +53,7 @@
                     <li><a href="/order/arrival-list">Arrived Order Checklist</a></li>
                 </ul>
             </li>
-            <li class="has-submenu" data-toggle="tooltip" title="Request Manager"><a href="#"><i class="fa fa-cubes"></i> <span class="nav-label">Request Manager</span></a>
+            <li class="has-submenu" data-toggle="tooltip" title="Request Manager"><a href="#"><i class="fa fa-archive"></i> <span class="nav-label">Request Manager</span></a>
                 <ul class="list-unstyled">
                     <li><a href="/request/approval-list">Approve Request</a></li>
                     <li><a href="/request/release-list">Release Request</a></li>

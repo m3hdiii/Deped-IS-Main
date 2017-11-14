@@ -32,52 +32,99 @@
     <div class="warper container-fluid">
 
         <div class="page-header">
-            <h1>Manage Request
-                <small>DepEd-Baguio City Division Office</small>
-            </h1>
-
+            <h3>Manage Request &nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small></h3>
         </div>
 
-        <div class="row item-body">
-            <div class="panel panel-default">
-                <h3 class="text-center">Request Info</h3>
-                <div class="panel-body">
 
-                    <table class="table table-hover">
-                        <thead>
+        <div class="panel panel-default">
+            <div class="panel-heading clean text-center">Information of Request</div>
+            <div class="panel-body">
+
+                <table cellpadding="0" cellspacing="0" border="0" class="table table-hover" id="basic-datatable">
+                    <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Reason</th>
+                        <th>Date Requested</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${requests}" var="request">
                         <tr>
-                            <th>User</th>
-                            <th>Reason</th>
-                            <th>Date Requested</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                            <th>${request.user.firstName} ${request.user.middleName} ${request.user.lastName}</th>
+                            <td>${request.userMessage}</td>
+                            <td>${request.requestDate}</td>
+                            <td>${request.requestStatus}</td>
+                            <td>
+                                <a href="${requestUrl}${request.requestId}">${anchorName}</a>
+                            </td>
                         </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach items="${requests}" var="request">
-                                <tr>
-                                    <th>${request.user.firstName} ${request.user.middleName} ${request.user.lastName}</th>
-                                    <td>${request.userMessage}</td>
-                                    <td>${request.requestDate}</td>
-                                    <td>${request.requestStatus}</td>
-                                    <td>
-                                        <a href="${requestUrl}${request.requestId}" class="btn btn-primary btn-sm">${anchorName}</a>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                    </c:forEach>
+                    </tbody>
+                </table>
 
+            </div>
         </div>
-    </div> <!-- Warper Ends Here (working area) -->
+    </div>
+    <!-- Warper Ends Here (working area) -->
+
+    <%--<div class="warper container-fluid">--%>
+
+        <%--<div class="page-header">--%>
+            <%--<h1>Manage Request--%>
+                <%--<small>DepEd-Baguio City Division Office</small>--%>
+            <%--</h1>--%>
+
+        <%--</div>--%>
+
+        <%--<div class="row item-body">--%>
+            <%--<div class="panel panel-default">--%>
+                <%--<h3 class="text-center">Request Info</h3>--%>
+                <%--<div class="panel-body">--%>
+
+                    <%--<table class="table table-hover">--%>
+                        <%--<thead>--%>
+                        <%--<tr>--%>
+                            <%--<th>User</th>--%>
+                            <%--<th>Reason</th>--%>
+                            <%--<th>Date Requested</th>--%>
+                            <%--<th>Status</th>--%>
+                            <%--<th>Action</th>--%>
+                        <%--</tr>--%>
+                        <%--</thead>--%>
+                        <%--<tbody>--%>
+                            <%--<c:forEach items="${requests}" var="request">--%>
+                                <%--<tr>--%>
+                                    <%--<th>${request.user.firstName} ${request.user.middleName} ${request.user.lastName}</th>--%>
+                                    <%--<td>${request.userMessage}</td>--%>
+                                    <%--<td>${request.requestDate}</td>--%>
+                                    <%--<td>${request.requestStatus}</td>--%>
+                                    <%--<td>--%>
+                                        <%--<a href="${requestUrl}${request.requestId}" class="btn btn-primary btn-sm">${anchorName}</a>--%>
+                                    <%--</td>--%>
+                                <%--</tr>--%>
+                            <%--</c:forEach>--%>
+                        <%--</tbody>--%>
+                    <%--</table>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+
+        <%--</div>--%>
+    <%--</div> <!-- Warper Ends Here (working area) -->--%>
 
     <c:import url="../../modals/cart.jsp"/>
 </section>
 <section class="content">
     <c:import url="../../includes/footer.jsp"/>
     <script type="text/javascript" src="${resourceURL}/js/additional/request.js"></script>
+
+    <!-- Data Table -->
+    <script src="${resourceURL}/js/plugins/datatables/jquery.dataTables.js"></script>
+    <script src="${resourceURL}/js/plugins/datatables/DT_bootstrap.js"></script>
+    <script src="${resourceURL}/js/plugins/datatables/jquery.dataTables-conf.js"></script>
+
 </section>
 </body>
 </html>
