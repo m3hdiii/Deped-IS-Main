@@ -1,119 +1,14 @@
-/* The switch - the box around the slider */
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 40px;
-    height: 19px;
-}
-
-/* Hide default HTML checkbox */
-.switch input {
-    display: none;
-}
-
-/* The slider */
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 15px;
-    width: 15px;
-    left: 4px;
-    top: 2px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-}
-
-input:checked + .slider {
-    background-color: #2196F3;
-}
-
-input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-}
-
-input:checked + .slider:before {
-    -webkit-transform: translateX(17px);
-    -ms-transform: translateX(17px);
-    transform: translateX(17px);
-}
-
-/* Rounded sliders */
-.slider.slider-round {
-    border-radius: 34px;
-}
-
-.slider.slider-round:before {
-    border-radius: 50%;
-}
-
-/*     Rounded Checkbox          */
-.round {
-    position: relative;
-}
-
-.round label {
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 50%;
-    cursor: pointer;
-    height: 20px;
-    left: 0;
-    position: absolute;
-    top: 0;
-    width: 20px;
-}
-
-.round label:after {
-    border: 2px solid #fff;
-    border-top: none;
-    border-right: none;
-    content: "";
-    height: 4px;
-    left: 4px;
-    opacity: 0;
-    position: absolute;
-    top: 6px;
-    transform: rotate(-45deg);
-    width: 10px;
-}
-
-.round input[type="checkbox"] {
-    visibility: hidden;
-}
-
-.round input[type="checkbox"]:checked + label {
-    background-color: deepskyblue;
-    border-color: deepskyblue;
-}
-
-.round input[type="checkbox"]:checked + label:after {
-    opacity: 1;
-}
-
 /* --------  Circle Pagination ------------*/
-*, *:after, *:before {
+*,*:after,*:before{
     box-sizing: border-box;
 }
 
-.pagination-circle ul {
+.pagination-circle ul{
     margin: 0;
     padding: 0;
 }
 
-.pagination-circle > li {
+.pagination-circle > li{
     overflow: hidden;
     position: relative;
     margin-top: 25px;
@@ -122,13 +17,11 @@ input:checked + .slider:before {
     list-style: none;
     padding: 0;
 }
-
-.pagination-circle > li p {
+.pagination-circle > li p{
     color: #000;
     line-height: 3;
 }
-
-.pagination-circle > li > a {
+.pagination-circle > li > a{
     line-height: 50px;
     text-decoration: none;
     color: #000;
@@ -138,14 +31,12 @@ input:checked + .slider:before {
 }
 
 /*positon the circle*/
-.pagination-circle > li > a:before {
-    content: '';
+.pagination-circle > li > a:before{
+    content:'';
     position: absolute;
     z-index: -1;
-    width: 50px;
-    height: 50px;
-    left: 50%;
-    margin-left: -25px;
+    width: 50px; height: 50px;
+    left: 50%; margin-left: -25px;
     border-radius: 100%;
     border: 3px solid #7c38bc;
     transition: all .2s;
@@ -153,49 +44,62 @@ input:checked + .slider:before {
 
 /*positioning the line*/
 .pagination-circle > li:not(:last-of-type):after,
-.pagination-circle > li:not(:first-of-type):before {
+.pagination-circle > li:not(:first-of-type):before{
     content: '';
     position: absolute;
     background: #7c38bc;
     top: 25px;
     height: 3px;
 }
-
-.pagination-circle > li:first-of-type:after {
+.pagination-circle > li:first-of-type:after{
     left: 50%;
     right: 0;
     margin-left: 25px;
 }
-
-.pagination-circle > li:not(:first-of-type):before {
+.pagination-circle > li:not(:first-of-type):before{
     left: 0;
     right: 50%;
     margin-right: 25px;
 }
-
-.pagination-circle > li:not(:first-of-type):after {
+.pagination-circle > li:not(:first-of-type):after{
     right: 0;
     left: 50%;
     margin-left: 25px;
 }
 
 /*hover stuff*/
-.pagination-circle > li:hover a {
+.pagination-circle > li:hover a{
     color: #fff;
 }
-
-.pagination-circle > li:hover a:before {
+.pagination-circle > li:hover a:before{
     background: #7a43b6;
 }
 
 /*pagination active*/
-.pagination-active > a:before {
+.pagination-active > a:before{
     border: 4px solid #7c38bc !important;
 }
-
-.pagination-active > a {
+.pagination-active > a{
     color: #7c38bc !important;
 }
+
+/*------------  Css for Items image-thumnails ------------*/
+
+.item-body .item-content-thumbnail{
+    margin-right: 8px;
+    width: 32%;
+    height: 400px;
+}
+
+.item-body .item-content-thumbnail:hover{
+    box-shadow: 0px 0px 10px 1px #0ff;
+    /*border: 2px solid rgba(153, 51, 255, 0.5);*/
+}
+
+.item-body .item-content-thumbnail img{
+    height: 135px;
+}
+
 
 
 
