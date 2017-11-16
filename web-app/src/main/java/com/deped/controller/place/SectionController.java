@@ -9,6 +9,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -56,7 +57,13 @@ public class SectionController extends AbstractMainController<Section, Long> {
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createAction(@Valid @ModelAttribute(BASE_NAME) Section entity) {
+    public ModelAndView createAction(@Valid @ModelAttribute(BASE_NAME) Section entity, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            HashMap<String, Object> modelMap = new HashMap<>();
+            modelMap.put(BASE_NAME, entity);
+            modelMap.put("departments", entity);
+            return new ModelAndView(CREATE_VIEW_PAGE, modelMap);
+        }
         entity.setCreationDate(new Date());
         ResponseEntity<Section> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Section.class);
         ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Section());
@@ -85,7 +92,14 @@ public class SectionController extends AbstractMainController<Section, Long> {
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @ModelAttribute(BASE_NAME) Section entity) {
+    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @ModelAttribute(BASE_NAME) Section entity, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            HashMap<String, Object> modelMap = new HashMap<>();
+            modelMap.put(BASE_NAME, entity);
+            List<Department> departments = fetchAllDepartment();
+            modelMap.put("departments", departments);
+            return new ModelAndView(UPDATE_VIEW_PAGE, modelMap);
+        }
         entity.setSectionId(aLong);
         //This is actually the update date
         entity.setCreationDate(new Date());

@@ -1,15 +1,14 @@
 package com.deped.model.pack;
 
-import com.deped.model.order.OrderDetails;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.deped.protection.validators.xss.XSS;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 import static com.deped.repository.utils.ConstantValues.FETCH_ALL_PACKS;
 
@@ -36,12 +35,19 @@ public class Pack implements Serializable {
     private Long packId;
 
     @Column(name = "name")
+    @NotEmpty(message = "Name field can not be blank")
+    @Length(min = 2, max = 45, message = "Name filed length must be between 2 to 45 character")
+    @XSS
     private String name;
 
     @Column(name = "description")
+    @Length(max = 400, message = "Description field must not be more than 400 character")
+    @XSS
     private String description;
 
     @Column(name = "capacity")
+    @Min(value = 1, message = "Package capacity can not be a negative")
+    @Max(value = 5000, message = "Package capacity can not be more than 5000")
     private Integer capacity;
 
     @Temporal(TemporalType.TIMESTAMP)

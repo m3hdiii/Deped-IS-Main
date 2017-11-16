@@ -39,8 +39,22 @@
             <div class="col-md-12">
                 <div class="col-md-8 col-md-offset-2">
                     <div class="panel panel-default">
+                        <c:set var="errors"
+                               value="${requestScope['org.springframework.validation.BindingResult.item'].allErrors}"/>
+
                         <form:form commandName="item" method="post" class="form-horizontal" role="form"
                                    enctype="multipart/form-data">
+                            <c:if test="${not empty errors}">
+                                <div>
+                                    <ul class="list-group">
+                                        <c:forEach items="${fieldErrors}" var="error" varStatus="loop">
+                                            <li class="list-group-item list-group-item-warning text-danger"><span
+                                                    class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                </div>
+                            </c:if>
                             <div class="item-image text-center">
                                 <h3>Update Item Info</h3>
                             </div>

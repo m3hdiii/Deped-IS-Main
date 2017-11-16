@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,6 +25,7 @@ public class OrderDetailsRestController extends AbstractMainRestController<Order
     private static final String FETCH_MAPPING_BY_ORDER_ID = BASE_NAME + FETCH_PATTERN + FETCH_BY_ID_PATTERN;
     private static final String FETCH_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String FETCH_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
+    private static final String FETCH_BY_STATES = FETCH_MAPPING + URL_SEPARATOR + "by-states";
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
     private static final String UPDATE_STATE_MAPPING = BASE_NAME + "/update-state/user" + FETCH_BY_ID_PATTERN + "/state/{state}";
 
@@ -99,8 +101,20 @@ public class OrderDetailsRestController extends AbstractMainRestController<Order
 
     @RequestMapping(value = UPDATE_STATE_MAPPING, method = RequestMethod.POST)
     public ResponseEntity<Response> updateOrderStatus(@PathVariable(ID_STRING_LITERAL) Long userId, @PathVariable("state") Integer orderDetailsState, @RequestBody OrderDetails... entities) {
-        OrderDetailsState state = OrderDetailsState.CANCELLED.values()[orderDetailsState];
+        OrderDetailsState state = OrderDetailsState.values()[orderDetailsState];
         ResponseEntity<Response> response = orderDetailsService.updateOrderState(userId, state, entities);
+        return response;
+    }
+
+    @RequestMapping(value = FETCH_BY_STATES, method = RequestMethod.POST)
+    public ResponseEntity<List<OrderDetails>> fetchByOrderDetailsStates(@RequestBody Integer... orderDetailsStates) {
+        List<OrderDetailsState> orderDetailsStateList = new ArrayList<>();
+        for (Integer orderDetailsState : orderDetailsStates) {
+            OrderDetailsState ods = OrderDetailsState.values()[orderDetailsState];
+            orderDetailsStateList.add(ods);
+        }
+
+        ResponseEntity<List<OrderDetails>> response = orderDetailsService.fetchAllByStates(orderDetailsStateList);
         return response;
     }
 }

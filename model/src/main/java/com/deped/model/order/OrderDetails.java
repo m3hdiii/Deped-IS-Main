@@ -5,9 +5,14 @@ import com.deped.model.category.Category;
 import com.deped.model.items.Item;
 import com.deped.model.pack.Pack;
 import com.deped.model.supply.Supplier;
+import com.deped.protection.validators.decimal.DoubleRange;
+import com.deped.protection.validators.xss.XSS;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 
@@ -41,18 +46,27 @@ public class OrderDetails implements Serializable {
     private Pack pack;
 
     @Column(name = "item_unit_price")
+    @DoubleRange(min = 1.0, message = "Unit price must have a value more than 1 Peso")
     private Double unitPrice;
 
     @Column(name = "package_capacity")
+    @Min(value = 1, message = "package can not have a negative capacity")
+    @Max(value = 5000, message = "package can not have more than 5000 capacity")
     private Integer packCapacity;
 
     @Column(name = "no_of_packs")
+    @Min(value = 1, message = "Number of packages can not be negative")
+    @Max(value = 500, message = "Number of packages can not be more than 500")
     private Integer noOfPacks;
 
     @Column(name = "total_quantity_requested_no")
+    @Min(value = 1, message = "Total quantity can not be a negative")
+    @Max(value = 2500000, message = "Total quantity can not be more than 2500000")
     private Integer totalQuantityRequestNo;
 
     @Column(name = "total_quantity_arrived_no")
+    @Min(value = 1, message = "Total quantity arrived can not be a negative")
+    @Max(value = 2500000, message = "Total quantity arrived can not be more than 2500000")
     private Integer totalQuantityArrivedNo;
 
     @Enumerated(value = EnumType.STRING)
@@ -64,9 +78,13 @@ public class OrderDetails implements Serializable {
     private Supplier supplier;
 
     @Column(name = "disapproval_message")
+    @Length(min = 1, max = 1000, message = "Disapproval Message field must not be more than 1000 character")
+    @XSS
     private String disapprovalMessage;
 
     @Column(name = "not_arrival_message")
+    @Length(min = 1, max = 1000, message = "Disapproval Message field must not be more than 1000 character")
+    @XSS
     private String notArrivalMessage;
 
     @Transient

@@ -15,4 +15,6 @@ public interface OrderDetailsService extends BaseService<OrderDetails> {
     ResponseEntity<Response> orderAll(OrderDetails... entities);
 
     ResponseEntity<List<OrderDetails>> fetchAllById(Long requestId);
+
+    ResponseEntity<List<OrderDetails>> fetchAllByStates(List<OrderDetailsState> orderDetailsStates);
 }

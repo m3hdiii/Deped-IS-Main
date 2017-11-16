@@ -1,12 +1,15 @@
 package com.deped.model.location;
 
-import static com.deped.repository.utils.ConstantValues.*;
-
+import com.deped.protection.validators.xss.XSS;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+
+import static com.deped.repository.utils.ConstantValues.FETCH_ALL_CITIES_BY_COUNTRY_CODE;
 
 @NamedQueries({
         @NamedQuery(
@@ -27,6 +30,9 @@ public class City {
     private Long cityId;
 
     @Column(name = "name")
+    @Length(min = 2, max = 45, message = "name must be between 2 to 45 character character")
+    @NotEmpty(message = "Name field can not be blank")
+    @XSS
     private String name;
 
     @Column(name = "district")

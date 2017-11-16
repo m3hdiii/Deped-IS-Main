@@ -18,7 +18,17 @@
 <body>
 
 <c:import url="../../includes/left-nav.jsp"/>
-
+<c:set var="errors" value="${requestScope['org.springframework.validation.BindingResult.equipment-info'].allErrors}"/>
+<c:if test="${not empty errors}">
+    <div>
+        <ul class="list-group">
+            <c:forEach items="${fieldErrors}" var="error" varStatus="loop">
+                <li class="list-group-item list-group-item-warning text-danger"><span
+                        class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}</li>
+            </c:forEach>
+        </ul>
+    </div>
+</c:if>
 <section class="content">
 
     <c:import url="../../includes/top-nav.jsp"/>

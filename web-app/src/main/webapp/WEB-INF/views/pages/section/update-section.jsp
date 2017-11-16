@@ -38,7 +38,21 @@
         <div class="col-lg-12">
             <div class="panel-heading"><h1>Edit Section</h1></div>
             <hr class="style13"/>
+            <c:set var="errors"
+                   value="${requestScope['org.springframework.validation.BindingResult.section'].allErrors}"/>
+
             <form:form commandName="section" method="post">
+                <c:if test="${not empty errors}">
+                    <div>
+                        <ul class="list-group">
+                            <c:forEach items="${fieldErrors}" var="error" varStatus="loop">
+                                <li class="list-group-item list-group-item-warning text-danger"><span
+                                        class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </div>
+                </c:if>
                 <div class="row form-group">
                     <div class="col-sm-2">
                         <label class="control-label"><span>name: </span></label>

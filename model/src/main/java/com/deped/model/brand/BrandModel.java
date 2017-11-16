@@ -1,6 +1,9 @@
 package com.deped.model.brand;
 
 import com.deped.model.items.ItemDetails;
+import com.deped.protection.validators.xss.XSS;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,12 +19,18 @@ public class BrandModel implements Serializable{
     private Long brandModelId;
 
     @Column(name = "model_number")
+    @NotEmpty(message = "Model number field can not be blank")
+    @Length(min = 1, max = 45, message = "Model number field must be between 2 to 45 character")
+    @XSS
     private String modelNumber;
 
     @Column(name = "description")
+    @Length(max = 400, message = "Description field must not be more than 400 character")
+    @XSS
     private String description;
 
     @Column(name = "specification")
+    @Length(max = 400, message = "Specification field must not be more than 400 character")
     private String specification;
 
     @Column(name = "pic_url")

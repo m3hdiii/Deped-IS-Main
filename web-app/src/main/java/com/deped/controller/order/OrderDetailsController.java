@@ -22,6 +22,7 @@ import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -229,8 +230,8 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
     @RequestMapping(value = APPROVAL_PAGE, method = GET)
     public ModelAndView approvalActionRender(@ModelAttribute("order") Order order, @PathVariable(ID_STRING_LITERAL) Long orderId) {
 
-        Order request = fetchOrder(orderId);
-        ModelAndView requestChecking = orderChecking(request, OrderState.PENDING);
+        Order fetchedOrder = fetchOrder(orderId);
+        ModelAndView requestChecking = orderChecking(fetchedOrder, OrderState.PENDING);
         if (requestChecking != null) {
             return requestChecking;
         }
@@ -241,9 +242,9 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
             return requestDetailsChecking;
         }
 
-        OrderDetailsState[] nextRequestDetailsStatuses = new OrderDetailsState[]{OrderDetailsState.APPROVED, OrderDetailsState.DISAPPROVED, OrderDetailsState.CANCELLED};
+        OrderDetailsState[] nextRequestDetailsStatuses = new OrderDetailsState[]{OrderDetailsState.APPROVED, OrderDetailsState.DISAPPROVED, OrderDetailsState.CANCELED};
         return renderActions(
-                request,
+                fetchedOrder,
                 new HashSet<>(requestDetailsList),
                 "Approval Page",
                 "Approving Registered Order Page",
@@ -272,8 +273,8 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
     @RequestMapping(value = REQUISITION_PAGE, method = GET)
     public ModelAndView orderedActionRender(@ModelAttribute("order") Order order, @PathVariable(ID_STRING_LITERAL) Long orderId) {
 
-        Order request = fetchOrder(orderId);
-        ModelAndView requestChecking = orderChecking(request, OrderState.CONSIDERED);
+        Order fetchedOrder = fetchOrder(orderId);
+        ModelAndView requestChecking = orderChecking(fetchedOrder, OrderState.CONSIDERED);
         if (requestChecking != null) {
             return requestChecking;
         }
@@ -284,9 +285,9 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
             return requestDetailsChecking;
         }
 
-        OrderDetailsState[] nextRequestDetailsStatuses = new OrderDetailsState[]{OrderDetailsState.ORDERED, OrderDetailsState.CANCELLED};
+        OrderDetailsState[] nextRequestDetailsStatuses = new OrderDetailsState[]{OrderDetailsState.ORDERED, OrderDetailsState.CANCELED};
         return renderActions(
-                request,
+                fetchedOrder,
                 new HashSet<>(requestDetailsList),
                 "Requisition Order Page",
                 "Requisition Page for Approved Items",
@@ -314,8 +315,8 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
     @RequestMapping(value = ARRIVAL_PAGE, method = GET)
     public ModelAndView arrivalActionRender(@ModelAttribute("order") Order order, @PathVariable(ID_STRING_LITERAL) Long orderId) {
-        Order request = fetchOrder(orderId);
-        ModelAndView requestChecking = orderChecking(request, OrderState.ORDERED);
+        Order fetchedOrder = fetchOrder(orderId);
+        ModelAndView requestChecking = orderChecking(fetchedOrder, OrderState.ORDERED);
         if (requestChecking != null) {
             return requestChecking;
         }
@@ -326,9 +327,9 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
             return requestDetailsChecking;
         }
 
-        OrderDetailsState[] nextRequestDetailsStatuses = new OrderDetailsState[]{OrderDetailsState.ARRIVED, OrderDetailsState.NOT_ARRIVED, OrderDetailsState.CANCELLED};
+        OrderDetailsState[] nextRequestDetailsStatuses = new OrderDetailsState[]{OrderDetailsState.ARRIVED, OrderDetailsState.NOT_ARRIVED, OrderDetailsState.CANCELED};
         return renderActions(
-                request,
+                fetchedOrder,
                 new HashSet<>(requestDetailsList),
                 "Arrival Page",
                 "Arrival Page for Ordered Items",
@@ -357,6 +358,65 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         ModelAndView mav = createResultPage(resultBean);
         return mav;
     }
+
+    /**
+     * For Canceled, Disapproved or Not Arrived Items
+     *
+     * @return
+     */
+    @RequestMapping(value = "testi", method = GET)
+    public ModelAndView reconsiderationOrder() {
+
+        List<Order> savedOrder = fetchOrderByStates(OrderState.SAVED);
+
+        OrderDetailsState[] orderDetailsStates = new OrderDetailsState[]{OrderDetailsState.DISAPPROVED, OrderDetailsState.NOT_ARRIVED, OrderDetailsState.CANCELED};
+        List<OrderDetails> orderDetails = fetchOrderDetailsByStates(orderDetailsStates);
+
+        return renderActions(
+                savedOrder,
+                new HashSet<>(orderDetails),
+                "Arrival Page",
+                "Arrival Page for Ordered Items",
+                "Arrival"
+        );
+    }
+
+    private List<OrderDetails> fetchOrderDetailsByStates(OrderDetailsState... states) {
+        Integer ordinals[] = new Integer[states.length];
+        for (int i = 0; i < states.length; i++) {
+            ordinals[i] = states[i].ordinal();
+        }
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Integer[]> httpEntity = new HttpEntity<>(ordinals, headers);
+        String restUrl = String.format(FETCH_URL, "order-details").concat("/").concat("by-states");
+        ResponseEntity<List<OrderDetails>> responseDetails = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<OrderDetails>>() {
+        });
+
+        List<OrderDetails> list = responseDetails.getBody();
+        return list;
+    }
+
+    private List<Order> fetchOrderByStates(OrderState... states) {
+        Integer ordinals[] = new Integer[states.length];
+        for (int i = 0; i < states.length; i++) {
+            ordinals[i] = states[i].ordinal();
+        }
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Integer[]> httpEntity = new HttpEntity<>(ordinals, headers);
+        String restUrl = String.format(FETCH_URL, "order").concat("/").concat("by-states");
+        ResponseEntity<List<Order>> responseDetails = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<Order>>() {
+        });
+
+        List<Order> list = responseDetails.getBody();
+        return list;
+    }
+
 
     private Order fetchOrder(Long requestId) {
         RestTemplate restTemplate = new RestTemplate();
@@ -426,6 +486,23 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
     }
 
+    private ModelAndView renderActions(List<Order> orders, Set<OrderDetails> orderDetailsList, String pageTitle, String topHeading, String h1Placeholder) {
+
+        Map<String, Object> modelMap = new HashMap<>();
+
+        OrderDetailsForm orderDetailsForm = new OrderDetailsForm();
+        orderDetailsForm.setMap(putOrderDetailsListIntoMap(orderDetailsList));
+        modelMap.put("orderDetailsForm", orderDetailsForm);
+        modelMap.put("orders", orders);
+        modelMap.put("pageTitle", pageTitle);
+        modelMap.put("topHeading", topHeading);
+        modelMap.put("h1Placeholder", h1Placeholder);
+
+        ModelAndView mv = new ModelAndView(FLOW_VIEW_PAGE, modelMap);
+        return mv;
+
+    }
+
 
     private ResponseEntity<Response> updateStatusAction(OrderDetailsForm orderDetailsForm, OrderDetailsState state) {
         Map<String, OrderDetails> map = orderDetailsForm.getMap();
@@ -467,7 +544,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(Long aLong, @ModelAttribute("orderDetailsList") OrderDetails entity) {
+    public ModelAndView updateAction(Long aLong, @ModelAttribute("orderDetailsList") OrderDetails entity, BindingResult bindingResult) {
         return null;
     }
 
@@ -616,7 +693,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
     }
 
     @Override
-    public ModelAndView createAction(OrderDetails entity) {
+    public ModelAndView createAction(OrderDetails entity, BindingResult bindingResult) {
         return null;
     }
 

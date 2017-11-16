@@ -1,5 +1,9 @@
 package com.deped.model.config.server;
 
+import com.deped.protection.validators.xss.XSS;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
 
 @Table(name = "application_config")
@@ -12,6 +16,9 @@ public class ServerConfig {
     private ServerEnumKey key;
 
     @Column(name = "value")
+    @NotEmpty(message = "Value field can not be blank")
+    @Length(min = 1, max = 500, message = "Name filed length must be between 1 to 500 character")
+    @XSS
     private String value;
 
     public ServerConfig() {

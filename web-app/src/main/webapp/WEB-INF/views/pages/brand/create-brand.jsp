@@ -36,8 +36,23 @@
         <div class="row new-item-body">
             <div class="col-md-12">
                 <div class="col-md-8 col-md-offset-2">
+                    <c:set var="errors"
+                           value="${requestScope['org.springframework.validation.BindingResult.brand'].allErrors}"/>
                     <form:form commandName="brand" method="post" class="form-horizontal"
                                enctype="multipart/form-data">
+
+                        <c:if test="${not empty errors}">
+                            <div>
+                                <ul class="list-group">
+                                    <c:forEach items="${errors}" var="error" varStatus="loop">
+                                        <li class="list-group-item list-group-item-warning text-danger"><span
+                                                class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
+                                        </li>
+                                    </c:forEach>
+                                </ul>
+                            </div>
+                        </c:if>
+
                         <div class="panel panel-default">
                             <h3 class="text-center">Add New Brand</h3>
                             <div class="panel-body">
@@ -55,12 +70,12 @@
                                                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                                                 <strong>Success!</strong> ${successfullyCreated}.
                                             </div>
-                                            &nbsp;&nbsp;<a href="/brand/create">Create New Brand</a>
+                                            &nbsp;&nbsp;<a href="/brand/list">All Brands</a>
                                         </c:when>
                                     </c:choose>
 
                                     <div class="form-group">
-                                        <label for="newBrandName">Name</label>
+                                        <label for="newBrandName">*Name</label>
                                         <form:input path="name" type="text" class="form-control" id="newBrandName" placeholder="Name of the Brand"/>
                                     </div>
                                     <div class="form-group">
@@ -71,17 +86,17 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="newBrandPhone">Phone Number</label>
+                                        <label for="newBrandPhone">*Contact Number</label>
                                         <form:input path="contactNumber" type="number" class="form-control"
                                                     id="newBrandPhone" placeholder="ex. 09123456789"/>
                                     </div>
                                     <div class="form-group">
-                                        <label for="newBrandTelephone">Telephone Number</label>
+                                        <label for="newBrandTelephone">Contact Number 2</label>
                                         <form:input path="contactNumber2" type="number" class="form-control"
                                                     id="newBrandTelephone" placeholder="ex. 477-2380-32"/>
                                     </div>
                                     <div class="form-group">
-                                        <label for="newOfficeAddress">Central Office Address</label>
+                                        <label for="newOfficeAddress">*Central Office Address</label>
                                         <form:input path="centralOfficeAddress" type="text" class="form-control"
                                                     id="newOfficeAddress" placeholder="Brand Central Office"/>
                                     </div>
@@ -101,8 +116,8 @@
                                 <a href="#" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i>
                                     Back</a>
                                 <div class="button-footer pull-right">
-                                    <button type="button" type="reset" class="btn btn-default">Clear</button>
-                                    <button type="submit" class="btn btn-primary">Create</button>
+                                    <button type="reset" value="Clear" class="btn btn-default">Clear</button>
+                                    <button type="submit" value="Submit" class="btn btn-primary">Create</button>
                                 </div>
                             </div>
                         </div>

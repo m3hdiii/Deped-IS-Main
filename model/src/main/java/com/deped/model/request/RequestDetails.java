@@ -6,6 +6,8 @@ import com.deped.model.tracker.RequestTracker;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -29,9 +31,13 @@ public class RequestDetails implements Serializable {
     private Item item;
 
     @Column(name = "request_quantity")
+    @Min(value = 1, message = "Request Quantity can not be negative")
+    @Max(value = 5000, message = "Request Quantity can not be more than 5000")
     private Integer requestQuantity;
 
     @Column(name = "approved_quantity")
+    @Min(value = 1, message = "Approved Quantity can not be negative")
+    @Max(value = 5000, message = "Approved Quantity can not be more than 5000")
     private Integer approvedQuantity;
 
     @Temporal(TemporalType.TIMESTAMP)

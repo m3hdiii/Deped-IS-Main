@@ -35,10 +35,25 @@
         <div class="row new-item-body">
             <div class="col-md-12">
                 <div class="col-md-8 col-md-offset-2">
+                    <c:set var="errors"
+                           value="${requestScope['org.springframework.validation.BindingResult.brand'].allErrors}"/>
+
                     <form:form commandName="brand" method="post" class="form-horizontal"
                                enctype="multipart/form-data">
+                        <c:if test="${not empty errors}">
+                            <div>
+                                <ul class="list-group">
+                                    <c:forEach items="${errors}" var="error" varStatus="loop">
+                                        <li class="list-group-item list-group-item-warning text-danger"><span
+                                                class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
+                                        </li>
+                                    </c:forEach>
+                                </ul>
+                            </div>
+                        </c:if>
+
                         <div class="panel panel-default">
-                            <h3 class="text-center">Brand Info</h3>
+                            <h3 class="text-center">Current Brand Information</h3>
                             <div class="panel-body">
                                 <div class="col-md-10 col-sm-offset-1">
 
@@ -54,7 +69,7 @@
                                                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                                                 <strong>Success!</strong> ${successfullyUpdated}.
                                             </div>
-                                            &nbsp;&nbsp;<a href="/brand/create">Create New Brand</a>
+                                            &nbsp;&nbsp;<a href="/brand/list">All Brands</a>
                                         </c:when>
                                     </c:choose>
 
@@ -100,8 +115,8 @@
                                 <a href="/brand/list" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i>
                                     Back</a>
                                 <div class="button-footer pull-right">
-                                    <button type="button" type="reset" class="btn btn-default">Reset</button>
-                                    <button type="submit" class="btn btn-primary">Create</button>
+                                        <%--<button type="reset" value="Clear" class="btn btn-default">Reset</button>--%>
+                                    <button type="submit" value="Update" class="btn btn-primary">Update</button>
                                 </div>
                             </div>
                         </div>

@@ -3,6 +3,7 @@ package com.deped.config;
 import com.deped.security.CustomFailureHandler;
 import com.deped.security.CustomSuccessHandler;
 import com.deped.security.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +16,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
-@EnableWebSecurity
+@EnableWebSecurity(debug = true)
 public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
@@ -32,7 +33,8 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+        http
+                .authorizeRequests()
                 .antMatchers("/user/update/{userId}").access("@centralizedAccessControl.checkUserChangeInfoAccess(authentication, #userId) or hasRole('ROLE_ADMIN')")
                 .antMatchers("/**").permitAll();
 
@@ -59,18 +61,21 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 
         http.csrf().disable();
-//
-//        http.sessionManagement().
-//                enableSessionUrlRewriting(false);
+
+        http.sessionManagement().
+                enableSessionUrlRewriting(false);
 
 //        http.portMapper().http(8493).mapsTo(8443);
 //        http.portMapper().http(80).mapsTo(443);
 
-//        http.headers()
-//                .xssProtection()
-//                .frameOptions()
-//                .httpStrictTransportSecurity()
-//                .cacheControl();
+        //ENABLED BY DEFAULT
+
+        http.headers()
+                .xssProtection().and()
+                .frameOptions().and()
+                .httpStrictTransportSecurity().and()
+                .cacheControl().and().referrerPolicy();
+
     }
 
     @Bean
@@ -80,7 +85,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
         return successHandler;
     }
 
-    @Bean
+    @Bean(autowire = Autowire.BY_TYPE)
     public AuthenticationFailureHandler authenticationFailureHandler() {
         CustomFailureHandler failureHandler = new CustomFailureHandler();
         failureHandler.setTargetUrl("login");

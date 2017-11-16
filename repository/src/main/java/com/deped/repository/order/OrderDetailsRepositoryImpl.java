@@ -2,7 +2,6 @@ package com.deped.repository.order;
 
 import com.deped.model.items.Item;
 import com.deped.model.order.*;
-import com.deped.model.request.RequestDetailsStatus;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
 import org.hibernate.Session;
@@ -129,13 +128,18 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
             return false;
         }
 
-        Transaction tx = null;
-        int effectedRows = -1;
-        try {
-            tx = hibernateSession.beginTransaction();
+        boolean isAllCancelled = true;
+        for (OrderDetails ord : entities) {
+            if (ord.getOrderDetailsState() != OrderDetailsState.CANCELED && ord.getOrderDetailsState() != OrderDetailsState.DISAPPROVED && ord.getOrderDetailsState() != OrderDetailsState.NOT_ARRIVED) {
+                isAllCancelled = false;
+                break;
+            }
+        }
 
-
-            OrderState nextOrderState = null;
+        OrderState nextOrderState = null;
+        if (isAllCancelled) {
+            nextOrderState = OrderState.FINALIZED;
+        } else {
             switch (orderDetailsState) {
                 case APPROVED:
                 case DISAPPROVED:
@@ -146,10 +150,16 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
                     break;
                 case ARRIVED:
                 case NOT_ARRIVED:
-                case CANCELLED:
+                case CANCELED:
                     nextOrderState = OrderState.FINALIZED;
                     break;
             }
+        }
+
+        Transaction tx = null;
+        int effectedRows = -1;
+        try {
+            tx = hibernateSession.beginTransaction();
 
             String requestStatusQuery = "UPDATE order_ SET order_state = :orderState WHERE order_id = :orderId";
             NativeQuery<Order> requestNativeQuery = hibernateSession.createNativeQuery(requestStatusQuery, Order.class);
@@ -269,8 +279,49 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
     public List<OrderDetails> fetchAllById(Long orderId) {
         Map<String, Object> parameterMap = new HashMap<>();
         parameterMap.put("orderId", orderId);
-        String sqlQuery = "SELECT * FROM order_details WHERE order_order_id = :orderId AND order_details_state != 'DISAPPROVED'";
+        String sqlQuery = "SELECT * FROM order_details WHERE order_order_id = :orderId AND order_details_state NOT IN ('DISAPPROVED', 'NOT_ARRIVED', 'CANCELLED') ";
         List<OrderDetails> list = hibernateFacade.fetchAllEntityBySqlQuery(sqlQuery, null, OrderDetails.class, parameterMap);
+        return list;
+    }
+
+    @Override
+    public List<OrderDetails> fetchAllByStates(List<OrderDetailsState> orderDetailsStates) {
+        String fetchQuery = "SELECT * FROM order_details WHERE order_details_state IN ( %s ) ORDER BY order_details_state";
+        StringBuilder sb = new StringBuilder();
+        for (OrderDetailsState ods : orderDetailsStates) {
+            sb
+                    .append("'")
+                    .append(ods.toString())
+                    .append("' ,");
+        }
+
+        String formatValue = sb.toString().substring(0, sb.toString().lastIndexOf(","));
+        String query = String.format(fetchQuery, formatValue);
+
+        Session hibernateSession = null;
+        try {
+            hibernateSession = hibernateFacade.getSessionFactory().openSession();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        Transaction tx = null;
+
+        List<OrderDetails> list;
+        try {
+            tx = hibernateSession.beginTransaction();
+            NativeQuery<OrderDetails> nativeQuery = hibernateSession.createNativeQuery(query, OrderDetails.class);
+            list = nativeQuery.list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null)
+                tx.rollback();
+            return null;
+        } finally {
+            if (hibernateSession != null)
+                hibernateSession.close();
+        }
         return list;
     }
 
@@ -290,6 +341,11 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
     }
 
     public static void main(String[] args) {
+        new OrderDetailsRepositoryImpl().fetchAllByStates(new ArrayList<OrderDetailsState>() {{
+            add(OrderDetailsState.CANCELED);
+            add(OrderDetailsState.NOT_ARRIVED);
+            add(OrderDetailsState.DISAPPROVED);
+        }});
 
         for (int i = 1; i <= 254; i++) {
             System.out.println("192.168.0." + i);
@@ -387,8 +443,6 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
                 firstElementState = nextIndexState;
             }
         }
-
-
         return stateUpdateBeanList;
     }
 }

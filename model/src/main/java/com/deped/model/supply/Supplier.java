@@ -1,6 +1,11 @@
 package com.deped.model.supply;
 
+import com.deped.protection.validators.xss.XSS;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 import static com.deped.repository.utils.ConstantValues.FETCH_ALL_SUPPLIER;
@@ -28,21 +33,37 @@ Supplier {
     private Long supplierId;
 
     @Column(name = "name")
+    @NotEmpty(message = "Name field can not be blank")
+    @Length(min = 2, max = 45, message = "Name filed length must be between 2 to 45 character")
+    @XSS
     private String name;
 
     @Column(name = "description")
+    @Length(max = 400, message = "Description field must not be more than 400 character")
+    @XSS
     private String description;
 
     @Column(name = "contact_no1")
+    @NotEmpty(message = "Supplier contact no 1 field can not be blank")
+    @XSS
+    @Length(min = 2, max = 45, message = "Supplier contact no 1 field must be between 2 to 45 character")
+    @Pattern(regexp = "[\\s]*[0-9]*[1-9]+", message = "Supplier contact no 1 field must only contain number")
     private String supplierContactNo1;
 
     @Column(name = "contact_no2")
+    @Length(min = 2, max = 45, message = "Supplier contact no 2 field must be between 2 to 45 character")
+    @Pattern(regexp = "[\\s]*[0-9]*[1-9]+", message = "Supplier contact no 2 field must only contain number")
+    @XSS
     private String supplierContactNo2;
 
     @Column(name = "address")
+    @Length(max = 400, message = "Supplier address field must not be more than 400 character")
+    @XSS
     private String supplierAddress;
 
     @Column(name = "remarks")
+    @Length(max = 400, message = "Supplier address field must not be more than 400 character")
+    @XSS
     private String remarks;
 
     @Temporal(TemporalType.TIMESTAMP)

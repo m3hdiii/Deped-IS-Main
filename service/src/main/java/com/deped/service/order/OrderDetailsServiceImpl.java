@@ -93,4 +93,11 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
         ResponseEntity<List<OrderDetails>> responseEntity = new ResponseEntity<>(brands, OK);
         return responseEntity;
     }
+
+    @Override
+    public ResponseEntity<List<OrderDetails>> fetchAllByStates(List<OrderDetailsState> orderDetailsStates) {
+        List<OrderDetails> brands = orderDetailsRepository.fetchAllByStates(orderDetailsStates);
+        ResponseEntity<List<OrderDetails>> responseEntity = new ResponseEntity<>(brands, OK);
+        return responseEntity;
+    }
 }

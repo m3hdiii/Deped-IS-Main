@@ -8,6 +8,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,7 +53,7 @@ public class ItemController extends AbstractMainController<Item, Long> {
     }
 
     @Override
-    public ModelAndView createAction(Item entity) {
+    public ModelAndView createAction(Item entity, BindingResult bindingResult) {
         return null;
     }
 
@@ -100,7 +101,7 @@ public class ItemController extends AbstractMainController<Item, Long> {
     }
 
     @Override
-    public ModelAndView updateAction(Long aLong, Item entity) {
+    public ModelAndView updateAction(Long aLong, Item entity, BindingResult bindingResult) {
         return null;
     }
 

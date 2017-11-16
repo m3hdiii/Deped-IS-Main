@@ -1,10 +1,12 @@
 package com.deped.model.security;
 
 import com.deped.model.account.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.deped.protection.validators.xss.XSS;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -28,9 +30,14 @@ public class Role implements Serializable {
     private Long roleId;
 
     @Column(name = "name")
+    @NotEmpty(message = "Name field can not be blank")
+    @Length(min = 2, max = 45, message = "Name filed length must be between 2 to 45 character")
+    @XSS
     private String name;
 
     @Column(name = "description")
+    @Length(max = 400, message = "Description field must not be more than 400 character")
+    @XSS
     private String description;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -39,7 +46,7 @@ public class Role implements Serializable {
 
 
     @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
-    @JsonBackReference("user-role-binding")
+    @JsonIgnore
     private Set<User> users;
 
     @ManyToMany

@@ -2,17 +2,17 @@ package com.deped.model.items;
 
 
 import com.deped.model.items.features.FunctionType;
-import com.deped.model.order.OrderDetails;
-import com.deped.model.pack.Pack;
-import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.deped.protection.validators.xss.XSS;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import static com.deped.repository.utils.ConstantValues.FETCH_ALL_ITEMS;
 import static com.deped.repository.utils.ConstantValues.FETCH_ALL_ITEMS_BY_TYPE;
@@ -26,11 +26,6 @@ import static com.deped.repository.utils.ConstantValues.FETCH_ALL_ITEMS_BY_TYPE;
         @NamedQuery(name = FETCH_ALL_ITEMS, query = "SELECT i FROM Item i"),
         @NamedQuery(name = FETCH_ALL_ITEMS_BY_TYPE, query = "SELECT i FROM Item i WHERE i.itemType  = :itemType")
 })
-//
-//@JsonIdentityInfo(
-//        generator = ObjectIdGenerators.PropertyGenerator.class,
-//        property = "itemId", scope = Item.class)
-
 @Entity
 @Table(name = "item")
 @DynamicUpdate
@@ -42,20 +37,29 @@ public class Item implements Serializable {
     private Long itemId;
 
     @Column(name = "name")
+    @Length(min = 2, max = 45, message = "name must be between 2 to 45 character character")
+    @NotEmpty(message = "Name field can not be blank")
+    @XSS
     protected String name;
 
     @Column(name = "description")
+    @Length(max = 400, message = "Description must not be more than 400 character")
+    @XSS
     private String description;
 
     @Column(name = "item_type")
     @Enumerated(value = EnumType.STRING)
+    @NotEmpty(message = "Item Type field can not be blank")
     private ItemType itemType;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "function_type")
+    @NotEmpty(message = "Function type field can not be blank")
     protected FunctionType functionType;
 
     @Column(name = "threshold")
+    @NotEmpty(message = "threshold type can not be blank")
+    @Min(value = 0, message = "Threshold field must not be negative")
     private Integer threshold;
 
     @Column(name = "quantity")

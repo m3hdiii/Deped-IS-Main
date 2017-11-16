@@ -10,4 +10,6 @@ public interface OrderRepository extends BaseRepository<Order> {
     List<Order> fetchAllByOrderState(OrderState orderState);
 
     List<Order> fetchAllByUserId(Long userId);
+
+    List<Order> fetchAllByStates(List<OrderState> orderStates);
 }

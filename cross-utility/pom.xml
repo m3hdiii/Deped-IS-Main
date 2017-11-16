@@ -32,5 +32,11 @@
             <artifactId>commons-text</artifactId>
             <version>1.1</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.owasp.antisamy</groupId>
+            <artifactId>antisamy</artifactId>
+            <version>1.5.7</version>
+        </dependency>
     </dependencies>
 </project>

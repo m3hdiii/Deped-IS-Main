@@ -34,9 +34,18 @@
         </c:when>
 
     </c:choose>
-
-
+    <c:set var="errors" value="${requestScope['org.springframework.validation.BindingResult.equipment'].allErrors}"/>
     <form:form commandName="equipment" method="post">
+        <c:if test="${not empty errors}">
+            <div>
+                <ul class="list-group">
+                    <c:forEach items="${fieldErrors}" var="error" varStatus="loop">
+                        <li class="list-group-item list-group-item-warning text-danger"><span
+                                class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}</li>
+                    </c:forEach>
+                </ul>
+            </div>
+        </c:if>
         <p><span>name: </span><form:input path="name"/></p>
         <p><span>description: </span><form:textarea path="description"/></p>
         <p><span>Equipment Status:

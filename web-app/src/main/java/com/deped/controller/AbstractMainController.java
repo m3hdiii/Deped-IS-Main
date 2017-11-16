@@ -125,6 +125,7 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         return httpEntity;
     }
 
+
     protected ModelAndView makeHintPage(String jspLocation, String className, String methodName) {
         Map<String, String> map = new HashMap<>();
         map.put("jspLocation", jspLocation);

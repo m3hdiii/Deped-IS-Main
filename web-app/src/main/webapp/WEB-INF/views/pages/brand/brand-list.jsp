@@ -36,9 +36,9 @@
 
             <div role="toolbar" class="btn-toolbar">
                 <div class="pull-left">
-                    <button class="btn btn-purple btn-sm">Select All</button>
+                    <%--<button class="btn btn-purple btn-sm">Select All</button>--%>
                     <a href="/brand/create" class="btn btn-default btn-sm"><i class="fa fa-plus text-success"></i></a>
-                    <button class="btn btn-default btn-sm"><i class="fa fa-trash text-danger"></i></button>
+                    <%--<button class="btn btn-default btn-sm"><i class="fa fa-trash text-danger"></i></button>--%>
                 </div>
             </div>
 
@@ -46,10 +46,10 @@
                 <!-- Brand-thumbnail-and-content-of-the-brand-thumbnail -->
                 <c:forEach items="${brands}" var="brand">
                     <div class='col-xs-4 thumbnail brand-content-thumbnail padd-md'>
-                        <div class="round">
-                            <input class="pull-left" type="checkbox" id="checkbox ${brand.brandId}"/>
-                            <label for="checkbox ${brand.brandId}"></label>
-                        </div>
+                            <%--<div class="round">
+                                <input class="pull-left" type="checkbox" id="checkbox ${brand.brandId}"/>
+                                <label for="checkbox ${brand.brandId}"></label>
+                            </div>--%>
                         <div class="dropdown pull-right">
                             <a href="#" data-toggle="dropdown"><i class="fa fa-ellipsis-v text-purple"></i></a>
                             <ul class="dropdown-menu">
@@ -60,8 +60,23 @@
                         </div>
 
                         <div class="item-infomation text-center">
-                            <h3>${brand.name}</h3>
+                            <h3><a href="/category/${brand.brandId}">${brand.name}</a></h3>
                             <!-- <small>The .img-thumbnail class creates a thumbnail of the image:</small> -->
+                            <details>
+                                <summary class="officeAddress">Brand Name</summary>
+                                <small>${brand.name}</small>
+                            </details>
+                            <c:choose>
+                                <c:when test="${not empty brand.logoUrl}">
+                                    <img width="104px" height="76px" src="${baseUrl}${brand.logoUrl}"
+                                         alt="item image"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <img width="104px" height="76px"
+                                         src="${resourceURL}/images/shared-images/no-brand.jpg"
+                                         alt="item image"/>
+                                </c:otherwise>
+                            </c:choose>
                             <hr size="30">
                             <div class="address col-xs-6">
                                 <details>

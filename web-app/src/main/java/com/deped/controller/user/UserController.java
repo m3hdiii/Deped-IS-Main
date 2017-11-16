@@ -16,6 +16,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -110,7 +111,7 @@ public class UserController extends AbstractMainController<User, Long> {
 
     @Override
     @RequestMapping(value = "dummy", method = POST)
-    public ModelAndView createAction(User entity) {
+    public ModelAndView createAction(User entity, BindingResult bindingResult) {
         return null;
     }
 
@@ -126,13 +127,16 @@ public class UserController extends AbstractMainController<User, Long> {
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
     public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
         ResponseEntity<User> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, User.class);
-        User item = response.getBody();
-        return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, item);
+        User user = response.getBody();
+        return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, user);
     }
 
     @Override
     @RequestMapping(value = UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(Long aLong, User entity) {
+    public ModelAndView updateAction(Long aLong, User entity, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
+        }
         entity.setUserId(aLong);
         //This is actually the update date
         entity.setCreationDate(new Date());

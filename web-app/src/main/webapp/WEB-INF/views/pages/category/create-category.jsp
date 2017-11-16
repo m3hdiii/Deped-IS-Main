@@ -39,13 +39,25 @@
 
                         <c:when test="${not empty successfullyCreated}">
                             <p style="color: green;">${successfullyCreated}</p>
-                            &nbsp;&nbsp;<a href="/category/create">Create New Category</a>
+                            &nbsp;&nbsp;<a href="/category/list">All Categories</a>
                         </c:when>
 
                     </c:choose>
-
+                    <c:set var="errors"
+                           value="${requestScope['org.springframework.validation.BindingResult.category'].allErrors}"/>
                     <form:form commandName="category" method="post" class="form-horizontal">
 
+                        <c:if test="${not empty errors}">
+                            <div>
+                                <ul class="list-group">
+                                    <c:forEach items="${errors}" var="error" varStatus="loop">
+                                        <li class="list-group-item list-group-item-warning text-danger"><span
+                                                class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
+                                        </li>
+                                    </c:forEach>
+                                </ul>
+                            </div>
+                        </c:if>
                         <p>
                         <div class="form-group">
                             <label class="col-sm-2"> Name: </label>
@@ -60,16 +72,16 @@
                         </div>
                         </p>
 
-                        <p>
+
                         <div class="form-group">
                             <div class="col-md-2">
-                                <button type="submit" class="btn btn-green"> Create Category</button>
+                                <button type="submit" class="btn btn-green">Create Category</button>
                             </div>
                             <div class="col-md-2">
-                                <button type="reset" class="btn btn-green"> Reset</button>
+                                <button type="reset" value="Reset" class="btn btn-green">Reset</button>
                             </div>
                         </div>
-                        </p>
+
 
                     </form:form>
                 </div>

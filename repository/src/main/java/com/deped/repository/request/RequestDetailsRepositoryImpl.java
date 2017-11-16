@@ -1,5 +1,6 @@
 package com.deped.repository.request;
 
+import com.deped.model.items.Item;
 import com.deped.model.request.*;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
@@ -176,6 +177,18 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
 
                 if (disapprovalMessage != null && !disapprovalMessage.isEmpty()) {
                     cancellationOrDisapprovalProcessor(rd, disapprovalMessage, hibernateSession, disapprovalReasonQuery);
+                }
+            }
+
+            String updateItemQuantityQuery = "UPDATE item SET quantity = quantity - :newQuantity WHERE item_id = :itemId";
+            if (requestDetailsStatus == RequestDetailsStatus.RELEASED) {
+                for (RequestDetails od : entities) {
+                    if (od.getRequestDetailsStatus() == RequestDetailsStatus.RELEASED) {
+                        NativeQuery<Item> nativeQuery = hibernateSession.createNativeQuery(updateItemQuantityQuery, Item.class);
+                        nativeQuery.setParameter("newQuantity", od.getRequestQuantity());
+                        nativeQuery.setParameter("itemId", od.getRequestDetailsID().getItemId());
+                        nativeQuery.executeUpdate();
+                    }
                 }
             }
 

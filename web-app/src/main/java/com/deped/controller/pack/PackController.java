@@ -2,12 +2,13 @@ package com.deped.controller.pack;
 
 import com.deped.controller.AbstractMainController;
 import com.deped.model.Response;
-import com.deped.model.pack.Pack;
 import com.deped.model.items.Item;
+import com.deped.model.pack.Pack;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,7 +19,6 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-
 import java.beans.PropertyEditorSupport;
 import java.util.Date;
 import java.util.HashMap;
@@ -58,7 +58,7 @@ public class PackController extends AbstractMainController<Pack, Long> {
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createAction(@Valid @ModelAttribute("pack") Pack entity) {
+    public ModelAndView createAction(@Valid @ModelAttribute("pack") Pack entity, BindingResult bindingResult) {
         entity.setCreationDate(new Date());
         ResponseEntity<Pack> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Pack.class);
         ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "pack", entity, new Pack());
@@ -87,7 +87,7 @@ public class PackController extends AbstractMainController<Pack, Long> {
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @ModelAttribute(BASE_NAME) Pack entity) {
+    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @ModelAttribute(BASE_NAME) Pack entity, BindingResult bindingResult) {
         entity.setPackId(aLong);
         //This is actually the update date
         entity.setCreationDate(new Date());

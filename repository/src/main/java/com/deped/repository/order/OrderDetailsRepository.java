@@ -12,4 +12,6 @@ public interface OrderDetailsRepository extends BaseRepository<OrderDetails> {
     boolean orderAll(OrderDetails... entities);
 
     List<OrderDetails> fetchAllById(Long requestId);
+
+    List<OrderDetails> fetchAllByStates(List<OrderDetailsState> orderDetailsStates);
 }

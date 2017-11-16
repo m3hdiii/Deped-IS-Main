@@ -2,18 +2,16 @@ package com.deped.controller.place;
 
 import com.deped.controller.AbstractMainController;
 import com.deped.model.location.Country;
-import com.deped.model.location.office.Department;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
 import java.util.List;
 
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
@@ -40,7 +38,7 @@ public class CountryController extends AbstractMainController<Country, String> {
     }
 
     @Override
-    public ModelAndView createAction(Country entity) {
+    public ModelAndView createAction(Country entity, BindingResult bindingResult) {
         return null;
     }
 
@@ -55,7 +53,7 @@ public class CountryController extends AbstractMainController<Country, String> {
     }
 
     @Override
-    public ModelAndView updateAction(String s, Country entity) {
+    public ModelAndView updateAction(String s, Country entity, BindingResult bindingResult) {
         return null;
     }
 

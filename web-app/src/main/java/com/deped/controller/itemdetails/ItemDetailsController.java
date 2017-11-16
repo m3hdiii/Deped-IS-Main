@@ -6,6 +6,7 @@ import com.deped.model.items.ItemDetails;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,7 +45,10 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, L
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createAction(@Valid ItemDetails entity) {
+    public ModelAndView createAction(@Valid ItemDetails entity, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ModelAndView(CREATE_VIEW_PAGE);
+        }
         entity.setCreationDate(new Date());
         ResponseEntity<ItemDetails> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, ItemDetails.class);
         ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "", entity, new ItemDetails());
@@ -63,12 +67,15 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, L
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
     public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
         ResponseEntity<ItemDetails> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, ItemDetails.class);
-        ItemDetails item = response.getBody();
-        return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, item);
+        ItemDetails itemDetails = response.getBody();
+        return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, itemDetails);
     }
 
     @Override
-    public ModelAndView updateAction(Long aLong, ItemDetails entity) {
+    public ModelAndView updateAction(Long aLong, ItemDetails entity, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
+        }
         entity.setItemDetailsId(aLong);
         //This is actually the update date
         entity.setCreationDate(new Date());

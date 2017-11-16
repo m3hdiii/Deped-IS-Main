@@ -2,16 +2,13 @@ package com.deped.model.request;
 
 
 import com.deped.model.account.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.deped.protection.validators.xss.XSS;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
 
 import static com.deped.repository.utils.ConstantValues.FETCH_ALL_REQUESTS;
 
@@ -37,6 +34,8 @@ public class Request implements Serializable {
     private Long requestId;
 
     @Column(name = "user_message")
+    @Length(max = 400, message = "User message field must not be more than 400 character")
+    @XSS
     private String userMessage;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -56,6 +55,8 @@ public class Request implements Serializable {
     private User user;
 
     @Column(name = "admin_notice")
+    @Length(max = 400, message = "Description field must not be more than 400 character")
+    @XSS
     private String adminNotice;
 
 

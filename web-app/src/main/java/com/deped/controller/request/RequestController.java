@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -155,7 +156,10 @@ public class RequestController extends AbstractMainController<Request, Long> {
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(Long aLong, Request entity) {
+    public ModelAndView updateAction(Long aLong, Request entity, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
+        }
         return null;
     }
 
@@ -191,7 +195,7 @@ public class RequestController extends AbstractMainController<Request, Long> {
     }
 
     @Override
-    public ModelAndView createAction(Request entity) {
+    public ModelAndView createAction(Request entity, BindingResult bindingResult) {
         return null;
     }
 
