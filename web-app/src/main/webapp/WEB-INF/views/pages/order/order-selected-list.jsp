@@ -29,25 +29,20 @@
 <section class="content">
     <c:import url="../../includes/top-nav.jsp"/>
 
-    <div class="warper container-fluid">
-    <div class="page-header">
-        <h3>&nbsp;&nbsp; Order ${h1Placeholder} Page&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
-        </h3>
-    </div>
+        <div class="warper container-fluid">
 
-        <div class="page-header">
-            <h1>Manage Order
-                <small>DepEd-Baguio City Division Office</small>
-            </h1>
+            <div class="page-header">
+                <h3>Order ${h1Placeholder} Page
+                    <small>for Goods, Semi-Expendable and Equipment</small>
+                </h3>
+            </div>
 
-        </div>
 
-        <div class="row item-body">
             <div class="panel panel-default">
-                <h3 class="text-center">Order Info</h3>
+                <div class="panel-heading text-center clean">Order Information</div>
                 <div class="panel-body">
 
-                    <table class="table table-hover">
+                    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="basic-datatable">
                         <thead>
                         <tr>
                             <th>User</th>
@@ -73,11 +68,56 @@
                         </c:forEach>
                         </tbody>
                     </table>
+
                 </div>
             </div>
-
         </div>
-    </div> <!-- Warper Ends Here (working area) -->
+            <!-- Warper Ends Here (working area) -->
+
+    <%--<div class="warper container-fluid">--%>
+        <%--<div class="page-header">--%>
+            <%--<h3>Order ${h1Placeholder} Page--%>
+                <%--<small>for Goods, Semi-Expendable and Equipment</small>--%>
+            <%--</h3>--%>
+        <%--</div>--%>
+
+
+        <%--<div class="row item-body">--%>
+            <%--<div class="panel panel-default">--%>
+                <%--<h3 class="text-center">Order Info</h3>--%>
+                <%--<div class="panel-body">--%>
+
+                    <%--<table class="table table-hover">--%>
+                        <%--<thead>--%>
+                        <%--<tr>--%>
+                            <%--<th>User</th>--%>
+                            <%--<th>Date Ordered</th>--%>
+                            <%--<th>Date Required</th>--%>
+                            <%--<th>Order State</th>--%>
+                            <%--<th>Budget Amount</th>--%>
+                            <%--<th>Action</th>--%>
+                        <%--</tr>--%>
+                        <%--</thead>--%>
+                        <%--<tbody>--%>
+                        <%--<c:forEach items="${orders}" var="order">--%>
+                            <%--<tr>--%>
+                                <%--<th>${order.user.firstName} ${order.user.middleName} ${order.user.lastName}</th>--%>
+                                <%--<td>${order.orderDate}</td>--%>
+                                <%--<td>${order.requiredDate}</td>--%>
+                                <%--<td>${order.orderState}</td>--%>
+                                <%--<td>${order.budgetAmount}</td>--%>
+                                <%--<td>--%>
+                                    <%--<a href="${orderUrl}${order.orderId}" class="btn btn-primary btn-sm">${anchorName}</a>--%>
+                                <%--</td>--%>
+                            <%--</tr>--%>
+                        <%--</c:forEach>--%>
+                        <%--</tbody>--%>
+                    <%--</table>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+
+        <%--</div>--%>
+    <%--</div> <!-- Warper Ends Here (working area) -->--%>
 
 
     <c:import url="../../includes/footer.jsp"/>

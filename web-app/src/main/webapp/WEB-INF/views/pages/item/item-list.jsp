@@ -25,35 +25,38 @@
 <section class="content">
 
     <c:import url="../../includes/top-nav.jsp"/>
-    <div class="warper container-fluid">
-        <div class="page-header">
-            <h1>Manage Items
-                <small>DepEd-Baguio City Division Office</small>
-            </h1>
 
-        </div>
+        <div class="warper container-fluid">
 
-        <div class="row item-body">
+            <div class="page-header">
+                <h3>Manage Items
+                    <small>DepEd-Baguio City Division Office</small>
+                </h3>
+            </div>
 
+            <div class="nav">
+                <div class="btn-group">
+                    <a href="/item/create" class="btn btn-sm btn-default text-right" data-toggle="tooltips"
+                       title="Add New Item">
+                        <i class="fa fa-plus"></i>
+                    </a>
+                    <button class="btn btn-sm btn-default text-right" data-toggle="tooltips" title="Delete Item">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>
+            </div>
 
             <div class="panel panel-default">
-                <h3 class="text-center">Created Items</h3>
+                <div class="panel-heading text-center clean">Created Items</div>
                 <div class="panel-body">
-                    <div class="nav">
-                        <a href="/item/create" class="btn btn-sm btn-default text-right" data-toggle="tooltips"
-                           title="Add New Item">
-                            <i class="fa fa-plus text-green"></i>
-                        </a>
-                        <button class="btn btn-sm btn-default text-right" data-toggle="tooltips" title="Delete Item">
-                            <i class="fa fa-trash text-danger"></i>
-                        </button>
-                    </div>
-                    <table class="table table-hover">
+
+                    <table cellpadding="0" cellspacing="0" border="0" class="table table-hover" id="basic-datatable">
                         <thead>
                         <tr>
                             <th>
-                                <label class="checkbox checkbox-inline">
-                                    <input type="checkbox"/>
+                                <label class="cr-styled">
+                                    <input type="checkbox" ng-model="todo.done">
+                                    <i class="fa"></i>
                                 </label>
                             </th>
                             <th>Image</th>
@@ -69,8 +72,9 @@
                         <c:forEach items="${itemList}" var="item">
                             <tr>
                                 <td>
-                                    <label class="checkbox checkbox-inline">
-                                        <input type="checkbox">
+                                    <label class="cr-styled">
+                                        <input type="checkbox" ng-model="todo.done">
+                                        <i class="fa"></i>
                                     </label>
                                 </td>
                                 <td>
@@ -101,18 +105,101 @@
                         </c:forEach>
                         </tbody>
                     </table>
+
                 </div>
             </div>
         </div>
-        <%--
-            <a href="/item/${item.itemId}">
-            ${item.functionType}
-            ${item.threshold}
-            <a href="/item/update/${item.itemId}"><img src="${resourceURL}/images/edit.png" width="16"/></a>
-            <img src="${resourceURL}/images/delete.png" width="16"/>
-        --%>
+            <!-- Warper Ends Here (working area) -->
 
-    </div>
+
+    <%--<div class="warper container-fluid">--%>
+        <%--<div class="page-header">--%>
+            <%--<h1>Manage Items--%>
+                <%--<small>DepEd-Baguio City Division Office</small>--%>
+            <%--</h1>--%>
+
+        <%--</div>--%>
+
+        <%--<div class="row item-body">--%>
+
+            <%--<div class="nav">--%>
+                <%--<a href="/item/create" class="btn btn-sm btn-default text-right" data-toggle="tooltips"--%>
+                   <%--title="Add New Item">--%>
+                    <%--<i class="fa fa-plus text-green"></i>--%>
+                <%--</a>--%>
+                <%--<button class="btn btn-sm btn-default text-right" data-toggle="tooltips" title="Delete Item">--%>
+                    <%--<i class="fa fa-trash text-danger"></i>--%>
+                <%--</button>--%>
+            <%--</div>--%>
+
+            <%--<div class="panel panel-default">--%>
+                <%--<h3 class="text-center">Created Items</h3>--%>
+                <%--<div class="panel-body">--%>
+                    <%--<table class="table table-hover">--%>
+                        <%--<thead>--%>
+                        <%--<tr>--%>
+                            <%--<th>--%>
+                                <%--<label class="checkbox checkbox-inline">--%>
+                                    <%--<input type="checkbox"/>--%>
+                                <%--</label>--%>
+                            <%--</th>--%>
+                            <%--<th>Image</th>--%>
+                            <%--<th>Name</th>--%>
+                            <%--<th>Brand</th>--%>
+                            <%--<th class="col-xs-2">Description</th>--%>
+                            <%--<th>Item Type</th>--%>
+                            <%--<th>QTY</th>--%>
+                            <%--<th>Actions</th>--%>
+                        <%--</tr>--%>
+                        <%--</thead>--%>
+                        <%--<tbody>--%>
+                        <%--<c:forEach items="${itemList}" var="item">--%>
+                            <%--<tr>--%>
+                                <%--<td>--%>
+                                    <%--<label class="checkbox checkbox-inline">--%>
+                                        <%--<input type="checkbox">--%>
+                                    <%--</label>--%>
+                                <%--</td>--%>
+                                <%--<td>--%>
+                                    <%--<c:choose>--%>
+                                        <%--<c:when test="${not empty item.picName}">--%>
+                                            <%--<img width="104px" height="76px" src="${baseUrl}${item.picName}"--%>
+                                                 <%--alt="item image"/>--%>
+                                        <%--</c:when>--%>
+                                        <%--<c:otherwise>--%>
+                                            <%--<img width="104px" height="76px"--%>
+                                                 <%--src="${resourceURL}/images/shared-images/no-item.png"--%>
+                                                 <%--alt="item image"/>--%>
+                                        <%--</c:otherwise>--%>
+                                    <%--</c:choose>--%>
+                                <%--</td>--%>
+                                <%--<th>${item.name}</th>--%>
+                                <%--<td>SONY</td>--%>
+                                <%--<td>${item.description}</td>--%>
+                                <%--<td>${item.itemType}</td>--%>
+                                <%--<td>${item.quantity}</td>--%>
+                                <%--</td>--%>
+                                <%--<td>--%>
+                                    <%--<a href="/item/update/${item.itemId}" class="btn btn-purple"><i--%>
+                                            <%--class="fa fa-pencil"></i></a>--%>
+                                    <%--<button class="btn btn-danger"><i class="fa fa-trash"></i></button>--%>
+                                <%--</td>--%>
+                            <%--</tr>--%>
+                        <%--</c:forEach>--%>
+                        <%--</tbody>--%>
+                    <%--</table>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+        <%--</div>--%>
+        <%--&lt;%&ndash;--%>
+            <%--<a href="/item/${item.itemId}">--%>
+            <%--${item.functionType}--%>
+            <%--${item.threshold}--%>
+            <%--<a href="/item/update/${item.itemId}"><img src="${resourceURL}/images/edit.png" width="16"/></a>--%>
+            <%--<img src="${resourceURL}/images/delete.png" width="16"/>--%>
+        <%--&ndash;%&gt;--%>
+
+    <%--</div>--%>
 
     <c:import url="../../includes/footer.jsp"/>
 
