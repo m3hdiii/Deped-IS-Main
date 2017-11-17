@@ -49,7 +49,6 @@
     </p>
 
 
-</section>
 <c:import url="../../includes/footer.jsp"/>
 
 </body>

@@ -102,11 +102,7 @@
     </div>
     <!-- Warper Ends Here (working area) -->
 
-    <c:import url="../../modals/cart.jsp"/>
-    <c:import url="../../modals/changePassword.jsp"/>
-</section>
-<section class="content">
     <c:import url="../../includes/footer.jsp"/>
-</section>
+
 </body>
 </html>

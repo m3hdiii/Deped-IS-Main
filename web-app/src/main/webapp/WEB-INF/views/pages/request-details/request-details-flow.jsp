@@ -702,18 +702,8 @@
     <%--</div> <!-- Warper Ends Here (working area) -->--%>
 
 
-
-    <c:import url="../../modals/cart.jsp"/>
-</section>
-<section class="content">
     <c:import url="../../includes/footer.jsp"/>
     <script type="text/javascript" src="${resourceURL}/js/additional/request-operation.js"></script>
 
-    <!-- Data Table -->
-    <script src="${resourceURL}/js/plugins/datatables/jquery.dataTables.js"></script>
-    <script src="${resourceURL}/js/plugins/datatables/DT_bootstrap.js"></script>
-    <script src="${resourceURL}/js/plugins/datatables/jquery.dataTables-conf.js"></script>
-
-</section>
 </body>
 </html>

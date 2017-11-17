@@ -81,11 +81,7 @@
         </div>
     </div>
 
-
-    <c:import url="../../modals/cart.jsp"/>
-</section>
-<section class="content">
     <c:import url="../../includes/footer.jsp"/>
-</section>
+
 </body>
 </html>
