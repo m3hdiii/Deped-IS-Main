@@ -3,17 +3,20 @@ package com.deped.controller.category;
 import com.deped.controller.AbstractMainController;
 import com.deped.model.Response;
 import com.deped.model.category.Category;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-
 import java.util.Date;
 import java.util.List;
 
@@ -41,14 +44,19 @@ public class CategoryController extends AbstractMainController<Category, Long> {
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = GET)
-    public ModelAndView renderCreatePage(@Valid @ModelAttribute(BASE_NAME) Category entity) {
+    public ModelAndView renderCreatePage(@ModelAttribute(BASE_NAME) Category entity) {
         ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE);
         return mv;
     }
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createAction(@Valid @ModelAttribute(BASE_NAME) Category entity) {
+    public ModelAndView createAction(@Valid @ModelAttribute(BASE_NAME) Category entity, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return new ModelAndView(CREATE_VIEW_PAGE, BASE_NAME, entity);
+        }
+
         entity.setCreationDate(new Date());
         ResponseEntity<Category> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Category.class);
         ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Category());
@@ -67,13 +75,17 @@ public class CategoryController extends AbstractMainController<Category, Long> {
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
     public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
         ResponseEntity<Category> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Category.class);
-        Category item = response.getBody();
-        return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, item);
+        Category category = response.getBody();
+        return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, category);
     }
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Category entity) {
+    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Category entity, BindingResult result) {
+
+        if (result.hasErrors()) {
+            return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
+        }
         entity.setCategoryId(aLong);
         //This is actually the update date
         entity.setCreationDate(new Date());
@@ -101,5 +113,10 @@ public class CategoryController extends AbstractMainController<Category, Long> {
     @RequestMapping(value = REMOVE_MAPPING, method = POST)
     public ModelAndView removeAction(@Valid Category... entity) {
         return null;
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
 }

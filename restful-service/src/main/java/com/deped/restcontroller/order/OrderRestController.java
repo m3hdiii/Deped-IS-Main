@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -23,6 +24,7 @@ public class OrderRestController extends AbstractMainRestController<Order, Long>
     private static final String FETCH_MAPPING_BY_USER = BASE_NAME + FETCH_PATTERN + "/user" + FETCH_BY_ID_PATTERN;
     private static final String FETCH_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String FETCH_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
+    private static final String FETCH_BY_STATES = FETCH_MAPPING + URL_SEPARATOR + "by-states";
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
 
 
@@ -98,5 +100,17 @@ public class OrderRestController extends AbstractMainRestController<Order, Long>
     @Override
     public ResponseEntity<Response> createOrUpdateAll(Order... entities) {
         return null;
+    }
+
+    @RequestMapping(value = FETCH_BY_STATES, method = RequestMethod.POST)
+    public ResponseEntity<List<Order>> fetchByOrderDetailsStates(@RequestBody Integer... orderDetailsStates) {
+        List<OrderState> orderDetailsStateList = new ArrayList<>();
+        for (Integer orderDetailsState : orderDetailsStates) {
+            OrderState ods = OrderState.values()[orderDetailsState];
+            orderDetailsStateList.add(ods);
+        }
+
+        ResponseEntity<List<Order>> response = orderService.fetchAllByStates(orderDetailsStateList);
+        return response;
     }
 }

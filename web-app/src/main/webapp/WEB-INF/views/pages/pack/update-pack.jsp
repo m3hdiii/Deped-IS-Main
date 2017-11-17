@@ -52,7 +52,21 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Pack Information</div>
                 <div class="panel-body">
+                    <c:set var="errors"
+                           value="${requestScope['org.springframework.validation.BindingResult.pack'].allErrors}"/>
+
                     <form:form commandName="pack" method="post" class="form-horizontal" role="form">
+                        <c:if test="${not empty errors}">
+                            <div>
+                                <ul class="list-group">
+                                    <c:forEach items="${fieldErrors}" var="error" varStatus="loop">
+                                        <li class="list-group-item list-group-item-warning text-danger"><span
+                                                class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
+                                        </li>
+                                    </c:forEach>
+                                </ul>
+                            </div>
+                        </c:if>
                         <div class="form-group">
                             <label class="col-sm-2 control-label">Name</label>
                             <div class="col-sm-7">

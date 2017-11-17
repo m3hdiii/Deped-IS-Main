@@ -31,31 +31,44 @@
 
         <c:when test="${not empty successfullyUpdated}">
             <p style="color: green;">${successfullyUpdated}</p>
-            &nbsp;&nbsp;<a href="/brand/create">Create New Brand</a>
+            &nbsp;&nbsp;<a href="/department/list">All Departments</a>
         </c:when>
 
     </c:choose>
 
     <div class="row">
         <div class="col-lg-12">
-            <div class="panel-heading"><h1>Edit Department<h1/></div>
+            <div class="panel-heading"><h1>Update Department</h1></div>
             <hr class="style13"/>
+            <c:set var="errors"
+                   value="${requestScope['org.springframework.validation.BindingResult.department'].allErrors}"/>
             <form:form commandName="department" method="post">
+                <c:if test="${not empty errors}">
+                    <div>
+                        <ul class="list-group">
+                            <c:forEach items="${errors}" var="error" varStatus="loop">
+                                <li class="list-group-item list-group-item-warning text-danger"><span
+                                        class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
+                                </li>
+                            </c:forEach>
+                        </ul>
+                    </div>
+                </c:if>
                 <div class="row form-group">
                     <div class="col-sm-2">
-                        <label class="control-label"><span>name: </span></label>
+                        <label class="control-label"><span>name</span></label>
                         <form:input path="name"/>
                     </div>
                 </div>
                 <div class="row form-group">
                     <div class="col-sm-2">
-                        <label class="control-label"><span>description: </span></label>
+                        <label class="control-label"><span>description</span></label>
                         <form:textarea path="description"/>
                     </div>
                 </div>
                 <div class="row form-group">
                     <div class="col-sm-2">
-                        <label class="control-label"><span>Department Head: </span></label>
+                        <label class="control-label"><span>Department Head</span></label>
                         <form:input path="departmentHead"/>
                     </div>
                 </div>

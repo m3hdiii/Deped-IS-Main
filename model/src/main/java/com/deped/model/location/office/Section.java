@@ -1,8 +1,12 @@
 package com.deped.model.location.office;
 
-import com.fasterxml.jackson.annotation.*;
+import com.deped.protection.validators.xss.XSS;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -27,9 +31,15 @@ public class Section implements Serializable {
     private Long sectionId;
 
     @Column(name = "name")
+    @Length(min = 2, max = 45, message = "Name filed length must be between 2 to 45 character")
+    @NotEmpty(message = "Name field can not be blank")
+    @XSS
+    @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = "Name field must contain number and alphabet only")
     private String name;
 
     @Column(name = "description")
+    @Length(max = 400, message = "Description must not be more than 400 character")
+    @XSS
     private String description;
 
     @ManyToOne

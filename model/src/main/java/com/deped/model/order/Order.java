@@ -2,6 +2,10 @@ package com.deped.model.order;
 
 import com.deped.model.account.User;
 import com.deped.model.delivery.DeliveryInformation;
+import com.deped.protection.validators.decimal.DoubleRange;
+import com.deped.protection.validators.xss.XSS;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -32,9 +36,11 @@ public class Order implements Serializable {
 
     @Column(name = "order_schedule")
     @Enumerated(EnumType.STRING)
+    @NotEmpty(message = "Schedule field can not be blank")
     private Schedule orderSchedule;
 
     @Column(name = "budget_amount")
+    @DoubleRange(min = 1.0, message = "Budget amount must have a value more than 1 Peso")
     private Double budgetAmount;
 
 //    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "order")
@@ -49,6 +55,8 @@ public class Order implements Serializable {
     private OrderState orderState;
 
     @Column(name = "arrival_description")
+    @Length(max = 400, message = "Arrival description field must not be more than 400 character")
+    @XSS
     private String arrivalDescription;
 
     public Long getOrderId() {

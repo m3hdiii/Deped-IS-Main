@@ -4,6 +4,7 @@ import com.deped.controller.ConstantController;
 import com.deped.model.account.User;
 import com.deped.model.security.Privilege;
 import com.deped.model.security.Role;
+import com.deped.utils.SystemUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,6 +24,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        if (!SystemUtils.isAlphaNumeric(username)) {
+            return null;
+        }
 
         ResponseEntity<User> response = makeFetchByUsernameRequest("user", username, User.class);
         User user = response.getBody();

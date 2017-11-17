@@ -3,14 +3,14 @@ package com.deped.controller.brand;
 import com.deped.controller.AbstractMainController;
 import com.deped.model.Response;
 import com.deped.model.brand.Brand;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -43,28 +43,20 @@ public class BrandController extends AbstractMainController<Brand, Long> {
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
 
 
-    @RequestMapping(value = CREATE_MAPPING + "/1", method = GET)
-    public ModelAndView renderCreatePage1() {
-        ModelAndView mv = new ModelAndView("test");
-        return mv;
-
-    }
-
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = GET)
-    public ModelAndView renderCreatePage(@ModelAttribute("brand") Brand entity) {
+    public ModelAndView renderCreatePage(@ModelAttribute(BASE_NAME) Brand entity) {
         ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE);
         return mv;
 
     }
 
-    @Override
-    public ModelAndView createAction(Brand entity) {
-        return null;
-    }
-
     @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createActionWithPic(@RequestParam MultipartFile brandPic, @Valid @ModelAttribute("brand") Brand entity) {
+    public ModelAndView createActionWithPic(@RequestParam MultipartFile brandPic, @Valid @ModelAttribute(BASE_NAME) Brand entity, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, BASE_NAME, entity);
+            return mv;
+        }
         entity.setCreationDate(new Date());
         String base64Encoded = null;
         try {
@@ -75,9 +67,8 @@ public class BrandController extends AbstractMainController<Brand, Long> {
         }
 
         entity.setLogoPic(base64Encoded);
-//        Base64.getDecoder().decode(str)
         ResponseEntity<Brand> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Brand.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "brand", entity, new Brand());
+        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Brand());
 
         return mv;
     }
@@ -99,13 +90,15 @@ public class BrandController extends AbstractMainController<Brand, Long> {
         return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, item);
     }
 
-    @Override
-    public ModelAndView updateAction(Long aLong, Brand entity) {
-        return null;
-    }
-
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateActionWithPicture(@RequestParam MultipartFile brandPic, @PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute Brand entity) {
+    public ModelAndView updateActionWithPicture(@RequestParam MultipartFile brandPic, @PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute Brand entity, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            ModelAndView mv = new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
+            return mv;
+        }
+
+        entity.setCreationDate(new Date());
         entity.setBrandId(aLong);
         String base64Encoded = null;
         try {
@@ -142,6 +135,22 @@ public class BrandController extends AbstractMainController<Brand, Long> {
     @Override
     @RequestMapping(value = REMOVE_MAPPING, method = POST)
     public ModelAndView removeAction(@Valid Brand... entity) {
+        return null;
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+    }
+
+    //------------------------------------------
+    @Override
+    public ModelAndView createAction(Brand entity, BindingResult bindingResult) {
+        return null;
+    }
+
+    @Override
+    public ModelAndView updateAction(Long aLong, Brand entity, BindingResult bindingResult) {
         return null;
     }
 }

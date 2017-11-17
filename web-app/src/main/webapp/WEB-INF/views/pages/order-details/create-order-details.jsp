@@ -74,6 +74,16 @@
             <th>Suppliers</th>
             <th>Add To Cart</th>
             </thead>
+            <%--            <c:set var="errors" value="${requestScope['org.springframework.validation.BindingResult.order'].allErrors}" />
+                        <c:if test="${not empty errors}">
+                            <div>
+                                <ul class="list-group">
+                                    <c:forEach items="${fieldErrors}" var="error" varStatus="loop">
+                                        <li class="list-group-item list-group-item-warning text-danger"><span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}</li>
+                                    </c:forEach>
+                                </ul>
+                            </div>
+                        </c:if>--%>
             <c:forEach items="${itemList}" var="item" varStatus="loop">
                 <form:form commandName="orderDetail" method="post">
                     <tr>

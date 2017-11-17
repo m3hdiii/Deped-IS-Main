@@ -4,6 +4,8 @@ import org.apache.commons.text.RandomStringGenerator;
 
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.apache.commons.text.CharacterPredicates.DIGITS;
 import static org.apache.commons.text.CharacterPredicates.LETTERS;
@@ -45,4 +47,15 @@ public class SystemUtils {
         }
         return null;
     }
+
+    public static boolean isAlphaNumeric(String str) {
+        Pattern pattern = Pattern.compile("^[a-zA-Z0-9_]*$");
+        Matcher matcher = pattern.matcher(str);
+        if (!matcher.matches()) {
+            return false;
+        }
+
+        return true;
+    }
+
 }

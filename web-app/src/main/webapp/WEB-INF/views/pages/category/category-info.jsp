@@ -38,10 +38,11 @@
                         <p> <label class="col-sm-2"> Description: </label> ${categoryInfo.description}</p>
                     </div>
                     <div class="col-md-11">
-                        <p> <label class="col-sm-2"> Parent Name: </label> ${categoryInfo.parentCategory.name}</p>
+                        <p><label class="col-sm-2"> Creation Date: </label> ${categoryInfo.creationDate}</p>
                     </div>
                     <div class="col-md-3">
-                        <button type="button" class="btn btn-block"> <a href="/category/update/${brandId}"> Update Info </a> </button>
+                        <a class="btn btn-info" role="button" href="/category/update/${categoryInfo.categoryId}"> Update
+                            Info </a>
                     </div>
                 </div>
             </div>

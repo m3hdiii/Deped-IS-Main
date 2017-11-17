@@ -5,8 +5,12 @@ import com.deped.model.items.features.Colour;
 import com.deped.model.items.features.Condition;
 import com.deped.model.items.features.EquipmentAvailability;
 import com.deped.model.items.features.Material;
+import com.deped.protection.validators.xss.XSS;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Min;
 import java.util.Date;
 
 @Entity
@@ -34,9 +38,15 @@ public class ItemDetails {
     private EquipmentAvailability equipmentAvailability;
 
     @Column(name = "office_serial_number")
+    @NotEmpty(message = "Office serial number field can not be blank")
+    @Length(min = 1, max = 45, message = "Office serial number filed length must be between 1 to 45 character")
+    @XSS
     private String officeSerialNo;
 
     @Column(name = "equipment_serial_number")
+    @NotEmpty(message = "Equipment serial number field can not be blank")
+    @Length(min = 1, max = 45, message = "Equipment serial number filed length must be between 1 to 45 character")
+    @XSS
     private String equipmentSerialNo;
 
     @Column(name = "creation_date")
@@ -48,9 +58,11 @@ public class ItemDetails {
     private Material material;
 
     @Column(name = "weight_in_gram")
+    @Min(value = 1, message = "Weight field must be at least one gram")
     private Long weightInGram;
 
     @Column(name = "life_span")
+    @Min(value = 1, message = "Life span field must be at least one month")
     private Short lifeSpan;
 
     @ManyToOne

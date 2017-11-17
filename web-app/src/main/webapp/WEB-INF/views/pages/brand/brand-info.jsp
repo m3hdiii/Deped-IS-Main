@@ -50,8 +50,7 @@
                         <p> <label class="col-sm-2"> Service Center Address: </label> ${brandInfo.serviceCenterAddress}</p>
                     </div>
                     <div class="col-md-3">
-                        <button type="button" class="btn btn-block"><a href="/brand/update/${brandInfo.brandId}"> Update
-                            Info </a></button>
+                        <a class="btn btn-info" role="button" href="/brand/update/${brandInfo.brandId}">Update Info </a>
                     </div>
                 </div>
             </div>

@@ -3,13 +3,13 @@ package com.deped.controller.place;
 import com.deped.controller.AbstractMainController;
 import com.deped.model.Response;
 import com.deped.model.location.office.Department;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -41,14 +41,18 @@ public class DepartmentController extends AbstractMainController<Department, Lon
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = GET)
-    public ModelAndView renderCreatePage(@Valid @ModelAttribute("department") Department entity) {
+    public ModelAndView renderCreatePage(@ModelAttribute("department") Department entity) {
         ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE);
         return mv;
     }
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createAction(@Valid @ModelAttribute("department") Department entity) {
+    public ModelAndView createAction(@Valid @ModelAttribute("department") Department entity, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ModelAndView(CREATE_VIEW_PAGE, "department", entity);
+        }
+
         entity.setCreationDate(new Date());
         ResponseEntity<Department> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Department.class);
         ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "department", entity, new Department());
@@ -76,7 +80,11 @@ public class DepartmentController extends AbstractMainController<Department, Lon
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Department entity) {
+    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Department entity, BindingResult result) {
+        if (result.hasErrors()) {
+            return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
+        }
+
         entity.setDepartmentId(aLong);
         //This is actually the update date
         entity.setCreationDate(new Date());
@@ -106,5 +114,10 @@ public class DepartmentController extends AbstractMainController<Department, Lon
     @RequestMapping(value = REMOVE_MAPPING, method = POST)
     public ModelAndView removeAction(@Valid Department... entity) {
         return null;
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
 }

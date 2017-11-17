@@ -4,6 +4,9 @@ import com.deped.model.order.Order;
 import com.deped.model.order.OrderState;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -92,5 +95,48 @@ public class OrderRepositoryImpl implements OrderRepository {
         parameterMap.put("userId", userId);
         List<Order> requests = hibernateFacade.fetchAllEntityBySqlQuery(nativeQuery, null, Order.class, parameterMap);
         return requests;
+    }
+
+    @Override
+    public List<Order> fetchAllByStates(List<OrderState> orderStates) {
+
+        String fetchQuery = "SELECT * FROM order_ WHERE order_state IN ( %s ) ORDER BY order_state";
+        StringBuilder sb = new StringBuilder();
+        for (OrderState ods : orderStates) {
+            sb
+                    .append("'")
+                    .append(ods.toString())
+                    .append("' ,");
+        }
+
+        String formatValue = sb.toString().substring(0, sb.toString().lastIndexOf(","));
+        String query = String.format(fetchQuery, formatValue);
+
+        Session hibernateSession = null;
+        try {
+            hibernateSession = hibernateFacade.getSessionFactory().openSession();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        Transaction tx = null;
+
+        List<Order> list;
+        try {
+            tx = hibernateSession.beginTransaction();
+            NativeQuery<Order> nativeQuery = hibernateSession.createNativeQuery(query, Order.class);
+            list = nativeQuery.list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null)
+                tx.rollback();
+            return null;
+        } finally {
+            if (hibernateSession != null)
+                hibernateSession.close();
+        }
+        return list;
+
     }
 }

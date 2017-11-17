@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -72,11 +73,6 @@ public class OrderController extends AbstractMainController<Order, Long> {
 
     }
 
-    @Override
-    public ModelAndView createAction(Order entity) {
-        return null;
-    }
-
     @RequestMapping(value = {CREATE_MAPPING}, method = POST)
     public ModelAndView createActionWithRedirect(@Valid @ModelAttribute("order") Order entity, final RedirectAttributes redirectAttributes) {
         entity.setOrderDate(new Date());
@@ -101,7 +97,7 @@ public class OrderController extends AbstractMainController<Order, Long> {
                 orderList,
                 ORDER_CONSIDERATION_PAGE,
                 "/order-details/approval/",
-                "Check inside",
+                "View Details",
                 "Approval List Page",
                 "Approval List Page For Orders",
                 "Approval"
@@ -117,7 +113,7 @@ public class OrderController extends AbstractMainController<Order, Long> {
                 orderList,
                 ORDER_CONSIDERATION_PAGE,
                 "/order-details/requisition/",
-                "Check inside",
+                "View Details",
                 "Requisition List Page",
                 "Requisition List Page For Orders",
                 "Requisition"
@@ -133,14 +129,12 @@ public class OrderController extends AbstractMainController<Order, Long> {
                 orderList,
                 ORDER_CONSIDERATION_PAGE,
                 "/order-details/arrival/",
-                "Check inside",
+                "View Details",
                 "Arrival List Page",
                 "Arrival List Page For Orders",
                 "Arrival"
         );
-
         return mav;
-
     }
 
     private ModelAndView createListModelMapping(List<Order> orderList, String jspPagePath, String detailsInfoLinkName, String anchorName, String pageTitle, String topHeading, String h1Placeholder) {
@@ -203,7 +197,7 @@ public class OrderController extends AbstractMainController<Order, Long> {
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(Long aLong, Order entity) {
+    public ModelAndView updateAction(Long aLong, Order entity, BindingResult bindingResult) {
         return null;
     }
 
@@ -237,5 +231,10 @@ public class OrderController extends AbstractMainController<Order, Long> {
                 setValue(getDate(text));
             }
         });
+    }
+
+    @Override
+    public ModelAndView createAction(Order entity, BindingResult bindingResult) {
+        return null;
     }
 }

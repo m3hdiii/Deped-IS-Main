@@ -1,6 +1,9 @@
 package com.deped.model.delivery;
 
 import com.deped.model.order.Order;
+import com.deped.protection.validators.xss.XSS;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -23,12 +26,20 @@ public class DeliveryInformation {
     private Date deliveryDate;
 
     @Column(name = "delivery_person_name")
+    @NotEmpty(message = "Name field can not be blank")
+    @Length(min = 2, max = 45, message = "Name filed length must be between 2 to 45 character")
+    @XSS
     private String deliveryPersonName;
 
     @Column(name = "delivery_person_contact_no1")
+    @NotEmpty(message = "Contact number 1 field can not be blank")
+    @Length(min = 2, max = 45, message = "Contact number 1 field length must be between 2 to 45 character")
+    @XSS
     private String deliveryPersonContactNumber;
 
     @Column(name = "delivery_person_contact_no2")
+    @Length(min = 2, max = 45, message = "Contact number 2 field length must be between 2 to 45 character")
+    @XSS
     private String deliveryPersonContactNumber2;
 
     @ManyToOne

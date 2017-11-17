@@ -39,9 +39,21 @@
             <div class="col-md-12">
                 <div class="col-md-8 col-md-offset-2">
                     <div class="panel panel-default">
+                        <c:set var="errors"
+                               value="${requestScope['org.springframework.validation.BindingResult.request'].allErrors}"/>
 
                         <form:form commandName="request" method="post" class="form-horizontal" role="form">
-
+                            <c:if test="${not empty errors}">
+                                <div>
+                                    <ul class="list-group">
+                                        <c:forEach items="${fieldErrors}" var="error" varStatus="loop">
+                                            <li class="list-group-item list-group-item-warning text-danger"><span
+                                                    class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                </div>
+                            </c:if>
                             <h3 class="text-center">Create Request</h3>
                             <div class="panel-body">
                                 <div class="col-md-10 col-sm-offset-1">

@@ -1,6 +1,11 @@
 package com.deped.model.brand;
 
+import com.deped.protection.validators.xss.XSS;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -26,21 +31,37 @@ public class Brand implements Serializable {
     private Long brandId;
 
     @Column(name = "name")
+    @NotEmpty(message = "Name field can not be blank")
+    @Length(min = 2, max = 45, message = "Name filed length must be between 2 to 45 character")
+    @XSS
+    @Pattern(regexp = "^[a-zA-Z0-9_\\s]*$", message = "Name field must contain number, alphabet, space and underscore only")
     private String name;
 
     @Column(name = "description")
+    @Length(max = 400, message = "Description field must not be more than 400 character")
+    @XSS
     private String description;
 
     @Column(name = "contact_no1")
+    @NotEmpty(message = "Contact number field can not be blank")
+    @Length(min = 2, max = 45, message = "Contact number field must be between 2 to 45 character")
+    @XSS
     private String contactNumber;
 
     @Column(name = "contact_no2")
+    @Length(min = 2, max = 45, message = "Contact number field 2 must be between 2 to 45 character")
+    @XSS
     private String contactNumber2;
 
     @Column(name = "central_office_address")
+    @NotEmpty(message = "Central office address field can not be blank")
+    @Length(min = 2, max = 100, message = "Central office address field must be between 2 to 100 character")
+    @XSS
     private String centralOfficeAddress;
 
     @Column(name = "service_center_address")
+    @Length(min = 2, max = 100, message = "Service Center address field must be between 2 to 100 character")
+    @XSS
     private String serviceCenterAddress;
 
     @Column(name = "creation_date")

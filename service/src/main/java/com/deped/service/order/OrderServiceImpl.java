@@ -82,4 +82,11 @@ public class OrderServiceImpl implements OrderService {
         return responseEntity;
     }
 
+    @Override
+    public ResponseEntity<List<Order>> fetchAllByStates(List<OrderState> orderStates) {
+        List<Order> brands = orderRepository.fetchAllByStates(orderStates);
+        ResponseEntity<List<Order>> responseEntity = new ResponseEntity<>(brands, OK);
+        return responseEntity;
+    }
+
 }

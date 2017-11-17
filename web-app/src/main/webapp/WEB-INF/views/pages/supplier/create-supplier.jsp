@@ -40,9 +40,23 @@
                             &nbsp;&nbsp;<a href="/supplier/create">Create New Supplier</a>
                         </c:when>
                     </c:choose>
+                    <c:set var="errors"
+                           value="${requestScope['org.springframework.validation.BindingResult.supplier'].allErrors}"/>
 
                     <form:form commandName="supplier" method="post" class="form-horizontal"
                                enctype="multipart/form-data">
+                        <c:if test="${not empty errors}">
+                            <div>
+                                <ul class="list-group">
+                                    <c:forEach items="${fieldErrors}" var="error" varStatus="loop">
+                                        <li class="list-group-item list-group-item-warning text-danger"><span
+                                                class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
+                                        </li>
+                                    </c:forEach>
+                                </ul>
+                            </div>
+                        </c:if>
+
 
                         <p>
                         <div class="form-group">

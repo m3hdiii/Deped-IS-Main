@@ -18,9 +18,15 @@ public class BrandServiceImpl implements BrandService {
 
     @Autowired
     private BrandRepository brandRepository;
+    private static final String BASE_FILE_FOLDER = "brands";
 
     @Override
     public ResponseEntity<Brand> create(Brand entity) {
+        String pictureBase64 = entity.getLogoPic();
+
+        String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, BASE_FILE_FOLDER);
+        entity.setLogoUrl(fileName);
+
         Brand savedEntity = brandRepository.create(entity);
         ResponseEntity<Brand> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;

@@ -6,12 +6,12 @@ import com.deped.model.request.Request;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-
 import java.util.Date;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -44,7 +44,12 @@ public class BorrowRequestController extends AbstractMainController<Request, Lon
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createAction(@Valid Request entity) {
+    public ModelAndView createAction(@Valid Request entity, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE);
+            return mv;
+        }
         entity.setRequestDate(new Date());
         ResponseEntity<Request> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Request.class);
         ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "", entity, new Request());
@@ -69,7 +74,10 @@ public class BorrowRequestController extends AbstractMainController<Request, Lon
 
     @Override
     @RequestMapping(value = UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(Long aLong, Request entity) {
+    public ModelAndView updateAction(Long aLong, Request entity, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+
+        }
         entity.setRequestId(aLong);
         //This is actually the update date
         entity.setRequestDate(new Date());

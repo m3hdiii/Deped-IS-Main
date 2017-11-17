@@ -30,17 +30,20 @@
                 <table class="table table-hover">
                     <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Department Head</th>
+                        <th class="col-md-3">Name</th>
+                        <th class="col-md-3">Description</th>
+                        <th class="col-md-3">Department Head</th>
+                        <th class="col-md-3">Edit</th>
                     </tr>
                     </thead>
                     <tbody>
                     <c:forEach items="${departments}" var="department">
                         <tr>
-                            <td>${department.name}</td>
+                            <td><a href="/department/${department.departmentId}">${department.name}</a></td>
                             <td>${department.description}</td>
                             <td>${department.departmentHead}</td>
+                            <td><a href="/department/update/${department.departmentId}"><img
+                                    src="${resourceURL}/images/edit.png" width="16"/></a></td>
                         </tr>
                     </c:forEach>
                     </tbody>

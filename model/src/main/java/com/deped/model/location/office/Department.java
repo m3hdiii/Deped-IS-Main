@@ -1,8 +1,12 @@
 package com.deped.model.location.office;
 
-import com.fasterxml.jackson.annotation.*;
+import com.deped.protection.validators.xss.XSS;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -33,9 +37,15 @@ public class Department implements Serializable {
     private Long departmentId;
 
     @Column(name = "name")
+    @Length(min = 2, max = 45, message = "Name filed length must be between 2 to 45 character")
+    @NotEmpty(message = "Name field can not be blank")
+    @XSS
+    @Pattern(regexp = "^[a-zA-Z0-9_\\s]*$", message = "Name field must contain number, alphabet, space and underscore only")
     private String name;
 
     @Column(name = "description")
+    @Length(max = 400, message = "Description must not be more than 400 character")
+    @XSS
     private String description;
 
     @Column(name = "creation_date")
@@ -43,6 +53,8 @@ public class Department implements Serializable {
     private Date creationDate;
 
     @Column(name = "department_head")
+    @Length(min = 2, max = 45, message = "Department head filed length must be between 2 to 45 character")
+    @XSS
     private String departmentHead;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "department", orphanRemoval = true)

@@ -3,10 +3,16 @@ package com.deped.model.account;
 import com.deped.model.location.City;
 import com.deped.model.location.office.Section;
 import com.deped.model.security.Role;
+import com.deped.protection.validators.fieldmatcher.FieldMatch;
+import com.deped.protection.validators.xss.XSS;
 import org.hibernate.annotations.Formula;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -28,7 +34,7 @@ import static com.deped.repository.utils.ConstantValues.*;
         ), @NamedQuery(
         name = FETCH_ALL_USERS,
         query = "SELECT user FROM User user"
-),@NamedQuery(
+), @NamedQuery(
         name = "fetchUser",
         query = "SELECT user FROM User user WHERE user.username = :username"
 )
@@ -57,6 +63,9 @@ import static com.deped.repository.utils.ConstantValues.*;
 
 @Entity
 @Table(name = "user")
+@FieldMatch.List({
+        @FieldMatch(first = "password", second = "repassword", message = "The password fields must match"),
+})
 public class User implements Serializable {
 
     @Id
@@ -64,15 +73,21 @@ public class User implements Serializable {
     @Column(name = "user_id ")
     private Long userId;
 
-    //    @NotNull(message = "There should be at least one username for a personnel")
-//    @Length(min = 3, max = 254, message = "Your username can not be less than three ot more than 254 character")
     @Column(name = "username")
+    @NotEmpty(message = "Username field can not be blank")
+    @Length(min = 3, max = 45, message = "Username field must be between 3 to 45 character")
+    @XSS
     private String username;
 
+
+    @NotEmpty(message = "Password field can not be blank")
+    @Length(min = 3, max = 45, message = "Password field must be between 3 to 45 character")
     @Column(name = "password")
     private String password;
 
     @Transient
+    @NotEmpty(message = "Repeat password field can not be blank")
+    @Length(min = 3, max = 45, message = "Repeat password field must be between 3 to 45 character")
     private String repassword;
 
     @Column(name = "account_status")
@@ -80,32 +95,45 @@ public class User implements Serializable {
     private AccountStatus accountStatus;
 
     @Column(name = "first_name")
+    @NotEmpty(message = "First name field can not be blank")
+    @Length(min = 2, max = 45, message = "First name field must be between 2 to 45 character")
+    @XSS
     private String firstName;
 
     @Column(name = "last_name")
+    @NotEmpty(message = "Last name field can not be blank")
+    @Length(min = 2, max = 45, message = "Last name field must be between 2 to 45 character")
+    @XSS
     private String lastName;
 
     @Column(name = "middle_name")
+    @Length(min = 0, max = 45, message = "Middle name field can't be more than 45 character")
+    @XSS
     private String middleName;
 
-    //    @NotNull(message = "Your email address must not be null !")
-//    @Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$")
-//    @Length(min = 5, max = 254, message = "your email can not be more than 254 characters ")
     @Column(name = "email_address", unique = true)
+    @NotEmpty(message = "Email address field can not be blank")
+    @Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Please provide correct email address")
+    @Length(min = 5, max = 100, message = "Email address field must be between 5 to 100 character")
     private String emailAddress;
 
     @Column(name = "phone_no1")
+    @NotEmpty(message = "Phone number 1 field can not be blank")
+    @Length(min = 5, max = 45, message = "Phone number 1 field must be between 5 to 45 character")
     private String phoneNo1;
 
     @Column(name = "phone_no2")
+    @Length(min = 5, max = 45, message = "Phone number 2 field must be between 5 to 45 character")
     private String phoneNo2;
 
     @Column(name = "gender")
     @Enumerated(value = EnumType.STRING)
+    @NotEmpty(message = "Gender field can not be blank")
     private Gender gender;
 
     @Temporal(TemporalType.DATE)
     @Column(name = "birth_date")
+    @NotEmpty(message = "Birthday field can not be blank")
     private Date birthDate;
 
 
@@ -114,9 +142,14 @@ public class User implements Serializable {
     private Position position;
 
     @Column(name = "address")
+    @NotEmpty(message = "Address field can not be blank!")
+    @Length(max = 400, message = "Address field can't be more than 400 character")
+    @XSS
     private String address;
 
     @Column(name = "website")
+    @Length(max = 100, message = "your website field can not be more than 100 character")
+    @Pattern(regexp = "^(http://|https://)?(www.)?([a-zA-Z0-9]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)?$")
     private String website;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -124,15 +157,25 @@ public class User implements Serializable {
     private Date creationDate;
 
     @Column(name = "referrer_name")
+    @Length(min = 2, max = 100, message = "Referrer name field must be between 2 to 45 character")
+    @NotEmpty(message = "Referrer name can not be blank")
+    @XSS
     private String referrerName;
 
     @Column(name = "referrer_address")
+    @Length(min = 2, max = 400, message = "Referrer address field field must be between 2 to 400 character")
+    @XSS
     private String referrerAddress;
 
     @Column(name = "referrer_phone_no1")
+    @Length(min = 5, max = 45, message = "Referrer phone number field must be between 5 to 45 character")
+    @NotNull(message = "First referrer phone number name can not be blank!")
+    @Pattern(regexp = "[\\s]*[0-9]*[1-9]+", message = "Referrer phone number 1 field must only contain number")
     private String referrerPhoneNo1;
 
     @Column(name = "referrer_phone_no2")
+    @Length(min = 5, max = 45, message = "Referrer phone number field must be between 5 to 45 character")
+    @Pattern(regexp = "[\\s]*[0-9]*[1-9]+", message = "Referrer phone number 2 field must only contain number")
     private String referrerPhoneNo2;
 
 
@@ -145,7 +188,6 @@ public class User implements Serializable {
 
     @Formula("lower(datediff(curdate(), birth_date)/365)")
     private Integer age;
-
 
     @Temporal(TemporalType.DATE)
     @Column(name = "employment_date")

@@ -6,10 +6,13 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
 import java.util.List;
 
 @Controller
@@ -36,7 +39,7 @@ public class CityController extends AbstractMainController<City, Long> {
     }
 
     @Override
-    public ModelAndView createAction(City entity) {
+    public ModelAndView createAction(City entity, BindingResult bindingResult) {
         return null;
     }
 
@@ -60,7 +63,7 @@ public class CityController extends AbstractMainController<City, Long> {
     }
 
     @Override
-    public ModelAndView updateAction(Long aLong, City entity) {
+    public ModelAndView updateAction(Long aLong, City entity, BindingResult bindingResult) {
         return null;
     }
 

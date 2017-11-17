@@ -17,6 +17,7 @@ import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -242,7 +243,8 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(Long aLong, @ModelAttribute("requestDetailsList") RequestDetails entity) {
+    public ModelAndView updateAction(Long aLong, @ModelAttribute("requestDetailsList") RequestDetails entity, BindingResult bindingResult) {
+
         return null;
     }
 
@@ -473,7 +475,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     }
 
     @Override
-    public ModelAndView createAction(RequestDetails entity) {
+    public ModelAndView createAction(RequestDetails entity, BindingResult bindingResult) {
         return null;
     }
 
