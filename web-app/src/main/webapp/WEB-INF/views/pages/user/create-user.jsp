@@ -22,7 +22,7 @@
 <body>
 
 <p>
-    Countries: <
+    Countries:
     <select onchange="getCities(this)">
         <option>--Select a country</option>
         <c:forEach items="${countries}" var="country">
@@ -38,8 +38,7 @@
 
     <form:input path="firstName" id="firstName" type="text" class="form-control typeahead"/>
 
-    <form:input path="lastName" id="lastName" type="text" class="form-control typeahead"/>
-    placeholder="Last Name"/>
+    <form:input path="lastName" id="lastName" type="text" class="form-control typeahead" placeholder="Last Name"/>
 
     <form:input path="middleName" id="middleName" type="text" class="form-control typeahead"/>
 

@@ -58,9 +58,14 @@
                                         <label for="newSchedule">Schedule</label>
                                         <form:select id="newSchedule" path="orderSchedule" items="${schedules}" class="form-control"/>
                                     </div>
+
                                     <div class="form-group">
-                                        <label for="newBudget">Budget Amount</label>
-                                        <form:input id="newBudget" type="number" path="budgetAmount" class="form-control" min="0"/>
+                                            <label for="newBudget">Budget Amount</label>
+                                            <div class="input-group" id="newBudget">
+                                                <span class="input-group-addon">₱</span>
+                                                <form:input id="newBudget" type="number" path="budgetAmount" class="form-control" min="0"/>
+                                                <span class="input-group-addon">.00</span>
+                                            </div>
                                     </div>
 
                                 </div>

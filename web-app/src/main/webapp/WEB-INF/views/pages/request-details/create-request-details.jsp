@@ -188,22 +188,31 @@
                                 <th>Quantity</th>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>Name Of Items Here</td>
-                                    <td>100</td>
-                                </tr>
-                                <tr>
-                                    <td>Name Of Items Here</td>
-                                    <td>100</td>
-                                </tr>
-                                <tr>
-                                    <td>Name Of Items Here</td>
-                                    <td>100</td>
-                                </tr>
+                                <c:choose>
+                                    <c:when test="${not empty sessionScope[basketName]}">
+                                        <tr>
+                                            <td>Name Of Items Here</td>
+                                            <td>100</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Name Of Items Here</td>
+                                            <td>100</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Name Of Items Here</td>
+                                            <td>100</td>
+                                        </tr>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <tr>
+                                            <td>No requested item in the table</td>
+                                        </tr>
+                                    </c:otherwise>
+                                </c:choose>
                                 </tbody>
                             </table>
 
-                            <a href="#" class="btn btn-info btn-flat btn-block"> View All </a>
+                            <a href="/request-details/basket/${requestIdValue}" class="btn btn-info btn-flat btn-block"> View All </a>
 
                         </div>
                     </div>
