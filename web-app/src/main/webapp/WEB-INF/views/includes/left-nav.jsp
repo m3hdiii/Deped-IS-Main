@@ -65,13 +65,35 @@
                     <li><a href="/user/create">Create User</a></li>
                 </ul>
             </li>
-            <li class="has-submenu" data-toggle="tooltip" title="Settings"><a href="#"><i class="fa fa-gears"></i> <span class="nav-label">Settings</span></a>
+            <li class="has-submenu" data-toggle="tooltip" title="Category"><a href="#"><i class="fa fa-gears"></i> <span class="nav-label">Category</span></a>
                 <ul class="list-unstyled">
-                    <li><a href="/category/list">Category</a></li>
-                    <li><a href="/department/list">Department</a></li>
-                    <li><a href="/section/list">Section</a></li>
-                    <li><a href="/brand/list">Brand</a></li>
-                    <li><a href="/pack/list">Pack</a></li>
+                    <li><a href="/category/list">Category List</a></li>
+                    <li><a href="/category/create">Create Category</a></li>
+                </ul>
+            </li>
+            <li class="has-submenu" data-toggle="tooltip" title="Department"><a href="#"><i class="fa fa-gears"></i> <span class="nav-label">Department</span></a>
+                <ul class="list-unstyled">
+                    <li><a href="/department/list">Department List</a></li>
+                    <li><a href="/department/create">Create Department</a></li>
+                </ul>
+            </li>
+            <li class="has-submenu" data-toggle="tooltip" title="Section"><a href="#"><i class="fa fa-gears"></i> <span class="nav-label">Section</span></a>
+                <ul class="list-unstyled">
+                    <li><a href="/section/list">Section List</a></li>
+                    <li><a href="/section/create">Create Section</a></li>
+                </ul>
+            </li>
+            <li class="has-submenu" data-toggle="tooltip" title="Brand"><a href="#"><i class="fa fa-gears"></i> <span class="nav-label">Brand</span></a>
+                <ul class="list-unstyled">
+                    <li><a href="/brand/list">Brand List</a></li>
+                    <li><a href="/brand/create">Create Brand</a></li>
+                </ul>
+            </li>
+
+            <li class="has-submenu" data-toggle="tooltip" title="Package"><a href="#"><i class="fa fa-gears"></i> <span class="nav-label">Package</span></a>
+                <ul class="list-unstyled">
+                    <li><a href="/pack/list">Pack List</a></li>
+                    <li><a href="/pack/create">Create Pack</a></li>
                 </ul>
             </li>
             <li><a href="signin.html"><i class="fa fa-sign-out" data-toggle="tooltip" title="Sign Out"></i><span class="nav-label">Sign Out</span></a></li>

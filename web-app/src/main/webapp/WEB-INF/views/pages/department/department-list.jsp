@@ -23,34 +23,81 @@
 
     <c:import url="../../includes/top-nav.jsp"/>
 
-    <div class="row">
-        <div class="col col-lg-12">
-            <div class="panel-heading"><h1>Department List</h1></div>
+        <div class="warper container-fluid">
+
+            <div class="page-header">
+                <h3>Department
+                    <small>for Goods, Semi-Expendable and Equipment</small>
+                </h3>
+            </div>
+
+
             <div class="panel panel-default">
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th class="col-md-3">Name</th>
-                        <th class="col-md-3">Description</th>
-                        <th class="col-md-3">Department Head</th>
-                        <th class="col-md-3">Edit</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach items="${departments}" var="department">
+                <div class="panel-heading">Departments</div>
+                <div class="panel-body">
+
+                    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="basic-datatable">
+                        <thead>
                         <tr>
-                            <td><a href="/department/${department.departmentId}">${department.name}</a></td>
-                            <td>${department.description}</td>
-                            <td>${department.departmentHead}</td>
-                            <td><a href="/department/update/${department.departmentId}"><img
-                                    src="${resourceURL}/images/edit.png" width="16"/></a></td>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Department Head</th>
+                            <th>Edit</th>
+                            <th>Remove</th>
                         </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                        <c:forEach items="${departments}" var="department">
+                            <tr>
+                                <td>
+                                    <a href="/department/${department.departmentId}">${department.name}</a>
+                                </td>
+                                <td>${department.description}</td>
+                                <td>${department.departmentHead}</td>
+                                <td>
+                                    <a href="/department/update/${department.departmentId}" class="btn btn-purple"><i class="fa fa-pencil"></i></a>
+                                </td>
+                                <td>
+                                    <button class="btn btn-danger"><i class="fa fa-trash"></i> </button>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+
+                </div>
             </div>
         </div>
-    </div>
+        <!-- Warper Ends Here (working area) -->
+
+    <%--<div class="row">--%>
+        <%--<div class="col col-lg-12">--%>
+            <%--<div class="panel-heading"><h1>Department List</h1></div>--%>
+            <%--<div class="panel panel-default">--%>
+                <%--<table class="table table-hover">--%>
+                    <%--<thead>--%>
+                    <%--<tr>--%>
+                        <%--<th class="col-md-3">Name</th>--%>
+                        <%--<th class="col-md-3">Description</th>--%>
+                        <%--<th class="col-md-3">Department Head</th>--%>
+                        <%--<th class="col-md-3">Edit</th>--%>
+                    <%--</tr>--%>
+                    <%--</thead>--%>
+                    <%--<tbody>--%>
+                    <%--<c:forEach items="${departments}" var="department">--%>
+                        <%--<tr>--%>
+                            <%--<td><a href="/department/${department.departmentId}">${department.name}</a></td>--%>
+                            <%--<td>${department.description}</td>--%>
+                            <%--<td>${department.departmentHead}</td>--%>
+                            <%--<td><a href="/department/update/${department.departmentId}"><img--%>
+                                    <%--src="${resourceURL}/images/edit.png" width="16"/></a></td>--%>
+                        <%--</tr>--%>
+                    <%--</c:forEach>--%>
+                    <%--</tbody>--%>
+                <%--</table>--%>
+            <%--</div>--%>
+        <%--</div>--%>
+    <%--</div>--%>
 
     <c:import url="../../includes/footer.jsp"/>
 
