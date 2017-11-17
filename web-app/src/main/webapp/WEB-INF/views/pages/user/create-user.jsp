@@ -31,19 +31,9 @@
     </select>
 </p>
 <div class="text-center"><h1>Employee Registration</h1></div>
-<c:set var="errors" value="${requestScope['org.springframework.validation.BindingResult.user'].allErrors}"/>
 
 <form:form commandName="user" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">
-    <c:if test="${not empty errors}">
-        <div>
-            <ul class="list-group">
-                <c:forEach items="${fieldErrors}" var="error" varStatus="loop">
-                    <li class="list-group-item list-group-item-warning text-danger"><span
-                            class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}</li>
-                </c:forEach>
-            </ul>
-        </div>
-    </c:if>
+
     <form:input path="username" id="username" type="text" class="form-control typeahead"/>
 
     <form:input path="firstName" id="firstName" type="text" class="form-control typeahead"/>
