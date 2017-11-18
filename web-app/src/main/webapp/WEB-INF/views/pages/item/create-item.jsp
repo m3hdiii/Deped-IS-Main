@@ -45,7 +45,7 @@
                             <c:if test="${not empty errors}">
                                 <div>
                                     <ul class="list-group">
-                                        <c:forEach items="${fieldErrors}" var="error" varStatus="loop">
+                                        <c:forEach items="${errors}" var="error" varStatus="loop">
                                             <li class="list-group-item list-group-item-warning text-danger"><span
                                                     class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
                                             </li>

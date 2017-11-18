@@ -42,7 +42,7 @@ public class Item implements Serializable {
     @Length(min = 2, max = 45, message = "name must be between 2 to 45 character character")
     @NotEmpty(message = "Name field can not be blank")
     @XSS
-    @Pattern(regexp = "^[a-zA-Z0-9_\\s]*$", message = "Name field must contain number, alphabet, space and underscore only")
+    @Pattern(regexp = "^[a-zA-Z0-9_ ]*$", message = "Name field must contain number, alphabet, space and underscore only")
     protected String name;
 
     @Column(name = "description")

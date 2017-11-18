@@ -172,7 +172,9 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
 
         }
 
+
         mv.addAllObjects(responseMap);
+        mv.addAllObjects(getConfigMap());
         mv.setViewName(createViewPage);
         return mv;
     }

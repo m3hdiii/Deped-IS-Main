@@ -124,7 +124,11 @@ public class ItemController extends AbstractMainController<Item, Long> {
     public ModelAndView updateActionWithPic(@PathVariable MultipartFile itemPic, @PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Item entity, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
+            Map<String, Object> modelMap = new HashMap<>();
+            modelMap.putAll(getConfigMap());
+            modelMap.put(BASE_NAME, entity);
+            ModelAndView mav = new ModelAndView(UPDATE_VIEW_PAGE, modelMap);
+            return mav;
         }
 
         if (itemPic != null) {
