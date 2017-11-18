@@ -37,6 +37,9 @@ import static com.deped.repository.utils.ConstantValues.*;
 ), @NamedQuery(
         name = "fetchUser",
         query = "SELECT user FROM User user WHERE user.username = :username"
+), @NamedQuery(
+        name = "fetchUserByEmail",
+        query = "SELECT user FROM User user WHERE user.emailAddress = :emailAddress"
 )
 
 //        @NamedQuery(

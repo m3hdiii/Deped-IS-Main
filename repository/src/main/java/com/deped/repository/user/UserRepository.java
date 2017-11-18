@@ -1,6 +1,7 @@
 package com.deped.repository.user;
 
 import com.deped.model.account.User;
+import com.deped.model.security.PasswordResetToken;
 import com.deped.repository.BaseRepository;
 
 /**
@@ -10,4 +11,8 @@ public interface UserRepository extends BaseRepository<User> {
     User loginUser(User user, LoginMethod loginMethod);
 
     User fetchByUsername(String username);
+
+    User fetchByEmail(String email);
+
+    PasswordResetToken createPasswordResetTokenForUser(PasswordResetToken passwordResetToken);
 }

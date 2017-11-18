@@ -2,16 +2,19 @@ package com.deped.restcontroller.user;
 
 import com.deped.model.Response;
 import com.deped.model.account.User;
+import com.deped.model.security.PasswordResetToken;
 import com.deped.repository.utils.Range;
 import com.deped.restcontroller.AbstractMainRestController;
-import com.deped.model.Operation;
+import com.deped.service.email.EmailService;
 import com.deped.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Created by mehdi on 7/7/17.
@@ -30,6 +33,9 @@ public class UserRestController extends AbstractMainRestController<User, Long> {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private HttpServletRequest request;
 
 
     @Override
@@ -85,4 +91,51 @@ public class UserRestController extends AbstractMainRestController<User, Long> {
         User user = userService.fetchByUsername(username);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/user/resetPassword/{email}/{context}", method = RequestMethod.POST)
+    public ResponseEntity<PasswordResetToken> resetPassword(@PathVariable("email") String userEmail, @PathVariable("context") String context) {
+
+
+        User user = userService.fetchByEmail(userEmail);
+        if (user == null) {
+            throw new NullPointerException();
+        }
+        String token = UUID.randomUUID().toString();
+        PasswordResetToken passwordResetToken = userService.createPasswordResetTokenForUser(user, token);
+
+        String message = constructMessage(context, passwordResetToken);
+
+        EmailService.sendEmail(userEmail, "Deped-IS Change Password", message);
+        return null;
+    }
+
+    private String constructMessage(String contextPath, PasswordResetToken passwordResetToken) {
+        //TODO for the other clients
+//        if(context.equals("NONE")){
+//            resetPasswordUrl = getBaseUrl();
+//        }
+
+        Long userId = passwordResetToken.getUser().getUserId();
+        String token = passwordResetToken.getToken();
+
+        String urlFormat = "%s/user/changePassword?id=%d&token=%s";
+        String url = String.format(urlFormat, contextPath, userId, token);
+
+        StringBuilder sb = new StringBuilder();
+        sb
+                .append("This email is an automatic email coming from DepEd Inventory System upon your request:\n\n")
+                .append("Please Change Your Password Using the below URL below:\n\n")
+                .append(url);
+        String message = sb.toString();
+
+        return message;
+    }
+
+    public String getBaseUrl() {
+        String formatUrl = "%s://%s%s%s";
+        String serverPort = (request.getServerPort() == 80) ? "" : ":" + request.getServerPort();
+        String url = String.format(formatUrl, request.getScheme(), request.getServerName(), serverPort, request.getContextPath());
+        return url;
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.deped.repository.user;
 
 import com.deped.model.account.User;
+import com.deped.model.security.PasswordResetToken;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
 import org.hibernate.Session;
@@ -116,8 +117,21 @@ public class UserRepositoryImpl implements UserRepository {
     public User fetchByUsername(String username) {
         Map<String, Object> map = new HashMap<>();
         map.put("username", username);
-        List<User> users = hibernateFacade.fetchAllByParameterMap("fetchUser",User.class, map);
+        List<User> users = hibernateFacade.fetchAllByParameterMap("fetchUser", User.class, map);
         return users.get(0);
 
+    }
+
+    @Override
+    public User fetchByEmail(String email) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("emailAddress", email);
+        List<User> users = hibernateFacade.fetchAllByParameterMap("fetchUserByEmail", User.class, map);
+        return users.get(0);
+    }
+
+    @Override
+    public PasswordResetToken createPasswordResetTokenForUser(PasswordResetToken passwordResetToken) {
+        return null;
     }
 }

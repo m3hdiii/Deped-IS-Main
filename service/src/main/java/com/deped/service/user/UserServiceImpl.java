@@ -4,6 +4,7 @@ package com.deped.service.user;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.account.User;
+import com.deped.model.security.PasswordResetToken;
 import com.deped.repository.user.LoginMethod;
 import com.deped.repository.user.UserRepository;
 import com.deped.repository.utils.Range;
@@ -84,5 +85,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public User fetchByUsername(String username) {
         return userRepository.fetchByUsername(username);
+    }
+
+    @Override
+    public User fetchByEmail(String email) {
+        return userRepository.fetchByEmail(email);
+    }
+
+    @Override
+    public PasswordResetToken createPasswordResetTokenForUser(User user, String token) {
+        PasswordResetToken passwordResetToken = new PasswordResetToken(user, token, null);
+
+        PasswordResetToken persistedPasswordResetToken = userRepository.createPasswordResetTokenForUser(passwordResetToken);
+        return persistedPasswordResetToken;
     }
 }

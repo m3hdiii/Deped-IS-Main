@@ -1,4 +1,4 @@
-package com.deped;
+package com.deped.repository;
 
 import com.deped.model.account.AccountStatus;
 import com.deped.model.account.Gender;
