@@ -46,11 +46,10 @@ public class SectionController extends AbstractMainController<Section, Long> {
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = GET)
-    public ModelAndView renderCreatePage(@Valid @ModelAttribute(BASE_NAME) Section entity) {
-        List<Department> departments = fetchAllDepartment();
+    public ModelAndView renderCreatePage(@ModelAttribute(BASE_NAME) Section entity) {
         HashMap<String, Object> modelMap = new HashMap<>();
         modelMap.put(BASE_NAME, entity);
-        modelMap.put("departments", departments);
+        modelMap.put("departments", fetchAllDepartment());
         ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
         return mv;
     }
@@ -58,15 +57,18 @@ public class SectionController extends AbstractMainController<Section, Long> {
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = POST)
     public ModelAndView createAction(@Valid @ModelAttribute(BASE_NAME) Section entity, BindingResult bindingResult) {
+        List<Department> departments = fetchAllDepartment();
         if (bindingResult.hasErrors()) {
             HashMap<String, Object> modelMap = new HashMap<>();
             modelMap.put(BASE_NAME, entity);
-            modelMap.put("departments", entity);
+            modelMap.put("departments", departments);
             return new ModelAndView(CREATE_VIEW_PAGE, modelMap);
         }
         entity.setCreationDate(new Date());
         ResponseEntity<Section> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Section.class);
+
         ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Section());
+        mv.addObject("departments", departments);
         return mv;
     }
 
@@ -92,19 +94,23 @@ public class SectionController extends AbstractMainController<Section, Long> {
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @ModelAttribute(BASE_NAME) Section entity, BindingResult bindingResult) {
+    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Section entity, BindingResult bindingResult) {
+
+        List<Department> departments = fetchAllDepartment();
+
         if (bindingResult.hasErrors()) {
             HashMap<String, Object> modelMap = new HashMap<>();
-            modelMap.put(BASE_NAME, entity);
-            List<Department> departments = fetchAllDepartment();
             modelMap.put("departments", departments);
+            modelMap.put(BASE_NAME, entity);
             return new ModelAndView(UPDATE_VIEW_PAGE, modelMap);
         }
         entity.setSectionId(aLong);
         //This is actually the update date
         entity.setCreationDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Section.class);
+
         ModelAndView mv = updateProcessing(response, UPDATE_VIEW_PAGE);
+        mv.addObject("departments", departments);
         return mv;
     }
 
@@ -131,26 +137,19 @@ public class SectionController extends AbstractMainController<Section, Long> {
     }
 
     private List<Department> fetchAllDepartment() {
-        RestTemplate restTemplate = new RestTemplate();
-        String restUrl;
-        restUrl = String.format(FETCH_URL, "department");
-        ResponseEntity<List<Department>> response = restTemplate.exchange(restUrl, HttpMethod.POST, null, new ParameterizedTypeReference<List<Department>>() {
-        });
-        return response.getBody();
+        return SharedData.getDepartments(false);
     }
 
     @RequestMapping(value = RENDER_LIST_MAPPING_BY_COUNTRY_CODE, method = RequestMethod.POST)
     public @ResponseBody
     List<Section> renderListPage(@PathVariable(ID_STRING_LITERAL) Long departmentId) {
-//        ResponseEntity<List<Section>> response = makeFetchRestRequestByFreignKey(BASE_NAME, String.valueOf(departmentId), HttpMethod.POST, new ParameterizedTypeReference<List<Section>>() {
-//        });
-//        List<Section> list = response.getBody();
-        List<Department> departments = SharedData.getDepartments(false);
-        for (Department dep : departments) {
-            if (dep.getDepartmentId() == departmentId) {
-                return dep.getSections();
-            }
-        }
+//        List<Department> departments = SharedData.getDepartments(false);
+//        for (Department dep : departments) {
+//            if (dep.getDepartmentId() == departmentId) {
+//                return dep.getSections();
+//            }
+//        }
+//        return null;
         return null;
     }
 

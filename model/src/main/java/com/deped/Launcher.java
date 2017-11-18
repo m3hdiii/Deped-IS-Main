@@ -15,7 +15,10 @@ import com.deped.model.location.Continent;
 import com.deped.model.location.Country;
 import com.deped.model.location.office.Department;
 import com.deped.model.location.office.Section;
-import com.deped.model.order.*;
+import com.deped.model.order.Order;
+import com.deped.model.order.OrderDetails;
+import com.deped.model.order.OrderDetailsState;
+import com.deped.model.order.Schedule;
 import com.deped.model.pack.Pack;
 import com.deped.model.request.Request;
 import com.deped.model.request.RequestDetails;
@@ -445,9 +448,6 @@ public class Launcher {
 
         for (int i = 0; i < 7; i++) {
             Section section = createSection();
-            department.setSections(new ArrayList<Section>() {{
-                add(section);
-            }});
             section.setDepartment(department);
             session.save("Section", section);
         }

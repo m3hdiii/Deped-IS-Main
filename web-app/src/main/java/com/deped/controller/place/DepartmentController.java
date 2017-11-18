@@ -41,21 +41,21 @@ public class DepartmentController extends AbstractMainController<Department, Lon
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = GET)
-    public ModelAndView renderCreatePage(@ModelAttribute("department") Department entity) {
+    public ModelAndView renderCreatePage(@ModelAttribute(BASE_NAME) Department entity) {
         ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE);
         return mv;
     }
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createAction(@Valid @ModelAttribute("department") Department entity, BindingResult bindingResult) {
+    public ModelAndView createAction(@Valid @ModelAttribute(BASE_NAME) Department entity, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return new ModelAndView(CREATE_VIEW_PAGE, "department", entity);
+            return new ModelAndView(CREATE_VIEW_PAGE, BASE_NAME, entity);
         }
 
         entity.setCreationDate(new Date());
         ResponseEntity<Department> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Department.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "department", entity, new Department());
+        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Department());
         return mv;
     }
 

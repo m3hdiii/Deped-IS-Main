@@ -5,9 +5,9 @@ import com.deped.model.delivery.DeliveryInformation;
 import com.deped.protection.validators.decimal.DoubleRange;
 import com.deped.protection.validators.xss.XSS;
 import org.hibernate.validator.constraints.Length;
-import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -28,6 +28,7 @@ public class Order implements Serializable {
 
     @Column(name = "required_date")
     @Temporal(TemporalType.TIMESTAMP)
+    @NotNull(message = "Require date can not be blank")
     private Date requiredDate;
 
     @ManyToOne
@@ -36,7 +37,7 @@ public class Order implements Serializable {
 
     @Column(name = "order_schedule")
     @Enumerated(EnumType.STRING)
-    @NotEmpty(message = "Schedule field can not be blank")
+    @NotNull(message = "Schedule field can not be blank")
     private Schedule orderSchedule;
 
     @Column(name = "budget_amount")

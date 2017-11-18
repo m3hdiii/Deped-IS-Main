@@ -100,6 +100,6 @@
     <%--</div>--%>
 
     <c:import url="../../includes/footer.jsp"/>
-
+</section>
 </body>
 </html>

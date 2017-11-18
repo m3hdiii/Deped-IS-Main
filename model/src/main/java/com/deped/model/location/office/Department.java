@@ -1,14 +1,12 @@
 package com.deped.model.location.office;
 
 import com.deped.protection.validators.xss.XSS;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -57,10 +55,6 @@ public class Department implements Serializable {
     @XSS
     private String departmentHead;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "department", orphanRemoval = true)
-    @JsonManagedReference
-    private List<Section> sections = new ArrayList<>();
-
 
     public Department() {
     }
@@ -68,7 +62,6 @@ public class Department implements Serializable {
     public Department(String name, String description, List<Section> sections, Date creationDate, String departmentHead) {
         this.name = name;
         this.description = description;
-        this.sections = sections;
         this.creationDate = creationDate;
         this.departmentHead = departmentHead;
     }
@@ -95,14 +88,6 @@ public class Department implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public List<Section> getSections() {
-        return sections;
-    }
-
-    public void setSections(List<Section> sections) {
-        this.sections = sections;
     }
 
     public Date getCreationDate() {

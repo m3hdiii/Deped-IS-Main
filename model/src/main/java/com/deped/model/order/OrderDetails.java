@@ -6,6 +6,7 @@ import com.deped.model.items.Item;
 import com.deped.model.pack.Pack;
 import com.deped.model.supply.Supplier;
 import com.deped.protection.validators.decimal.DoubleRange;
+import com.deped.protection.validators.integer.IntegerRange;
 import com.deped.protection.validators.xss.XSS;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
@@ -60,8 +61,7 @@ public class OrderDetails implements Serializable {
     private Integer noOfPacks;
 
     @Column(name = "total_quantity_requested_no")
-    @Min(value = 1, message = "Total quantity can not be a negative")
-    @Max(value = 2500000, message = "Total quantity can not be more than 2500000")
+    @IntegerRange(min = 1, max = 2500000, mandatory = true, message = "Total quantity must be between 1 and 2500000")
     private Integer totalQuantityRequestNo;
 
     @Column(name = "total_quantity_arrived_no")

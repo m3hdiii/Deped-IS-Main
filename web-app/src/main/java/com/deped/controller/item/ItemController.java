@@ -3,12 +3,18 @@ package com.deped.controller.item;
 import com.deped.controller.AbstractMainController;
 import com.deped.model.Response;
 import com.deped.model.items.Item;
+import com.deped.model.items.ItemType;
+import com.deped.model.items.features.FunctionType;
 import com.deped.utils.ImageUtils;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.beans.PropertyEditorSupport;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
@@ -47,7 +54,7 @@ public class ItemController extends AbstractMainController<Item, Long> {
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = GET)
-    public ModelAndView renderCreatePage(@ModelAttribute("item") Item entity) {
+    public ModelAndView renderCreatePage(@ModelAttribute(BASE_NAME) Item entity) {
         ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE);
         return mv;
     }
@@ -58,23 +65,30 @@ public class ItemController extends AbstractMainController<Item, Long> {
     }
 
     @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createActionWithPic(@PathVariable MultipartFile itemPic, @Valid @ModelAttribute("item") Item entity) {
-
-        entity.setCreationDate(new Date());
-        entity.setQuantity(0);
-        byte[] fileBytes;
+    public ModelAndView createActionWithPic(@PathVariable MultipartFile itemPic, @Valid @ModelAttribute(BASE_NAME) Item entity, BindingResult result) {
         try {
-            if (itemPic != null && (fileBytes = itemPic.getBytes()) != null && fileBytes.length != 0) {
+            byte[] fileBytes = itemPic.getBytes();
+            if (itemPic != null && fileBytes != null && fileBytes.length != 0) {
                 boolean isImage = ImageUtils.isImage(fileBytes);
                 if (isImage) {
                     String encodeBase64 = ImageUtils.encodeBase64(fileBytes);
                     entity.setPictureBase64(encodeBase64);
+                } else {
+                    result.addError(new FieldError("Item", "pictureBase64", "Your file is suspicious and it's not an image. Your actions will be logged"));
                 }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        if (result.hasErrors()) {
+            ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, BASE_NAME, entity);
+            return mv;
+        }
+
+        entity.setCreationDate(new Date());
+        entity.setQuantity(0);
+
 
         ResponseEntity<Item> response = makeCreateRestRequest(entity, BASE_ENTITY_URL_NAME, HttpMethod.POST, Item.class);
         ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "item", entity, new Item());
@@ -107,7 +121,11 @@ public class ItemController extends AbstractMainController<Item, Long> {
 
 
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateActionWithPic(@PathVariable MultipartFile itemPic, @PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Item entity) {
+    public ModelAndView updateActionWithPic(@PathVariable MultipartFile itemPic, @PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Item entity, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
+        }
 
         if (itemPic != null) {
             String itemBase64String = getBase64String(itemPic);
@@ -144,5 +162,53 @@ public class ItemController extends AbstractMainController<Item, Long> {
     @RequestMapping(value = REMOVE_MAPPING, method = POST)
     public ModelAndView removeAction(Item... entity) {
         return null;
+    }
+
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+
+        binder.registerCustomEditor(ItemType.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                if (text == null) {
+                    setValue(null);
+                    return;
+                }
+
+                try {
+                    ItemType itemType = ItemType.valueOf(text);
+                    setValue(itemType);
+                    return;
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                }
+
+                setValue(null);
+            }
+        });
+
+        binder.registerCustomEditor(FunctionType.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                if (text == null) {
+                    setValue(null);
+                    return;
+                }
+
+                try {
+                    FunctionType itemType = FunctionType.valueOf(text);
+                    setValue(itemType);
+                    return;
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
+                }
+                setValue(null);
+            }
+        });
+
     }
 }

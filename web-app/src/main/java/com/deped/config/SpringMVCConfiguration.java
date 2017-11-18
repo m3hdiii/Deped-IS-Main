@@ -12,7 +12,7 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
-@ComponentScan(basePackages = {"com.deped.config","com.deped.controller", "com.deped.security"})
+@ComponentScan(basePackages = {"com.deped.config", "com.deped.controller", "com.deped.security"})
 @EnableWebMvc
 public class SpringMVCConfiguration extends WebMvcConfigurerAdapter {
 
@@ -44,4 +44,15 @@ public class SpringMVCConfiguration extends WebMvcConfigurerAdapter {
         return cmr;
 
     }
+
+    /*
+    TODO further consideration
+    @Bean(name = "messageSource")
+    public ResourceBundleMessageSource messageSource(){
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasenames("validation/messages");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
+
+    }*/
 }

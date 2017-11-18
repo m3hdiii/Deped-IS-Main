@@ -1,6 +1,7 @@
 package com.deped.controller.pack;
 
 import com.deped.controller.AbstractMainController;
+import com.deped.controller.SharedData;
 import com.deped.model.Response;
 import com.deped.model.items.Item;
 import com.deped.model.pack.Pack;
@@ -47,8 +48,8 @@ public class PackController extends AbstractMainController<Pack, Long> {
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = GET)
-    public ModelAndView renderCreatePage(@Valid @ModelAttribute("pack") Pack entity) {
-        List<Item> items = fetchAllItems();
+    public ModelAndView renderCreatePage(@ModelAttribute(BASE_NAME) Pack entity) {
+        List<Item> items = SharedData.getItems(false);
         HashMap<String, Object> modelMap = new HashMap<>();
         modelMap.put(BASE_NAME, entity);
         modelMap.put("items", items);
@@ -58,10 +59,19 @@ public class PackController extends AbstractMainController<Pack, Long> {
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createAction(@Valid @ModelAttribute("pack") Pack entity, BindingResult bindingResult) {
+    public ModelAndView createAction(@Valid @ModelAttribute(BASE_NAME) Pack entity, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            HashMap<String, Object> modelMap = new HashMap<>();
+            modelMap.put(BASE_NAME, entity);
+            List<Item> items = SharedData.getItems(false);
+            modelMap.put("items", items);
+            ModelAndView mav = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
+            return mav;
+        }
         entity.setCreationDate(new Date());
         ResponseEntity<Pack> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Pack.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "pack", entity, new Pack());
+        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Pack());
         return mv;
     }
 
@@ -80,7 +90,7 @@ public class PackController extends AbstractMainController<Pack, Long> {
         Pack pack = response.getBody();
         HashMap<String, Object> modelMap = new HashMap<>();
         modelMap.put(BASE_NAME, pack);
-        List<Item> items = fetchAllItems();
+        List<Item> items = SharedData.getItems(false);
         modelMap.put("items", items);
         return new ModelAndView(UPDATE_VIEW_PAGE, modelMap);
     }

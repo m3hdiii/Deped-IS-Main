@@ -2,6 +2,7 @@ package com.deped.model.items;
 
 
 import com.deped.model.items.features.FunctionType;
+import com.deped.protection.validators.integer.IntegerRange;
 import com.deped.protection.validators.xss.XSS;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DynamicUpdate;
@@ -9,7 +10,8 @@ import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +42,7 @@ public class Item implements Serializable {
     @Length(min = 2, max = 45, message = "name must be between 2 to 45 character character")
     @NotEmpty(message = "Name field can not be blank")
     @XSS
+    @Pattern(regexp = "^[a-zA-Z0-9_\\s]*$", message = "Name field must contain number, alphabet, space and underscore only")
     protected String name;
 
     @Column(name = "description")
@@ -49,17 +52,16 @@ public class Item implements Serializable {
 
     @Column(name = "item_type")
     @Enumerated(value = EnumType.STRING)
-    @NotEmpty(message = "Item Type field can not be blank")
+    @NotNull(message = "Item Type field can not be blank")
     private ItemType itemType;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "function_type")
-    @NotEmpty(message = "Function type field can not be blank")
+    @NotNull(message = "Function type field can not be blank")
     protected FunctionType functionType;
 
     @Column(name = "threshold")
-    @NotEmpty(message = "threshold type can not be blank")
-    @Min(value = 0, message = "Threshold field must not be negative")
+    @IntegerRange(min = 1, message = "Threshold field must not be negative")
     private Integer threshold;
 
     @Column(name = "quantity")

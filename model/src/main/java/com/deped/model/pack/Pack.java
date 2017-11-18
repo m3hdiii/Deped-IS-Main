@@ -1,12 +1,12 @@
 package com.deped.model.pack;
 
+import com.deped.protection.validators.integer.IntegerRange;
 import com.deped.protection.validators.xss.XSS;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -38,6 +38,7 @@ public class Pack implements Serializable {
     @NotEmpty(message = "Name field can not be blank")
     @Length(min = 2, max = 45, message = "Name filed length must be between 2 to 45 character")
     @XSS
+    @Pattern(regexp = "^[a-zA-Z0-9_\\s]*$", message = "Name field must contain number, alphabet, space and underscore only")
     private String name;
 
     @Column(name = "description")
@@ -46,8 +47,7 @@ public class Pack implements Serializable {
     private String description;
 
     @Column(name = "capacity")
-    @Min(value = 1, message = "Package capacity can not be a negative")
-    @Max(value = 5000, message = "Package capacity can not be more than 5000")
+    @IntegerRange(min = 1, max = 500, message = "Package capacity must be between 1 to 500")
     private Integer capacity;
 
     @Temporal(TemporalType.TIMESTAMP)

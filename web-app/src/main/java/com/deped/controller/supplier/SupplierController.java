@@ -3,11 +3,13 @@ package com.deped.controller.supplier;
 import com.deped.controller.AbstractMainController;
 import com.deped.model.Response;
 import com.deped.model.supply.Supplier;
+import com.deped.utils.ImageUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,9 +19,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -48,19 +51,21 @@ public class SupplierController extends AbstractMainController<Supplier, Long> {
     public ModelAndView renderCreatePage(@ModelAttribute(BASE_NAME) Supplier entity) {
         ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE);
         return mv;
-
     }
 
-    @Override
-    public ModelAndView createAction(Supplier entity, BindingResult bindingResult) {
-        return null;
-    }
+    @RequestMapping(value = CREATE_MAPPING, method = POST)
+    public ModelAndView createActionWithPic(@RequestParam MultipartFile supplyPic, @Valid @ModelAttribute(BASE_NAME) Supplier entity, BindingResult bindingResult) {
 
-    @RequestMapping(value = {CREATE_MAPPING}, method = POST)
-    public ModelAndView createActionWithPic(@RequestParam MultipartFile supplyPic, @Valid @ModelAttribute(BASE_NAME) Supplier entity) {
+        checkInfo(supplyPic, entity, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            Map<String, Object> modelMap = new HashMap<>();
+            modelMap.put(BASE_NAME, entity);
+            ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE);
+            return mv;
+        }
+
         entity.setCreationDate(new Date());
-        String base64Encoded = getBase64String(supplyPic);
-        entity.setPictureBase64(base64Encoded);
         ResponseEntity<Supplier> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Supplier.class);
         ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Supplier());
         return mv;
@@ -79,29 +84,39 @@ public class SupplierController extends AbstractMainController<Supplier, Long> {
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
     public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
         ResponseEntity<Supplier> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Supplier.class);
-        Supplier item = response.getBody();
-        return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, item);
+        Supplier supplier = response.getBody();
+        return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, supplier);
     }
 
-    @Override
-    public ModelAndView updateAction(Long aLong, Supplier entity, BindingResult bindingResult) {
-        return null;
-    }
-
-    @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateActionWithPicture(@RequestParam MultipartFile brandPic, @PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute Supplier entity) {
-        entity.setSupplierId(aLong);
-        String base64Encoded = null;
+    private void checkInfo(MultipartFile supplyPic, Supplier entity, BindingResult bindingResult) {
         try {
-            byte[] picture = brandPic.getBytes();
-            base64Encoded = Base64.getEncoder().encodeToString(picture);
+            byte[] fileBytes = supplyPic.getBytes();
+            if (supplyPic != null && fileBytes != null && fileBytes.length != 0) {
+                boolean isImage = ImageUtils.isImage(fileBytes);
+                if (isImage) {
+                    String encodeBase64 = ImageUtils.encodeBase64(fileBytes);
+                    entity.setPictureBase64(encodeBase64);
+                } else {
+                    bindingResult.addError(new FieldError(Supplier.class.getSimpleName(), "pictureBase64", "Your file is suspicious and it's not an image. Your actions will be logged"));
+                }
+            }
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        //entity.setLogoPic(base64Encoded);
+    }
 
-        //This is actually the update date
+    @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
+    public ModelAndView updateActionWithPicture(@RequestParam MultipartFile supplyPic, @PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute Supplier entity, BindingResult bindingResult) {
+        entity.setSupplierId(aLong);
+        checkInfo(supplyPic, entity, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            ModelAndView mv = new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
+            return mv;
+        }
+
         entity.setCreationDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Supplier.class);
         ModelAndView mv = updateProcessing(response, UPDATE_VIEW_PAGE);
@@ -128,5 +143,16 @@ public class SupplierController extends AbstractMainController<Supplier, Long> {
     public ModelAndView removeAction(@Valid Supplier... entity) {
         return null;
     }
+
+    @Override
+    public ModelAndView createAction(Supplier entity, BindingResult bindingResult) {
+        return null;
+    }
+
+    @Override
+    public ModelAndView updateAction(Long aLong, Supplier entity, BindingResult bindingResult) {
+        return null;
+    }
+
 }
 

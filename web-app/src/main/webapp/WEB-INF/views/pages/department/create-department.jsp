@@ -80,7 +80,8 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="newDepHead">Department Head</label>
-                                            <form:textarea type="text" path="description" class="form-control" cols="3" rows="3" id="newDepHead" maxlength="100"/>
+                                            <form:input type="text" path="departmentHead" class="form-control" cols="3"
+                                                        rows="3" id="newDepHead" maxlength="100"/>
                                         </div>
                                     </div>
                                 </div>

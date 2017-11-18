@@ -1,7 +1,6 @@
 package com.deped.model.location.office;
 
 import com.deped.protection.validators.xss.XSS;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -34,7 +33,7 @@ public class Section implements Serializable {
     @Length(min = 2, max = 45, message = "Name filed length must be between 2 to 45 character")
     @NotEmpty(message = "Name field can not be blank")
     @XSS
-    @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = "Name field must contain number and alphabet only")
+    @Pattern(regexp = "^[a-zA-Z0-9_ ]*$", message = "Name field must contain number, alphabet, underscore and space only")
     private String name;
 
     @Column(name = "description")
@@ -44,7 +43,6 @@ public class Section implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "department_id")
-    @JsonBackReference
     private Department department;
 
     @Temporal(TemporalType.TIMESTAMP)

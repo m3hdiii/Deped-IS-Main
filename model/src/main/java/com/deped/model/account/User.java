@@ -77,6 +77,7 @@ public class User implements Serializable {
     @NotEmpty(message = "Username field can not be blank")
     @Length(min = 3, max = 45, message = "Username field must be between 3 to 45 character")
     @XSS
+    @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = "Name field must contain number, underscore and alphabet only")
     private String username;
 
 

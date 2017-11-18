@@ -64,7 +64,7 @@ public class OrderController extends AbstractMainController<Order, Long> {
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = GET)
-    public ModelAndView renderCreatePage(@ModelAttribute("order") Order entity) {
+    public ModelAndView renderCreatePage(@ModelAttribute(BASE_NAME) Order entity) {
         Map<String, Object> modelMap = new HashMap<>();
         modelMap.put("schedules", Schedule.values());
 
@@ -73,8 +73,16 @@ public class OrderController extends AbstractMainController<Order, Long> {
 
     }
 
-    @RequestMapping(value = {CREATE_MAPPING}, method = POST)
-    public ModelAndView createActionWithRedirect(@Valid @ModelAttribute("order") Order entity, final RedirectAttributes redirectAttributes) {
+    @RequestMapping(value = CREATE_MAPPING, method = POST)
+    public ModelAndView createActionWithRedirect(@Valid @ModelAttribute(BASE_NAME) Order entity, BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
+            Map<String, Object> modelMap = new HashMap<>();
+            modelMap.put("schedules", Schedule.values());
+            modelMap.put(BASE_NAME, entity);
+            ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
+            return mv;
+        }
+
         entity.setOrderDate(new Date());
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User user = ((UserDetailsServiceImpl.CustomSpringSecurityUser) authentication.getPrincipal()).getUser();

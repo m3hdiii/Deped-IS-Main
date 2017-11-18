@@ -1,4 +1,4 @@
-package com.deped.protection.validators.decimal;
+package com.deped.protection.validators.integer;
 
 import org.hibernate.validator.internal.util.logging.Log;
 import org.hibernate.validator.internal.util.logging.LoggerFactory;
@@ -6,27 +6,29 @@ import org.hibernate.validator.internal.util.logging.LoggerFactory;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-public class DoubleRangeValidator implements ConstraintValidator<DoubleRange, Double> {
+public class IntegerRangeValidator implements ConstraintValidator<IntegerRange, Integer> {
 
     private static final Log log = LoggerFactory.make();
-    private double min;
-    private double max;
+    private Integer min;
+    private Integer max;
+    boolean isMandatory;
 
     @Override
-    public void initialize(DoubleRange parameters) {
-        min = parameters.min();
-        max = parameters.max();
+    public void initialize(IntegerRange property) {
+        min = property.min();
+        max = property.max();
+        isMandatory = property.mandatory();
         validateParameters();
     }
 
     @Override
-    public boolean isValid(Double value, ConstraintValidatorContext context) {
+    public boolean isValid(Integer value, ConstraintValidatorContext context) {
         if (value == null) {
-            return false;
+            return !isMandatory;
         }
 
-        return value >= min && value <= max;
 
+        return value >= min && value <= max;
     }
 
     private void validateParameters() {

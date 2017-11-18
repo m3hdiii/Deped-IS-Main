@@ -23,6 +23,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -31,7 +32,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import javax.validation.*;
 import java.beans.PropertyEditorSupport;
 import java.util.*;
 
@@ -108,26 +109,38 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         }
         httpSession.setAttribute(ORDER + orderId, order);
 
-
-        Map<String, Object> modelMap = new HashMap<>();
-        modelMap.put("orderId", orderId);
-        modelMap.put("itemList", SharedData.getItems(false));
-        modelMap.put("packs", SharedData.getPacks(false));
-        modelMap.put("categories", SharedData.getCategories(false));
-        modelMap.put("suppliers", SharedData.getSuppliers(false));
-        modelMap.put("orderDetail", new OrderDetails());
-
+        Map<String, Object> modelMap = createOrderDetailsModelMap(orderId, new OrderDetails());
         ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
         return mv;
 
     }
 
+    private Map<String, Object> createOrderDetailsModelMap(Long orderId, OrderDetails orderDetails) {
+        Map<String, Object> modelMap = new HashMap<>(getConfigMap());
+        modelMap.put("orderId", orderId);
+        modelMap.put("itemList", SharedData.getItems(false));
+        modelMap.put("packs", SharedData.getPacks(false));
+        modelMap.put("categories", SharedData.getCategories(false));
+        modelMap.put("suppliers", SharedData.getSuppliers(false));
+        modelMap.put("orderDetail", orderDetails);
+
+        return modelMap;
+
+    }
+
     @RequestMapping(value = {CREATE_MAPPING}, method = POST)
-    public ModelAndView createActionWithRedirect(@Valid @ModelAttribute("orderDetail") OrderDetails entity, @Valid @ModelAttribute("orderEntity") Order orderEntity, final RedirectAttributes redirectAttributes, HttpSession httpSession) {
+    public ModelAndView createActionWithRedirect(@ModelAttribute("orderEntity") Order orderEntity, @Valid @ModelAttribute("orderDetail") OrderDetails entity, BindingResult bindingResult, HttpSession httpSession, final RedirectAttributes redirectAttributes) {
 
         Order order = entity.getOrder();
         if (order == null) {
             return null;
+        }
+
+        if (bindingResult.hasErrors()) {
+            Map<String, Object> modelMap = createOrderDetailsModelMap(order.getOrderId(), entity);
+            ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
+            return mv;
+
         }
 
         Object basketInfo = httpSession.getAttribute(BASKET + order.getOrderId());
@@ -162,25 +175,33 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
     @RequestMapping(value = BASKET_VIEW_PAGE, method = RequestMethod.GET)
     public ModelAndView renderBasket(@PathVariable(ID_STRING_LITERAL) Long orderId, HttpSession httpSession) {
+        ModelAndView mav = getBasketModelAndView(orderId, new OrderDetailsForm(), httpSession);
+        return mav;
+    }
+
+    private ModelAndView getBasketModelAndView(Long orderId, OrderDetailsForm orderDetailsForm, HttpSession httpSession) {
         Object object = httpSession.getAttribute(BASKET + orderId);
         if (object == null) {
             String redirectUrl = String.format("redirect:/order-details/create/%d", orderId);
             return new ModelAndView(redirectUrl);
         }
 
-        Map<String, Object> modelMap = new HashMap<>();
-        modelMap.put("orderId", orderId);
-        modelMap.put("orderDetailsForm", new OrderDetailsForm());
-        modelMap.put("itemList", SharedData.getItems(false));
-        modelMap.put("packs", SharedData.getPacks(false));
-        modelMap.put("categories", SharedData.getCategories(false));
-        modelMap.put("suppliers", SharedData.getSuppliers(false));
+        Map<String, Object> modelMap = createOrderDetailsModelMap(orderId, null);
+        modelMap.put("orderDetailsForm", orderDetailsForm);
         ModelAndView mav = new ModelAndView("pages/order-details/basket", modelMap);
         return mav;
     }
 
+
     @RequestMapping(value = BASKET_VIEW_PAGE, method = POST)
-    public ModelAndView actionOnBasket(@PathVariable(ID_STRING_LITERAL) Long orderId, @RequestParam ActionParam actionParam, @ModelAttribute("orderDetailsForm") OrderDetailsForm orderDetailsForm, HttpSession httpSession) {
+    public ModelAndView actionOnBasket(@PathVariable(ID_STRING_LITERAL) Long orderId, @RequestParam ActionParam actionParam, @ModelAttribute("orderDetailsForm") OrderDetailsForm orderDetailsForm, BindingResult bindingResult, HttpSession httpSession) {
+
+        addValidation(orderDetailsForm, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            ModelAndView mav = getBasketModelAndView(orderId, orderDetailsForm, httpSession);
+            return mav;
+        }
         Object object = httpSession.getAttribute(BASKET + orderId);
         final String orderPage = String.format("redirect:/order-details/create/%d", orderId);
         final String dashboardPage = "redirect:/dashboard";
@@ -467,7 +488,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
     private ModelAndView renderActions(Order order, Set<OrderDetails> orderDetailsList, String pageTitle, String topHeading, String h1Placeholder, OrderDetailsState currentState, OrderDetailsState[] nextStates) {
 
-        Map<String, Object> modelMap = new HashMap<>();
+        Map<String, Object> modelMap = new HashMap<>(getConfigMap());
 
         OrderDetailsForm orderDetailsForm = new OrderDetailsForm();
         orderDetailsForm.setMap(putOrderDetailsListIntoMap(orderDetailsList));
@@ -488,7 +509,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
     private ModelAndView renderActions(List<Order> orders, Set<OrderDetails> orderDetailsList, String pageTitle, String topHeading, String h1Placeholder) {
 
-        Map<String, Object> modelMap = new HashMap<>();
+        Map<String, Object> modelMap = new HashMap<>(getConfigMap());
 
         OrderDetailsForm orderDetailsForm = new OrderDetailsForm();
         orderDetailsForm.setMap(putOrderDetailsListIntoMap(orderDetailsList));
@@ -684,6 +705,28 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
             orderDetailsMap.put(SystemUtils.getRandomString(), orderDetails);
         }
         return orderDetailsMap;
+    }
+
+    private void addValidation(OrderDetailsForm orderDetailsForm, BindingResult result) {
+        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+        Validator validator = validatorFactory.getValidator();
+        Map<String, OrderDetails> map = orderDetailsForm.getMap();
+
+        for (Map.Entry<String, OrderDetails> entry : map.entrySet()) {
+            OrderDetails orderDetails = entry.getValue();
+            String key = entry.getKey();
+            Set<ConstraintViolation<OrderDetails>> violations = validator.validate(orderDetails);
+
+            for (ConstraintViolation<OrderDetails> violation : violations) {
+                String propertyPath = violation.getPropertyPath().toString();
+                String message = violation.getMessage();
+                // Add JSR-303 errors to BindingResult
+                // This allows Spring to display them in view via a FieldError
+                result.addError(new FieldError("OrderDetails", propertyPath, message));
+            }
+
+        }
+
     }
 
 
