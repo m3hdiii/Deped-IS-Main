@@ -30,7 +30,8 @@
     <div class="warper container-fluid">
 
         <div class="page-header">
-            <h3>&nbsp;&nbsp;&nbspItem Registration&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
+            <h3>Item Registration
+                <small>for Goods, Semi-Expendable and Equipment</small>
             </h3>
         </div>
         <div class="row new-item-body">
@@ -68,13 +69,12 @@
                                                 <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
                                                 <strong>Success!</strong> ${successfullyCreated}.
                                             </div>
-                                            &nbsp;&nbsp;<a href="/goods/create">Create New Items</a>
                                         </c:when>
                                     </c:choose>
 
                                     <div class="form-group">
                                         <label for="newItemName">Name</label>
-                                        <form:input path="name" class="form-control typeahead" placeholder="Name of the item" id="newItemName"/>
+                                        <form:input path="name" class="form-control typeahead" placeholder="Item Name" id="newItemName"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="newItemBrand">Brand</label>

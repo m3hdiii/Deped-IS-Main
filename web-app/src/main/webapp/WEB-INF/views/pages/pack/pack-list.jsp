@@ -1,5 +1,8 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page isELIgnored="false" %>
 
 <c:url value="/public" var="resourceURL" scope="request"/>
@@ -31,32 +34,48 @@
                 </h3>
             </div>
 
+            <div class="btn-group visible-lg-inline-block">
+                <a href="/pack/create" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top" title="Add Package"><i class="fa fa-plus"></i></a>
+                <button type="button" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+            </div>
+            <hr class="clean">
 
             <div class="panel panel-default">
-                <div class="panel-heading">Packages</div>
                 <div class="panel-body">
 
-                    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="basic-datatable">
+                    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-hover" id="basic-datatable">
                         <thead>
                         <tr>
+                            <th>
+                                <label class="cr-styled">
+                                    <input type="checkbox" ng-model="todo.done">
+                                    <i class="fa"></i>
+                                </label>
+                            </th>
                             <th>Name</th>
                             <th>Description</th>
-                            <th>Associated Item</th>
-                            <th>Edit</th>
-                            <th>Remove</th>
+                            <%--<th>Associated Item</th>--%>
+                            <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
                         <c:forEach items="${packs}" var="pack">
                             <tr>
+                                <td>
+                                    <label class="cr-styled">
+                                        <input type="checkbox" ng-model="todo.done">
+                                        <i class="fa"></i>
+                                    </label>
+                                </td>
                                 <td>${pack.name}</td>
                                 <td>${pack.description}</td>
-                                <td>${pack.item.name}</td>
+                                <%--<td>${pack.item}</td>--%>
                                 <td>
-                                    <a href="/pack/update/${pack.packId}" class="btn btn-purple"><i class="fa fa-pencil"></i></a>
-                                </td>
-                                <td>
-                                    <button class="btn btn-danger"><i class="fa fa-trash"></i> </button>
+                                    <div class="btn-group visible-lg-inline-block">
+                                        <a href="/pack/update/${pack.packId}" class="btn btn-purple tooltip-btn" data-toggle="tooltip" data-placement="top" title="Edit Package"><i
+                                                class="fa fa-pencil"></i></a>
+                                        <button type="button" class="btn btn-danger tooltip-btn" data-toggle="tooltip" data-placement="top" title="Delete" ><i class="fa fa-trash"></i></button>
+                                    </div>
                                 </td>
                             </tr>
                         </c:forEach>

@@ -27,38 +27,54 @@
 
             <div class="page-header">
                 <h3>Department
-                    <small>for Goods, Semi-Expendable and Equipment</small>
+                    <small>DepEd-Baguio City Division Office</small>
                 </h3>
             </div>
 
+            <div class="btn-group visible-lg-inline-block">
+                <a href="/department/create" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top" title="Add Department"><i class="fa fa-plus"></i></a>
+                <button type="button" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+            </div>
+            <hr class="clean">
 
             <div class="panel panel-default">
-                <div class="panel-heading">Departments</div>
                 <div class="panel-body">
 
-                    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered" id="basic-datatable">
+                    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-hover" id="basic-datatable">
                         <thead>
                         <tr>
+                            <th>
+                                <label class="cr-styled">
+                                    <input type="checkbox" ng-model="todo.done">
+                                    <i class="fa"></i>
+                                </label>
+                            </th>
                             <th>Name</th>
                             <th>Description</th>
                             <th>Department Head</th>
-                            <th>Edit</th>
-                            <th>Remove</th>
+                            <th>Action</th>
                         </tr>
                         </thead>
                         <tbody>
                         <c:forEach items="${departments}" var="department">
                             <tr>
                                 <td>
+                                    <label class="cr-styled">
+                                        <input type="checkbox" ng-model="todo.done">
+                                        <i class="fa"></i>
+                                    </label>
+                                </td>
+                                <td>
                                     <a href="/department/${department.departmentId}">${department.name}</a>
                                 </td>
                                 <td>${department.description}</td>
                                 <td>${department.departmentHead}</td>
                                 <td>
-                                    <a href="/department/update/${department.departmentId}" class="btn btn-purple"><i class="fa fa-pencil"></i></a>
-                                </td>
-                                <td>
-                                    <button class="btn btn-danger"><i class="fa fa-trash"></i> </button>
+                                    <div class="btn-group visible-lg-inline-block">
+                                        <a href="/department/update/${department.departmentId}" class="btn btn-purple tooltip-btn" data-toggle="tooltip" data-placement="top" title="Edit Department"><i
+                                                class="fa fa-pencil"></i></a>
+                                        <button type="button" class="btn btn-danger tooltip-btn" data-toggle="tooltip" data-placement="top" title="Delete" ><i class="fa fa-trash"></i></button>
+                                    </div>
                                 </td>
                             </tr>
                         </c:forEach>
