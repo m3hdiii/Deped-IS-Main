@@ -13,12 +13,14 @@
 
         <!-- Assume test is the database name -->
         <property name="hibernate.connection.url">
-            jdbc:mysql://localhost:8889/deped
+            jdbc:mysql://localhost:3306/deped
         </property>
         <property name="hibernate.connection.username">
             root
         </property>
-        <property name="hibernate.connection.password">root</property>
+        <property name="hibernate.connection.password">mysqlmysql</property>
+
+        <property name="connection.pool_size">30</property>
 
         <!-- List of XML mapping files -->
         <mapping class="com.deped.model.account.User"/>
@@ -45,8 +47,7 @@
         <mapping class="com.deped.model.security.Privilege"/>
         <mapping class="com.deped.model.delivery.DeliveryInformation"/>
         <mapping class="com.deped.model.supply.Supplier"/>
-        <mapping class="com.deped.model.supply.Supply"/>
-
+        <mapping class="com.deped.model.security.PasswordResetToken"/>
 
     </session-factory>
 </hibernate-configuration>
