@@ -5,7 +5,6 @@ import com.deped.model.location.office.Section;
 import com.deped.model.security.Role;
 import com.deped.protection.validators.fieldmatcher.FieldMatch;
 import com.deped.protection.validators.xss.XSS;
-import org.hibernate.annotations.Formula;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
@@ -132,7 +131,7 @@ public class User implements Serializable {
 
     @Column(name = "gender")
     @Enumerated(value = EnumType.STRING)
-    @NotEmpty(message = "Gender field can not be blank")
+    @NotNull(message = "Gender field can not be blank")
     private Gender gender;
 
     @Temporal(TemporalType.DATE)
@@ -190,7 +189,8 @@ public class User implements Serializable {
 //    @Column(name = "manager_id")
 //    private User manager;
 
-    @Formula("lower(datediff(curdate(), birth_date)/365)")
+    //    @Formula("lower(datediff(curdate(), birth_date)/365)")
+    @Transient
     private Integer age;
 
     @Temporal(TemporalType.DATE)

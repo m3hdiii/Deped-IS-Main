@@ -18,20 +18,25 @@ public class PasswordResetToken implements Serializable {
     @Column(name = "token")
     private String token;
 
-    @Column(name = "expiry_date")
-    private Date expiryDate;
+    @Column(name = "creation_date")
+    private Date creationDate;
 
     @JoinColumn(name = "user_id")
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.DETACH)
     private User user;
+
+    @Column(name = "token_state")
+    @Enumerated(EnumType.STRING)
+    private TokenState tokenState;
 
     public PasswordResetToken() {
     }
 
-    public PasswordResetToken(User user, String token, Date expiryDate) {
+    public PasswordResetToken(User user, String token, Date creationDate, TokenState tokenState) {
         this.token = token;
-        this.expiryDate = expiryDate;
+        this.creationDate = creationDate;
         this.user = user;
+        this.tokenState = tokenState;
     }
 
     public Long getId() {
@@ -50,12 +55,12 @@ public class PasswordResetToken implements Serializable {
         this.token = token;
     }
 
-    public Date getExpiryDate() {
-        return expiryDate;
+    public Date getCreationDate() {
+        return creationDate;
     }
 
-    public void setExpiryDate(Date expiryDate) {
-        this.expiryDate = expiryDate;
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public User getUser() {
@@ -64,5 +69,13 @@ public class PasswordResetToken implements Serializable {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public TokenState getTokenState() {
+        return tokenState;
+    }
+
+    public void setTokenState(TokenState tokenState) {
+        this.tokenState = tokenState;
     }
 }

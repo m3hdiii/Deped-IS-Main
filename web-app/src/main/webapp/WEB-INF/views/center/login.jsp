@@ -4,7 +4,7 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
-<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec"  %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,12 +22,18 @@
             <p class="text-center">Inventory System Login</p>
             <hr class="clean">
 
-            <c:url value="/performLogin" var="loginUrl" />
+            <c:url value="/performLogin" var="loginUrl"/>
 
             <c:if test="${param.error != null}">
-            <p style="color: red;">
-                invalid username/password !
-            </p>
+                <p style="color: red;">
+                    invalid username/password !
+                </p>
+            </c:if>
+
+            <c:if test="${param.pcs != null}">
+                <p style="color: green;">
+                        ${param.pcs}
+                </p>
             </c:if>
             <form action="${loginUrl}" method="post" role="form">
 
@@ -37,7 +43,8 @@
                 </div>
                 <div class="form-group input-group">
                     <span class="input-group-addon"><i class="fa fa-key"></i></span>
-                    <input id="login-password" type="password"  name="password" class="form-control" placeholder="Password"/>
+                    <input id="login-password" type="password" name="password" class="form-control"
+                           placeholder="Password"/>
                 </div>
                 <div class="form-group">
                     <label class="cr-styled">
@@ -52,14 +59,13 @@
             <hr>
 
             <p class="text-center text-gray">Did you forget your password?</p>
-            <button type="submit" class="btn btn-default btn-block">Contact Admin</button>
+            <a href="/forgot-password" class="btn btn-default btn-block" role="button">Recover it Here!</a>
         </div>
     </div>
 </div>
 
 <section class="navbar-fixed-bottom">
-    <c:import url="../includes/footer.jsp" />
-</section>
-<script src="${resourceURL}/js/additional/login.js" type="text/javascript"></script>
+    <c:import url="../includes/footer.jsp"/>
+    <script src="${resourceURL}/js/additional/login.js" type="text/javascript"></script>
 </body>
 </html>

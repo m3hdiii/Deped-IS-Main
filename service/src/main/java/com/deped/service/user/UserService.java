@@ -1,8 +1,9 @@
 package com.deped.service.user;
 
+import com.deped.model.Response;
 import com.deped.model.account.User;
-import com.deped.model.security.PasswordResetToken;
 import com.deped.service.BaseService;
+import org.springframework.http.ResponseEntity;
 
 public interface UserService extends BaseService<User> {
 
@@ -14,5 +15,10 @@ public interface UserService extends BaseService<User> {
 
     User fetchByEmail(String email);
 
-    PasswordResetToken createPasswordResetTokenForUser(User user, String token);
+    ResponseEntity<Response> createPasswordResetTokenForUser(User user, String context);
+
+    ResponseEntity<Response> checkToken(Long userId, String token);
+
+
+    ResponseEntity<Response> changePasswordByToken(Long userId, String token, String newPassword);
 }

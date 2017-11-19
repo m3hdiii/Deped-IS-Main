@@ -15,4 +15,10 @@ public interface UserRepository extends BaseRepository<User> {
     User fetchByEmail(String email);
 
     PasswordResetToken createPasswordResetTokenForUser(PasswordResetToken passwordResetToken);
+
+    Boolean removePasswordResetToken(PasswordResetToken passwordResetToken);
+
+    PasswordResetToken findByToken(String token);
+
+    boolean changePasswordByToken(Long userId, String token, String newPassword, int period);
 }

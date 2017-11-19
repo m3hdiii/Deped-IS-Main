@@ -45,12 +45,12 @@
         <div class="col-lg-6 col-lg-offset-3 text-center ">
             <hr class="">
             <p class="text-gray">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin iaculis quam sit amet nisi dictum, in iaculis dolor lobortis. Aenean placerat purus non faucibus aliquam.</p>
-            <button type="submit" class="btn btn-default">Go Home</button>
+            <a href="/" class="btn btn-default" role="button">Go Home</a>
         </div>
     </div>
 
 </div>
-
+<section class="navbar-fixed-bottom">
 <c:import url="includes/footer.jsp" />
 </body>
 </html>
