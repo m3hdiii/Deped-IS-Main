@@ -185,7 +185,7 @@
                                     </c:when>
                                     <c:otherwise>
                                         <tr>
-                                            <td colspan="">No requested item in the table</td>
+                                            <td colspan="2">No requested item in the table</td>
                                         </tr>
                                     </c:otherwise>
                                 </c:choose>
