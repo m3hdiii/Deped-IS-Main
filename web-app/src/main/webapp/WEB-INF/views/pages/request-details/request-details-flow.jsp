@@ -51,9 +51,9 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <a href="#" data-column="0" class="toggle-vis btn btn-default btn-sm">Image</a>
-                    <a href="#" data-column="6" class="toggle-vis btn btn-default btn-sm">Category</a>
-                    <a href="#" data-column="7" class="toggle-vis btn btn-default btn-sm">Unit Price</a>
-                    <a href="#" data-column="9" class="toggle-vis btn btn-default btn-sm">Item Type</a>
+                    <a href="#" data-column="5" class="toggle-vis btn btn-default btn-sm">Item Type</a>
+                    <a href="#" data-column="6" class="toggle-vis btn btn-default btn-sm">Note</a>
+
                 </div>
                 <div class="panel-body">
 

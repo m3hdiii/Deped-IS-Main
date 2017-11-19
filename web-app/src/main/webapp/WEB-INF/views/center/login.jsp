@@ -38,7 +38,7 @@
             <form action="${loginUrl}" method="post" role="form">
 
                 <div class="form-group input-group">
-                    <span class="input-group-addon"><i class="fa fa-envelope"></i></span>
+                    <span class="input-group-addon"><i class="fa fa-user"></i></span>
                     <input id="login-username" name="username" type="text" class="form-control" placeholder="Username"/>
                 </div>
                 <div class="form-group input-group">
