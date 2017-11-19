@@ -111,16 +111,16 @@
 
                                         <form:select path="itemType" id="newItemType" class="form-control chosen-select"
                                                      data-placeholder="Select a Type">
-                                            <form:option value="-" label="--Please Select"/>
-                                            <form:options items="${itemType}" />
+                                            <form:option value="" label="--Please Select"/>
+                                            <form:options items="${itemType}" itemLabel="name"/>
                                         </form:select>
                                     </div>
                                     <div class="form-group">
                                         <label for="newItemCategory">Function Type</label>
                                         <form:select path="functionType" id="newItemCategory" class="form-control chosen-select"
                                                      data-placeholder="Select a Category">
-                                            <form:option value="-" label="--Please Select"/>
-                                            <form:options items="${functionType}" />
+                                            <form:option value="" label="--Please Select"/>
+                                            <form:options items="${functionType}" itemLabel="name"/>
                                         </form:select>
                                     </div>
                                 </div>

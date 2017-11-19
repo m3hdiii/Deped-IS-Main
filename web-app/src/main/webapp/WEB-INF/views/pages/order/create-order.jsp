@@ -56,7 +56,10 @@
 
                                     <div class="form-group">
                                         <label for="newSchedule">Schedule</label>
-                                        <form:select id="newSchedule" path="orderSchedule" items="${schedules}" class="form-control"/>
+                                        <form:select class="form-control" id="newSchedule" path="orderSchedule">
+                                            <form:option value="" label="--Please Select"/>
+                                            <form:options items="${schedules}" itemLabel="name"/>
+                                        </form:select>
                                     </div>
 
                                     <div class="form-group">
