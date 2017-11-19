@@ -27,48 +27,26 @@
 <section class="content">
     <c:import url="../../includes/top-nav.jsp"/>
 
-    <div class="page-header">
-        <h3>&nbsp;&nbsp;&nbspOrder Request&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
-        </h3>
-    </div>
-
-    <c:set var="requestName" value="requestSessionNo${requestId}"/>
-    <c:set var="relatedRequest" value="${sessionScope[requestName]}"/>
-
-    <div class="row">
-        <p>Request Number: ${relatedRequest.requestId}</p>
-        <p>Request
-            By: ${relatedRequest.user.firstName}&nbsp;${relatedRequest.user.middleName}&nbsp;${relatedOrder.user.lastName}</p>
-        <p>Creation Date: ${relatedRequest.requestDate}</p>
-    </div>
-
-     <c:set var="requestIdValue" value="${relatedRequest.requestId}"/>
-     <c:set var="basketName" value="requestDetailsMap-RequestNo${requestIdValue}"/>
-
-    <div>
-        <c:choose>
-            <c:when test="${not empty sessionScope[basketName]}">
-                <a href="/request-details/basket/${requestIdValue}"><img width="16"
-                                                                         src="${resourceURL}/images/request/add-to-cart.png"
-                                                                         alt="add to cart"/><span>${fn:length(sessionScope[basketName])}</span></a>
-            </c:when>
-            <c:otherwise>
-                <a href="/request-details/basket/${requestIdValue}"><img width="16"
-                                                                         src="${resourceURL}/images/request/add-to-cart.png"
-                                                                         alt="add to cart"/></a>
-            </c:otherwise>
-        </c:choose>
-
-    </div>
-
-    <hr class="style13">
-
-
     <div class="warper container-fluid">
 
         <div class="page-header">
-            <h1>Request Items <small>Goods, Semi-Expandable, and Equipment</small></h1>
+            <h3>Order Request
+                <small>for Goods, Semi-Expendable and Equipment</small>
+            </h3>
         </div>
+
+        <c:set var="requestName" value="requestSessionNo${requestId}"/>
+        <c:set var="relatedRequest" value="${sessionScope[requestName]}"/>
+
+        <div class="row">
+            <p>Request Number: ${relatedRequest.requestId}</p>
+            <p>Request
+                By: ${relatedRequest.user.firstName}&nbsp;${relatedRequest.user.middleName}&nbsp;${relatedOrder.user.lastName}</p>
+            <p>Creation Date: ${relatedRequest.requestDate}</p>
+        </div>
+
+        <c:set var="requestIdValue" value="${relatedRequest.requestId}"/>
+        <c:set var="basketName" value="requestDetailsMap-RequestNo${requestIdValue}"/>
 
         <div class="row">
 
