@@ -107,7 +107,9 @@
                                 <c:if test="${currentOrderDetailsState eq 'ARRIVED'}">
                                     <th>
                                         <div class="col-md-12">
-                                            <form:input min="0"  type="number" class="form-control form-control-flat no-margn" path="map['${strKey}'].totalQuantityArrivedNo"
+                                            <form:input min="0" type="number"
+                                                        class="form-control form-control-flat no-margn"
+                                                        path="map['${strKey}'].totalQuantityArrivedNo"
                                                         value="${orderDet.totalQuantityRequestNo}"/>
                                         </div>
 
@@ -119,7 +121,7 @@
                                 <td>${orderDet.item.itemType}</td>
                                 <td>
                                     <form:select multiple="single" path="map['${strKey}'].orderDetailsState">
-                                        <form:options items="${nextOrderDetailsStates}"/>
+                                        <form:options items="${nextOrderDetailsStates}" itemLabel="action"/>
                                     </form:select>
                                 </td>
 
@@ -146,9 +148,9 @@
         </form:form>
     </div>
     <!-- Warper Ends Here (working area) -->
-
-    <c:import url="../../includes/footer.jsp"/>
-    <script type="text/javascript" src="${resourceURL}/js/additional/order.js"></script>
+        <section class="navbar-fixed-bottom">
+            <c:import url="../../includes/footer.jsp"/>
+            <script type="text/javascript" src="${resourceURL}/js/additional/order.js"></script>
 
 </body>
 </html>
