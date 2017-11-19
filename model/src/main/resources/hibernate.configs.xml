@@ -20,8 +20,7 @@
         </property>
         <property name="hibernate.connection.password">root</property>
 
-        <property name="connection.pool_size">100</property>
-
+        <property name="connection.pool_size">30</property>
         <!-- List of XML mapping files -->
         <mapping class="com.deped.model.account.User"/>
         <mapping class="com.deped.model.location.City"/>
@@ -46,6 +45,7 @@
         <mapping class="com.deped.model.delivery.DeliveryInformation"/>
         <mapping class="com.deped.model.supply.Supplier"/>
         <mapping class="com.deped.model.config.server.ServerConfig"/>
+        <mapping class="com.deped.model.security.PasswordResetToken"/>
 
 
     </session-factory>
