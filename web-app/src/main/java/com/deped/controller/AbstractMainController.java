@@ -38,7 +38,7 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
     }
 
     public ModelAndView createResultPage(ResultBean resultBean) {
-        Map<String, Object> modelMap = new HashMap<>();
+        Map<String, Object> modelMap = new HashMap<>(getConfigMap());
         modelMap.put("result", resultBean);
         ModelAndView mav = new ModelAndView("result", modelMap);
         return mav;
@@ -172,7 +172,9 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
 
         }
 
+
         mv.addAllObjects(responseMap);
+        mv.addAllObjects(getConfigMap());
         mv.setViewName(createViewPage);
         return mv;
     }

@@ -36,6 +36,7 @@ Supplier {
     @NotEmpty(message = "Name field can not be blank")
     @Length(min = 2, max = 45, message = "Name filed length must be between 2 to 45 character")
     @XSS
+    @Pattern(regexp = "^[a-zA-Z0-9_\\s]*$", message = "Name field must contain number, alphabet, space and underscore only")
     private String name;
 
     @Column(name = "description")

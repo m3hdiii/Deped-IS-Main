@@ -5,7 +5,6 @@ import com.deped.model.location.office.Section;
 import com.deped.model.security.Role;
 import com.deped.protection.validators.fieldmatcher.FieldMatch;
 import com.deped.protection.validators.xss.XSS;
-import org.hibernate.annotations.Formula;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
@@ -37,6 +36,9 @@ import static com.deped.repository.utils.ConstantValues.*;
 ), @NamedQuery(
         name = "fetchUser",
         query = "SELECT user FROM User user WHERE user.username = :username"
+), @NamedQuery(
+        name = "fetchUserByEmail",
+        query = "SELECT user FROM User user WHERE user.emailAddress = :emailAddress"
 )
 
 //        @NamedQuery(
@@ -77,6 +79,7 @@ public class User implements Serializable {
     @NotEmpty(message = "Username field can not be blank")
     @Length(min = 3, max = 45, message = "Username field must be between 3 to 45 character")
     @XSS
+    @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = "Name field must contain number, underscore and alphabet only")
     private String username;
 
 
@@ -128,7 +131,7 @@ public class User implements Serializable {
 
     @Column(name = "gender")
     @Enumerated(value = EnumType.STRING)
-    @NotEmpty(message = "Gender field can not be blank")
+    @NotNull(message = "Gender field can not be blank")
     private Gender gender;
 
     @Temporal(TemporalType.DATE)
@@ -186,7 +189,8 @@ public class User implements Serializable {
 //    @Column(name = "manager_id")
 //    private User manager;
 
-    @Formula("lower(datediff(curdate(), birth_date)/365)")
+    //    @Formula("lower(datediff(curdate(), birth_date)/365)")
+    @Transient
     private Integer age;
 
     @Temporal(TemporalType.DATE)

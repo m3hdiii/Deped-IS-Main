@@ -16,8 +16,6 @@
 <body>
 
 <div class="container">
-    <% String s = request.getServletPath(); %>
-    <%=System.out.println(request.getServletPath())%>
     <div class="row">
         <div class="col-lg-6 col-lg-offset-3">
             <h1 class="text-center" style="font-size:150px; font-weight:800;">404</h1>

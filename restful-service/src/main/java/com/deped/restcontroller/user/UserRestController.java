@@ -4,13 +4,13 @@ import com.deped.model.Response;
 import com.deped.model.account.User;
 import com.deped.repository.utils.Range;
 import com.deped.restcontroller.AbstractMainRestController;
-import com.deped.model.Operation;
 import com.deped.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -30,6 +30,9 @@ public class UserRestController extends AbstractMainRestController<User, Long> {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private HttpServletRequest request;
 
 
     @Override
@@ -85,4 +88,40 @@ public class UserRestController extends AbstractMainRestController<User, Long> {
         User user = userService.fetchByUsername(username);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/user/reset-password/", method = RequestMethod.POST)
+    public ResponseEntity<Response> resetPassword(@RequestBody String[] vars) {
+        String context = vars[0];
+        String emailAddress = vars[1];
+
+        User user = userService.fetchByEmail(emailAddress);
+        if (user == null) {
+
+        }
+
+        ResponseEntity<Response> response = userService.createPasswordResetTokenForUser(user, context);
+        return response;
+    }
+
+    @RequestMapping(value = "/user/check-token/", method = RequestMethod.POST)
+    public ResponseEntity<Response> checkToken(@RequestBody String[] values) {
+        ResponseEntity<Response> response = userService.checkToken(Long.valueOf(values[0]), values[1]);
+        return response;
+    }
+
+    @RequestMapping(value = "/user/change-password/", method = RequestMethod.POST)
+    public ResponseEntity<Response> changePassword(@RequestBody String[] values) {
+        ResponseEntity<Response> response = userService.changePasswordByToken(Long.valueOf(values[0]), values[1], values[2]);
+        return response;
+    }
+
+
+
+    public String getBaseUrl() {
+        String formatUrl = "%s://%s%s%s";
+        String serverPort = (request.getServerPort() == 80) ? "" : ":" + request.getServerPort();
+        String url = String.format(formatUrl, request.getScheme(), request.getServerName(), serverPort, request.getContextPath());
+        return url;
+    }
+
 }

@@ -47,7 +47,7 @@
                             <c:if test="${not empty errors}">
                                 <div>
                                     <ul class="list-group">
-                                        <c:forEach items="${fieldErrors}" var="error" varStatus="loop">
+                                        <c:forEach items="${errors}" var="error" varStatus="loop">
                                             <li class="list-group-item list-group-item-warning text-danger"><span
                                                     class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
                                             </li>
@@ -136,7 +136,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <a href="#" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i>
+                                <a href="/item/list" class="btn btn-default pull-left"><i
+                                        class="fa fa-chevron-left"></i>
                                     Back</a>
                                 <div class="button-footer pull-right">
                                     <input type="button" class="btn btn-default" value="Clear"/>
