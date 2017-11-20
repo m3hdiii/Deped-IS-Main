@@ -1,37 +1,57 @@
 package com.deped.utils;
 
+import net.sf.jmimemagic.Magic;
+import net.sf.jmimemagic.MagicException;
+import net.sf.jmimemagic.MagicMatchNotFoundException;
+import net.sf.jmimemagic.MagicParseException;
 import org.apache.tika.mime.MimeType;
 import org.apache.tika.mime.MimeTypeException;
 import org.apache.tika.mime.MimeTypes;
 
+import javax.activation.MimetypesFileTypeMap;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.URLConnection;
+import java.nio.file.Files;
 import java.util.Base64;
 
 public class ImageUtils {
 
     public static boolean isImage(byte[] file) {
         try {
-            String extension = URLConnection.guessContentTypeFromStream(new ByteArrayInputStream(file));
+            String extension = Magic.getMagicMatch(file, false).getMimeType();
             if (extension != null && extension.startsWith("image")) {
                 return true;
             }
-        } catch (IOException e) {
+        }  catch (MagicException e) {
+            e.printStackTrace();
+        } catch (MagicParseException e) {
+            e.printStackTrace();
+        } catch (MagicMatchNotFoundException e) {
             e.printStackTrace();
         }
         return false;
     }
 
     public static String getExtension(byte[] file) {
-        String contentType;
+        String contentType = null;
         try {
-            contentType = URLConnection.guessContentTypeFromStream(new ByteArrayInputStream(file));
+            contentType =  Magic.getMagicMatch(file, false).getMimeType();
             if (contentType == null || !contentType.startsWith("image")) {
                 throw new IOException("some or and inconsistent file has passed");
             }
 
         } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (MagicException e) {
+            e.printStackTrace();
+            return null;
+        } catch (MagicParseException e) {
+            e.printStackTrace();
+            return null;
+        } catch (MagicMatchNotFoundException e) {
             e.printStackTrace();
             return null;
         }
@@ -59,6 +79,13 @@ public class ImageUtils {
     }
 
     public static void main(String[] args) {
-        System.out.println(System.getProperty("user.dir"));
+        try {
+            byte[] bFile = Files.readAllBytes(new File("C:\\Users\\Colvin\\Desktop\\5f59f60f.jpg").toPath());
+            ImageUtils.getExtension(bFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+
 }

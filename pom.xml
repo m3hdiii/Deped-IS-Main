@@ -37,6 +37,13 @@
         <jackson.databind.version>2.9.1</jackson.databind.version>
     </properties>
     <dependencies>
+
+        <dependency>
+            <groupId>jmimemagic</groupId>
+            <artifactId>jmimemagic</artifactId>
+            <version>0.1.2</version>
+        </dependency>
+
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
