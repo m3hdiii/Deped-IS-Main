@@ -15,6 +15,15 @@
     <link rel="stylesheet" href="${resourceURL}/css/main/style.css"/>
     <link rel="stylesheet" href="${resourceURL}/css/common/common.css"/>
 
+    <!-- Chosen Select  -->
+    <link rel="stylesheet" href="${resourceURL}/css/plugins/bootstrap-chosen/chosen.css" />
+
+    <!-- DateTime Picker  -->
+    <link rel="stylesheet" href="${resourceURL}/css/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css" />
+
+    <!-- Bootstrap Validator  -->
+    <link rel="stylesheet" href="${resourceURL}/css/bootstrap-validator/bootstrap-validator.css" />
+
     <%--<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>--%>
     <%--<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>--%>
     <style>

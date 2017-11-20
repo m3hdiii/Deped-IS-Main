@@ -30,27 +30,45 @@
 
             <div class="page-header">
                 <h3>Manage Items
-                    <small>DepEd-Baguio City Division Office</small>
+                    <small>for Goods, Semi-Expendable and Equipment</small>
                 </h3>
             </div>
 
-            <div class="nav">
-                <div class="btn-group">
-                    <a href="/item/create" class="btn btn-sm btn-default text-right" data-toggle="tooltips"
-                       title="Add New Item">
-                        <i class="fa fa-plus"></i>
-                    </a>
-                    <button class="btn btn-sm btn-default text-right" data-toggle="tooltips" title="Delete Item">
-                        <i class="fa fa-trash"></i>
-                    </button>
-                </div>
+            <div class="btn-group">
+
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Item Type <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Goods</a></li>
+                    <li><a href="#">Semi-Expendable</a></li>
+                    <li><a href="#">Equipment</a></li>
+                </ul>
             </div>
 
+            <div class="btn-group">
+
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Brand <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li><a href="#">Sony</a></li>
+                    <li><a href="#">Sandisk</a></li>
+                    <li><a href="#">Copy</a></li>
+                </ul>
+            </div>
+
+            <div class="btn-group visible-lg-inline-block">
+                <a href="/item/create" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top" title="Add Item"><i class="fa fa-plus"></i></a>
+                <button type="button" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+            </div>
+            <hr class="clean">
+
+
             <div class="panel panel-default">
-                <div class="panel-heading text-center clean">Created Items</div>
                 <div class="panel-body">
 
-                    <table cellpadding="0" cellspacing="0" border="0" class="table table-hover" id="basic-datatable">
+                    <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-hover" id="basic-datatable">
                         <thead>
                         <tr>
                             <th>
@@ -97,9 +115,11 @@
                                 <td>${item.quantity}</td>
                                 </td>
                                 <td>
-                                    <a href="/item/update/${item.itemId}" class="btn btn-purple"><i
-                                            class="fa fa-pencil"></i></a>
-                                    <button class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                                    <div class="btn-group visible-lg-inline-block">
+                                        <a href="/item/update/${item.itemId}" class="btn btn-purple tooltip-btn" data-toggle="tooltip" data-placement="top" title="Edit Item"><i
+                                                class="fa fa-pencil"></i></a>
+                                        <button type="button" class="btn btn-danger tooltip-btn" data-toggle="tooltip" data-placement="top" title="Delete" ><i class="fa fa-trash"></i></button>
+                                    </div>
                                 </td>
                             </tr>
                         </c:forEach>
