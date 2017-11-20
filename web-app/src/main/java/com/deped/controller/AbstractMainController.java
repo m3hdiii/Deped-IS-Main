@@ -12,6 +12,7 @@ import com.deped.model.security.Role;
 import com.deped.model.supply.Supplier;
 import com.deped.repository.utils.Range;
 import com.deped.utils.ImageUtils;
+import com.deped.utils.SystemUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
@@ -44,6 +45,27 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         return mav;
 
     }
+
+    public Item fetchItemByStringId(String text) {
+        try {
+            Long itemId = Long.parseLong(text);
+            Item discoveredItem = fetchItemById(itemId);
+            return discoveredItem;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Item fetchItemById(Long itemId) {
+        Item item = new Item();
+        item.setItemId(itemId);
+
+        List<Item> items = SharedData.getItems(false);
+        Item discoveredItem = SystemUtils.findElementInList(items, item);
+        return discoveredItem;
+    }
+
 
     public ResponseEntity<Response> makeUpdateRestRequest(T entity, String baseName, HttpMethod method, Class<T> entityClass) {
         RestTemplate restTemplate = new RestTemplate();

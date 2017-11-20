@@ -678,21 +678,8 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         binder.registerCustomEditor(Item.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
-                if (text != null) {
-                    try {
-                        Long itemId = Long.parseLong(text);
-                        Item item = new Item();
-                        item.setItemId(itemId);
-
-                        List<Item> items = SharedData.getItems(false);
-                        Item discoveredItem = SystemUtils.findElementInList(items, item);
-
-                        setValue(discoveredItem);
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                        setValue(null);
-                    }
-                }
+                Item discoveredItem = fetchItemByStringId(text);
+                setValue(discoveredItem);
             }
         });
     }

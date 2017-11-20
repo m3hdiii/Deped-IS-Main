@@ -1,19 +1,30 @@
 package com.deped.controller.itemdetails;
 
 import com.deped.controller.AbstractMainController;
+import com.deped.form.ItemDetailsForm;
 import com.deped.model.Response;
+import com.deped.model.items.Item;
 import com.deped.model.items.ItemDetails;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.validation.*;
+import java.beans.PropertyEditorSupport;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -42,6 +53,61 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, L
     public ModelAndView renderCreatePage(@ModelAttribute ItemDetails entity) {
         ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE);
         return mv;
+    }
+
+    @RequestMapping(value = "/item-details/create/{requestId}/{itemId}/{quantity}", method = GET)
+    public ModelAndView createMultipleItemDetails(@PathVariable("requestId") Long requestId, @PathVariable("itemId") Long itemId, @PathVariable("quantity") Integer quantity, HttpSession session) {
+        ModelAndView mav = createModelAndView(itemId, quantity, null);
+        return mav;
+
+    }
+
+    private ModelAndView createModelAndView(Long itemId, Integer quantity, ItemDetailsForm itemDetailsForm) {
+        if (itemDetailsForm == null) {
+            Item discoveredItem = fetchItemById(itemId);
+            ArrayList<ItemDetails> itemDetailsList = new ArrayList<>();
+            for (int i = 0; i < quantity; i++) {
+                ItemDetails itemDetails = new ItemDetails();
+                itemDetails.setItem(discoveredItem);
+                itemDetailsList.add(itemDetails);
+            }
+            itemDetailsForm = new ItemDetailsForm(itemDetailsList);
+        }
+
+
+        return new ModelAndView("pages/item-details/create-item-details", "itemDetailsForm", itemDetailsForm);
+    }
+
+    @RequestMapping(value = "/item-details/create/{requestId}/{itemId}/{quantity}", method = POST)
+    public ModelAndView createMultipleItemDetails(@PathVariable("requestId") Long requestId, @PathVariable("itemId") Long itemId, @PathVariable("quantity") Integer quantity, @ModelAttribute("itemDetailsForm") ItemDetailsForm itemDetailsForm, BindingResult bindingResult, HttpSession session) {
+
+        checkItemDetailsList(itemDetailsForm.getItemDetailsList(), bindingResult);
+        if (bindingResult.hasErrors()) {
+            ModelAndView mav = createModelAndView(itemId, quantity, itemDetailsForm);
+            return mav;
+        }
+
+        session.setAttribute(String.format("ItemDetails%d%d%d", requestId, itemId, quantity), itemDetailsForm.getItemDetailsList());
+
+        ModelAndView mav = new ModelAndView("redirect:/request-details/issue/" + requestId);
+
+        return mav;
+    }
+
+    private void checkItemDetailsList(List<ItemDetails> itemDetailsList, BindingResult result) {
+        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+        Validator validator = validatorFactory.getValidator();
+
+        for (ItemDetails itemDetails : itemDetailsList) {
+
+            Set<ConstraintViolation<ItemDetails>> violations = validator.validate(itemDetails);
+
+            for (ConstraintViolation<ItemDetails> violation : violations) {
+                String propertyPath = violation.getPropertyPath().toString();
+                String message = violation.getMessage();
+                result.addError(new FieldError("ItemDetails", propertyPath, message));
+            }
+        }
     }
 
     @Override
@@ -102,5 +168,16 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, L
     @RequestMapping(value = REMOVE_MAPPING, method = POST)
     public ModelAndView removeAction(@Valid ItemDetails... entity) {
         return null;
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder, HttpServletRequest request) {
+        binder.registerCustomEditor(Item.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                Item discoveredItem = fetchItemByStringId(text);
+                setValue(discoveredItem);
+            }
+        });
     }
 }

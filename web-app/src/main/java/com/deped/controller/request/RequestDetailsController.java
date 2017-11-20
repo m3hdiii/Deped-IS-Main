@@ -1,9 +1,11 @@
 package com.deped.controller.request;
 
+import com.deped.ResultBean;
 import com.deped.controller.AbstractMainController;
 import com.deped.controller.SharedData;
 import com.deped.form.RequestDetailsForm;
 import com.deped.model.Response;
+import com.deped.model.ResponseStatus;
 import com.deped.model.account.User;
 import com.deped.model.items.Item;
 import com.deped.model.request.Request;
@@ -289,9 +291,27 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     @RequestMapping(value = APPROVAL_PAGE, method = POST)
     public ModelAndView approvalActionSubmit(@ModelAttribute("requestDetailsForm") RequestDetailsForm orderDetailsForm) {
         ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, RequestDetailsStatus.APPROVED);
-        ModelAndView mav = new ModelAndView();
-        return null;
+        Response response = updateResponse.getBody();
+
+        String headTagTitle = "Approval Result";
+        String headTagDescription = "Approval Result Summary";
+        String heading = "Operation Result";
+        String successMessage = response.getResponseStatus() == com.deped.model.ResponseStatus.SUCCESSFUL ? "You Successfully Processed The Approval Process" : null;
+        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "Something Went Wrong In Approval Process" : null;
+
+        ResultBean resultBean = new ResultBean(headTagTitle, headTagDescription, heading, successMessage, failureMessage);
+        ModelAndView mav = createResultPage(resultBean);
+        return mav;
     }
+
+    public ModelAndView createResultPage(ResultBean resultBean) {
+        Map<String, Object> modelMap = new HashMap<>(getConfigMap());
+        modelMap.put("result", resultBean);
+        ModelAndView mav = new ModelAndView("result", modelMap);
+        return mav;
+
+    }
+
 
     //Administrative Tasks
     @RequestMapping(value = RELEASED_PAGE, method = GET)
@@ -321,7 +341,17 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     @RequestMapping(value = RELEASED_PAGE, method = POST)
     public ModelAndView arrivalActionSubmit(@ModelAttribute("requestDetailsForm") RequestDetailsForm orderDetailsForm) {
         ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, RequestDetailsStatus.RELEASED);
-        return null;
+        Response response = updateResponse.getBody();
+
+        String headTagTitle = "Release Page";
+        String headTagDescription = "Release Result Summary";
+        String heading = "Release Operation";
+        String successMessage = response.getResponseStatus() == com.deped.model.ResponseStatus.SUCCESSFUL ? "You Successfully Processed The Releasing Process" : null;
+        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "Something Went Wrong In Releasing Process" : null;
+
+        ResultBean resultBean = new ResultBean(headTagTitle, headTagDescription, heading, successMessage, failureMessage);
+        ModelAndView mav = createResultPage(resultBean);
+        return mav;
     }
 
     private ModelAndView requestChecking(Request request, RequestStatus mustBeInStatus) {
@@ -439,21 +469,8 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         binder.registerCustomEditor(Item.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
-                if (text != null) {
-                    try {
-                        Long itemId = Long.parseLong(text);
-                        Item item = new Item();
-                        item.setItemId(itemId);
-
-                        List<Item> items = SharedData.getItems(false);
-                        Item discoveredItem = SystemUtils.findElementInList(items, item);
-
-                        setValue(discoveredItem);
-                    } catch (NumberFormatException e) {
-                        e.printStackTrace();
-                        setValue(null);
-                    }
-                }
+                Item discoveredItem = fetchItemByStringId(text);
+                setValue(discoveredItem);
             }
         });
     }
