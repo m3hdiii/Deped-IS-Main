@@ -17,6 +17,7 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
@@ -58,10 +59,13 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     private static final String UPDATE_VIEW_PAGE = BASE_SHOW_PAGE + UPDATE_PAGE + BASE_NAME;
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
     private static final String FLOW_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + "-flow";
+    private static final String SUMMARY_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + "-summary";
 
     private static final String BASKET_VIEW_PAGE = BASE_NAME + URL_SEPARATOR + "basket" + URL_SEPARATOR + ID_PATTERN;
     private static final String APPROVAL_PAGE = BASE_NAME + URL_SEPARATOR + "approval" + URL_SEPARATOR + ID_PATTERN;
     private static final String RELEASED_PAGE = BASE_NAME + URL_SEPARATOR + "issue" + URL_SEPARATOR + ID_PATTERN;
+
+    private static final String SUMMARY_PAGE = BASE_NAME + URL_SEPARATOR + "summary" + URL_SEPARATOR + ID_PATTERN;
 
     private static final String UPDATE_STATUS_REST = BASE_NAME + URL_SEPARATOR + "update-status/user/%d/status/%d";
 
@@ -120,12 +124,22 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
 
 
     @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createActionWithRedirect(@Valid @ModelAttribute("requestDetail") RequestDetails entity, @Valid @ModelAttribute("requestEntity") Request requestEntity, final RedirectAttributes redirectAttributes, HttpSession httpSession) {
+    public ModelAndView createActionWithRedirect(@PathVariable(ID_STRING_LITERAL) Long requestId, @Valid @ModelAttribute("requestDetails") RequestDetails entity, BindingResult bindingResult, final RedirectAttributes redirectAttributes, HttpSession httpSession) {
 
         Request request = entity.getRequest();
         if (request == null) {
-            return null;
+            bindingResult.addError(new FieldError("RequestDetails", "request", "Something went wrong please contact with your admin"));
         }
+
+        if (bindingResult.hasErrors()) {
+            Map<String, Object> modelMap = new HashMap<>(getConfigMap());
+            modelMap.put("requestId", requestId);
+            modelMap.put("itemList", SharedData.getItems(false));
+            modelMap.put("requestDetails", entity);
+            ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
+            return mv;
+        }
+
 
         Object basketInfo = httpSession.getAttribute(BASKET + request.getRequestId());
         Map<String, RequestDetails> requestDetailsMap;
@@ -367,6 +381,32 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         }
         return null;
     }
+
+    //Administrative Tasks
+    @RequestMapping(value = SUMMARY_PAGE, method = GET)
+    public ModelAndView summaryActionRender(@PathVariable(ID_STRING_LITERAL) Long requestId) {
+        Request request = fetchRequest(requestId);
+
+        if (request == null) {
+            return new ModelAndView("redirect:/dashboard");
+        }
+
+        List<RequestDetails> requestDetailsList = fetchRequestDetails(requestId);
+        ModelAndView requestDetailsChecking = requestDetailsChecking(requestDetailsList);
+        if (requestDetailsChecking != null) {
+            return requestDetailsChecking;
+        }
+
+        Map<String, Object> modelMap = new HashMap<>(getConfigMap());
+
+        modelMap.put("request", request);
+        modelMap.put("requestDetailsList", requestDetailsList);
+        modelMap.put("requestId", request.getRequestId());
+        modelMap.put("relatedRequest", request);
+        ModelAndView mv = new ModelAndView(SUMMARY_VIEW_PAGE, modelMap);
+        return mv;
+    }
+
 
     private ModelAndView requestDetailsChecking(List<RequestDetails> requestDetailsList) {
         String newRequestRedirectUrl;

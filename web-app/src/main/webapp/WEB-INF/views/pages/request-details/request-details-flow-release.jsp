@@ -37,10 +37,10 @@
         </div>
 
         <div class="row">
-            <h4>Order Information</h4>
+            <h4>Request Information</h4>
             <p>Request Number: ${relatedRequest.requestId}</p>
             <p>Requested
-                By: ${relatedRequest.user.firstName}&nbsp;${relatedRequest.user.middleName}&nbsp;${relatedRequest.user.lastName}</p>
+                By: ${relatedRequest.user.firstName}&nbsp;${relatedRequest.user.lastName}</p>
             <p>Reason: ${relatedRequest.userMessage}</p>
         </div>
 

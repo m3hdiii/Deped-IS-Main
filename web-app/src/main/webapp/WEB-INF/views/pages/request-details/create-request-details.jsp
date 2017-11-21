@@ -47,6 +47,19 @@
 
         <c:set var="requestIdValue" value="${relatedRequest.requestId}"/>
         <c:set var="basketName" value="requestDetailsMap-RequestNo${requestIdValue}"/>
+        <c:set var="errors"
+               value="${requestScope['org.springframework.validation.BindingResult.requestDetails'].allErrors}"/>
+        <c:if test="${not empty errors}">
+            <div>
+                <ul class="list-group">
+                    <c:forEach items="${errors}" var="error" varStatus="loop">
+                        <li class="list-group-item list-group-item-warning text-danger"><span
+                                class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
+                        </li>
+                    </c:forEach>
+                </ul>
+            </div>
+        </c:if>
 
         <div class="row">
 
@@ -111,6 +124,7 @@
 
                 <div class="item-body col-md-9">
                     <!-- Items-thumbnail-and-content-of-the-item-thumbnail -->
+
                     <c:forEach items="${itemList}" var="item" varStatus="loop">
                         <form:form class='col-xs-3 thumbnail item-content-thumbnail' commandName="requestDetails"
                                    method="post">

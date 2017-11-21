@@ -31,7 +31,7 @@ public class RequestDetails implements Serializable {
     private Item item;
 
     @Column(name = "request_quantity")
-    @Min(value = 1, message = "Request Quantity can not be negative")
+    @Min(value = 1, message = "Request Quantity can not be zero or negative")
     @Max(value = 5000, message = "Request Quantity can not be more than 5000")
     private Integer requestQuantity;
 

@@ -55,8 +55,10 @@
                     class="fa fa-list-alt"></i> <span class="nav-label">Request Items</span></a>
                 <ul class="list-unstyled">
                     <li><a href="/request/create">Create Request</a></li>
+                    <li><a href="/request/summary">My Requests</a></li>
                 </ul>
             </li>
+
             <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
                 <li class="has-submenu" data-toggle="tooltip" title="Order Items"><a href="#"><i
                         class="fa fa-file-text-o"></i> <span class="nav-label">Order Items</span></a>
