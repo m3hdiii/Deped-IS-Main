@@ -21,7 +21,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -50,7 +49,7 @@ public class LoginController {
     private HttpServletRequest request;
 
     @RequestMapping(value = {"", HOME, INDEX, MAIN, LOGIN}, method = RequestMethod.GET)
-    public String renderLogin(HttpServletResponse response) {
+    public String renderLogin() {
         User user = null;
         if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -59,7 +58,7 @@ public class LoginController {
                 try {
                     user = ((UserDetailsServiceImpl.CustomSpringSecurityUser) principal).getUser();
                 } catch (Exception e) {
-                    e.printStackTrace();
+
                 }
         }
 
