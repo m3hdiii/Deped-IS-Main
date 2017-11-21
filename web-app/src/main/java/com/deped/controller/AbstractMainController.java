@@ -7,6 +7,7 @@ import com.deped.model.config.client.ClientEnumKey;
 import com.deped.model.items.Item;
 import com.deped.model.location.City;
 import com.deped.model.location.Country;
+import com.deped.model.location.office.Department;
 import com.deped.model.pack.Pack;
 import com.deped.model.security.Role;
 import com.deped.model.supply.Supplier;
@@ -301,6 +302,10 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         }
 
         if (entityClass == Role.class) {
+            SharedData.getRoles(isUpdated);
+        }
+
+        if (entityClass == Department.class) {
             SharedData.getRoles(isUpdated);
         }
     }
