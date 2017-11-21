@@ -23,63 +23,139 @@
 
     <c:import url="../../includes/top-nav.jsp"/>
 
-    <c:choose>
-        <c:when test="${not empty notUpdated}">
-            <p style="color: red;">${notUpdated}</p>
-        </c:when>
 
+        <div class="warper container-fluid">
 
-        <c:when test="${not empty successfullyUpdated}">
-            <p style="color: green;">${successfullyUpdated}</p>
-            &nbsp;&nbsp;<a href="/department/list">All Departments</a>
-        </c:when>
+            <div class="page-header">
+                <h3>Department
+                    <small>DepEd-Baguio City Division Office</small>
+                </h3>
 
-    </c:choose>
+            </div>
 
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="panel-heading"><h1>Update Department</h1></div>
-            <hr class="style13"/>
-            <c:set var="errors"
-                   value="${requestScope['org.springframework.validation.BindingResult.department'].allErrors}"/>
-            <form:form commandName="department" method="post">
-                <c:if test="${not empty errors}">
-                    <div>
-                        <ul class="list-group">
-                            <c:forEach items="${errors}" var="error" varStatus="loop">
-                                <li class="list-group-item list-group-item-warning text-danger"><span
-                                        class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
-                                </li>
-                            </c:forEach>
-                        </ul>
+            <div class="row new-item-body">
+                <div class="col-md-12">
+                    <div class="col-md-8 col-md-offset-2">
+                        <div class="panel panel-default">
+                            <c:set var="errors"
+                                   value="${requestScope['org.springframework.validation.BindingResult.department'].allErrors}"/>
+                            <form:form commandName="department" method="post">
+                                <c:if test="${not empty errors}">
+                                    <div>
+                                        <ul class="list-group">
+                                            <c:forEach items="${errors}" var="error" varStatus="loop">
+                                                <li class="list-group-item list-group-item-warning text-danger"><span
+                                                        class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
+                                                </li>
+                                            </c:forEach>
+                                        </ul>
+                                    </div>
+                                </c:if>
+                                <h3 class="text-center">Update Department</h3>
+                                <div class="panel-body">
+                                    <div class="col-md-10 col-sm-offset-1">
+                                        <c:choose>
+                                            <c:when test="${not empty notUpdated}">
+                                                <div class="alert alert-danger alert-dismissable fade in">
+                                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                    <strong>Failed!</strong> ${notUpdated}.
+                                                </div>
+                                            </c:when>
+                                            <c:when test="${not empty successfullyUpdated}">
+                                                <div class="alert alert-success alert-dismissable fade in">
+                                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                    <strong>Success!</strong> ${successfullyUpdated}.
+                                                </div>
+                                            </c:when>
+                                        </c:choose>
+
+                                        <div class="form-group">
+                                            <label for="updateDepName">Name</label>
+                                            <form:input type="text" path="name" class="form-control" id="updateDepName"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="updateDepDesc">Description</label>
+                                            <form:textarea type="text" path="description" class="form-control" cols="3" rows="3" id="updateDepDesc" maxlength="100"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="updateDepHead">Department Head</label>
+                                            <form:input type="text" path="departmentHead" class="form-control" cols="3"
+                                                        rows="3" id="updateDepHead" maxlength="100"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <a href="/department/list" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i> Back</a>
+                                    <div class="button-footer pull-right">
+                                        <input type="reset" class="btn btn-default" value="Reset"/>
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                    </div>
+                                </div>
+                            </form:form>
+                        </div>
                     </div>
-                </c:if>
-                <div class="row form-group">
-                    <div class="col-sm-2">
-                        <label class="control-label"><span>name</span></label>
-                        <form:input path="name"/>
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-sm-2">
-                        <label class="control-label"><span>description</span></label>
-                        <form:textarea path="description"/>
-                    </div>
-                </div>
-                <div class="row form-group">
-                    <div class="col-sm-2">
-                        <label class="control-label"><span>Department Head</span></label>
-                        <form:input path="departmentHead"/>
-                    </div>
-                </div>
-                <div class="row form-group btn-group-sm">
-                    <div class="col-sm-2">
-                        <button type="submit" class="btn btn-success btn-block">Update Department</button>
-                    </div>
-                </div>
-            </form:form>
+                </div> <!-- New Item Body closing -->
+            </div>
         </div>
-    </div>
+        <!-- Warper Ends Here (working area) -->
+
+    <%--<c:choose>--%>
+        <%--<c:when test="${not empty notUpdated}">--%>
+            <%--<p style="color: red;">${notUpdated}</p>--%>
+        <%--</c:when>--%>
+
+
+        <%--<c:when test="${not empty successfullyUpdated}">--%>
+            <%--<p style="color: green;">${successfullyUpdated}</p>--%>
+            <%--&nbsp;&nbsp;<a href="/department/list">All Departments</a>--%>
+        <%--</c:when>--%>
+
+    <%--</c:choose>--%>
+
+    <%--<div class="row">--%>
+        <%--<div class="col-lg-12">--%>
+            <%--<div class="panel-heading"><h1>Update Department</h1></div>--%>
+            <%--<hr class="style13"/>--%>
+            <%--<c:set var="errors"--%>
+                   <%--value="${requestScope['org.springframework.validation.BindingResult.department'].allErrors}"/>--%>
+            <%--<form:form commandName="department" method="post">--%>
+                <%--<c:if test="${not empty errors}">--%>
+                    <%--<div>--%>
+                        <%--<ul class="list-group">--%>
+                            <%--<c:forEach items="${errors}" var="error" varStatus="loop">--%>
+                                <%--<li class="list-group-item list-group-item-warning text-danger"><span--%>
+                                        <%--class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}--%>
+                                <%--</li>--%>
+                            <%--</c:forEach>--%>
+                        <%--</ul>--%>
+                    <%--</div>--%>
+                <%--</c:if>--%>
+                <%--<div class="row form-group">--%>
+                    <%--<div class="col-sm-2">--%>
+                        <%--<label class="control-label"><span>name</span></label>--%>
+                        <%--<form:input path="name"/>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+                <%--<div class="row form-group">--%>
+                    <%--<div class="col-sm-2">--%>
+                        <%--<label class="control-label"><span>description</span></label>--%>
+                        <%--<form:textarea path="description"/>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+                <%--<div class="row form-group">--%>
+                    <%--<div class="col-sm-2">--%>
+                        <%--<label class="control-label"><span>Department Head</span></label>--%>
+                        <%--<form:input path="departmentHead"/>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+                <%--<div class="row form-group btn-group-sm">--%>
+                    <%--<div class="col-sm-2">--%>
+                        <%--<button type="submit" class="btn btn-success btn-block">Update Department</button>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+            <%--</form:form>--%>
+        <%--</div>--%>
+    <%--</div>--%>
             <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>
