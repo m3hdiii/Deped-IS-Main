@@ -2,6 +2,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page isELIgnored="false" %>
 
@@ -55,7 +56,9 @@
                             <th>Name</th>
                             <th>Description</th>
                             <%--<th>Associated Item</th>--%>
-                            <th>Action</th>
+                            <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
+                                <th>Actions</th>
+                            </sec:authorize>
                         </tr>
                         </thead>
                         <tbody>
@@ -70,6 +73,7 @@
                                 <td>${pack.name}</td>
                                 <td>${pack.description}</td>
                                 <%--<td>${pack.item}</td>--%>
+                                <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
                                 <td>
                                     <div class="btn-group visible-lg-inline-block">
                                         <a href="/pack/update/${pack.packId}" class="btn btn-purple tooltip-btn" data-toggle="tooltip" data-placement="top" title="Edit Package"><i
@@ -77,6 +81,7 @@
                                         <button type="button" class="btn btn-danger tooltip-btn" data-toggle="tooltip" data-placement="top" title="Delete" ><i class="fa fa-trash"></i></button>
                                     </div>
                                 </td>
+                                </sec:authorize>
                             </tr>
                         </c:forEach>
                         </tbody>
@@ -122,7 +127,6 @@
         <%--</div>--%>
     <%--</div>--%>
 
-        <section class="navbar-fixed-bottom">
             <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>

@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <%@ page isELIgnored="false" %>
 
@@ -71,7 +72,7 @@
             </table>
         </div>
     </div>
-        <section class="navbar-fixed-bottom">
-            <c:import url="../../includes/footer.jsp"/>
+
+        <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>

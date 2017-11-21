@@ -57,7 +57,6 @@
 
     <c:import url="../../modals/cart.jsp"/>
 </section>
-<section class="navbar-fixed-bottom">
     <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>

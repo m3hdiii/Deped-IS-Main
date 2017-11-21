@@ -95,7 +95,6 @@
             </table>
         </div>
     </div>
-        <section class="navbar-fixed-bottom">
             <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>

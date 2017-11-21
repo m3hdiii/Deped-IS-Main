@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page isELIgnored="false" %>
 
 <c:url value="/public" var="resourceURL" scope="request"/>
@@ -50,15 +50,17 @@
                                 <input class="pull-left" type="checkbox" id="checkbox ${brand.brandId}"/>
                                 <label for="checkbox ${brand.brandId}"></label>
                             </div>--%>
-                        <div class="dropdown pull-right">
-                            <a href="#" data-toggle="dropdown"><i class="fa fa-ellipsis-v text-purple"></i></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="/brand/update/${brand.brandId}"><i class="fa fa-pencil text-primary"></i>
-                                    Edit</a></li>
-                                <li><a href="#"><i class="fa fa-trash text-danger"></i> Delete</a></li>
-                            </ul>
-                        </div>
-
+                        <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
+                            <div class="dropdown pull-right">
+                                <a href="#" data-toggle="dropdown"><i class="fa fa-ellipsis-v text-purple"></i></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="/brand/update/${brand.brandId}"><i
+                                            class="fa fa-pencil text-primary"></i>
+                                        Edit</a></li>
+                                    <li><a href="#"><i class="fa fa-trash text-danger"></i> Delete</a></li>
+                                </ul>
+                            </div>
+                        </sec:authorize>
                         <div class="item-infomation text-center">
                             <h3><a href="/category/${brand.brandId}">${brand.name}</a></h3>
                             <!-- <small>The .img-thumbnail class creates a thumbnail of the image:</small> -->
@@ -127,7 +129,6 @@
         </div>
 
     </div> <!-- Warper Ends Here (working area) -->
-        <section class="navbar-fixed-bottom">
-            <c:import url="../../includes/footer.jsp"/>
+    <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>

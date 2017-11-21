@@ -63,7 +63,6 @@
 
         </table>
     </div>
-        <section class="navbar-fixed-bottom">
             <c:import url="../../includes/footer.jsp"/>
     <script type="text/javascript" src="${resourceURL}/js/additional/order.js"></script>
 

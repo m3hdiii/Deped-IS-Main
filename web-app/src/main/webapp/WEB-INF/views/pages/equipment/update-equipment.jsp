@@ -64,7 +64,6 @@
         <button type="submit">Create Brand</button>
     </form:form>
 
-        <section class="navbar-fixed-bottom">
-            <c:import url="../includes/footer.jsp"/>
+            <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>

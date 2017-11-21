@@ -1,5 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page isELIgnored="false" %>
 
 <c:url value="/public" var="resourceURL" scope="request"/>
@@ -162,9 +162,11 @@
                                 <td>
                                     <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#view-user-modal"><i class="fa fa-eye"></i></a>
                                 </td>
+                                <sec:authorize access="hasRole('ROLE_ADMIN')">
                                 <td class="text-nowrap">
                                     <a href="#" class="btn btn-purple"><i class="fa fa-pencil"></i></a>
                                 </td>
+                                </sec:authorize>
                             </tr>
                         </c:forEach>
                     </tbody>
@@ -353,7 +355,6 @@
             <%--</div>--%>
         <%--</div>--%>
     <%--</div> <!-- Warper Ends Here (working area) -->--%>
-        <section class="navbar-fixed-bottom">
         <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>

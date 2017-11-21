@@ -382,7 +382,6 @@
         <%--</div>--%>
     <%--</div> <!-- Warper Ends Here (working area) -->--%>
 
-        <section class="navbar-fixed-bottom">
             <c:import url="../../includes/footer.jsp"/>
 
 </body>
