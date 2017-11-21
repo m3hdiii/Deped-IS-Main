@@ -35,8 +35,10 @@ public class SupplierServiceImpl implements SupplierService {
     public ResponseEntity<Response> update(Supplier entity) {
         String pictureBase64 = entity.getPictureBase64();
 
-        String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, BASE_FILE_FOLDER);
-        entity.setPicName(fileName);
+        if (pictureBase64 != null) {
+            String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, BASE_FILE_FOLDER);
+            entity.setPicName(fileName);
+        }
 
         Boolean isUpdated = supplyRepository.update(entity);
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, Supplier.class);

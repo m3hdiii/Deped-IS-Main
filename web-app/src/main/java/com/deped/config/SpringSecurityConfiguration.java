@@ -47,17 +47,19 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/category/list").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_SUPPLY_OFFICER')")
                 .antMatchers("/pack/list").access("hasRole('ROLE_ADMIN')  OR hasRole('ROLE_SUPPLY_OFFICER')")
                 .antMatchers("/brand/list").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_SUPPLY_OFFICER')")
-                .antMatchers("/supplier/list").access("hasRole('ROLE_ADMIN')  OR hasRole('ROLE_SUPPLY_OFFICER')")
                 .antMatchers("/order/list").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/request/list").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/item/list").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_SUPPLY_OFFICER')")
 
+                .antMatchers("/supplier/list").access("hasRole('ROLE_ADMIN')  OR hasRole('ROLE_SUPPLY_OFFICER')")
+                .antMatchers("/supplier/create").hasRole("SUPPLY_OFFICER")
+                .antMatchers("/supplier/update/*").hasRole("SUPPLY_OFFICER")
+                .antMatchers("/supplier/*").denyAll()
 
                 .antMatchers("/item/**").hasRole("SUPPLY_OFFICER")
                 .antMatchers("/category/**").hasRole("SUPPLY_OFFICER")
                 .antMatchers("/brand/**").hasRole("SUPPLY_OFFICER")
                 .antMatchers("/pack/**").hasRole("SUPPLY_OFFICER")
-                .antMatchers("/supplier/**").hasRole("SUPPLY_OFFICER")
                 .antMatchers("/department/**").hasRole("ADMIN")
                 .antMatchers("/section/**").hasRole("ADMIN")
 

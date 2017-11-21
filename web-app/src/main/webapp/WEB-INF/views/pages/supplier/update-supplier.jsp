@@ -109,6 +109,7 @@
                                     </div>
                                 </div><!-- New Supplier Body closing -->
 
+                                <form:hidden path="picName"/>
                                 <div class="modal-footer">
                                     <a href="/supplier/list" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i>
                                         Back</a>

@@ -56,7 +56,8 @@ public class SupplierController extends AbstractMainController<Supplier, Long> {
     @RequestMapping(value = CREATE_MAPPING, method = POST)
     public ModelAndView createActionWithPic(@RequestParam MultipartFile supplyPic, @Valid @ModelAttribute(BASE_NAME) Supplier entity, BindingResult bindingResult) {
 
-        checkInfo(supplyPic, entity, bindingResult);
+        String base64Image = checkInfo(supplyPic, bindingResult);
+        entity.setPictureBase64(base64Image);
 
         if (bindingResult.hasErrors()) {
             Map<String, Object> modelMap = new HashMap<>();
@@ -88,29 +89,32 @@ public class SupplierController extends AbstractMainController<Supplier, Long> {
         return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, supplier);
     }
 
-    private void checkInfo(MultipartFile supplyPic, Supplier entity, BindingResult bindingResult) {
+    private String checkInfo(MultipartFile supplyPic, BindingResult bindingResult) {
+        String encodeBase64 = null;
         try {
             byte[] fileBytes = supplyPic.getBytes();
             if (supplyPic != null && fileBytes != null && fileBytes.length != 0) {
                 boolean isImage = ImageUtils.isImage(fileBytes);
                 if (isImage) {
-                    String encodeBase64 = ImageUtils.encodeBase64(fileBytes);
-                    entity.setPictureBase64(encodeBase64);
+                    encodeBase64 = ImageUtils.encodeBase64(fileBytes);
+                    return encodeBase64;
                 } else {
                     bindingResult.addError(new FieldError(Supplier.class.getSimpleName(), "pictureBase64", "Your file is suspicious and it's not an image. Your actions will be logged"));
                 }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return encodeBase64;
 
     }
 
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
     public ModelAndView updateActionWithPicture(@RequestParam MultipartFile supplyPic, @PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute Supplier entity, BindingResult bindingResult) {
         entity.setSupplierId(aLong);
-        checkInfo(supplyPic, entity, bindingResult);
+        String base64Image = checkInfo(supplyPic, bindingResult);
+        entity.setPictureBase64(base64Image);
 
         if (bindingResult.hasErrors()) {
             ModelAndView mv = new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
