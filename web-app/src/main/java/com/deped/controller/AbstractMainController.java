@@ -306,7 +306,7 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         }
 
         if (entityClass == Department.class) {
-            SharedData.getRoles(isUpdated);
+            SharedData.getDepartments(isUpdated);
         }
     }
 }

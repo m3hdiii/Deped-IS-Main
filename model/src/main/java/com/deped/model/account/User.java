@@ -207,13 +207,13 @@ public class User implements Serializable {
     @Transient
     private MultipartFile picture;
 
-    @ManyToMany
+    @ManyToMany/*(cascade = CascadeType.ALL)*/
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(
-                    name = "user_id", referencedColumnName = "user_id"),
+                    name = "user_id"/*, referencedColumnName = "user_id"*/),
             inverseJoinColumns = @JoinColumn(
-                    name = "role_id", referencedColumnName = "role_id"))
+                    name = "role_id"/*, referencedColumnName = "role_id"*/))
 //    @JsonManagedReference("user-role-binding")
     private Set<Role> roles;
 

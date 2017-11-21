@@ -35,15 +35,50 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/user/update/{userId}").access("@centralizedAccessControl.checkUserChangeInfoAccess(authentication, #userId) or hasRole('ROLE_ADMIN')")
-                .antMatchers("/**").permitAll();
+                //.antMatchers("/user/update/{userId}").access("@centralizedAccessControl.checkUserChangeInfoAccess(authentication, #userId) or hasRole('ROLE_ADMIN')")
 
 
-//                .antMatchers("/login").permitAll()
-//
-//                .antMatchers("/brand/**").access("hasRole('ROLE_ADMIN')")
-//                .antMatchers("user/**").access("hasRole('ROLE_ADMIN')");
+                .antMatchers("/order/create").hasRole("SUPPLY_OFFICER")
+                .antMatchers("/order-details/create/*").hasRole("SUPPLY_OFFICER")
+                .antMatchers("/order/approval-list").hasRole("CHIEF")
+                .antMatchers("/order/requisition-list").hasRole("SUPPLY_OFFICER")
+                .antMatchers("/order/arrival-list").hasRole("SUPPLY_OFFICER")
 
+                .antMatchers("/category/list").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_SUPPLY_OFFICER')")
+                .antMatchers("/pack/list").access("hasRole('ROLE_ADMIN')  OR hasRole('ROLE_SUPPLY_OFFICER')")
+                .antMatchers("/brand/list").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_SUPPLY_OFFICER')")
+                .antMatchers("/supplier/list").access("hasRole('ROLE_ADMIN')  OR hasRole('ROLE_SUPPLY_OFFICER')")
+                .antMatchers("/order/list").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/request/list").access("hasRole('ROLE_ADMIN')")
+                .antMatchers("/item/list").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_SUPPLY_OFFICER')")
+
+
+                .antMatchers("/item/**").hasRole("SUPPLY_OFFICER")
+                .antMatchers("/category/**").hasRole("SUPPLY_OFFICER")
+                .antMatchers("/brand/**").hasRole("SUPPLY_OFFICER")
+                .antMatchers("/pack/**").hasRole("SUPPLY_OFFICER")
+                .antMatchers("/supplier/**").hasRole("SUPPLY_OFFICER")
+                .antMatchers("/department/**").hasRole("ADMIN")
+                .antMatchers("/section/**").hasRole("ADMIN")
+
+                .antMatchers("/user/list").access("hasRole('ROLE_CHIEF') OR hasRole('ROLE_ADMIN')")
+                .antMatchers("/user/*").access("hasRole('ROLE_CHIEF') OR hasRole('ROLE_ADMIN')")
+
+                .antMatchers("/user/update/*", "/user/create").hasRole("ADMIN")
+
+
+                .antMatchers("/request/create").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_PERSONNEL') OR hasRole('ROLE_USER') OR hasRole('ROLE_SUPPLY_OFFICER')")
+                .antMatchers("/request-details/create/*").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_PERSONNEL') OR hasRole('ROLE_USER') OR hasRole('ROLE_SUPPLY_OFFICER')")
+
+                .antMatchers("/request/approval-list").access("hasRole('ROLE_CHIEF') OR hasRole('ROLE_SUPPLY_OFFICER')")
+                .antMatchers("/request-details/approval/*").access("hasRole('ROLE_CHIEF') OR hasRole('ROLE_SUPPLY_OFFICER')")
+
+                .antMatchers("/request/release-list").hasRole("SUPPLY_OFFICER")
+                .antMatchers("/request-details/issue/*").hasRole("SUPPLY_OFFICER")
+
+                .antMatchers("/dashboard").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_PERSONNEL') OR hasRole('ROLE_USER') OR hasRole('ROLE_SUPPLY_OFFICER')")
+
+                .antMatchers("/", "/login/", "/forgot-password").permitAll();
 
         http.formLogin()
                 .loginPage("/login")

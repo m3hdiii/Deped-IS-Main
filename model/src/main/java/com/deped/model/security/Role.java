@@ -3,7 +3,6 @@ package com.deped.model.security;
 import com.deped.model.account.User;
 import com.deped.protection.validators.xss.XSS;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -46,7 +45,7 @@ public class Role implements Serializable {
 
 
     @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
-    @JsonIgnore
+//    @JsonBackReference("user-role-binding")
     private Set<User> users;
 
     @ManyToMany

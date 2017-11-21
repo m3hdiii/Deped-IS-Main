@@ -30,6 +30,7 @@
     <nav class="navigation">
         <ul class="list-unstyled">
             <li class="active" data-toggle="tooltip" title="Dashboard"><a href="/dashboard"><i class="fa fa-dashboard"></i><span class="nav-label">Dashboard</span></a></li>
+
             <li class="has-submenu" data-toggle="tooltip" title="Request Items"><a href="#"><i class="fa fa-list-alt"></i> <span class="nav-label">Request Items</span></a>
                 <ul class="list-unstyled">
                     <li><a href="/request/create">Create Request</a></li>
