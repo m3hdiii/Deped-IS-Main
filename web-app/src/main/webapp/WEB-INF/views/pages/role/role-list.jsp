@@ -74,7 +74,8 @@
                             <sec:authorize access="hasRole('ROLE_ADMIN')">
                                 <td>
                                     <div class="btn-group visible-lg-inline-block">
-                                        <a href="/category/update/${role.roleId}" class="btn btn-purple tooltip-btn" data-toggle="tooltip" data-placement="top" title="Edit Role"><i
+                                        <a href="/role/update/${role.roleId}" class="btn btn-purple tooltip-btn"
+                                           data-toggle="tooltip" data-placement="top" title="Edit Role"><i
                                                 class="fa fa-pencil"></i></a>
                                         <button type="button" class="btn btn-danger tooltip-btn" data-toggle="tooltip" data-placement="top" title="Delete" ><i class="fa fa-trash"></i></button>
                                     </div>

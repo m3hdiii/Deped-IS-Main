@@ -12,9 +12,18 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
 
+import static com.deped.repository.utils.ConstantValues.FETCH_ALL_ROLE;
+
 /**
  * Created by Mehdi on 6/8/2017.
  */
+
+
+@NamedQueries({
+        @NamedQuery(
+                name = FETCH_ALL_ROLE,
+                query = "SELECT r FROM Role r ORDER BY r.name")
+})
 
 @Entity
 @Table(name = "role")

@@ -1,10 +1,11 @@
 package com.deped.controller.role;
 
 import com.deped.controller.AbstractMainController;
+import com.deped.controller.SharedData;
 import com.deped.model.Response;
+import com.deped.model.config.client.ClientEnumKey;
 import com.deped.model.security.Role;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,7 +19,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -97,9 +100,13 @@ public class RoleController extends AbstractMainController<Role, Long> {
     @Override
     @RequestMapping(value = RENDER_LIST_MAPPING, method = GET)
     public ModelAndView renderListPage() {
-        ResponseEntity<List<Role>> response = makeFetchAllRestRequest(BASE_NAME, HttpMethod.POST, new ParameterizedTypeReference<List<Role>>() {
-        });
-        ModelAndView mv = listProcessing(response, "roles", LIST_VIEW_PAGE);
+        List<Role> roles = SharedData.getRoles(false);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("roles", roles);
+        Map<ClientEnumKey, String> mapConfig = SharedData.getClientConfigsMap(false);
+        map.put("baseUrl", mapConfig.get(ClientEnumKey.RESOURCE_BASE_URL));
+
+        ModelAndView mv = new ModelAndView(LIST_VIEW_PAGE, map);
         return mv;
     }
 

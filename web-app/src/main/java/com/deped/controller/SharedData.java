@@ -99,7 +99,7 @@ public class SharedData {
 
     public synchronized static List<Role> getRoles(boolean dataIsUpdated) {
         if (roles == null || dataIsUpdated) {
-            roles = fetchAll("roles", new ParameterizedTypeReference<List<Role>>() {
+            roles = fetchAll("role", new ParameterizedTypeReference<List<Role>>() {
             });
         }
         return roles;
