@@ -31,9 +31,22 @@
         </div>
 
         <div class="row">
-
+            <c:set var="errors" value="${requestScope['org.springframework.validation.BindingResult.user'].allErrors}"/>
             <div class="col-md-12">
-                <form:form commandName="user" method="post" class="form-horizontal validator-form" role="form" enctype="multipart/form-data">
+                <form:form commandName="user" method="post" class="form-horizontal" role="form"
+                           enctype="multipart/form-data">
+                    <c:if test="${not empty errors}">
+                        <div>
+                            <ul class="list-group">
+                                <c:forEach items="${errors}" var="error" varStatus="loop">
+                                    <li class="list-group-item list-group-item-warning text-danger"><span
+                                            class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
+                                    </li>
+                                </c:forEach>
+                            </ul>
+                        </div>
+                    </c:if>
+
                     <div class="panel panel-default">
 
                         <div class="panel-heading text-center">User Information</div>
@@ -167,7 +180,7 @@
                                 <label class="col-sm-2 control-label"><span class="text-red">*</span> Postion</label>
                                 <div class="col-sm-7">
                                     <form:select path="position" class="form-control">
-                                        <form:option value="-" label="---Choose a Position"/>
+                                        <form:option value="" label="---Choose a Position"/>
                                         <form:options items="${positions}" />
                                     </form:select>
                                 </div>
@@ -253,99 +266,7 @@
 
 </section>
 
-
-    <%--<p>--%>
-    <%--Countries:--%>
-    <%--<select onchange="getCities(this)">--%>
-        <%--<option>--Select a country</option>--%>
-        <%--<c:forEach items="${countries}" var="country">--%>
-            <%--<option value="${country.countryCode}">${country.name}</option>--%>
-        <%--</c:forEach>--%>
-    <%--</select>--%>
-<%--</p>--%>
-<%--<div class="text-center"><h1>Employee Registration</h1></div>--%>
-
-<%--<form:form commandName="user" method="post" class="form-horizontal" role="form" enctype="multipart/form-data">--%>
-
-    <%--<form:input path="username" id="username" type="text" class="form-control typeahead"/>--%>
-
-    <%--<form:input path="firstName" id="firstName" type="text" class="form-control typeahead"/>--%>
-
-    <%--<form:input path="lastName" id="lastName" type="text" class="form-control typeahead" placeholder="Last Name"/>--%>
-
-    <%--<form:input path="middleName" id="middleName" type="text" class="form-control typeahead"/>--%>
-
-    <%--<form:input path="emailAddress" value="mehdi@me.com" id="emailAddress" type="text" class="form-control typeahead"/>--%>
-
-    <%--<form:input path="phoneNo1" value="(074) 2460975" id="phoneNo1" type="text" class="form-control typeahead"/>--%>
-
-    <%--<form:input path="phoneNo2" value="(074) 2460975" id="phoneNo2" type="text" class="form-control typeahead"/>--%>
-
-    <%--<form:select path="gender">--%>
-        <%--<form:option value="-" label="--Please Select"/>--%>
-        <%--<form:options items="${genders}"/>--%>
-    <%--</form:select>--%>
-
-    <%--<form:input path="birthDate" value="1986-07-29" id="birthDate" type='date' class="form-control"--%>
-                <%--data-date-format="YYYY-MM-DD" placeholder="YYYY-MM-DD"/>--%>
-
-    <%--<form:password path="password" id="password" class="form-control tagsinput"/>--%>
-
-    <%--<form:input path="repassword" class="form-control tagsinput" placeholder="* * * * * *"/>--%>
-
-
-    <%--<form:select path="position">--%>
-        <%--<form:option value="-" label="--Please Select"/>--%>
-        <%--<form:options items="${positions}" />--%>
-    <%--</form:select>--%>
-
-    <%--<select onchange="getCities(this)">--%>
-        <%--<option>--Select a country</option>--%>
-        <%--<c:forEach items="${countries}" var="country">--%>
-            <%--<option value="${country.countryCode}">${country.name}</option>--%>
-        <%--</c:forEach>--%>
-    <%--</select>--%>
-
-    <%--<form:select id="cities" path="cityOfBorn">--%>
-        <%--<form:option value="">--Please Select</form:option>--%>
-    <%--</form:select>--%>
-
-    <%--<select onchange="getSections(this)">--%>
-        <%--<option>--Select a department</option>--%>
-        <%--<c:forEach items="${departments}" var="departmet">--%>
-            <%--<option value="${departmet.departmentId}">${departmet.name}</option>--%>
-        <%--</c:forEach>--%>
-    <%--</select>--%>
-
-    <%--<form:select id="section" path="section">--%>
-        <%--<form:options items="${sections}"/>--%>
-    <%--</form:select>--%>
-
-
-    <%--<form:textarea path="address" value="Tehran - Iran" id="address" class="form-control typeahead"/>--%>
-
-    <%--<form:input path="website" value="www.your-domain.com" id="website" class="form-control typeahead"/>--%>
-
-    <%--<input type="file" name="userPic" id="profilePicture" class="form-control file"/>--%>
-
-    <%--<form:input path="referrerName" value="Morteza AfsariKashi" id="referrerName" class="form-control typeahead"/>--%>
-
-    <%--<form:textarea path="referrerAddress" id="referrerAddress" cols="30" rows="10" value="Tehran Iran"--%>
-                   <%--class="form-control typeahead" placeholder="Tehran Iran"/>--%>
-
-    <%--<form:input path="referrerPhoneNo1" value="09335787555" id="referrerPhoneNo1" class="form-control typeahead"/>--%>
-
-    <%--<form:input path="referrerPhoneNo2" value="09335787777" id="referrerPhoneNo2" class="form-control typeahead"/>--%>
-
-    <%--<div class="form-group">--%>
-        <%--<div class="col-lg-3 col-lg-offset-5">--%>
-            <%--<button type="submit" class="btn btn-purple btn-block">Register Employee</button>--%>
-        <%--</div>--%>
-    <%--</div>--%>
-<%--</form:form>--%>
-
 <c:import url="../../includes/footer.jsp"/>
-<script src="${resourceURL}/js/additional/signup.js" type="text/javascript"></script>
 
 <c:url var="findCitiesURL" value="/city/list"/>
 <c:url var="findSectionURL" value="/section/list"/>
@@ -384,6 +305,5 @@
         }, "json");
     }
 </script>
-    <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>

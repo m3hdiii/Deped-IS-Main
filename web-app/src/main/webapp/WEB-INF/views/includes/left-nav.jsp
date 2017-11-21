@@ -26,7 +26,7 @@
         </c:choose>
 
 
-        <h4 class="user-name">Name Here</h4>
+        <h4 class="user-name">${user.firstName} ${user.lastName}</h4>
 
         <div class="dropdown user-login">
             <button class="btn btn-xs dropdown-toggle btn-rounded" type="button" data-toggle="dropdown"

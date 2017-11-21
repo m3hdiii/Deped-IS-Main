@@ -77,8 +77,13 @@ public class UserController extends AbstractMainController<User, Long> {
     }
 
 
-    @RequestMapping(value = {CREATE_MAPPING}, method = POST)
-    public ModelAndView createActionMain(@RequestParam MultipartFile userPic, @Valid @ModelAttribute("user") User entity) {
+    @RequestMapping(value = CREATE_MAPPING, method = POST)
+    public ModelAndView createActionMain(@RequestParam MultipartFile userPic, @Valid @ModelAttribute("user") User entity, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            return new ModelAndView(CREATE_VIEW_PAGE, "user", entity);
+        }
+
         Map<String, Object> model = new HashMap<>();
         byte[] picture = null;
         if (userPic != null) {

@@ -136,7 +136,7 @@ public class User implements Serializable {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "birth_date")
-    @NotEmpty(message = "Birthday field can not be blank")
+//    @NotEmpty(message = "Birthday field can not be blank")
     private Date birthDate;
 
 
