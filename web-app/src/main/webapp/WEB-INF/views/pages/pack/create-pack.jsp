@@ -11,7 +11,7 @@
 
 <c:url value="/" var="routePath" scope="request"/>
 <c:import url="../../includes/head.jsp">
-    <c:param name="title" value="EDIT LATER"/>
+    <c:param name="title" value="Create Pack"/>
     <c:param name="description" value="EDIT LATER PAGE"/>
 </c:import>
 

@@ -18,8 +18,8 @@
 <c:url value="/public" var="resourceURL" scope="request"/>
 <c:url value="/" var="routePath" scope="request"/>
 <c:import url="../../includes/head.jsp">
-    <c:param name="title" value="Item Registration"/>
-    <c:param name="description" value="Item Registration Page"/>
+    <c:param name="title" value="Create Order"/>
+    <c:param name="description" value="Create Order Page"/>
 </c:import>
 <html>
 <body>

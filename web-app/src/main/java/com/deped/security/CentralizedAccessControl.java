@@ -11,7 +11,8 @@ public class CentralizedAccessControl {
     public boolean checkUserChangeInfoAccess(Authentication authentication, Long id) {
         User user = ((UserDetailsServiceImpl.CustomSpringSecurityUser) authentication.getPrincipal()).getUser();
         Long userId = user.getUserId();
-        return userId == id;
+        boolean isTheSamePerson = (userId == id);
+        return isTheSamePerson;
 
     }
 }

@@ -20,8 +20,8 @@
 
 <html>
 <c:import url="../../includes/head.jsp">
-    <c:param name="title" value="Item Registration"/>
-    <c:param name="description" value="Item Registration Page"/>
+    <c:param name="title" value="Basket"/>
+    <c:param name="description" value="Basket Page"/>
 </c:import>
 
 <body>

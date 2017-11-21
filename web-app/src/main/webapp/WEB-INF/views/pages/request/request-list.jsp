@@ -14,7 +14,7 @@
 
 <c:url value="/" var="routePath" scope="request"/>
 <c:import url="../../includes/head.jsp">
-    <c:param name="title" value="Item"/>
+    <c:param name="title" value="Request Manager"/>
     <c:param name="description" value="List of Item"/>
 </c:import>
 

@@ -20,7 +20,7 @@
 
 <html>
 <c:import url="../../includes/head.jsp">
-    <c:param name="title" value="Item Registration"/>
+    <c:param name="title" value="Request Manager"/>
     <c:param name="description" value="Item Registration Page"/>
 </c:import>
 

@@ -1,6 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
+<sec:authentication var="pc" property="principal"/>
+<c:set var="user" value="${pc.user}"/>
 <header class="top-head container-fluid">
     <button type="button" class="navbar-toggle pull-left">
         <span class="sr-only">Toggle navigation</span>
@@ -12,7 +15,7 @@
     <nav class=" navbar-default hidden-xs" role="navigation">
         <ul class="nav navbar-nav">
             <li><a href="/dashboard">Home</a></li>
-            <li><a href="/user/">Profile</a></li>
+            <li><a href="/user/${user.userId}">Profile</a></li>
             <li class="dropdown">
                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">Search & Filter <span class="caret"></span></a>
                 <ul role="menu" class="dropdown-menu">

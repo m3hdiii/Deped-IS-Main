@@ -64,7 +64,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/role/**").hasRole("ADMIN")
 
                 .antMatchers("/user/list").access("hasRole('ROLE_CHIEF') OR hasRole('ROLE_ADMIN')")
-                .antMatchers("/user/*").access("hasRole('ROLE_CHIEF') OR hasRole('ROLE_ADMIN')")
+                .antMatchers("/user/{userId}").access("@centralizedAccessControl.checkUserChangeInfoAccess(authentication, #userId) OR hasRole('ROLE_CHIEF') OR hasRole('ROLE_ADMIN')")
 
                 .antMatchers("/user/update/*", "/user/create").hasRole("ADMIN")
 
