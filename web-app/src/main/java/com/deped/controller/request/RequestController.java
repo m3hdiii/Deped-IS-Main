@@ -4,13 +4,10 @@ import com.deped.controller.AbstractMainController;
 import com.deped.model.account.User;
 import com.deped.model.request.Request;
 import com.deped.model.request.RequestStatus;
-import com.deped.security.UserDetailsServiceImpl;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -124,8 +121,7 @@ public class RequestController extends AbstractMainController<Request, Long> {
     @RequestMapping(value = {CREATE_MAPPING}, method = POST)
     public ModelAndView createActionWithRedirect(@Valid @ModelAttribute("request") Request entity, final RedirectAttributes redirectAttributes) {
         entity.setRequestDate(new Date());
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = ((UserDetailsServiceImpl.CustomSpringSecurityUser) authentication.getPrincipal()).getUser();
+        User user = getUserFromSpringSecurityContext();
         entity.setUser(user);
 
         ResponseEntity<Request> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Request.class);

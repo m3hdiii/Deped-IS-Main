@@ -15,12 +15,9 @@ import com.deped.model.order.OrderDetailsState;
 import com.deped.model.order.OrderState;
 import com.deped.model.pack.Pack;
 import com.deped.model.supply.Supplier;
-import com.deped.security.UserDetailsServiceImpl;
 import com.deped.utils.SystemUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -535,8 +532,8 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         HttpEntity<OrderDetails[]> httpEntity = new HttpEntity<>(orderDetailsArray, headers);
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = ((UserDetailsServiceImpl.CustomSpringSecurityUser) authentication.getPrincipal()).getUser();
+
+        User user = getUserFromSpringSecurityContext();
         Long userId = user.getUserId();
 
         String restUrl = String.format((BASE_URL + UPDATE_STATE_REST), userId, state.ordinal());

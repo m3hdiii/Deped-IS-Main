@@ -12,12 +12,9 @@ import com.deped.model.request.Request;
 import com.deped.model.request.RequestDetails;
 import com.deped.model.request.RequestDetailsStatus;
 import com.deped.model.request.RequestStatus;
-import com.deped.security.UserDetailsServiceImpl;
 import com.deped.utils.SystemUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -428,8 +425,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<RequestDetails[]> httpEntity = new HttpEntity<>(requestDetailsArray, headers);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = ((UserDetailsServiceImpl.CustomSpringSecurityUser) authentication.getPrincipal()).getUser();
+        User user = getUserFromSpringSecurityContext();
         Long userId = user.getUserId();
         String restUrl = String.format((BASE_URL + UPDATE_STATUS_REST), userId, status.ordinal());
 

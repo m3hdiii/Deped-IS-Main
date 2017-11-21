@@ -2,6 +2,7 @@ package com.deped.controller;
 
 import com.deped.ResultBean;
 import com.deped.model.Response;
+import com.deped.model.account.User;
 import com.deped.model.category.Category;
 import com.deped.model.config.client.ClientEnumKey;
 import com.deped.model.items.Item;
@@ -12,10 +13,13 @@ import com.deped.model.pack.Pack;
 import com.deped.model.security.Role;
 import com.deped.model.supply.Supplier;
 import com.deped.repository.utils.Range;
+import com.deped.security.UserDetailsServiceImpl;
 import com.deped.utils.ImageUtils;
 import com.deped.utils.SystemUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -309,4 +313,18 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
             SharedData.getDepartments(isUpdated);
         }
     }
+
+    public User getUserFromSpringSecurityContext() {
+        User user = null;
+        if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Object principal = authentication.getPrincipal();
+            if (principal != null)
+                user = ((UserDetailsServiceImpl.CustomSpringSecurityUser) principal).getUser();
+        }
+
+        return user;
+
+    }
+
 }

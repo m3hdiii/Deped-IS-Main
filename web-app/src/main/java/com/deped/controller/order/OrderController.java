@@ -5,13 +5,10 @@ import com.deped.model.account.User;
 import com.deped.model.order.Order;
 import com.deped.model.order.OrderState;
 import com.deped.model.order.Schedule;
-import com.deped.security.UserDetailsServiceImpl;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -82,10 +79,9 @@ public class OrderController extends AbstractMainController<Order, Long> {
             ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
             return mv;
         }
-
         entity.setOrderDate(new Date());
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = ((UserDetailsServiceImpl.CustomSpringSecurityUser) authentication.getPrincipal()).getUser();
+
+        User user = getUserFromSpringSecurityContext();
         entity.setUser(user);
 
         ResponseEntity<Order> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Order.class);

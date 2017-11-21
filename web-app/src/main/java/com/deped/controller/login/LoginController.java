@@ -4,9 +4,12 @@ import com.deped.controller.ConstantController;
 import com.deped.model.Response;
 import com.deped.model.ResponseStatus;
 import com.deped.model.account.User;
+import com.deped.security.UserDetailsServiceImpl;
 import com.deped.utils.NetworkUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -18,6 +21,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
@@ -46,7 +50,23 @@ public class LoginController {
     private HttpServletRequest request;
 
     @RequestMapping(value = {"", HOME, INDEX, MAIN, LOGIN}, method = RequestMethod.GET)
-    public String renderLogin(@ModelAttribute("user") User user) {
+    public String renderLogin(HttpServletResponse response) {
+        User user = null;
+        if (SecurityContextHolder.getContext() != null && SecurityContextHolder.getContext().getAuthentication() != null) {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            Object principal = authentication.getPrincipal();
+            if (principal != null)
+                try {
+                    user = ((UserDetailsServiceImpl.CustomSpringSecurityUser) principal).getUser();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+        }
+
+        if (user != null) {
+            return "redirect:/dashboard";
+        }
+
         return "center/login";
     }
 
