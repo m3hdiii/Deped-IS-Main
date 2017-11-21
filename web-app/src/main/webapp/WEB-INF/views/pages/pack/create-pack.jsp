@@ -42,7 +42,7 @@
                                 <c:if test="${not empty errors}">
                                     <div>
                                         <ul class="list-group">
-                                            <c:forEach items="${fieldErrors}" var="error" varStatus="loop">
+                                            <c:forEach items="${errors}" var="error" varStatus="loop">
                                                 <li class="list-group-item list-group-item-warning text-danger"><span
                                                         class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
                                                 </li>
@@ -77,10 +77,13 @@
                                             <form:textarea type="text" path="description" class="form-control"
                                                            placeholder="Pack Description Here..." cols="3" rows="3" id="newPackDesc" maxlength="100"></form:textarea>
                                         </div>
-                                        <div class="form-group">
-                                            <label for="newPackCapacity">Capacity</label>
-                                            <form:input type="number" min="0" path="capacity" id="newPackCapacity" class="form-control"/>
-                                        </div>
+
+                                        <%--Capacity of package--%>
+
+                                        <%--<div class="form-group">--%>
+                                            <%--<label for="newPackCapacity">Capacity</label>--%>
+                                            <%--<form:input type="number" min="0" path="capacity" id="newPackCapacity" class="form-control"/>--%>
+                                        <%--</div>--%>
                                     </div>
                                 </div>
                                 <div class="modal-footer">

@@ -115,7 +115,7 @@
                                 <a href="/brand/list" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i>
                                     Back</a>
                                 <div class="button-footer pull-right">
-                                        <%--<button type="reset" value="Clear" class="btn btn-default">Reset</button>--%>
+                                    <input type="reset" value="Clear" class="btn btn-default" value="Reset"/>
                                     <button type="submit" value="Update" class="btn btn-primary">Update</button>
                                 </div>
                             </div>
