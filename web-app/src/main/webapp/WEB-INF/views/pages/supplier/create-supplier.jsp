@@ -11,8 +11,8 @@
 
 <c:url value="/" var="routePath" scope="request"/>
 <c:import url="../../includes/head.jsp">
-    <c:param name="title" value="EDIT LATER"/>
-    <c:param name="description" value="EDIT LATER PAGE"/>
+    <c:param name="title" value="Create Supplier"/>
+    <c:param name="description" value="Supplier PAGE"/>
 </c:import>
 
 <body>
@@ -23,104 +23,209 @@
 
     <c:import url="../../includes/top-nav.jsp"/>
 
-    <div class="page-header">
-        <h3> Create Supplier </h3>
-    </div>
+        <div class="warper container-fluid">
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="panel panel-default">
-                <div class="panel-body">
-                    <c:choose>
-                        <c:when test="${not empty notCreated}">
-                            <p style="color: red;">${notCreated}</p>
-                        </c:when>
-                        <c:when test="${not empty successfullyCreated}">
-                            <p style="color: green;">${successfullyCreated}</p>
-                            &nbsp;&nbsp;<a href="/supplier/create">Create New Supplier</a>
-                        </c:when>
-                    </c:choose>
-                    <c:set var="errors"
-                           value="${requestScope['org.springframework.validation.BindingResult.supplier'].allErrors}"/>
+            <div class="page-header">
+                <h1>Supplier
+                    <small>DepEd-Baguio City Division Office</small>
+                </h1>
 
-                    <form:form commandName="supplier" method="post" class="form-horizontal"
-                               enctype="multipart/form-data">
-                        <c:if test="${not empty errors}">
-                            <div>
-                                <ul class="list-group">
-                                    <c:forEach items="${fieldErrors}" var="error" varStatus="loop">
-                                        <li class="list-group-item list-group-item-warning text-danger"><span
-                                                class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
-                                        </li>
-                                    </c:forEach>
-                                </ul>
+            </div>
+
+            <div class="row new-item-body">
+                <div class="col-md-12">
+                    <div class="col-md-8 col-md-offset-2">
+                        <c:set var="errors"
+                               value="${requestScope['org.springframework.validation.BindingResult.supplier'].allErrors}"/>
+
+                        <form:form commandName="supplier" method="post" class="form-horizontal"
+                                   enctype="multipart/form-data">
+
+                            <c:if test="${not empty errors}">
+                                <div>
+                                    <ul class="list-group">
+                                        <c:forEach items="${errors}" var="error" varStatus="loop">
+                                            <li class="list-group-item list-group-item-warning text-danger"><span
+                                                    class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                </div>
+                            </c:if>
+
+                            <div class="panel panel-default">
+                                <h3 class="text-center">Add New Supplier</h3>
+                                <div class="panel-body">
+                                    <div class="col-md-10 col-sm-offset-1">
+
+                                        <c:choose>
+                                            <c:when test="${not empty notCreated}">
+                                                <div class="alert alert-danger alert-dismissable fade in">
+                                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                    <strong>Failed!</strong> ${notCreated}.
+                                                </div>
+                                            </c:when>
+                                            <c:when test="${not empty successfullyCreated}">
+                                                <div class="alert alert-success alert-dismissable fade in">
+                                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                    <strong>Success!</strong> ${successfullyCreated}.
+                                                </div>
+                                            </c:when>
+                                        </c:choose>
+
+                                        <div class="form-group">
+                                            <label for="newSuppName">*Name</label>
+                                            <form:input path="name" type="text" class="form-control" id="newSuppName" placeholder="Name of the Supplier"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="newSuppDesc">Description</label>
+                                            <form:textarea path="description" type="text" class="form-control limit-char-45"
+                                                           cols="3" rows="3" id="newSuppDesc" maxlength="100" placeholder="Enter Description Here..."/>
+                                            <!--<span class="word-count">0</span> / <span class="word-left">100</span>-->
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="newSuppPhone">*Contact Number</label>
+                                            <form:input path="supplierContactNo1" type="number" class="form-control"
+                                                        id="newSuppPhone" placeholder="ex. 09123456789"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="newSuppTelephone">Contact Number 2</label>
+                                            <form:input path="supplierContactNo2" type="number" class="form-control"
+                                                        id="newSuppTelephone" placeholder="ex. 477-2380-32"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="newOfficeAddress">*Central Office Address</label>
+                                            <form:input path="supplierAddress" type="text" class="form-control"
+                                                        id="newOfficeAddress" placeholder="Supplier Central Office"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="newServiceAddress">Service Center Address</label>
+                                            <form:input path="remarks" type="text" class="form-control"
+                                                        id="newServiceAddress" placeholder="Supplier Service Center"/>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="newsuppPic">Supplier Image</label>
+                                            <input type="file" name="supplyPic" id="newsuppPic"/>
+                                        </div>
+                                    </div>
+                                </div><!-- New Supplier Body closing -->
+
+                                <div class="modal-footer">
+                                    <a href="/supplier/list" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i>
+                                        Back</a>
+                                    <div class="button-footer pull-right">
+                                        <input type="reset" value="Clear" class="btn btn-default"/>
+                                        <button type="submit" value="Submit" class="btn btn-primary">Create</button>
+                                    </div>
+                                </div>
                             </div>
-                        </c:if>
-
-
-                        <p>
-                        <div class="form-group">
-                            <label class="col-sm-2"> Name: </label>
-                            <form:input path="name" class="col-md-4"/>
-                        </div>
-                        </p>
-
-                        <p>
-                        <div class="form-group">
-                            <label class="col-sm-2"> Description: </label>
-                            <form:textarea path="description" class="col-md-4"/>
-                        </div>
-                        </p>
-
-                        <p>
-                        <div class="form-group">
-                            <label class="col-sm-2"> Contact Number: </label>
-                            <form:input path="supplierContactNo1" class="col-md-3"/>
-                        </div>
-                        </p>
-
-                        <p>
-                        <div class="form-group">
-                            <label class="col-sm-2"> Contact Number 2: </label>
-                            <form:input path="supplierContactNo2" class="col-md-3"/>
-                        </div>
-                        </p>
-
-                        <p>
-                        <div class="form-group">
-                            <label class="col-sm-2"> Central Office Address: </label>
-                            <form:input path="supplierAddress" class="col-md-4"/>
-                        </div>
-                        </p>
-
-                        <p>
-                        <div class="form-group">
-                            <label class="col-sm-2"> Service Center Address: </label>
-                            <form:input path="remarks" class="col-md-4"/>
-                        </div>
-                        </p>
-
-                        <div>
-                            <label class="col-sm-2"> Service Center Address: </label>
-                            <input type="file" name="supplyPic" id="brandPicture" class="col-md-4"/>
-                        </div>
-
-                        <p>
-                        <div class="form-group">
-                            <div class="col-md-2">
-                                <button type="submit" class="btn btn-green"> Create Supplier</button>
-                            </div>
-                            <div class="col-md-2">
-                                <button type="reset" class="btn btn-green"> Reset</button>
-                            </div>
-                        </div>
-                        </p>
-
-                    </form:form>
+                        </form:form>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <!-- Warper Ends Here (working area) -->
+
+
+    <%--<div class="page-header">--%>
+        <%--<h3> Create Supplier </h3>--%>
+    <%--</div>--%>
+
+    <%--<div class="row">--%>
+        <%--<div class="col-md-12">--%>
+            <%--<div class="panel panel-default">--%>
+                <%--<div class="panel-body">--%>
+                    <%--<c:choose>--%>
+                        <%--<c:when test="${not empty notCreated}">--%>
+                            <%--<p style="color: red;">${notCreated}</p>--%>
+                        <%--</c:when>--%>
+                        <%--<c:when test="${not empty successfullyCreated}">--%>
+                            <%--<p style="color: green;">${successfullyCreated}</p>--%>
+                            <%--&nbsp;&nbsp;<a href="/supplier/create">Create New Supplier</a>--%>
+                        <%--</c:when>--%>
+                    <%--</c:choose>--%>
+                    <%--<c:set var="errors"--%>
+                           <%--value="${requestScope['org.springframework.validation.BindingResult.supplier'].allErrors}"/>--%>
+
+                    <%--<form:form commandName="supplier" method="post" class="form-horizontal"--%>
+                               <%--enctype="multipart/form-data">--%>
+                        <%--<c:if test="${not empty errors}">--%>
+                            <%--<div>--%>
+                                <%--<ul class="list-group">--%>
+                                    <%--<c:forEach items="${fieldErrors}" var="error" varStatus="loop">--%>
+                                        <%--<li class="list-group-item list-group-item-warning text-danger"><span--%>
+                                                <%--class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}--%>
+                                        <%--</li>--%>
+                                    <%--</c:forEach>--%>
+                                <%--</ul>--%>
+                            <%--</div>--%>
+                        <%--</c:if>--%>
+
+
+                        <%--<p>--%>
+                        <%--<div class="form-group">--%>
+                            <%--<label class="col-sm-2"> Name: </label>--%>
+                            <%--<form:input path="name" class="col-md-4"/>--%>
+                        <%--</div>--%>
+                        <%--</p>--%>
+
+                        <%--<p>--%>
+                        <%--<div class="form-group">--%>
+                            <%--<label class="col-sm-2"> Description: </label>--%>
+                            <%--<form:textarea path="description" class="col-md-4"/>--%>
+                        <%--</div>--%>
+                        <%--</p>--%>
+
+                        <%--<p>--%>
+                        <%--<div class="form-group">--%>
+                            <%--<label class="col-sm-2"> Contact Number: </label>--%>
+                            <%--<form:input path="supplierContactNo1" class="col-md-3"/>--%>
+                        <%--</div>--%>
+                        <%--</p>--%>
+
+                        <%--<p>--%>
+                        <%--<div class="form-group">--%>
+                            <%--<label class="col-sm-2"> Contact Number 2: </label>--%>
+                            <%--<form:input path="supplierContactNo2" class="col-md-3"/>--%>
+                        <%--</div>--%>
+                        <%--</p>--%>
+
+                        <%--<p>--%>
+                        <%--<div class="form-group">--%>
+                            <%--<label class="col-sm-2"> Central Office Address: </label>--%>
+                            <%--<form:input path="supplierAddress" class="col-md-4"/>--%>
+                        <%--</div>--%>
+                        <%--</p>--%>
+
+                        <%--<p>--%>
+                        <%--<div class="form-group">--%>
+                            <%--<label class="col-sm-2"> Service Center Address: </label>--%>
+                            <%--<form:input path="remarks" class="col-md-4"/>--%>
+                        <%--</div>--%>
+                        <%--</p>--%>
+
+                        <%--<div>--%>
+                            <%--<label class="col-sm-2"> Service Center Address: </label>--%>
+                            <%--<input type="file" name="supplyPic" id="suppPicture" class="col-md-4"/>--%>
+                        <%--</div>--%>
+
+                        <%--<p>--%>
+                        <%--<div class="form-group">--%>
+                            <%--<div class="col-md-2">--%>
+                                <%--<button type="submit" class="btn btn-green"> Create Supplier</button>--%>
+                            <%--</div>--%>
+                            <%--<div class="col-md-2">--%>
+                                <%--<button type="reset" class="btn btn-green"> Reset</button>--%>
+                            <%--</div>--%>
+                        <%--</div>--%>
+                        <%--</p>--%>
+
+                    <%--</form:form>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+        <%--</div>--%>
+    <%--</div>--%>
 
             <c:import url="../../includes/footer.jsp"/>
 

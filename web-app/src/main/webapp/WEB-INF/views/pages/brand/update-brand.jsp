@@ -26,7 +26,7 @@
     <div class="warper container-fluid">
 
         <div class="page-header">
-            <h1>Update Brand
+            <h1>Brand
                 <small>DepEd-Baguio City Division Office</small>
             </h1>
 
@@ -53,7 +53,7 @@
                         </c:if>
 
                         <div class="panel panel-default">
-                            <h3 class="text-center">Current Brand Information</h3>
+                            <h3 class="text-center">Update Brand</h3>
                             <div class="panel-body">
                                 <div class="col-md-10 col-sm-offset-1">
 

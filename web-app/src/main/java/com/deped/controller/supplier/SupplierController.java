@@ -128,7 +128,7 @@ public class SupplierController extends AbstractMainController<Supplier, Long> {
     public ModelAndView renderListPage() {
         ResponseEntity<List<Supplier>> response = makeFetchAllRestRequest(BASE_NAME, HttpMethod.POST, new ParameterizedTypeReference<List<Supplier>>() {
         });
-        ModelAndView mv = listProcessing(response, "brands", LIST_VIEW_PAGE);
+        ModelAndView mv = listProcessing(response, "suppliers", LIST_VIEW_PAGE);
         return mv;
     }
 
