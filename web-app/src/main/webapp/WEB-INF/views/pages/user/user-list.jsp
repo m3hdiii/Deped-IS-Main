@@ -160,11 +160,11 @@
                                 <td>${user.section.name}</td>
 
                                 <td>
-                                    <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#view-user-modal"><i class="fa fa-eye"></i></a>
+                                    <a href="/user/${user.userId}" class="btn btn-primary"><i class="fa fa-eye"></i></a>
                                 </td>
                                 <sec:authorize access="hasRole('ROLE_ADMIN')">
                                 <td class="text-nowrap">
-                                    <a href="#" class="btn btn-purple"><i class="fa fa-pencil"></i></a>
+                                    <a href="/user/update/${user.userId}" class="btn btn-purple"><i class="fa fa-pencil"></i></a>
                                 </td>
                                 </sec:authorize>
                             </tr>
