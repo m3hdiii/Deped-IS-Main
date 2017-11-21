@@ -56,7 +56,7 @@ public class CityController extends AbstractMainController<City, Long> {
     @RequestMapping(value = RENDER_LIST_MAPPING_BY_COUNTRY_CODE, method = RequestMethod.POST)
     public @ResponseBody
     List<City> renderListPage(@PathVariable(ID_STRING_LITERAL) String countryCode) {
-        ResponseEntity<List<City>> response = makeFetchRestRequestByFreignKey(BASE_NAME, countryCode, HttpMethod.POST, new ParameterizedTypeReference<List<City>>() {
+        ResponseEntity<List<City>> response = makeFetchRestRequestByForeignKey(BASE_NAME, countryCode, HttpMethod.POST, new ParameterizedTypeReference<List<City>>() {
         });
         List<City> list = response.getBody();
         return list;

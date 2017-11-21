@@ -1,11 +1,9 @@
 package com.deped.restcontroller.places;
 
 import com.deped.model.Response;
-import com.deped.model.location.City;
 import com.deped.model.location.office.Section;
 import com.deped.repository.utils.Range;
 import com.deped.restcontroller.AbstractMainRestController;
-import com.deped.model.Operation;
 import com.deped.service.places.SectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +18,7 @@ public class SectionRestController extends AbstractMainRestController<Section, L
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
     private static final String FETCH_MAPPING = BASE_NAME + FETCH_PATTERN;
+    private static final String FETCH_MAPPING_BY_DEPARTMENT_ID = BASE_NAME + FETCH_PATTERN + FETCH_BY_ID_PATTERN;
     private static final String FETCH_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String FETCH_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
@@ -45,6 +44,12 @@ public class SectionRestController extends AbstractMainRestController<Section, L
     @RequestMapping(value = FETCH_MAPPING, method = RequestMethod.POST)
     public ResponseEntity<List<Section>> fetchAll() {
         ResponseEntity<List<Section>> response = sectionService.fetchAll();
+        return response;
+    }
+
+    @RequestMapping(value = FETCH_MAPPING_BY_DEPARTMENT_ID, method = RequestMethod.POST)
+    public ResponseEntity<List<Section>> fetchAllByDepartmentId(@PathVariable(ID_STRING_LITERAL) Long departmentId) {
+        ResponseEntity<List<Section>> response = sectionService.fetchAllByDepartment(departmentId);
         return response;
     }
 

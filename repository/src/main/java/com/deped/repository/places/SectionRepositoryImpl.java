@@ -1,15 +1,16 @@
 package com.deped.repository.places;
 
 import com.deped.model.location.office.Section;
-
-import static com.deped.repository.utils.ConstantValues.*;
-
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static com.deped.repository.utils.ConstantValues.*;
 
 @Repository
 public class SectionRepositoryImpl implements SectionRepository {
@@ -32,6 +33,7 @@ public class SectionRepositoryImpl implements SectionRepository {
         List<Section> sections = hibernateFacade.fetchAllEntity(FETCH_ALL_SECTION, Section.class);
         return sections;
     }
+
 
     @Override
     public List<Section> fetchByRange(Range range) {
@@ -57,5 +59,14 @@ public class SectionRepositoryImpl implements SectionRepository {
     @Override
     public Boolean createOrUpdateAll(Section... entities) {
         return null;
+    }
+
+    @Override
+    public List<Section> fetchAllByDepartment(Long departmentId) {
+        String sqlQuery = "SELECT * FROM section WHERE department_id = :departmentId";
+        Map<String, Object> parameterMap = new HashMap<>();
+        parameterMap.put("departmentId", departmentId);
+        List<Section> list = hibernateFacade.fetchAllEntityBySqlQuery(sqlQuery, null, Section.class, parameterMap);
+        return list;
     }
 }

@@ -41,6 +41,13 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
+    public ResponseEntity<List<Section>> fetchAllByDepartment(Long departmentId) {
+        List<Section> sections = sectionRepository.fetchAllByDepartment(departmentId);
+        ResponseEntity<List<Section>> responseEntity = new ResponseEntity<>(sections, OK);
+        return responseEntity;
+    }
+
+    @Override
     public ResponseEntity<List<Section>> fetchByRange(Range range) {
         List<Section> sections = sectionRepository.fetchByRange(range);
         ResponseEntity<List<Section>> responseEntity = new ResponseEntity<>(sections, OK);

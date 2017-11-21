@@ -1,14 +1,31 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
-<%--
-<sec:authentication var="principal" property="principal" />
-<c:set var="currentUser" value="${principal.user}" />
---%>
+
+<sec:authentication var="pc" property="principal"/>
+<c:set var="user" value="${pc.user}"/>
+
 <aside class="left-panel">
 
     <div class="user text-center">
-        <img src="${resourceURL}/images/avtar/user.png" class="img-circle" alt="...">
+
+        <c:choose>
+            <c:when test="${not empty user.picUrl}">
+                <img src="${sessionScope.baseUrl}${user.picUrl}" class="img-circle" alt="...">
+            </c:when>
+            <c:otherwise>
+                <c:if test="${user.gender eq 'FEMALE'}">
+                    <img src="${resourceURL}/images/avtar/user_female.png" class="img-circle" alt="...">
+                </c:if>
+
+                <c:if test="${user.gender eq 'MALE'}">
+                    <img src="${resourceURL}/images/avtar/user_male.png" class="img-circle" alt="...">
+                </c:if>
+
+            </c:otherwise>
+        </c:choose>
+
+
         <h4 class="user-name">Name Here</h4>
 
         <div class="dropdown user-login">

@@ -108,7 +108,7 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         return response;
     }
 
-    public ResponseEntity<List<T>> makeFetchRestRequestByFreignKey(String baseName, String foreignKeyValue, HttpMethod method, ParameterizedTypeReference<List<T>> typeRef) {
+    public ResponseEntity<List<T>> makeFetchRestRequestByForeignKey(String baseName, String foreignKeyValue, HttpMethod method, ParameterizedTypeReference<List<T>> typeRef) {
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity httpEntity = makeHttpEntity(null);
         String restUrl = String.format(FETCH_URL, baseName) + URL_SEPARATOR + foreignKeyValue;

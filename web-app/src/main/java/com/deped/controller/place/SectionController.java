@@ -143,14 +143,9 @@ public class SectionController extends AbstractMainController<Section, Long> {
     @RequestMapping(value = RENDER_LIST_MAPPING_BY_COUNTRY_CODE, method = RequestMethod.POST)
     public @ResponseBody
     List<Section> renderListPage(@PathVariable(ID_STRING_LITERAL) Long departmentId) {
-//        List<Department> departments = SharedData.getDepartments(false);
-//        for (Department dep : departments) {
-//            if (dep.getDepartmentId() == departmentId) {
-//                return dep.getSections();
-//            }
-//        }
-//        return null;
-        return null;
+        ResponseEntity<List<Section>> response = makeFetchRestRequestByForeignKey(BASE_NAME, String.valueOf(departmentId), HttpMethod.POST, new ParameterizedTypeReference<List<Section>>() {
+        });
+        return response.getBody();
     }
 
     @InitBinder
