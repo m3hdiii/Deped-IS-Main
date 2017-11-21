@@ -62,21 +62,24 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><span class="text-red">*</span> Email Address</label>
                                 <div class="col-sm-7">
-                                    <form:input path="emailAddress" name="email" id="emailAddress" type="emailAddress" class="form-control" placeholder="example@gmail.com"/>
+                                    <form:input path="emailAddress" id="emailAddress" type="emailAddress"
+                                                class="form-control" placeholder="example@gmail.com"/>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><span class="text-red">*</span> Password</label>
                                 <div class="col-sm-7">
-                                    <form:password path="password" id="password" name="password" class="form-control" placeholder="* * * * * * * * *"/>
+                                    <form:password path="password" id="password" class="form-control"
+                                                   placeholder="* * * * * * * * *"/>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><span class="text-red">*</span> Re-type Password</label>
                                 <div class="col-sm-7">
-                                    <form:input path="repassword" name="confirmPassword" type="password" class="form-control" placeholder="* * * * * * * * *"/>
+                                    <form:input path="repassword" type="password" class="form-control"
+                                                placeholder="* * * * * * * * *"/>
                                 </div>
                             </div>
 

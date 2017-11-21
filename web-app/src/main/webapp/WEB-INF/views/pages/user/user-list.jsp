@@ -16,7 +16,6 @@
 </c:import>
 
 <body>
-
 <c:import url="../../includes/left-nav.jsp"/>
 
 <section class="content">
@@ -51,88 +50,28 @@
                     <tbody>
                         <c:forEach items="${user}" var="user">
                             <tr>
-                                <c:choose>
-                                    <c:when test="${not empty user.picUrl}">
-                                        <td>
-                                            <img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>
-                                        </td>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <td>
-                                            <img src="../../${resourceURL}/images/avtar/user.png" class="img-circle" alt="User#1" width="50px" height="50px">
-                                        </td>
-                                    </c:otherwise>
-                                </c:choose>
+                                <td>
 
-                                <%--<c:choose>--%>
-                                    <%--<c:when test="${not empty user.picUrl}">--%>
-                                        <%--<c:choose>--%>
-                                            <%--<c:when test="${(user.accountStatus) eq ('EXPIRED')}">--%>
-                                                <%--<td>--%>
-                                                    <%--<div class="user-status invisibled pull-left">--%>
-                                                        <%--<img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>--%>
-                                                    <%--</div>--%>
-                                                <%--</td>--%>
-                                            <%--</c:when>--%>
-                                            <%--<c:when test="${(user.accountStatus) eq ('LOCKED')}">--%>
-                                                <%--<td>--%>
-                                                    <%--<div class="user-status busy pull-left">--%>
-                                                        <%--<img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>--%>
-                                                    <%--</div>--%>
-                                                <%--</td>--%>
-                                            <%--</c:when>--%>
-                                            <%--<c:when test="${(user.accountStatus) eq ('NOT_ACTIVE')}">--%>
-                                                <%--<td>--%>
-                                                    <%--<div class="user-status offline pull-left">--%>
-                                                        <%--<img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>--%>
-                                                    <%--</div>--%>
-                                                <%--</td>--%>
-                                            <%--</c:when>--%>
-                                            <%--<c:otherwise>--%>
-                                                <%--<td>--%>
-                                                    <%--<div class="user-status online pull-left">--%>
-                                                        <%--<img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>--%>
-                                                    <%--</div>--%>
-                                                <%--</td>--%>
-                                            <%--</c:otherwise>--%>
-                                        <%--</c:choose>--%>
-                                    <%--</c:when>--%>
-                                    <%--<c:otherwise>--%>
-                                        <%--<c:when test="${(user.accountStatus) eq ('EXPIRED')}">--%>
-                                            <%--<td>--%>
-                                                <%--<div class="user-status invisibled pull-left">--%>
-                                                    <%--<img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>--%>
-                                                <%--</div>--%>
-                                            <%--</td>--%>
-                                        <%--</c:when>--%>
-                                        <%--<c:when test="${(user.accountStatus) eq ('LOCKED')}">--%>
-                                            <%--<td>--%>
-                                                <%--<div class="user-status busy pull-left">--%>
-                                                    <%--<img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>--%>
-                                                <%--</div>--%>
-                                            <%--</td>--%>
-                                        <%--</c:when>--%>
-                                        <%--<c:when test="${(user.accountStatus) eq ('NOT_ACTIVE')}">--%>
-                                            <%--<td>--%>
-                                                <%--<div class="user-status offline pull-left">--%>
-                                                    <%--<img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>--%>
-                                                <%--</div>--%>
-                                            <%--</td>--%>
-                                        <%--</c:when>--%>
-                                        <%--<c:otherwise>--%>
-                                            <%--<td>--%>
-                                                <%--<div class="user-status online pull-left">--%>
-                                                    <%--<img src="${baseUrl}${user.picUrl}" class="img-circle" alt="user image" width="50px" height="50px"/>--%>
-                                                <%--</div>--%>
-                                            <%--</td>--%>
-                                        <%--</c:otherwise>--%>
-                                    <%--</c:otherwise>--%>
-                                <%--</c:choose>--%>
-                                <!-- <td>
-                                   <div class="user-status busy pull-left">
-                                       <img src="../../assets/images/avtar/user.png" class="img-circle" alt="User#1" width="50px" height="50px">
-                                   </div>
-                               </td> -->
+                                    <c:choose>
+                                        <c:when test="${not empty user.picUrl}">
+                                            <img src="${sessionScope.baseUrl}${user.picUrl}" class="img-circle"
+                                                 alt="..." width="50px" height="50px">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:if test="${user.gender eq 'FEMALE'}">
+                                                <img src="${resourceURL}/images/avtar/user_female.png"
+                                                     class="img-circle"
+                                                     alt="..." width="50px" height="50px">
+                                            </c:if>
+
+                                            <c:if test="${user.gender eq 'MALE'}">
+                                                <img src="${resourceURL}/images/avtar/user_male.png" class="img-circle"
+                                                     alt="..." width="50px" height="50px">
+                                            </c:if>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+
                                 <td>
                                     <div class="name">
                                             ${user.firstName} ${user.middleName} ${user.lastName}
