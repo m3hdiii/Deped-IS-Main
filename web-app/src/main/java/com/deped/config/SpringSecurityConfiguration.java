@@ -67,8 +67,8 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/update/*", "/user/create").hasRole("ADMIN")
 
 
-                .antMatchers("/request/create").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_PERSONNEL') OR hasRole('ROLE_USER') OR hasRole('ROLE_SUPPLY_OFFICER')")
-                .antMatchers("/request-details/create/*").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_PERSONNEL') OR hasRole('ROLE_USER') OR hasRole('ROLE_SUPPLY_OFFICER')")
+                .antMatchers("/request/create").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_PERSONNEL') OR hasRole('ROLE_CHIEF') OR hasRole('ROLE_SUPPLY_OFFICER')")
+                .antMatchers("/request-details/create/*").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_PERSONNEL') OR hasRole('ROLE_CHIEF') OR hasRole('ROLE_SUPPLY_OFFICER')")
 
                 .antMatchers("/request/approval-list").access("hasRole('ROLE_CHIEF') OR hasRole('ROLE_SUPPLY_OFFICER')")
                 .antMatchers("/request-details/approval/*").access("hasRole('ROLE_CHIEF') OR hasRole('ROLE_SUPPLY_OFFICER')")
@@ -76,7 +76,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/request/release-list").hasRole("SUPPLY_OFFICER")
                 .antMatchers("/request-details/issue/*").hasRole("SUPPLY_OFFICER")
 
-                .antMatchers("/dashboard").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_PERSONNEL') OR hasRole('ROLE_USER') OR hasRole('ROLE_SUPPLY_OFFICER')")
+                .antMatchers("/dashboard").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_PERSONNEL') OR hasRole('ROLE_CHIEF') OR hasRole('ROLE_SUPPLY_OFFICER')")
 
                 .antMatchers("/", "/login/", "/forgot-password").permitAll();
 
