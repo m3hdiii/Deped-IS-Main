@@ -205,13 +205,15 @@
             </sec:authorize>
 
             <sec:authorize access="hasRole('ROLE_ADMIN')">
-            <li class="has-submenu" data-toggle="tooltip" title="Department"><a href="#"><i class="fa fa-gears"></i>
+            <li class="has-submenu" data-toggle="tooltip" title="Role"><a href="#"><i class="fa fa-gears"></i>
                 <span class="nav-label">Roles</span></a>
                 <ul class="list-unstyled">
                     <li><a href="/role/list">Role List</a></li>
                     <li><a href="/role/create">Create Role</a></li>
                 </ul>
             </li>
+            <li><a href="#"><i class="fa fa-refresh" data-toggle="tooltip" title="Refresh Database"></i><span
+                    class="nav-label">Refresh Database</span></a></li>
             </sec:authorize>
             <li><a href="/logout"><i class="fa fa-sign-out" data-toggle="tooltip" title="Sign Out"></i><span
                     class="nav-label">Sign Out</span></a></li>
