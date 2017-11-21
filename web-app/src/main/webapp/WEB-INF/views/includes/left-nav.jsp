@@ -186,7 +186,7 @@
                     </ul>
                 </li>
             </sec:authorize>
-            <li><a href="signin.html"><i class="fa fa-sign-out" data-toggle="tooltip" title="Sign Out"></i><span
+            <li><a href="/logout"><i class="fa fa-sign-out" data-toggle="tooltip" title="Sign Out"></i><span
                     class="nav-label">Sign Out</span></a></li>
         </ul>
     </nav>
