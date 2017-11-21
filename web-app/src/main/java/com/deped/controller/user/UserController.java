@@ -17,15 +17,14 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.imageio.ImageIO;
 import javax.validation.Valid;
-import java.awt.image.BufferedImage;
 import java.beans.PropertyEditorSupport;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -78,33 +77,27 @@ public class UserController extends AbstractMainController<User, Long> {
 
 
     @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createActionMain(@RequestParam MultipartFile userPic, @Valid @ModelAttribute("user") User entity, BindingResult bindingResult) {
+    public ModelAndView createActionMain(@RequestParam MultipartFile userPic, @Valid @ModelAttribute(BASE_NAME) User entity, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
-            return new ModelAndView(CREATE_VIEW_PAGE, "user", entity);
+            return new ModelAndView(CREATE_VIEW_PAGE, BASE_NAME, entity);
         }
 
-        Map<String, Object> model = new HashMap<>();
-        byte[] picture = null;
-        if (userPic != null) {
-            try {
-                picture = userPic.getBytes();
-                if (picture == null)
-                    throw new IOException("file is empty");
-
-                BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(picture));
-                if (bufferedImage == null) {
-                    throw new IOException("this is not a picture");
+        try {
+            byte[] fileBytes = userPic.getBytes();
+            if (userPic != null && fileBytes != null && fileBytes.length != 0) {
+                boolean isImage = ImageUtils.isImage(fileBytes);
+                if (isImage) {
+                    String encodeBase64 = ImageUtils.encodeBase64(fileBytes);
+                    entity.setPictureBase64(encodeBase64);
+                } else {
+                    bindingResult.addError(new FieldError("Item", "pictureBase64", "Your file is suspicious and it's not an image. Your actions will be logged"));
                 }
-                boolean isFileExtensionOK = ImageUtils.isImage(picture);
-                if (!isFileExtensionOK)
-                    throw new IOException("file extension problem");
-                entity.setPicture(userPic);
-
-            } catch (IOException e) {
-                e.printStackTrace();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
 
         return new ModelAndView(CREATE_VIEW_PAGE);
     }
@@ -133,12 +126,18 @@ public class UserController extends AbstractMainController<User, Long> {
     public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
         ResponseEntity<User> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, User.class);
         User user = response.getBody();
-        return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, user);
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("genders", Gender.values());
+        modelMap.put("positions", Position.values());
+        modelMap.put("countries", SharedData.getCountries(false));
+        modelMap.put("departments", SharedData.getDepartments(false));
+        modelMap.put("user", user);
+        return new ModelAndView(UPDATE_VIEW_PAGE, modelMap);
     }
 
     @Override
-    @RequestMapping(value = UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(Long aLong, User entity, BindingResult bindingResult) {
+    @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
+    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) User entity, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
         }

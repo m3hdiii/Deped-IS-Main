@@ -7,7 +7,6 @@ import com.deped.protection.validators.fieldmatcher.FieldMatch;
 import com.deped.protection.validators.xss.XSS;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -205,7 +204,7 @@ public class User implements Serializable {
     private String picUrl;
 
     @Transient
-    private MultipartFile picture;
+    private String pictureBase64;
 
     @ManyToMany/*(cascade = CascadeType.ALL)*/
     @JoinTable(
@@ -224,7 +223,7 @@ public class User implements Serializable {
         this.userId = userId;
     }
 
-    public User(String username, String password, AccountStatus accountStatus, String firstName, String lastName, String middleName, String emailAddress, String phoneNo1, String phoneNo2, Gender gender, Date birthDate, Date employmentDate, Position position, String address, String website, MultipartFile picture, Date creationDate, String referrerName, String referrerAddress, String referrerPhoneNo1, String referrerPhoneNo2, Section section, Integer age) {
+    public User(String username, String password, AccountStatus accountStatus, String firstName, String lastName, String middleName, String emailAddress, String phoneNo1, String phoneNo2, Gender gender, Date birthDate, Date employmentDate, Position position, String address, String website, Date creationDate, String referrerName, String referrerAddress, String referrerPhoneNo1, String referrerPhoneNo2, Section section, Integer age) {
         this.username = username;
         this.password = password;
         this.accountStatus = accountStatus;
@@ -240,7 +239,6 @@ public class User implements Serializable {
         this.position = position;
         this.address = address;
         this.website = website;
-        this.picture = picture;
         this.creationDate = creationDate;
         this.referrerName = referrerName;
         this.referrerAddress = referrerAddress;
@@ -379,12 +377,12 @@ public class User implements Serializable {
         this.website = website;
     }
 
-    public MultipartFile getPicture() {
-        return picture;
+    public String getPictureBase64() {
+        return pictureBase64;
     }
 
-    public void setPicture(MultipartFile picture) {
-        this.picture = picture;
+    public void setPictureBase64(String pictureBase64) {
+        this.pictureBase64 = pictureBase64;
     }
 
     public String getReferrerName() {

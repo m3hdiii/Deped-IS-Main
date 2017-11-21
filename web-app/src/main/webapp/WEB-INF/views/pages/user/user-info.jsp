@@ -40,7 +40,23 @@
         <div class="row profile-body">
             <div class="col-md-12 col-sm-6">
                 <div class="prof-image-container">
-                    <img src="${resourceURL}/images/avtar/user.png" class="img-circle prof-image" alt="...">
+                    <c:choose>
+                        <c:when test="${not empty userInfo.picUrl}">
+                            <img src="${sessionScope.baseUrl}${userInfo.picUrl}" class="img-circle prof-image"
+                                 alt="...">
+                        </c:when>
+                        <c:otherwise>
+                            <c:if test="${userInfo.gender eq 'FEMALE'}">
+                                <img src="${resourceURL}/images/avtar/user_female.png" class="img-circle prof-image"
+                                     alt="...">
+                            </c:if>
+
+                            <c:if test="${userInfo.gender eq 'MALE'}">
+                                <img src="${resourceURL}/images/avtar/user_male.png" class="img-circle prof-image"
+                                     alt="...">
+                            </c:if>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
                 <div class="panel panel-default clearfix rounded icon-bar border-radius-20">
                     <div class="panel-container">
