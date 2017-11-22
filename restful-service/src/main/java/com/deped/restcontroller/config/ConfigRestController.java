@@ -2,6 +2,7 @@ package com.deped.restcontroller.config;
 
 import com.deped.model.config.client.ClientConfig;
 import com.deped.model.config.client.ClientEnumKey;
+import com.deped.utils.NetworkUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,9 +37,22 @@ public class ConfigRestController {
     }
 
     public String getBaseUrl() {
+        InetAddress network = null;
+        try {
+            network = NetworkUtils.getLocalHostLANAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+
+        String host = network.getHostAddress();
+
+        if (host == null) {
+            return null;
+        }
+
         String formatUrl = "%s://%s%s%s";
         String serverPort = (request.getServerPort() == 80) ? "" : ":" + request.getServerPort();
-        String url = String.format(formatUrl, request.getScheme(), request.getServerName(), serverPort, request.getContextPath());
+        String url = String.format(formatUrl, request.getScheme(), host, serverPort, request.getContextPath());
         return url;
     }
 }
