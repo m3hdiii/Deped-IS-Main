@@ -84,7 +84,7 @@
 
             <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER') OR hasRole('ROLE_CHIEF')">
                 <li class="has-submenu" data-toggle="tooltip" title="Order Manager"><a href="#"><i
-                        class="fa fa-truck"></i>
+                        class="fa fa-shopping-cart"></i>
                     <span class="nav-label">Order Manager</span></a>
                     <ul class="list-unstyled">
                         <sec:authorize access="hasRole('ROLE_CHIEF')">
@@ -113,7 +113,7 @@
             </sec:authorize>
             <sec:authorize access="hasRole('ROLE_ADMIN') OR hasRole('ROLE_CHIEF')">
                 <li class="has-submenu" data-toggle="tooltip" title="User Manager"><a href="#"><i
-                        class="fa fa-users"></i>
+                        class="fa fa-user"></i>
                     <span class="nav-label">User Manager</span></a>
                     <ul class="list-unstyled">
                         <sec:authorize access="hasRole('ROLE_ADMIN') OR hasRole('ROLE_CHIEF')">
@@ -126,7 +126,7 @@
                 </li>
             </sec:authorize>
             <sec:authorize access="hasRole('ROLE_ADMIN') OR hasRole('ROLE_SUPPLY_OFFICER')">
-                <li class="has-submenu" data-toggle="tooltip" title="Category"><a href="#"><i class="fa fa-gears"></i>
+                <li class="has-submenu" data-toggle="tooltip" title="Category"><a href="#"><i class="fa fa-table"></i>
                     <span
                             class="nav-label">Category</span></a>
                     <ul class="list-unstyled">
@@ -140,7 +140,7 @@
                 </li>
             </sec:authorize>
             <sec:authorize access="hasRole('ROLE_ADMIN')">
-                <li class="has-submenu" data-toggle="tooltip" title="Department"><a href="#"><i class="fa fa-gears"></i>
+                <li class="has-submenu" data-toggle="tooltip" title="Department"><a href="#"><i class="fa fa-caret-square-o-up"></i>
                     <span class="nav-label">Department</span></a>
                     <ul class="list-unstyled">
                         <li><a href="/department/list">Department List</a></li>
@@ -148,7 +148,7 @@
                     </ul>
                 </li>
 
-                <li class="has-submenu" data-toggle="tooltip" title="Section"><a href="#"><i class="fa fa-gears"></i>
+                <li class="has-submenu" data-toggle="tooltip" title="Section"><a href="#"><i class="fa fa-caret-square-o-down"></i>
                     <span
                             class="nav-label">Section</span></a>
                     <ul class="list-unstyled">
@@ -158,7 +158,7 @@
                 </li>
             </sec:authorize>
             <sec:authorize access="hasRole('ROLE_ADMIN') OR hasRole('ROLE_SUPPLY_OFFICER')">
-                <li class="has-submenu" data-toggle="tooltip" title="Brand"><a href="#"><i class="fa fa-gears"></i>
+                <li class="has-submenu" data-toggle="tooltip" title="Brand"><a href="#"><i class="fa fa-tags"></i>
                     <span
                             class="nav-label">Brand</span></a>
                     <ul class="list-unstyled">
@@ -174,7 +174,7 @@
             </sec:authorize>
 
             <sec:authorize access="hasRole('ROLE_ADMIN') OR hasRole('ROLE_SUPPLY_OFFICER')">
-                <li class="has-submenu" data-toggle="tooltip" title="Package"><a href="#"><i class="fa fa-gears"></i>
+                <li class="has-submenu" data-toggle="tooltip" title="Package"><a href="#"><i class="fa fa-folder-open"></i>
                     <span
                             class="nav-label">Package</span></a>
                     <ul class="list-unstyled">
@@ -190,7 +190,7 @@
             </sec:authorize>
 
             <sec:authorize access="hasRole('ROLE_ADMIN') OR hasRole('ROLE_SUPPLY_OFFICER')">
-                <li class="has-submenu" data-toggle="tooltip" title="Package"><a href="#"><i class="fa fa-gears"></i>
+                <li class="has-submenu" data-toggle="tooltip" title="Package"><a href="#"><i class="fa fa-truck"></i>
                     <span
                             class="nav-label">Supplier</span></a>
                     <ul class="list-unstyled">
@@ -206,7 +206,7 @@
             </sec:authorize>
 
             <sec:authorize access="hasRole('ROLE_ADMIN')">
-                <li class="has-submenu" data-toggle="tooltip" title="Role"><a href="#"><i class="fa fa-gears"></i>
+                <li class="has-submenu" data-toggle="tooltip" title="Role"><a href="#"><i class="fa fa-users"></i>
                     <span class="nav-label">Roles</span></a>
                     <ul class="list-unstyled">
                         <li><a href="/role/list">Role List</a></li>
