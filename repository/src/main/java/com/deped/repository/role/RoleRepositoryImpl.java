@@ -1,15 +1,14 @@
 package com.deped.repository.role;
 
-import com.deped.model.category.Category;
 import com.deped.model.security.Role;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import static com.deped.repository.utils.ConstantValues.*;
-
 import java.util.List;
+
+import static com.deped.repository.utils.ConstantValues.*;
 
 @Repository
 public class RoleRepositoryImpl implements RoleRepository {

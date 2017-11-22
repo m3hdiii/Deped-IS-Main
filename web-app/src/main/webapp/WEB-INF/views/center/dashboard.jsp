@@ -27,6 +27,11 @@
                 <small>DepEd Division Office Inventory System</small>
             </h1>
         </div>
+        <div>
+            <c:if test="${not empty dataUpdateSuccess}">
+                <p style="color: green;">${dataUpdateSuccess}</p>
+            </c:if>
+        </div>
 
 
         <div class="row">

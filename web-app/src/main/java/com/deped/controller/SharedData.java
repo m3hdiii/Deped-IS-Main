@@ -31,12 +31,25 @@ public class SharedData {
     private static List<Supplier> suppliers;
     private static String restBaseUrl;
 
+
     public static synchronized void setRestBaseUrl(String restBaseUrl) {
         SharedData.restBaseUrl = restBaseUrl;
     }
 
     public static synchronized String getRestBaseUrl() {
         return SharedData.restBaseUrl;
+    }
+
+    public static synchronized void refreshAll() {
+        getItems(true);
+        getPacks(true);
+        getCategories(true);
+        getSuppliers(true);
+        getCountries(true);
+        getClientConfigsMap(true);
+        getCities(true);
+        getRoles(true);
+        getDepartments(true);
     }
 
     public static synchronized List<Item> getItems(boolean dataIsUpdated) {

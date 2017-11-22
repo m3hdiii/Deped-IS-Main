@@ -1,10 +1,10 @@
 package com.deped.controller.place;
 
 import com.deped.controller.AbstractMainController;
+import com.deped.controller.SharedData;
 import com.deped.model.Response;
 import com.deped.model.location.office.Department;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -96,9 +96,7 @@ public class DepartmentController extends AbstractMainController<Department, Lon
     @Override
     @RequestMapping(value = RENDER_LIST_MAPPING, method = GET)
     public ModelAndView renderListPage() {
-        ResponseEntity<List<Department>> response = makeFetchAllRestRequest(BASE_NAME, HttpMethod.POST, new ParameterizedTypeReference<List<Department>>() {
-        });
-        List<Department> list = response.getBody();
+        List<Department> list = SharedData.getDepartments(false);
         HashMap<String, Object> map = new HashMap<>();
         map.put("departments", list);
         return new ModelAndView(LIST_VIEW_PAGE, map);

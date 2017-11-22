@@ -213,7 +213,8 @@
                         <li><a href="/role/create">Create Role</a></li>
                     </ul>
                 </li>
-                <li><a href="#"><i class="fa fa-refresh" data-toggle="tooltip" title="Refresh Database"></i><span
+                <li><a href="/refresh-all"><i class="fa fa-refresh" data-toggle="tooltip"
+                                              title="Refresh Database"></i><span
                         class="nav-label">Refresh Database</span></a></li>
             </sec:authorize>
             <li><a href="/logout"><i class="fa fa-sign-out" data-toggle="tooltip" title="Sign Out"></i><span

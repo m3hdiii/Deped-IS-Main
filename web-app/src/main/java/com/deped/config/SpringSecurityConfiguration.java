@@ -43,6 +43,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/order/approval-list").hasRole("CHIEF")
                 .antMatchers("/order/requisition-list").hasRole("SUPPLY_OFFICER")
                 .antMatchers("/order/arrival-list").hasRole("SUPPLY_OFFICER")
+                .antMatchers("/refresh-all").hasRole("ADMIN")
 
                 .antMatchers("/category/list").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_SUPPLY_OFFICER')")
                 .antMatchers("/pack/list").access("hasRole('ROLE_ADMIN')  OR hasRole('ROLE_SUPPLY_OFFICER')")
