@@ -180,7 +180,7 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
                 }
             }
 
-            String updateItemQuantityQuery = "UPDATE item SET quantity = quantity - :newQuantity WHERE item_id = :itemId";
+            String updateItemQuantityQuery = "UPDATE item SET quantity = (quantity - :newQuantity) WHERE item_id = :itemId";
             if (requestDetailsStatus == RequestDetailsStatus.RELEASED) {
                 for (RequestDetails od : entities) {
                     if (od.getRequestDetailsStatus() == RequestDetailsStatus.RELEASED) {

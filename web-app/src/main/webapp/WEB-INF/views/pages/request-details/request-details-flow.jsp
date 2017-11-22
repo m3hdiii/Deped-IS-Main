@@ -125,6 +125,8 @@
                                 <form:hidden path="map['${strKey}'].requestDetailsID.requestId"
                                              value="${requestDet.request.requestId}"/>
                                 <form:hidden path="map['${strKey}'].requestDetailsID.itemId" value="${requestDet.item.itemId}"/>
+                                <form:hidden path="map['${strKey}'].requestQuantity"
+                                             value="${requestDet.requestQuantity}"/>
 
                             </tr>
                         </c:forEach>
