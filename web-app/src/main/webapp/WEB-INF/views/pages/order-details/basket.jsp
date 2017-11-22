@@ -112,7 +112,7 @@
 
                         <td>
                             <form:input path="map['${strKey}'].noOfPacks"
-                                        value="${orderDet.totalQuantityRequestNo}"/>
+                                        value="${orderDet.noOfPacks}"/>
                         </td>
 
                         <td>
