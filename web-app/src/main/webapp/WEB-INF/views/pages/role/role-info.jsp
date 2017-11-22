@@ -35,6 +35,9 @@
                         <p><label class="col-sm-2"> Name: </label> ${roleInfo.name}</p>
                     </div>
                     <div class="col-md-11">
+                        <p><label class="col-sm-2"> Simple Name: </label> ${roleInfo.simpleName}</p>
+                    </div>
+                    <div class="col-md-11">
                         <p><label class="col-sm-2"> Description: </label> ${roleInfo.description}</p>
                     </div>
                     <div class="col-md-11">

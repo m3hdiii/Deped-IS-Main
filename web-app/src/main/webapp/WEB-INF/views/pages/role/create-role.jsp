@@ -75,6 +75,10 @@
                                         <form:input type="text" path="name" class="form-control" id="newRoleName"/>
                                     </div>
                                     <div class="form-group">
+                                        <label for="newRoleName">Simple Name</label>
+                                        <form:input type="text" path="simpleName" class="form-control" id="newRoleName"/>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="newCategDesc">Description</label>
                                         <form:textarea type="text" path="description" class="form-control" cols="3" rows="3" id="newCategDesc" maxlength="100"/>
                                     </div>
