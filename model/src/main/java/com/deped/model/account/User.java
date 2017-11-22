@@ -181,7 +181,7 @@ public class User implements Serializable {
     private String referrerPhoneNo2;
 
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "section_id")
     private Section section;
 
@@ -196,7 +196,7 @@ public class User implements Serializable {
     @Column(name = "employment_date")
     private Date employmentDate;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "city_of_born")
     private City cityOfBorn;
 

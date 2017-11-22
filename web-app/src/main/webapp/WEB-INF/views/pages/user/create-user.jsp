@@ -30,6 +30,21 @@
             </h3>
         </div>
 
+        <c:choose>
+            <c:when test="${not empty notCreated}">
+                <div class="alert alert-danger alert-dismissable fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Failed!</strong> ${notCreated}.
+                </div>
+            </c:when>
+            <c:when test="${not empty successfullyCreated}">
+                <div class="alert alert-success alert-dismissable fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Success!</strong> ${successfullyCreated}.
+                </div>
+            </c:when>
+        </c:choose>
+
         <div class="row">
             <c:set var="errors" value="${requestScope['org.springframework.validation.BindingResult.user'].allErrors}"/>
             <div class="col-md-12">

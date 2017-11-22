@@ -26,9 +26,15 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
+    private static final String BASE_FILE_FOLDER = "user";
 
     @Override
     public ResponseEntity<User> create(User entity) {
+        String pictureBase64 = entity.getPictureBase64();
+
+        String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, BASE_FILE_FOLDER);
+        entity.setPicUrl(fileName);
+
         User savedEntity = userRepository.create(entity);
         ResponseEntity<User> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
@@ -36,6 +42,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<Response> update(User entity) {
+        String pictureBase64 = entity.getPictureBase64();
+
+        String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, BASE_FILE_FOLDER);
+        entity.setPicUrl(fileName);
+
         Boolean isUpdated = userRepository.update(entity);
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, User.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);

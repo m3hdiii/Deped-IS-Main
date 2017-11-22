@@ -29,7 +29,21 @@
                 <small>Department of Education Division</small>
             </h3>
         </div>
-
+        <c:choose>
+            <c:when test="${not empty notUpdated}">
+                <div class="alert alert-danger alert-dismissable fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Failed!</strong> ${notUpdated}.
+                </div>
+            </c:when>
+            <c:when test="${not empty successfullyUpdated}">
+                <div class="alert alert-success alert-dismissable fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                    <strong>Success!</strong> ${successfullyUpdated}.
+                </div>
+                &nbsp;&nbsp;<a href="/user/list">All Users</a>
+            </c:when>
+        </c:choose>
         <div class="row">
             <c:set var="errors" value="${requestScope['org.springframework.validation.BindingResult.user'].allErrors}"/>
             <div class="col-md-12">

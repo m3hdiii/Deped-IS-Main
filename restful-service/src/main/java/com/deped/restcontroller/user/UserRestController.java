@@ -37,7 +37,7 @@ public class UserRestController extends AbstractMainRestController<User, Long> {
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = RequestMethod.POST)
-    public ResponseEntity<User> create(User entity) {
+    public ResponseEntity<User> create(@RequestBody User entity) {
         ResponseEntity<User> response = userService.create(entity);
         return response;
     }

@@ -66,22 +66,25 @@ public class UserController extends AbstractMainController<User, Long> {
 
     @RequestMapping(value = {CREATE_MAPPING}, method = GET)
     public ModelAndView renderCreatePage() {
+        Map<String, Object> modelMap = makeCreateModel(new User());
+        return new ModelAndView(CREATE_VIEW_PAGE, modelMap);
+    }
+
+    public Map<String, Object> makeCreateModel(User user) {
         Map<String, Object> modelMap = new HashMap<>();
         modelMap.put("genders", Gender.values());
         modelMap.put("positions", Position.values());
         modelMap.put("countries", SharedData.getCountries(false));
         modelMap.put("departments", SharedData.getDepartments(false));
-        modelMap.put("user", new User());
-        return new ModelAndView(CREATE_VIEW_PAGE, modelMap);
+        modelMap.put("user", user);
+        return modelMap;
     }
 
 
     @RequestMapping(value = CREATE_MAPPING, method = POST)
     public ModelAndView createActionMain(@RequestParam MultipartFile userPic, @Valid @ModelAttribute(BASE_NAME) User entity, BindingResult bindingResult) {
 
-        if (bindingResult.hasErrors()) {
-            return new ModelAndView(CREATE_VIEW_PAGE, BASE_NAME, entity);
-        }
+
 
         try {
             byte[] fileBytes = userPic.getBytes();
@@ -98,19 +101,18 @@ public class UserController extends AbstractMainController<User, Long> {
             e.printStackTrace();
         }
 
+        if (bindingResult.hasErrors()) {
+            Map<String, Object> modelMap = makeCreateModel(entity);
+            return new ModelAndView(CREATE_VIEW_PAGE, modelMap);
+        }
 
-        return new ModelAndView(CREATE_VIEW_PAGE);
-    }
+        entity.setCreationDate(new Date());
 
-    @Override
-    public ModelAndView renderCreatePage(User entity) {
-        return null;
-    }
 
-    @Override
-    @RequestMapping(value = "dummy", method = POST)
-    public ModelAndView createAction(User entity, BindingResult bindingResult) {
-        return null;
+        ResponseEntity<User> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, User.class);
+        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "user", entity, new User());
+        mv.addAllObjects(makeCreateModel(new User()));
+        return mv;
     }
 
     @Override
@@ -126,26 +128,44 @@ public class UserController extends AbstractMainController<User, Long> {
     public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
         ResponseEntity<User> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, User.class);
         User user = response.getBody();
-        Map<String, Object> modelMap = new HashMap<>();
-        modelMap.put("genders", Gender.values());
-        modelMap.put("positions", Position.values());
-        modelMap.put("countries", SharedData.getCountries(false));
-        modelMap.put("departments", SharedData.getDepartments(false));
-        modelMap.put("user", user);
+        Map<String, Object> modelMap = makeCreateModel(user);
+
         return new ModelAndView(UPDATE_VIEW_PAGE, modelMap);
     }
 
-    @Override
+
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) User entity, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
+    public ModelAndView updateAction(@RequestParam MultipartFile userPic, @PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) User entity, BindingResult bindingResult) {
+
+        try {
+            byte[] fileBytes = userPic.getBytes();
+            if (userPic != null && fileBytes != null && fileBytes.length != 0) {
+                boolean isImage = ImageUtils.isImage(fileBytes);
+                if (isImage) {
+                    String encodeBase64 = ImageUtils.encodeBase64(fileBytes);
+                    entity.setPictureBase64(encodeBase64);
+                } else {
+                    bindingResult.addError(new FieldError("Item", "pictureBase64", "Your file is suspicious and it's not an image. Your actions will be logged"));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        if (bindingResult.hasErrors()) {
+            Map<String, Object> modelMap = makeCreateModel(entity);
+            return new ModelAndView(UPDATE_VIEW_PAGE, modelMap);
+        }
+
+
         entity.setUserId(aLong);
-        //This is actually the update date
         entity.setCreationDate(new Date());
+
+
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, User.class);
+
         ModelAndView mv = updateProcessing(response, UPDATE_VIEW_PAGE);
+        mv.addAllObjects(makeCreateModel(entity));
         return mv;
     }
 
@@ -217,6 +237,23 @@ public class UserController extends AbstractMainController<User, Long> {
                 setValue(getDate(text));
             }
         });
+    }
+
+    @Override
+    public ModelAndView renderCreatePage(User entity) {
+        return null;
+    }
+
+    @Override
+    @RequestMapping(value = "dummy", method = POST)
+    public ModelAndView createAction(User entity, BindingResult bindingResult) {
+        return null;
+    }
+
+
+    @Override
+    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) User entity, BindingResult bindingResult) {
+        return null;
     }
 
     public static void main(String[] args) {
