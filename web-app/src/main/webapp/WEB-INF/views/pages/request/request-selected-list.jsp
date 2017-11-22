@@ -58,7 +58,7 @@
                             <td>${request.requestDate}</td>
                             <td>${request.requestStatus}</td>
                             <td>
-                                <a href="${requestUrl}${request.requestId}">${anchorName}</a>
+                                <a href="${requestUrl}${request.requestId}" class="btn btn-primary btn-sm">${anchorName}</a>
                             </td>
                         </tr>
                     </c:forEach>

@@ -76,7 +76,7 @@ public class RequestController extends AbstractMainController<Request, Long> {
         Map<String, Object> modelMap = new HashMap<>();
         modelMap.put("requests", requests);
         modelMap.put("requestUrl", "/request-details/approval/");
-        modelMap.put("anchorName", "Approval");
+        modelMap.put("anchorName", "Handle");
         ModelAndView mav = new ModelAndView(OPERATION_LIST, modelMap);
         return mav;
 
