@@ -1,6 +1,6 @@
 package com.deped;
 
-import static com.deped.controller.ConstantController.*;
+import com.deped.controller.AbstractMainController;
 import com.deped.controller.user.UserController;
 import com.deped.model.Response;
 import com.deped.model.account.User;
@@ -40,10 +40,10 @@ public class Client {
     }
 
     public static void main(String[] args) {
-        makeCreateRestRequest(BASE_URL, USERS);
-        makeUpdateRestRequest(BASE_URL, USERS);
-        makeFetchAllRestRequest(FETCH_URL);
-        makeFetchAllByRangeRestRequest(BASE_URL, new Range(1, 10));
+        makeCreateRestRequest(AbstractMainController.BASE_URL, USERS);
+        makeUpdateRestRequest(AbstractMainController.BASE_URL, USERS);
+        makeFetchAllRestRequest(AbstractMainController.FETCH_URL);
+        makeFetchAllByRangeRestRequest(AbstractMainController.BASE_URL, new Range(1, 10));
     }
 
     private static void makeCreateRestRequest(String baseName, List<User> users) {

@@ -29,7 +29,15 @@ public class SharedData {
     private static List<Pack> packs;
     private static List<Category> categories;
     private static List<Supplier> suppliers;
+    private static String restBaseUrl;
 
+    public static synchronized void setRestBaseUrl(String restBaseUrl) {
+        SharedData.restBaseUrl = restBaseUrl;
+    }
+
+    public static synchronized String getRestBaseUrl() {
+        return SharedData.restBaseUrl;
+    }
 
     public static synchronized List<Item> getItems(boolean dataIsUpdated) {
         if (items == null || dataIsUpdated) {
@@ -122,7 +130,7 @@ public class SharedData {
 
     private static <T> T fetchAll(String baseUrl, ParameterizedTypeReference<T> param) {
         RestTemplate restTemplate = new RestTemplate();
-        String restUrl = String.format(ConstantController.FETCH_URL, baseUrl);
+        String restUrl = String.format(AbstractMainController.FETCH_URL, baseUrl);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity httpEntity = new HttpEntity(null, headers);

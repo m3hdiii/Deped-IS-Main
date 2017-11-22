@@ -34,6 +34,17 @@ import java.util.Map;
 
 public abstract class AbstractMainController<T, ID> implements MainController<T, ID>, ConstantMessages {
 
+    //--------------- REST URLS
+    public static final String BASE_URL = SharedData.getRestBaseUrl();
+    public static final String CREATE_URL = BASE_URL + "%s/create";
+    public static final String UPDATE_URL = BASE_URL + "%s/update";
+    public static final String FETCH_URL = BASE_URL + "%s/fetch-all";
+    public static final String FETCH_RANGE_URL = BASE_URL + "%s/fetch-all/%d/%d";
+    public static final String REMOVE_URL = BASE_URL + "%s/remove";
+    public static final String CREATE_ALL_URL = BASE_URL + "%s/create-all";
+    public static final String FETCH_BY_ID_URL = BASE_URL + "%s/%d";
+
+
     public ResponseEntity<T> makeCreateRestRequest(T entity, String baseRestName, HttpMethod method, Class<T> entityClass) {
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity httpEntity = makeHttpEntity(entity);

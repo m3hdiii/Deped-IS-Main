@@ -23,14 +23,4 @@ public interface ConstantController {
     String INFO_PAGE = DASH_SEPARATOR + "info";
     String LIST_PAGE = DASH_SEPARATOR + "list";
 
-    //--------------- REST URLS
-    String BASE_URL = "http://localhost:4444/rest/";
-    String CREATE_URL = BASE_URL + "%s/create";
-    String UPDATE_URL = BASE_URL + "%s/update";
-    String FETCH_URL = BASE_URL + "%s/fetch-all";
-    String FETCH_RANGE_URL = BASE_URL + "%s/fetch-all/%d/%d";
-    String REMOVE_URL = BASE_URL + "%s/remove";
-    String CREATE_ALL_URL = BASE_URL + "%s/create-all";
-    String FETCH_BY_ID_URL = BASE_URL + "%s/%d";
-
 }

@@ -21,6 +21,7 @@ public class ConfigRestController {
     @Autowired
     private HttpServletRequest request;
 
+
     @RequestMapping(value = FETCH_MAPPING, method = RequestMethod.POST)
     public ResponseEntity<List<ClientConfig>> fetchAll() {
         List<ClientConfig> clientConfigs = new ArrayList<>();

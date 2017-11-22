@@ -1,6 +1,6 @@
 package com.deped.controller.login;
 
-import com.deped.controller.ConstantController;
+import com.deped.controller.AbstractMainController;
 import com.deped.model.Response;
 import com.deped.model.ResponseStatus;
 import com.deped.model.account.User;
@@ -99,7 +99,7 @@ public class LoginController {
         String[] variables = {getBaseUrl(), user.getEmailAddress()};
         HttpEntity<String[]> httpEntity = new HttpEntity<>(variables, headers);
 
-        String restUrl = ConstantController.BASE_URL + "user/reset-password/";
+        String restUrl = AbstractMainController.BASE_URL + "user/reset-password/";
         ResponseEntity<Response> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, Response.class);
 
         Response responseObject = response.getBody();
@@ -126,7 +126,7 @@ public class LoginController {
         String[] variables = {String.valueOf(userId), token};
         HttpEntity<String[]> httpEntity = new HttpEntity<>(variables, headers);
 
-        String restUrl = ConstantController.BASE_URL + "user/check-token/";
+        String restUrl = AbstractMainController.BASE_URL + "user/check-token/";
         ResponseEntity<Response> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, Response.class);
 
         Response responseObject = response.getBody();
@@ -165,7 +165,7 @@ public class LoginController {
         String[] variables = {String.valueOf(userId), token, user.getPassword()};
         HttpEntity<String[]> httpEntity = new HttpEntity<>(variables, headers);
 
-        String restUrl = ConstantController.BASE_URL + "user/change-password/";
+        String restUrl = AbstractMainController.BASE_URL + "user/change-password/";
         ResponseEntity<Response> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, Response.class);
 
         Response responseObject = response.getBody();
