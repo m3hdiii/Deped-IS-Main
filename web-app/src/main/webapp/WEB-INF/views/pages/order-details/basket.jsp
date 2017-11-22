@@ -170,19 +170,19 @@
                 </c:forEach>
                 <tr>
                     <td colspan="3">
-                        <button name="actionParam" value="UPDATE_ALL">Update the List And Order More</button>
+                        <button name="actionParam" class="btn btn-purple btn-block" value="UPDATE_ALL">Update the List And Order More</button>
                     </td>
 
                     <td colspan="3">
-                        <button name="actionParam" value="DELETE_ALL">DELETE the List and Re-Order</button>
+                        <button name="actionParam" class="btn btn-danger btn-block" value="DELETE_ALL">DELETE the List and Re-Order</button>
                     </td>
 
                     <td colspan="3">
-                        <button name="actionParam" value="SAVE_ALL">Update all and SAVE the List</button>
+                        <button name="actionParam" class="btn btn-primary btn-block" value="SAVE_ALL">Update all and SAVE the List</button>
                     </td>
 
                     <td colspan="3">
-                        <button name="actionParam" value="ORDER_ALL">Update all and ORDER the List</button>
+                        <button name="actionParam" class="btn btn-success btn-block" value="ORDER_ALL">Update all and ORDER the List</button>
                     </td>
                 </tr>
             </form:form>
