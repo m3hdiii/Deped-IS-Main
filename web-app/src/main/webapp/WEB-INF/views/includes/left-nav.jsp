@@ -84,7 +84,7 @@
 
             <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER') OR hasRole('ROLE_CHIEF')">
                 <li class="has-submenu" data-toggle="tooltip" title="Order Manager"><a href="#"><i
-                        class="fa fa-truck"></i>
+                        class="fa fa-shopping-cart"></i>
                     <span class="nav-label">Order Manager</span></a>
                     <ul class="list-unstyled">
                         <sec:authorize access="hasRole('ROLE_CHIEF')">
