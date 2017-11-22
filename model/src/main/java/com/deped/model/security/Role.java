@@ -43,6 +43,12 @@ public class Role implements Serializable {
     @XSS
     private String name;
 
+    @Column(name = "simple_name")
+    @NotEmpty(message = "Simple Name field can not be blank")
+    @Length(min = 2, max = 45, message = "Simple Name filed length must be between 2 to 45 character")
+    @XSS
+    private String simpleName;
+
     @Column(name = "description")
     @Length(max = 400, message = "Description field must not be more than 400 character")
     @XSS
@@ -113,5 +119,13 @@ public class Role implements Serializable {
 
     public void setPrivileges(Set<Privilege> privileges) {
         this.privileges = privileges;
+    }
+
+    public String getSimpleName() {
+        return simpleName;
+    }
+
+    public void setSimpleName(String simpleName) {
+        this.simpleName = simpleName;
     }
 }
