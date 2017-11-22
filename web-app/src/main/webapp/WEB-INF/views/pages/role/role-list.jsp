@@ -66,7 +66,7 @@
                                 </label>
                             </td>
                             <td>
-                                <a href="/role/${role.roleId}">${role.name}</a>
+                                <a href="/role/${role.roleId}">${role.simpleName}</a>
                             </td>
                             <td>
                                     ${role.description}
