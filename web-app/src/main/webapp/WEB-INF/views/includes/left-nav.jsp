@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 
 <sec:authentication var="pc" property="principal"/>
@@ -29,17 +30,15 @@
         <h4 class="user-name">${user.firstName} ${user.lastName}</h4>
 
         <div class="dropdown user-login">
-            <button class="btn btn-xs dropdown-toggle btn-rounded" type="button" data-toggle="dropdown"
+            <button class="btn btn-md dropdown-toggle btn-rounded" type="button" data-toggle="dropdown"
                     aria-expanded="true">
-                <i class="fa fa-circle status-icon available"></i> Available <i class="fa fa-angle-down"></i>
+                <i class="fa fa-circle status-icon available"></i> ROLES <i class="fa fa-angle-down"></i>
             </button>
             <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-                <li role="presentation"><a role="menuitem" href="#"><i class="fa fa-circle status-icon busy"></i>
-                    Busy</a></li>
-                <li role="presentation"><a role="menuitem" href="#"><i class="fa fa-circle status-icon invisibled"></i>
-                    Invisible</a></li>
-                <li role="presentation"><a role="menuitem" href="#"><i class="fa fa-circle status-icon signout"></i>
-                    Sign out</a></li>
+                <c:forEach items="${user.roles}" var="role">
+                    <li role="presentation"><a role="menuitem" href="#"><i class="fa fa-user-o"></i>
+                            ${role.simpleName}</a></li>
+                </c:forEach>
             </ul>
         </div>
     </div>
@@ -207,15 +206,15 @@
             </sec:authorize>
 
             <sec:authorize access="hasRole('ROLE_ADMIN')">
-            <li class="has-submenu" data-toggle="tooltip" title="Role"><a href="#"><i class="fa fa-gears"></i>
-                <span class="nav-label">Roles</span></a>
-                <ul class="list-unstyled">
-                    <li><a href="/role/list">Role List</a></li>
-                    <li><a href="/role/create">Create Role</a></li>
-                </ul>
-            </li>
-            <li><a href="#"><i class="fa fa-refresh" data-toggle="tooltip" title="Refresh Database"></i><span
-                    class="nav-label">Refresh Database</span></a></li>
+                <li class="has-submenu" data-toggle="tooltip" title="Role"><a href="#"><i class="fa fa-gears"></i>
+                    <span class="nav-label">Roles</span></a>
+                    <ul class="list-unstyled">
+                        <li><a href="/role/list">Role List</a></li>
+                        <li><a href="/role/create">Create Role</a></li>
+                    </ul>
+                </li>
+                <li><a href="#"><i class="fa fa-refresh" data-toggle="tooltip" title="Refresh Database"></i><span
+                        class="nav-label">Refresh Database</span></a></li>
             </sec:authorize>
             <li><a href="/logout"><i class="fa fa-sign-out" data-toggle="tooltip" title="Sign Out"></i><span
                     class="nav-label">Sign Out</span></a></li>
