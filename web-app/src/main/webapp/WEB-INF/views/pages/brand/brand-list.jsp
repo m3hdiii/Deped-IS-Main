@@ -34,12 +34,9 @@
 
         <div class="row item-body">
 
-            <div role="toolbar" class="btn-toolbar">
-                <div class="pull-left">
-                    <%--<button class="btn btn-purple btn-sm">Select All</button>--%>
-                    <a href="/brand/create" class="btn btn-default btn-sm"><i class="fa fa-plus text-success"></i></a>
-                    <%--<button class="btn btn-default btn-sm"><i class="fa fa-trash text-danger"></i></button>--%>
-                </div>
+            <div class="btn-group visible-lg-inline-block">
+                <a href="/brand/create" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
+                   title="Add Brand"><i class="fa fa-plus"></i></a>
             </div>
 
             <div class="brand-list-body padd-t-lg">
