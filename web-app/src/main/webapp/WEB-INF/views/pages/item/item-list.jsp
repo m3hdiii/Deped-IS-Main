@@ -82,7 +82,7 @@
                         </th>
                         <th>Image</th>
                         <th>Name</th>
-                        <th>Brand</th>
+                        <%--<th>Brand</th>--%>
                         <th class="col-xs-2">Description</th>
                         <th>Item Type</th>
                         <th>QTY</th>
@@ -114,7 +114,7 @@
                                 </c:choose>
                             </td>
                             <th>${item.name}</th>
-                            <td>SONY</td>
+                            <%--<td>SONY</td>--%>
                             <td>${item.description}</td>
                             <td>${item.itemType}</td>
                             <td>${item.quantity}</td>

@@ -76,21 +76,21 @@
                                         <label for="newItemName">Name</label>
                                         <form:input path="name" class="form-control typeahead" placeholder="Item Name" id="newItemName"/>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="newItemBrand">Brand</label>
-                                        <select id="newItemBrand" class="form-control">
-                                            <option disabled selected>Choose...</option>
-                                            <option>Generic</option>
-                                            <option>Sand Disk</option>
-                                            <option>Bosch</option>
-                                            <option>Standard</option>
-                                            <option>SONY</option>
-                                            <option>SAMSUNG</option>
-                                        </select>
-                                    </div>
-                                    <div class="text-right">
-                                        <a href="/brand/create" class="btn btn-purple btn-xs"><i class="fa fa-plus-circle"> Add Brand</i></a>
-                                    </div>
+                                    <%--<div class="form-group">--%>
+                                        <%--<label for="newItemBrand">Brand</label>--%>
+                                        <%--<select id="newItemBrand" class="form-control">--%>
+                                            <%--<option disabled selected>Choose...</option>--%>
+                                            <%--<option>Generic</option>--%>
+                                            <%--<option>Sand Disk</option>--%>
+                                            <%--<option>Bosch</option>--%>
+                                            <%--<option>Standard</option>--%>
+                                            <%--<option>SONY</option>--%>
+                                            <%--<option>SAMSUNG</option>--%>
+                                        <%--</select>--%>
+                                    <%--</div>--%>
+                                    <%--<div class="text-right">--%>
+                                        <%--<a href="/brand/create" class="btn btn-purple btn-xs"><i class="fa fa-plus-circle"> Add Brand</i></a>--%>
+                                    <%--</div>--%>
                                     <div class="form-group">
                                         <label for="newItemDesc">Description</label>
                                         <form:textarea type="text" path="description" class="form-control typeahead"

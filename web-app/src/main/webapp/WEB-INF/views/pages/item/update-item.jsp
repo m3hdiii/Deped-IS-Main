@@ -31,7 +31,7 @@
 
         <div class="page-header">
             <h1>Edit Item
-                <small>DepEd-Baguio City Division Office</small>
+                <small>for Goods, Semi-Expendable and Equipment</small>
             </h1>
         </div>
 

@@ -33,8 +33,6 @@
         <div class="btn-group visible-lg-inline-block">
             <a href="/supplier/create" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
                title="Add Supplier"><i class="fa fa-plus"></i></a>
-            <button type="button" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
-                    title="Delete"><i class="fa fa-trash"></i></button>
         </div>
         <hr class="clean">
 
@@ -109,8 +107,6 @@
                             <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
                                 <td>
                                     <div class="btn-group visible-lg-inline-block">
-
-
                                         <a href="/supplier/update/${supplier.supplierId}"
                                            class="btn btn-purple tooltip-btn"
                                            data-toggle="tooltip" data-placement="top" title="Edit Supplier"><i
