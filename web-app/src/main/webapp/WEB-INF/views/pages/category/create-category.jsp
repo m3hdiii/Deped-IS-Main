@@ -27,7 +27,7 @@
 
         <div class="page-header">
             <h3>Category
-                <small>DepEd-Baguio City Division Office</small>
+                <small>for Goods, Semi-Expendable and Equipment</small>
             </h3>
             <hr class="clean">
         </div>

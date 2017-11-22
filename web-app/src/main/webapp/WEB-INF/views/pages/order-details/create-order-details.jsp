@@ -38,14 +38,6 @@
         <c:set var="orderName" value="orderSessionNo${orderId}"/>
         <c:set var="relatedOrder" value="${sessionScope[orderName]}"/>
 
-        <div class="row">
-            <p>Order Number: ${relatedOrder.orderId}</p>
-            <p>Order
-                By: ${relatedOrder.user.firstName}&nbsp;${relatedOrder.user.middleName}&nbsp;${relatedOrder.user.lastName}</p>
-            <p>Schedule For: ${relatedOrder.orderSchedule}</p>
-            <p>Budget: ${relatedOrder.budgetAmount}</p>
-        </div>
-
         <c:set var="orderIdValue" value="${relatedOrder.orderId}"/>
         <c:set var="basketName" value="orderDetailsMap-OrderNo${orderIdValue}"/>
 
@@ -56,6 +48,20 @@
                                                                      alt="add to cart"/><span>${fn:length(sessionScope[basketName])}</span></a>
             </c:if>
         </div>
+        <c:set var="errors"
+               value="${requestScope['org.springframework.validation.BindingResult.orderDetail'].allErrors}"/>
+        <c:if test="${not empty errors}">
+            <div>
+                <ul class="list-group">
+                    <c:forEach items="${errors}" var="error">
+                        <li class="list-group-item list-group-item-warning text-danger"><span
+                                class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
+                        </li>
+                    </c:forEach>
+                </ul>
+            </div>
+        </c:if>
+
 
         <div class="panel panel-default">
             <div class="panel-heading">Basic DataTable</div>

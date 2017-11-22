@@ -26,7 +26,7 @@
 
         <div class="page-header">
             <h3>Register Emplooyee
-                <small>Department of Education Division</small>
+                <small>DepEd-Baguio City Division Office</small>
             </h3>
         </div>
 

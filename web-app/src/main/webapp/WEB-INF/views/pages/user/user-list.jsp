@@ -24,8 +24,13 @@
 
     <div class="warper container-fluid">
 
-        <div class="page-header"><h1>Data Tables <small>Working controls</small></h1></div>
+        <div class="page-header"><h1>Manage Users <small>DepEd-Baguio City Division Office</small></h1></div>
 
+        <div class="btn-group visible-lg-inline-block">
+            <a href="/user/create" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
+               title="Add User"><i class="fa fa-plus"></i></a>
+        </div>
+        <hr class="clean">
 
 
         <div class="panel panel-default">
@@ -43,8 +48,7 @@
                         <th>Contact Number</th>
                         <th>Position</th>
                         <th>Section</th>
-                        <th></th>
-                        <th></th>
+                        <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -74,7 +78,7 @@
 
                                 <td>
                                     <div class="name">
-                                            ${user.firstName} ${user.middleName} ${user.lastName}
+                                            ${user.firstName} ${user.lastName}
                                     </div>
                                     <div class="email">
                                         <a href="#">${user.emailAddress}</a>
@@ -98,14 +102,18 @@
                                 <td>${user.position}</td>
                                 <td>${user.section.name}</td>
 
-                                <td>
-                                    <a href="/user/${user.userId}" class="btn btn-primary"><i class="fa fa-eye"></i></a>
-                                </td>
-                                <sec:authorize access="hasRole('ROLE_ADMIN')">
-                                <td class="text-nowrap">
-                                    <a href="/user/update/${user.userId}" class="btn btn-purple"><i class="fa fa-pencil"></i></a>
-                                </td>
-                                </sec:authorize>
+
+                                    <td>
+                                        <div class="btn-group visible-lg-inline-block">
+                                            <a href="/user/${user.userId}" class="btn btn-primary tooltip-btn" data-toggle="tooltip" data-placement="top" title="View User"><i class="fa fa-eye"></i></a>
+                                            <sec:authorize access="hasRole('ROLE_ADMIN')">
+                                                <a href="/user/update/${user.userId}" class="btn btn-purple tooltip-btn"
+                                               data-toggle="tooltip" data-placement="top" title="Edit User"><i
+                                                    class="fa fa-pencil"></i></a>
+                                            </sec:authorize>
+                                        </div>
+                                    </td>
+
                             </tr>
                         </c:forEach>
                     </tbody>
