@@ -38,7 +38,7 @@
                 <div class="col-md-8 col-md-offset-2">
                     <div class="panel panel-default">
                         <form:form commandName="role" method="post" class="form-horizontal">
-                            <h3 class="text-center">Add New Role</h3>
+                            <h3 class="text-center">Update Role Information</h3>
                             <div class="panel-body">
                                 <div class="col-md-10 col-sm-offset-1">
                                     <c:choose>
@@ -75,6 +75,10 @@
                                         <form:input type="text" path="name" class="form-control" id="newRoleName"/>
                                     </div>
                                     <div class="form-group">
+                                        <label for="newRoleName">Simple Name</label>
+                                        <form:input type="text" path="simpleName" class="form-control" id="newRoleName"/>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="newCategDesc">Description</label>
                                         <form:textarea type="text" path="description" class="form-control" cols="3" rows="3" id="newCategDesc" maxlength="100"/>
                                     </div>
@@ -84,7 +88,7 @@
                                 <a href="/role/list" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i> Back</a>
                                 <div class="button-footer pull-right">
                                     <input type="reset" class="btn btn-default" value="Clear"/>
-                                    <button type="submit" class="btn btn-primary">Create</button>
+                                    <button type="submit" class="btn btn-primary">Update</button>
                                 </div>
                             </div>
                         </form:form>
