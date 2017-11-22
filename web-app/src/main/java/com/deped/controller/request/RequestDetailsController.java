@@ -127,8 +127,15 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     public ModelAndView createActionWithRedirect(@PathVariable(ID_STRING_LITERAL) Long requestId, @Valid @ModelAttribute("requestDetails") RequestDetails entity, BindingResult bindingResult, final RedirectAttributes redirectAttributes, HttpSession httpSession) {
 
         Request request = entity.getRequest();
+
         if (request == null) {
             bindingResult.addError(new FieldError("RequestDetails", "request", "Something went wrong please contact with your admin"));
+        }
+
+        Object basketInfo = httpSession.getAttribute(BASKET + request.getRequestId());
+        if (basketInfo != null) {
+            HashMap<String, RequestDetails> bInfo = (HashMap<String, RequestDetails>) basketInfo;
+            checkIfTheSameItemExisting(bInfo, entity, bindingResult);
         }
 
         if (bindingResult.hasErrors()) {
@@ -141,7 +148,6 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         }
 
 
-        Object basketInfo = httpSession.getAttribute(BASKET + request.getRequestId());
         Map<String, RequestDetails> requestDetailsMap;
         if (basketInfo == null) {
             requestDetailsMap = new HashMap<>();
@@ -154,6 +160,16 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         String redirectUrl = String.format("redirect:/request-details/create/%d", request.getRequestId());
         //redirectAttributes.addFlashAttribute("request", request);
         return new ModelAndView(redirectUrl);
+    }
+
+    private void checkIfTheSameItemExisting(HashMap<String, RequestDetails> basket, RequestDetails requestDetails, BindingResult bindingResult) {
+        Collection<RequestDetails> requestDetailsList = basket.values();
+        for (RequestDetails rd : requestDetailsList) {
+            if (rd.getItem().getItemId() == requestDetails.getItem().getItemId()) {
+                bindingResult.addError(new FieldError("RequestDetails", "item", "You can not add the same item twice, but you can edit it"));
+                break;
+            }
+        }
     }
 
 
