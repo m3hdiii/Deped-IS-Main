@@ -102,7 +102,7 @@
                         </section>
 
                         <div class="button-group col-md-12 text-center">
-                            <a class="btn btn-primary btn-md btn-purple" href="/userInfo/update/${userInfo.userId}">Update Information</a>
+                            <a class="btn btn-primary btn-md btn-purple" href="/user/update/${userInfo.userId}">Update Information</a>
                         </div>
 
                     </div>
