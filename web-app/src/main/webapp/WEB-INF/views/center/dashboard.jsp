@@ -40,7 +40,7 @@
                 <div class="panel panel-default clearfix dashboard-stats rounded">
                     <span id="dashboard-stats-sparkline1" class="sparkline transit"></span>
                     <i class="fa fa-cubes bg-purple transit stats-icon"></i>
-                    <h3 class="transit">1547</h3>
+                    <h3 class="transit">${dashboardInfo.lastWeekRequest}</h3>
                     <p class="text-muted transit">New Requests</p>
                 </div>
             </div>
@@ -48,7 +48,7 @@
                 <div class="panel panel-default clearfix dashboard-stats rounded">
                     <span id="dashboard-stats-sparkline2" class="sparkline transit"></span>
                     <i class="fa fa-truck bg-info transit stats-icon"></i>
-                    <h3 class="transit">200
+                    <h3 class="transit">${dashboardInfo.lastWeekOrders}
                     </h3>
                     <p class="text-muted transit">New Orders</p>
                 </div>
@@ -57,7 +57,7 @@
                 <div class="panel panel-default clearfix dashboard-stats rounded">
                     <span id="dashboard-stats-sparkline4" class="sparkline transit"></span>
                     <i class="fa fa-warning bg-warning transit stats-icon"></i>
-                    <h3 class="transit">35
+                    <h3 class="transit">${dashboardInfo.underThreshold}
                     </h3>
                     <p class="text-muted transit">Low Quantity</p>
                 </div>
@@ -66,7 +66,7 @@
                 <div class="panel panel-default clearfix dashboard-stats rounded">
                     <span id="dashboard-stats-sparkline3" class="sparkline transit"></span>
                     <i class="fa fa-user bg-success transit stats-icon"></i>
-                    <h3 class="transit">2,014
+                    <h3 class="transit">${dashboardInfo.totalUsers}
                     </h3>
                     <p class="text-muted transit">Total Users</p>
                 </div>

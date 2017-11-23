@@ -1,5 +1,6 @@
 package com.deped.controller;
 
+import com.deped.model.brand.Brand;
 import com.deped.model.category.Category;
 import com.deped.model.config.client.ClientConfig;
 import com.deped.model.config.client.ClientEnumKey;
@@ -30,6 +31,7 @@ public class SharedData {
     private static List<Category> categories;
     private static List<Supplier> suppliers;
     private static String restBaseUrl;
+    private static List<Brand> brands;
 
 
     public static synchronized void setRestBaseUrl(String restBaseUrl) {
@@ -50,6 +52,7 @@ public class SharedData {
         getCities(true);
         getRoles(true);
         getDepartments(true);
+        //getBrands(true);
     }
 
     public static synchronized List<Item> getItems(boolean dataIsUpdated) {
@@ -135,6 +138,16 @@ public class SharedData {
         }
 
         return departments;
+    }
+
+    public synchronized static List<Brand> getBrands(boolean dataIsUpdated) {
+
+        if (brands == null || dataIsUpdated) {
+            brands = fetchAll("brand", new ParameterizedTypeReference<List<Brand>>() {
+            });
+        }
+
+        return brands;
     }
 
     public static void main(String[] args) {
