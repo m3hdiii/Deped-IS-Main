@@ -11,6 +11,7 @@
 <c:url value="/public" var="resourceURL" scope="request"/>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -61,7 +62,7 @@
                 <div class="panel panel-default clearfix rounded icon-bar border-radius-20">
                     <div class="panel-container">
                         <div class="profile-option-container text-right">
-                            <img src ="${resourceURL}/images/svg/ic_more_horiz_black_24px.svg"/>
+                            <img src="${resourceURL}/images/svg/ic_more_horiz_black_24px.svg"/>
                         </div>
                         <section class="user-information">
                             <div class="text-center">
@@ -101,14 +102,17 @@
                             </div>
                         </section>
 
-                        <div class="button-group col-md-12 text-center">
-                            <a class="btn btn-primary btn-md btn-purple" href="/user/update/${userInfo.userId}">Update Information</a>
-                        </div>
+                        <sec:authorize access="hasRole('ROLE_ADMIN')">
+                            <div class="button-group col-md-12 text-center">
+                                <a class="btn btn-primary btn-md btn-purple" href="/user/update/${userInfo.userId}">Update
+                                    Information</a>
+                            </div>
+                        </sec:authorize>
+
 
                     </div>
                 </div>
             </div>
-
 
 
         </div>
@@ -116,6 +120,6 @@
 
     </div>
     <!-- Warper Ends Here (working area) -->
-            <c:import url="../../includes/footer.jsp"/>
+    <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>

@@ -189,7 +189,7 @@
                                 </button>
                                 <button name="actionParam" value="REQUEST_ALL" class="btn btn-success"
                                         data-toggle="tooltip"
-                                        title="Send the Request">Finalize
+                                        title="Send the Request">Send Request
                                 </button>
                             </div>
                         </form:form>
