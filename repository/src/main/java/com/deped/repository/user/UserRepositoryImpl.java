@@ -1,5 +1,6 @@
 package com.deped.repository.user;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.account.User;
 import com.deped.model.security.PasswordResetToken;
 import com.deped.model.security.TokenState;
@@ -27,13 +28,13 @@ public class UserRepositoryImpl implements UserRepository {
     private SessionFactory sessionFactory = hibernateFacade.getSessionFactory();
 
     @Override
-    public User create(User entity) {
+    public User create(User entity) throws DatabaseRolesViolationException {
         User savedUser = hibernateFacade.saveEntity(User.class, entity);
         return savedUser;
     }
 
     @Override
-    public Boolean update(User entity) {
+    public Boolean update(User entity) throws DatabaseRolesViolationException {
         Boolean isUpdated = hibernateFacade.updateEntity(entity);
         return isUpdated;
     }
@@ -56,13 +57,13 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Boolean remove(User... entities) {
+    public Boolean remove(User... entities) throws DatabaseRolesViolationException {
         Boolean isDeleted = hibernateFacade.removeEntities(USER_TABLE, USER_TABLE_ID, entities);
         return isDeleted;
     }
 
     @Override
-    public Boolean createOrUpdateAll(User... entities) {
+    public Boolean createOrUpdateAll(User... entities) throws DatabaseRolesViolationException {
         return null;
     }
 
@@ -133,7 +134,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public PasswordResetToken createPasswordResetTokenForUser(PasswordResetToken passwordResetToken) {
+    public PasswordResetToken createPasswordResetTokenForUser(PasswordResetToken passwordResetToken) throws DatabaseRolesViolationException {
         PasswordResetToken entity = hibernateFacade.saveEntity(PasswordResetToken.class, passwordResetToken);
         return entity;
     }
@@ -154,7 +155,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public boolean changePasswordByToken(Long userId, String token, String newPassword, int period) {
+    public boolean changePasswordByToken(Long userId, String token, String newPassword, int period) throws DatabaseRolesViolationException {
         Session hibernateSession = null;
         try {
             hibernateSession = sessionFactory.openSession();

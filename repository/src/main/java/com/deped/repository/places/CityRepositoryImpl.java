@@ -1,5 +1,6 @@
 package com.deped.repository.places;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.location.City;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
@@ -19,12 +20,12 @@ public class CityRepositoryImpl implements CityRepository {
     private HibernateFacade hibernateFacade;
 
     @Override
-    public City create(City entity) {
+    public City create(City entity) throws DatabaseRolesViolationException {
         return hibernateFacade.saveEntity(City.class, entity);
     }
 
     @Override
-    public Boolean update(City entity) {
+    public Boolean update(City entity) throws DatabaseRolesViolationException {
         return hibernateFacade.updateEntity(entity);
     }
 
@@ -44,13 +45,13 @@ public class CityRepositoryImpl implements CityRepository {
     }
 
     @Override
-    public Boolean remove(City... entities) {
+    public Boolean remove(City... entities) throws DatabaseRolesViolationException {
         return hibernateFacade.
                 removeEntities(CITY_TABLE, CITY_TABLE_ID, entities);
     }
 
     @Override
-    public Boolean createOrUpdateAll(City... entities) {
+    public Boolean createOrUpdateAll(City... entities) throws DatabaseRolesViolationException {
         return null;
     }
 

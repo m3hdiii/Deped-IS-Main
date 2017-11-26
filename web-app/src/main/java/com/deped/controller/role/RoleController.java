@@ -62,7 +62,7 @@ public class RoleController extends AbstractMainController<Role, Long> {
 
         entity.setCreationDate(new Date());
         ResponseEntity<Role> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Role.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Role());
+        ModelAndView mv = postCreateProcessing(Role.class, response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Role(), bindingResult, BASE_NAME);
         return mv;
     }
 
@@ -78,22 +78,22 @@ public class RoleController extends AbstractMainController<Role, Long> {
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
     public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
         ResponseEntity<Role> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Role.class);
-        Role role= response.getBody();
+        Role role = response.getBody();
         return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, role);
     }
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Role entity, BindingResult result) {
+    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Role entity, BindingResult bindingResult) {
 
-        if (result.hasErrors()) {
+        if (bindingResult.hasErrors()) {
             return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
         }
         entity.setRoleId(aLong);
         //This is actually the update date
         entity.setCreationDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Role.class);
-        ModelAndView mv = updateProcessing(response, UPDATE_VIEW_PAGE);
+        ModelAndView mv = postUpdateProcessing(Role.class, response, UPDATE_VIEW_PAGE, BASE_NAME, entity, new Role(), bindingResult, BASE_NAME);
         return mv;
     }
 

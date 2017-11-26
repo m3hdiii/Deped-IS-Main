@@ -59,7 +59,7 @@ public class CategoryController extends AbstractMainController<Category, Long> {
 
         entity.setCreationDate(new Date());
         ResponseEntity<Category> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Category.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Category());
+        ModelAndView mv = postCreateProcessing(Category.class, response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Category(), bindingResult, BASE_NAME);
         return mv;
     }
 
@@ -87,10 +87,9 @@ public class CategoryController extends AbstractMainController<Category, Long> {
             return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
         }
         entity.setCategoryId(aLong);
-        //This is actually the update date
         entity.setCreationDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Category.class);
-        ModelAndView mv = updateProcessing(response, UPDATE_VIEW_PAGE);
+        ModelAndView mv = postUpdateProcessing(Category.class, response, UPDATE_VIEW_PAGE, BASE_NAME, entity, new Category(), result, BASE_NAME);
         return mv;
     }
 
@@ -99,7 +98,7 @@ public class CategoryController extends AbstractMainController<Category, Long> {
     public ModelAndView renderListPage() {
         ResponseEntity<List<Category>> response = makeFetchAllRestRequest(BASE_NAME, HttpMethod.POST, new ParameterizedTypeReference<List<Category>>() {
         });
-        ModelAndView mv = listProcessing(response, "categories", LIST_VIEW_PAGE);
+        ModelAndView mv = postListProcessing(response, "categories", LIST_VIEW_PAGE);
         return mv;
     }
 

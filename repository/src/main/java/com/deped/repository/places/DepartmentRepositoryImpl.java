@@ -1,5 +1,6 @@
 package com.deped.repository.places;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.location.office.Department;
 import com.deped.repository.utils.ConstantValues;
 import com.deped.repository.utils.HibernateFacade;
@@ -7,9 +8,10 @@ import com.deped.repository.utils.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import static com.deped.repository.utils.ConstantValues.*;
-
 import java.util.List;
+
+import static com.deped.repository.utils.ConstantValues.FETCH_ALL_DEPARTMENTS;
+import static com.deped.repository.utils.ConstantValues.FETCH_ALL_DEPARTMENT_RANGES;
 
 @Repository
 public class DepartmentRepositoryImpl implements DepartmentRepository {
@@ -18,12 +20,12 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
     private HibernateFacade hibernateFacade;
 
     @Override
-    public Department create(Department entity) {
+    public Department create(Department entity) throws DatabaseRolesViolationException {
         return hibernateFacade.saveEntity(Department.class, entity);
     }
 
     @Override
-    public Boolean update(Department entity) {
+    public Boolean update(Department entity) throws DatabaseRolesViolationException {
         return hibernateFacade.updateEntity(entity);
     }
 
@@ -43,13 +45,13 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
     }
 
     @Override
-    public Boolean remove(Department... entities) {
+    public Boolean remove(Department... entities) throws DatabaseRolesViolationException {
         return hibernateFacade.
                 removeEntities(ConstantValues.DEPARTMENT_TABLE, ConstantValues.DEPARTMENT_TABLE_ID, entities);
     }
 
     @Override
-    public Boolean createOrUpdateAll(Department... entities) {
+    public Boolean createOrUpdateAll(Department... entities) throws DatabaseRolesViolationException {
         return null;
     }
 }

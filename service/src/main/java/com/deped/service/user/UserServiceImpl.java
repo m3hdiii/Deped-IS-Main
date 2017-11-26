@@ -2,6 +2,7 @@ package com.deped.service.user;
 
 
 import com.deped.config.SharedConfigData;
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.ResponseStatus;
@@ -15,6 +16,7 @@ import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
 import com.deped.service.email.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +37,13 @@ public class UserServiceImpl implements UserService {
         String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, BASE_FILE_FOLDER);
         entity.setPicUrl(fileName);
 
-        User savedEntity = userRepository.create(entity);
+        User savedEntity = null;
+        try {
+            savedEntity = userRepository.create(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         ResponseEntity<User> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }
@@ -47,7 +55,13 @@ public class UserServiceImpl implements UserService {
         String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, BASE_FILE_FOLDER);
         entity.setPicUrl(fileName);
 
-        Boolean isUpdated = userRepository.update(entity);
+        Boolean isUpdated = null;
+        try {
+            isUpdated = userRepository.update(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, User.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
@@ -76,7 +90,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<Response> remove(User... entities) {
-        Boolean isRemoved = userRepository.remove(entities);
+        Boolean isRemoved = null;
+        try {
+            isRemoved = userRepository.remove(entities);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isRemoved, Operation.DELETE, User.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
@@ -113,7 +133,13 @@ public class UserServiceImpl implements UserService {
         String token = UUID.randomUUID().toString();
         PasswordResetToken passwordResetToken = new PasswordResetToken(user, token, new Date(), TokenState.AVAILABLE);
 
-        PasswordResetToken persistedPasswordResetToken = userRepository.createPasswordResetTokenForUser(passwordResetToken);
+        PasswordResetToken persistedPasswordResetToken = null;
+        try {
+            persistedPasswordResetToken = userRepository.createPasswordResetTokenForUser(passwordResetToken);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
 
         if (persistedPasswordResetToken == null) {
             Response response = ServiceUtils.makeResponse(false, Operation.CREATE, PasswordResetToken.class);
@@ -140,7 +166,13 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<Response> changePasswordByToken(Long userId, String token, String newPassword) {
         Map<ServerEnumKey, String> configMap = SharedConfigData.getAppConfigs(false);
         int period = Integer.parseInt(configMap.get(ServerEnumKey.PASSWORD_RESET_TOKEN_PERIOD));
-        boolean isUpdated = userRepository.changePasswordByToken(userId, token, newPassword, period);
+        boolean isUpdated = false;
+        try {
+            isUpdated = userRepository.changePasswordByToken(userId, token, newPassword, period);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
 
         if (!isUpdated) {
             Response response = new Response(ResponseStatus.FAILED, "Something went wrong. Contact with your administrator");

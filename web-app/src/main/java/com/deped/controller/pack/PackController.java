@@ -71,7 +71,7 @@ public class PackController extends AbstractMainController<Pack, Long> {
         }
         entity.setCreationDate(new Date());
         ResponseEntity<Pack> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Pack.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Pack());
+        ModelAndView mv = postCreateProcessing(Pack.class, response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Pack(), bindingResult, BASE_NAME);
         return mv;
     }
 
@@ -102,7 +102,7 @@ public class PackController extends AbstractMainController<Pack, Long> {
         //This is actually the update date
         entity.setCreationDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Pack.class);
-        ModelAndView mv = updateProcessing(response, UPDATE_VIEW_PAGE);
+        ModelAndView mv = postUpdateProcessing(Pack.class, response, UPDATE_VIEW_PAGE, BASE_NAME, entity, new Pack(), bindingResult, BASE_NAME);
         return mv;
     }
 
@@ -111,7 +111,7 @@ public class PackController extends AbstractMainController<Pack, Long> {
     public ModelAndView renderListPage() {
         ResponseEntity<List<Pack>> response = makeFetchAllRestRequest(BASE_NAME, HttpMethod.POST, new ParameterizedTypeReference<List<Pack>>() {
         });
-        ModelAndView mv = listProcessing(response, "packs", LIST_VIEW_PAGE);
+        ModelAndView mv = postListProcessing(response, "packs", LIST_VIEW_PAGE);
         return mv;
     }
 

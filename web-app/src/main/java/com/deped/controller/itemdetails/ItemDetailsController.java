@@ -32,7 +32,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Controller
 public class ItemDetailsController extends AbstractMainController<ItemDetails, Long> {
 
-    private static final String BASE_NAME = "equipment-info";
+    private static final String BASE_NAME = "item-info";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
     private static final String RENDER_UPDATE_MAPPING = BASE_NAME + RENDER_UPDATE_PATTERN;
@@ -116,9 +116,10 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, L
         if (bindingResult.hasErrors()) {
             return new ModelAndView(CREATE_VIEW_PAGE);
         }
+
         entity.setCreationDate(new Date());
         ResponseEntity<ItemDetails> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, ItemDetails.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "", entity, new ItemDetails());
+        ModelAndView mv = postCreateProcessing(ItemDetails.class, response, CREATE_VIEW_PAGE, BASE_NAME, entity, new ItemDetails(), bindingResult, "item details");
         return mv;
     }
 
@@ -147,7 +148,7 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, L
         //This is actually the update date
         entity.setCreationDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, ItemDetails.class);
-        ModelAndView mv = updateProcessing(response, UPDATE_VIEW_PAGE);
+        ModelAndView mv = postUpdateProcessing(ItemDetails.class, response, UPDATE_VIEW_PAGE, BASE_NAME, entity, new ItemDetails(), bindingResult, "item details");
         return mv;
     }
 

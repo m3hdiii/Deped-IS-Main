@@ -52,7 +52,7 @@ public class BorrowRequestController extends AbstractMainController<Request, Lon
         }
         entity.setRequestDate(new Date());
         ResponseEntity<Request> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Request.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "", entity, new Request());
+        ModelAndView mv = postCreateProcessing(Request.class, response, CREATE_VIEW_PAGE, "", entity, new Request(), bindingResult, "");
         return mv;
     }
 
@@ -82,7 +82,7 @@ public class BorrowRequestController extends AbstractMainController<Request, Lon
         //This is actually the update date
         entity.setRequestDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Request.class);
-        ModelAndView mv = updateProcessing(response, UPDATE_VIEW_PAGE);
+        ModelAndView mv = postUpdateProcessing(Request.class, response, UPDATE_VIEW_PAGE, "", entity, new Request(), bindingResult, "");
         return mv;
     }
 

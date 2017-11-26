@@ -1,5 +1,6 @@
 package com.deped.repository.request;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.items.Item;
 import com.deped.model.request.*;
 import com.deped.repository.utils.HibernateFacade;
@@ -39,12 +40,12 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
     }
 
     @Override
-    public RequestDetails create(RequestDetails entity) {
+    public RequestDetails create(RequestDetails entity) throws DatabaseRolesViolationException {
         return hibernateFacade.saveEntity(RequestDetails.class, entity);
     }
 
     @Override
-    public Boolean update(RequestDetails entity) {
+    public Boolean update(RequestDetails entity) throws DatabaseRolesViolationException {
         return hibernateFacade.updateEntity(entity);
     }
 
@@ -64,13 +65,13 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
     }
 
     @Override
-    public Boolean remove(RequestDetails... entities) {
+    public Boolean remove(RequestDetails... entities) throws DatabaseRolesViolationException {
         //TODO write different query for this
         return hibernateFacade.removeEntities(REQUEST_DETAILS_TABLE, "composite?", entities);
     }
 
     @Override
-    public Boolean createOrUpdateAll(RequestDetails... entities) {
+    public Boolean createOrUpdateAll(RequestDetails... entities) throws DatabaseRolesViolationException {
         Boolean isDone = hibernateFacade.createOrUpdateAll(RequestDetails.class, entities);
         return isDone;
     }

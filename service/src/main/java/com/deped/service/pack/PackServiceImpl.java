@@ -1,5 +1,6 @@
 package com.deped.service.pack;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.pack.Pack;
@@ -7,6 +8,7 @@ import com.deped.repository.pack.PackRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +22,26 @@ public class PackServiceImpl implements PackService {
 
     @Override
     public ResponseEntity<Pack> create(Pack entity) {
-        Pack savedEntity = packRepository.create(entity);
+        Pack savedEntity = null;
+        try {
+            savedEntity = packRepository.create(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         ResponseEntity<Pack> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }
 
     @Override
     public ResponseEntity<Response> update(Pack entity) {
-        Boolean isUpdated = packRepository.update(entity);
+        Boolean isUpdated = null;
+        try {
+            isUpdated = packRepository.update(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, Pack.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
@@ -56,7 +70,13 @@ public class PackServiceImpl implements PackService {
 
     @Override
     public ResponseEntity<Response> remove(Pack... entities) {
-        Boolean isRemoved = packRepository.remove(entities);
+        Boolean isRemoved = null;
+        try {
+            isRemoved = packRepository.remove(entities);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isRemoved, Operation.DELETE, Pack.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;

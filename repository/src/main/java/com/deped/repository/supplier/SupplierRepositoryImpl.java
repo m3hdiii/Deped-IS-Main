@@ -1,5 +1,6 @@
 package com.deped.repository.supplier;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.supply.Supplier;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
@@ -17,12 +18,12 @@ public class SupplierRepositoryImpl implements SupplierRepository {
     private HibernateFacade hibernateFacade;
 
     @Override
-    public Supplier create(Supplier entity) {
+    public Supplier create(Supplier entity) throws DatabaseRolesViolationException {
         return hibernateFacade.saveEntity(Supplier.class, entity);
     }
 
     @Override
-    public Boolean update(Supplier entity) {
+    public Boolean update(Supplier entity) throws DatabaseRolesViolationException {
         return hibernateFacade.updateEntity(entity);
     }
 
@@ -42,12 +43,12 @@ public class SupplierRepositoryImpl implements SupplierRepository {
     }
 
     @Override
-    public Boolean remove(Supplier... entities) {
+    public Boolean remove(Supplier... entities) throws DatabaseRolesViolationException {
         return hibernateFacade.removeEntities(SUPPLIER_TABLE, SUPPLIER_TABLE_ID, entities);
     }
 
     @Override
-    public Boolean createOrUpdateAll(Supplier... entities) {
+    public Boolean createOrUpdateAll(Supplier... entities) throws DatabaseRolesViolationException {
         return null;
     }
 }

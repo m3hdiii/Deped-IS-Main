@@ -1,5 +1,6 @@
 package com.deped.repository.user;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.account.User;
 import com.deped.model.security.PasswordResetToken;
 import com.deped.repository.BaseRepository;
@@ -14,11 +15,11 @@ public interface UserRepository extends BaseRepository<User> {
 
     User fetchByEmail(String email);
 
-    PasswordResetToken createPasswordResetTokenForUser(PasswordResetToken passwordResetToken);
+    PasswordResetToken createPasswordResetTokenForUser(PasswordResetToken passwordResetToken) throws DatabaseRolesViolationException;
 
     Boolean removePasswordResetToken(PasswordResetToken passwordResetToken);
 
     PasswordResetToken findByToken(String token);
 
-    boolean changePasswordByToken(Long userId, String token, String newPassword, int period);
+    boolean changePasswordByToken(Long userId, String token, String newPassword, int period) throws DatabaseRolesViolationException;
 }

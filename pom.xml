@@ -6,12 +6,12 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
+        <module>cross-utility</module>
         <module>model</module>
         <module>repository</module>
         <module>service</module>
         <module>restful-service</module>
         <module>web-app</module>
-        <module>cross-utility</module>
     </modules>
     <name>Department Of Education Inventory System</name>
     <url>http://depedpines.com/</url>

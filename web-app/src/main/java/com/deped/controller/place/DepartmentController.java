@@ -55,7 +55,7 @@ public class DepartmentController extends AbstractMainController<Department, Lon
 
         entity.setCreationDate(new Date());
         ResponseEntity<Department> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Department.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Department());
+        ModelAndView mv = postCreateProcessing(Department.class, response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Department(), bindingResult, BASE_NAME);
         return mv;
     }
 
@@ -80,8 +80,8 @@ public class DepartmentController extends AbstractMainController<Department, Lon
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Department entity, BindingResult result) {
-        if (result.hasErrors()) {
+    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Department entity, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
             return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
         }
 
@@ -89,7 +89,7 @@ public class DepartmentController extends AbstractMainController<Department, Lon
         //This is actually the update date
         entity.setCreationDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Department.class);
-        ModelAndView mv = updateProcessing(response, UPDATE_VIEW_PAGE);
+        ModelAndView mv = postUpdateProcessing(Department.class, response, UPDATE_VIEW_PAGE, BASE_NAME, entity, new Department(), bindingResult, BASE_NAME);
         return mv;
     }
 

@@ -8,8 +8,6 @@ import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public class DashboardRepositoryImpl implements DashboardRepository {
 
@@ -45,42 +43,49 @@ public class DashboardRepositoryImpl implements DashboardRepository {
             NativeQuery nativeQuery3 = hibernateSession.createNativeQuery(belowThreshold);
             NativeQuery nativeQuery4 = hibernateSession.createNativeQuery(totalUserNo);
 
-            List lastWeekRequestNoResult = nativeQuery1.list();
-            List lastWeekOrdersNoResult = nativeQuery2.list();
-            List belowThresholdResult = nativeQuery3.list();
-            List totalUserResult = nativeQuery4.list();
+            Object lastWeekRequestNoResult = nativeQuery1.getSingleResult();
+            Object lastWeekOrdersNoResult = nativeQuery2.getSingleResult();
+            Object belowThresholdResult = nativeQuery3.getSingleResult();
+            Object totalUserResult = nativeQuery4.getSingleResult();
 
-            if (lastWeekRequestNoResult.get(0) != null) {
+            if (lastWeekRequestNoResult != null) {
                 try {
-                    String st1 = lastWeekRequestNoResult.get(0).toString();
+                    String st1 = lastWeekRequestNoResult.toString();
+                    System.out.println(st1);
                     lastWeekRequestNoLong = Long.parseLong(st1);
                 } catch (NumberFormatException e) {
+                    e.printStackTrace();
 
                 }
             }
 
-            if (lastWeekOrdersNoResult.get(0) != null) {
+            if (lastWeekOrdersNoResult != null) {
                 try {
-                    String st2 = lastWeekOrdersNoResult.get(0).toString();
+                    String st2 = lastWeekOrdersNoResult.toString();
+                    System.out.println(st2);
                     lastWeekOrdersNoLong = Long.parseLong(st2);
                 } catch (NumberFormatException e) {
-
+                    e.printStackTrace();
                 }
             }
 
-            if (belowThresholdResult.get(0) != null) {
+            if (belowThresholdResult != null) {
                 try {
-                    String st3 = belowThresholdResult.get(0).toString();
+                    String st3 = belowThresholdResult.toString();
+                    System.out.println(st3);
                     belowThresholdLong = Long.parseLong(st3);
                 } catch (NumberFormatException e) {
+                    e.printStackTrace();
                 }
             }
 
-            if (totalUserResult.get(0) != null) {
+            if (totalUserResult != null) {
                 try {
-                    String st4 = totalUserResult.get(0).toString();
+                    String st4 = totalUserResult.toString();
+                    System.out.println(st4);
                     totalUserLong = Long.parseLong(st4);
                 } catch (NumberFormatException e) {
+                    e.printStackTrace();
                 }
             }
             tx.commit();

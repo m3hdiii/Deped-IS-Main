@@ -184,7 +184,7 @@ public class RequestController extends AbstractMainController<Request, Long> {
     public ModelAndView renderListPage() {
         ResponseEntity<List<Request>> response = makeFetchAllRestRequest(BASE_NAME, HttpMethod.POST, new ParameterizedTypeReference<List<Request>>() {
         });
-        ModelAndView mv = listProcessing(response, "requests", LIST_VIEW_PAGE);
+        ModelAndView mv = postListProcessing(response, "requests", LIST_VIEW_PAGE);
         return mv;
     }
 

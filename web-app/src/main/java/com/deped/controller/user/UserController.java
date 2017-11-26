@@ -9,7 +9,7 @@ import com.deped.model.account.Position;
 import com.deped.model.account.User;
 import com.deped.model.location.City;
 import com.deped.model.location.office.Section;
-import com.deped.utils.ImageUtils;
+import com.deped.tools.ControllerImageUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.springframework.core.ParameterizedTypeReference;
@@ -17,7 +17,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
@@ -84,33 +83,18 @@ public class UserController extends AbstractMainController<User, Long> {
     @RequestMapping(value = CREATE_MAPPING, method = POST)
     public ModelAndView createActionMain(@RequestParam MultipartFile userPic, @Valid @ModelAttribute(BASE_NAME) User entity, BindingResult bindingResult) {
 
-
-
-        try {
-            byte[] fileBytes = userPic.getBytes();
-            if (userPic != null && fileBytes != null && fileBytes.length != 0) {
-                boolean isImage = ImageUtils.isImage(fileBytes);
-                if (isImage) {
-                    String encodeBase64 = ImageUtils.encodeBase64(fileBytes);
-                    entity.setPictureBase64(encodeBase64);
-                } else {
-                    bindingResult.addError(new FieldError("Item", "pictureBase64", "Your file is suspicious and it's not an image. Your actions will be logged"));
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String encodeBase64 = ControllerImageUtils.imageUploadProcessing(userPic, bindingResult);
 
         if (bindingResult.hasErrors()) {
             Map<String, Object> modelMap = makeCreateModel(entity);
             return new ModelAndView(CREATE_VIEW_PAGE, modelMap);
         }
 
+        entity.setPictureBase64(encodeBase64);
         entity.setCreationDate(new Date());
-
-
         ResponseEntity<User> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, User.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, "user", entity, new User());
+
+        ModelAndView mv = postCreateProcessing(User.class, response, CREATE_VIEW_PAGE, BASE_NAME, entity, new User(), bindingResult, BASE_NAME);
         mv.addAllObjects(makeCreateModel(new User()));
         return mv;
     }
@@ -137,34 +121,20 @@ public class UserController extends AbstractMainController<User, Long> {
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
     public ModelAndView updateAction(@RequestParam MultipartFile userPic, @PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) User entity, BindingResult bindingResult) {
 
-        try {
-            byte[] fileBytes = userPic.getBytes();
-            if (userPic != null && fileBytes != null && fileBytes.length != 0) {
-                boolean isImage = ImageUtils.isImage(fileBytes);
-                if (isImage) {
-                    String encodeBase64 = ImageUtils.encodeBase64(fileBytes);
-                    entity.setPictureBase64(encodeBase64);
-                } else {
-                    bindingResult.addError(new FieldError("Item", "pictureBase64", "Your file is suspicious and it's not an image. Your actions will be logged"));
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        String encodeBase64 = ControllerImageUtils.imageUploadProcessing(userPic, bindingResult);
 
         if (bindingResult.hasErrors()) {
             Map<String, Object> modelMap = makeCreateModel(entity);
             return new ModelAndView(UPDATE_VIEW_PAGE, modelMap);
         }
 
-
+        entity.setPictureBase64(encodeBase64);
         entity.setUserId(aLong);
         entity.setCreationDate(new Date());
 
-
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, User.class);
 
-        ModelAndView mv = updateProcessing(response, UPDATE_VIEW_PAGE);
+        ModelAndView mv = postUpdateProcessing(User.class, response, UPDATE_VIEW_PAGE, BASE_NAME, entity, new User(), bindingResult, BASE_NAME);
         mv.addAllObjects(makeCreateModel(entity));
         return mv;
     }
@@ -174,7 +144,7 @@ public class UserController extends AbstractMainController<User, Long> {
     public ModelAndView renderListPage() {
         ResponseEntity<List<User>> response = makeFetchAllRestRequest(BASE_NAME, HttpMethod.POST, new ParameterizedTypeReference<List<User>>() {
         });
-        ModelAndView mv = listProcessing(response, "user", LIST_VIEW_PAGE);
+        ModelAndView mv = postListProcessing(response, "user", LIST_VIEW_PAGE);
         return mv;
     }
 

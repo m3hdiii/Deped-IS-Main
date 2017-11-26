@@ -1,5 +1,6 @@
 package com.deped.repository.order;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.items.Item;
 import com.deped.model.order.*;
 import com.deped.repository.utils.HibernateFacade;
@@ -38,12 +39,12 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
     }
 
     @Override
-    public OrderDetails create(OrderDetails entity) {
+    public OrderDetails create(OrderDetails entity) throws DatabaseRolesViolationException {
         return hibernateFacade.saveEntity(OrderDetails.class, entity);
     }
 
     @Override
-    public Boolean update(OrderDetails entity) {
+    public Boolean update(OrderDetails entity) throws DatabaseRolesViolationException {
         return hibernateFacade.updateEntity(entity);
     }
 

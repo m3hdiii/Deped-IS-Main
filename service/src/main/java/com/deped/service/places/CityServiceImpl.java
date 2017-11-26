@@ -1,5 +1,6 @@
 package com.deped.service.places;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.location.City;
@@ -7,6 +8,7 @@ import com.deped.repository.places.CityRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +23,26 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public ResponseEntity<City> create(City entity) {
-        City savedEntity = cityRepository.create(entity);
+        City savedEntity = null;
+        try {
+            savedEntity = cityRepository.create(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         ResponseEntity<City> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }
 
     @Override
     public ResponseEntity<Response> update(City entity) {
-        Boolean isUpdated = cityRepository.update(entity);
+        Boolean isUpdated = null;
+        try {
+            isUpdated = cityRepository.update(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, City.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
@@ -57,7 +71,13 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public ResponseEntity<Response> remove(City... entities) {
-        Boolean isRemoved = cityRepository.remove(entities);
+        Boolean isRemoved = null;
+        try {
+            isRemoved = cityRepository.remove(entities);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isRemoved, Operation.DELETE, City.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;

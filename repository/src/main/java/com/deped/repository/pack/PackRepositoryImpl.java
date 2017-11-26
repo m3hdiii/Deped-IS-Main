@@ -1,14 +1,15 @@
 package com.deped.repository.pack;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.pack.Pack;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import static com.deped.repository.utils.ConstantValues.*;
-
 import java.util.List;
+
+import static com.deped.repository.utils.ConstantValues.*;
 
 @Repository
 public class PackRepositoryImpl implements PackRepository {
@@ -17,13 +18,13 @@ public class PackRepositoryImpl implements PackRepository {
     private HibernateFacade hibernateFacade;
 
     @Override
-    public Pack create(Pack entity) {
+    public Pack create(Pack entity) throws DatabaseRolesViolationException {
         Pack pack = hibernateFacade.saveEntity(Pack.class, entity);
         return pack;
     }
 
     @Override
-    public Boolean update(Pack entity) {
+    public Boolean update(Pack entity) throws DatabaseRolesViolationException {
         Boolean isUpdated = hibernateFacade.updateEntity(entity);
         return isUpdated;
     }
@@ -47,13 +48,13 @@ public class PackRepositoryImpl implements PackRepository {
     }
 
     @Override
-    public Boolean remove(Pack... entities) {
+    public Boolean remove(Pack... entities) throws DatabaseRolesViolationException {
         Boolean isRemoved = hibernateFacade.removeEntities(PACK_TABLE, PACK_TABLE_ID, entities);
         return isRemoved;
     }
 
     @Override
-    public Boolean createOrUpdateAll(Pack... entities) {
+    public Boolean createOrUpdateAll(Pack... entities) throws DatabaseRolesViolationException {
         return null;
     }
 }

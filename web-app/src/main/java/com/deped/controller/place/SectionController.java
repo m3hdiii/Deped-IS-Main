@@ -67,7 +67,7 @@ public class SectionController extends AbstractMainController<Section, Long> {
         entity.setCreationDate(new Date());
         ResponseEntity<Section> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Section.class);
 
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Section());
+        ModelAndView mv = postCreateProcessing(Section.class, response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Section(), bindingResult, BASE_NAME);
         mv.addObject("departments", departments);
         return mv;
     }
@@ -109,7 +109,7 @@ public class SectionController extends AbstractMainController<Section, Long> {
         entity.setCreationDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Section.class);
 
-        ModelAndView mv = updateProcessing(response, UPDATE_VIEW_PAGE);
+        ModelAndView mv = postUpdateProcessing(Section.class, response, UPDATE_VIEW_PAGE, BASE_NAME, entity, new Section(), bindingResult, BASE_NAME);
         mv.addObject("departments", departments);
         return mv;
     }
@@ -120,7 +120,7 @@ public class SectionController extends AbstractMainController<Section, Long> {
     public ModelAndView renderListPage() {
         ResponseEntity<List<Section>> response = makeFetchAllRestRequest(BASE_NAME, HttpMethod.POST, new ParameterizedTypeReference<List<Section>>() {
         });
-        ModelAndView mv = listProcessing(response, "sections", LIST_VIEW_PAGE);
+        ModelAndView mv = postListProcessing(response, "sections", LIST_VIEW_PAGE);
         return mv;
     }
 

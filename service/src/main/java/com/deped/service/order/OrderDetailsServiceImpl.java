@@ -1,5 +1,6 @@
 package com.deped.service.order;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.order.OrderDetails;
@@ -8,6 +9,7 @@ import com.deped.repository.order.OrderDetailsRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +23,26 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
 
     @Override
     public ResponseEntity<OrderDetails> create(OrderDetails entity) {
-        OrderDetails savedEntity = orderDetailsRepository.create(entity);
+        OrderDetails savedEntity = null;
+        try {
+            savedEntity = orderDetailsRepository.create(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         ResponseEntity<OrderDetails> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }
 
     @Override
     public ResponseEntity<Response> update(OrderDetails entity) {
-        Boolean isUpdated = orderDetailsRepository.update(entity);
+        Boolean isUpdated = null;
+        try {
+            isUpdated = orderDetailsRepository.update(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, OrderDetails.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
@@ -57,7 +71,13 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
 
     @Override
     public ResponseEntity<Response> remove(OrderDetails... entities) {
-        Boolean isRemoved = orderDetailsRepository.remove(entities);
+        Boolean isRemoved = null;
+        try {
+            isRemoved = orderDetailsRepository.remove(entities);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isRemoved, Operation.DELETE, OrderDetails.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
@@ -65,7 +85,12 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
 
     @Override
     public ResponseEntity<Response> createOrUpdateAll(OrderDetails... entities) {
-        Boolean isCreated = orderDetailsRepository.createOrUpdateAll(entities);
+        Boolean isCreated = null;
+        try {
+            isCreated = orderDetailsRepository.createOrUpdateAll(entities);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+        }
         Response response = ServiceUtils.makeResponse(isCreated, Operation.CREATE, OrderDetails.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;

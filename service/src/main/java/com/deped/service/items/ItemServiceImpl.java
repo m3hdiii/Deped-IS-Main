@@ -1,5 +1,6 @@
 package com.deped.service.items;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.items.Item;
@@ -7,6 +8,7 @@ import com.deped.repository.items.ItemRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -28,7 +30,13 @@ public class ItemServiceImpl implements ItemService {
         String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, BASE_FILE_FOLDER);
         entity.setPicName(fileName);
 
-        Item savedEntity = itemRepository.create(entity);
+        Item savedEntity = null;
+        try {
+            savedEntity = itemRepository.create(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         ResponseEntity<Item> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }
@@ -40,7 +48,13 @@ public class ItemServiceImpl implements ItemService {
         String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, BASE_FILE_FOLDER);
         entity.setPicName(fileName);
 
-        Boolean isUpdated = itemRepository.update(entity);
+        Boolean isUpdated = null;
+        try {
+            isUpdated = itemRepository.update(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, Item.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
@@ -69,7 +83,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ResponseEntity<Response> remove(Item... entities) {
-        Boolean isRemoved = itemRepository.remove(entities);
+        Boolean isRemoved = null;
+        try {
+            isRemoved = itemRepository.remove(entities);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isRemoved, Operation.DELETE, Item.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;

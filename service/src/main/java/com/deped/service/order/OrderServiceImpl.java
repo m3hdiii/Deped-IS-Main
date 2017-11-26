@@ -1,5 +1,6 @@
 package com.deped.service.order;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.order.Order;
@@ -8,6 +9,7 @@ import com.deped.repository.order.OrderRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -21,14 +23,26 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ResponseEntity<Order> create(Order entity) {
-        Order savedEntity = orderRepository.create(entity);
+        Order savedEntity = null;
+        try {
+            savedEntity = orderRepository.create(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         ResponseEntity<Order> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }
 
     @Override
     public ResponseEntity<Response> update(Order entity) {
-        Boolean isUpdated = orderRepository.update(entity);
+        Boolean isUpdated = null;
+        try {
+            isUpdated = orderRepository.update(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, Order.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
@@ -57,7 +71,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public ResponseEntity<Response> remove(Order... entities) {
-        Boolean isRemoved = orderRepository.remove(entities);
+        Boolean isRemoved = null;
+        try {
+            isRemoved = orderRepository.remove(entities);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isRemoved, Operation.DELETE, Order.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;

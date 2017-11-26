@@ -1,5 +1,6 @@
 package com.deped.repository.places;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.location.office.Section;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
@@ -19,12 +20,12 @@ public class SectionRepositoryImpl implements SectionRepository {
     private HibernateFacade hibernateFacade;
 
     @Override
-    public Section create(Section entity) {
+    public Section create(Section entity) throws DatabaseRolesViolationException {
         return hibernateFacade.saveEntity(Section.class, entity);
     }
 
     @Override
-    public Boolean update(Section entity) {
+    public Boolean update(Section entity) throws DatabaseRolesViolationException {
         return hibernateFacade.updateEntity(entity);
     }
 
@@ -57,7 +58,7 @@ public class SectionRepositoryImpl implements SectionRepository {
     }
 
     @Override
-    public Boolean createOrUpdateAll(Section... entities) {
+    public Boolean createOrUpdateAll(Section... entities) throws DatabaseRolesViolationException {
         return null;
     }
 

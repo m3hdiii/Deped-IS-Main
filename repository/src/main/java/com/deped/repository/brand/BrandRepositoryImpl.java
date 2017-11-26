@@ -1,5 +1,6 @@
 package com.deped.repository.brand;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.brand.Brand;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
@@ -8,9 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static com.deped.repository.utils.ConstantValues.BRAND_TABLE;
-import static com.deped.repository.utils.ConstantValues.BRAND_TABLE_ID;
-import static com.deped.repository.utils.ConstantValues.FETCH_ALL_BRANDS;
+import static com.deped.repository.utils.ConstantValues.*;
 
 @Repository
 public class BrandRepositoryImpl implements BrandRepository {
@@ -19,12 +18,12 @@ public class BrandRepositoryImpl implements BrandRepository {
     private HibernateFacade hibernateFacade;
 
     @Override
-    public Brand create(Brand entity) {
+    public Brand create(Brand entity) throws DatabaseRolesViolationException {
         return hibernateFacade.saveEntity(Brand.class, entity);
     }
 
     @Override
-    public Boolean update(Brand entity) {
+    public Boolean update(Brand entity) throws DatabaseRolesViolationException {
         return hibernateFacade.updateEntity(entity);
     }
 
@@ -44,12 +43,12 @@ public class BrandRepositoryImpl implements BrandRepository {
     }
 
     @Override
-    public Boolean remove(Brand... entities) {
+    public Boolean remove(Brand... entities) throws DatabaseRolesViolationException {
         return hibernateFacade.removeEntities(BRAND_TABLE, BRAND_TABLE_ID, entities);
     }
 
     @Override
-    public Boolean createOrUpdateAll(Brand... entities) {
+    public Boolean createOrUpdateAll(Brand... entities) throws DatabaseRolesViolationException {
         return null;
     }
 }

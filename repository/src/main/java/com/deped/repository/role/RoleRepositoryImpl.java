@@ -1,5 +1,6 @@
 package com.deped.repository.role;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.security.Role;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
@@ -17,12 +18,12 @@ public class RoleRepositoryImpl implements RoleRepository {
     private HibernateFacade hibernateFacade;
 
     @Override
-    public Role create(Role entity) {
+    public Role create(Role entity) throws DatabaseRolesViolationException {
         return hibernateFacade.saveEntity(Role.class, entity);
     }
 
     @Override
-    public Boolean update(Role entity) {
+    public Boolean update(Role entity) throws DatabaseRolesViolationException {
         return hibernateFacade.updateEntity(entity);
     }
 
@@ -42,12 +43,12 @@ public class RoleRepositoryImpl implements RoleRepository {
     }
 
     @Override
-    public Boolean remove(Role... entities) {
+    public Boolean remove(Role... entities) throws DatabaseRolesViolationException {
         return hibernateFacade.removeEntities(ROLE_TABLE, ROLE_TABLE_ID, entities);
     }
 
     @Override
-    public Boolean createOrUpdateAll(Role... entities) {
+    public Boolean createOrUpdateAll(Role... entities) throws DatabaseRolesViolationException {
         return null;
     }
 }

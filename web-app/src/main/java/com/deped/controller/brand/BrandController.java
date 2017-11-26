@@ -3,6 +3,7 @@ package com.deped.controller.brand;
 import com.deped.controller.AbstractMainController;
 import com.deped.model.Response;
 import com.deped.model.brand.Brand;
+import com.deped.tools.ControllerImageUtils;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -15,8 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
-import java.io.IOException;
-import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -53,22 +52,17 @@ public class BrandController extends AbstractMainController<Brand, Long> {
 
     @RequestMapping(value = CREATE_MAPPING, method = POST)
     public ModelAndView createActionWithPic(@RequestParam MultipartFile brandPic, @Valid @ModelAttribute(BASE_NAME) Brand entity, BindingResult bindingResult) {
+        String encodeBase64 = ControllerImageUtils.imageUploadProcessing(brandPic, bindingResult);
+
         if (bindingResult.hasErrors()) {
             ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, BASE_NAME, entity);
             return mv;
         }
-        entity.setCreationDate(new Date());
-        String base64Encoded = null;
-        try {
-            byte[] picture = brandPic.getBytes();
-            base64Encoded = Base64.getEncoder().encodeToString(picture);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        entity.setLogoPic(base64Encoded);
+        entity.setCreationDate(new Date());
+        entity.setLogoPic(encodeBase64);
         ResponseEntity<Brand> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Brand.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Brand());
+        ModelAndView mv = postCreateProcessing(Brand.class, response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Brand(), bindingResult, BASE_NAME);
 
         return mv;
     }
@@ -93,27 +87,18 @@ public class BrandController extends AbstractMainController<Brand, Long> {
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
     public ModelAndView updateActionWithPicture(@RequestParam MultipartFile brandPic, @PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute Brand entity, BindingResult bindingResult) {
 
+        String encodeBase64 = ControllerImageUtils.imageUploadProcessing(brandPic, bindingResult);
+
         if (bindingResult.hasErrors()) {
             ModelAndView mv = new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
             return mv;
         }
 
         entity.setCreationDate(new Date());
+        entity.setLogoPic(encodeBase64);
         entity.setBrandId(aLong);
-        String base64Encoded = null;
-        try {
-            byte[] picture = brandPic.getBytes();
-            base64Encoded = Base64.getEncoder().encodeToString(picture);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        entity.setLogoPic(base64Encoded);
-
-        //This is actually the update date
-        entity.setCreationDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Brand.class);
-        ModelAndView mv = updateProcessing(response, UPDATE_VIEW_PAGE);
+        ModelAndView mv = postUpdateProcessing(Brand.class, response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Brand(), bindingResult, BASE_NAME);
         return mv;
     }
 
@@ -122,7 +107,7 @@ public class BrandController extends AbstractMainController<Brand, Long> {
     public ModelAndView renderListPage() {
         ResponseEntity<List<Brand>> response = makeFetchAllRestRequest(BASE_NAME, HttpMethod.POST, new ParameterizedTypeReference<List<Brand>>() {
         });
-        ModelAndView mv = listProcessing(response, "brands", LIST_VIEW_PAGE);
+        ModelAndView mv = postListProcessing(response, "brands", LIST_VIEW_PAGE);
         return mv;
     }
 

@@ -20,6 +20,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
@@ -44,12 +47,24 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
     public static final String CREATE_ALL_URL = BASE_URL + "%s/create-all";
     public static final String FETCH_BY_ID_URL = BASE_URL + "%s/%d";
 
+    private String createDuplicateMessage = "This %s already exist";
+    private String updateDuplicateMessage = "Update failed! This %s already exist";
+    private String deleteConstraintViolationMessage = "%s with the same % exist. Please choose another";
+
 
     public ResponseEntity<T> makeCreateRestRequest(T entity, String baseRestName, HttpMethod method, Class<T> entityClass) {
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity httpEntity = makeHttpEntity(entity);
         String restUrl = String.format(CREATE_URL, baseRestName);
-        ResponseEntity<T> response = restTemplate.exchange(restUrl, method, httpEntity, entityClass);
+        ResponseEntity<T> response = null;
+
+        try {
+            response = restTemplate.exchange(restUrl, method, httpEntity, entityClass);
+        } catch (HttpClientErrorException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getStatusCode());
+        }
+
         updateSharedEntities(entityClass);
         return response;
     }
@@ -87,7 +102,13 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity httpEntity = makeHttpEntity(entity);
         String restUrl = String.format(UPDATE_URL, baseName);
-        ResponseEntity<Response> response = restTemplate.exchange(restUrl, method, httpEntity, Response.class);
+        ResponseEntity<Response> response;
+        try {
+            response = restTemplate.exchange(restUrl, method, httpEntity, Response.class);
+        } catch (HttpClientErrorException e) {
+            e.printStackTrace();
+            return new ResponseEntity<>(e.getStatusCode());
+        }
         updateSharedEntities(entityClass);
         return response;
     }
@@ -172,16 +193,16 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         return new ModelAndView(jspLocation, map);
     }
 
-    public ModelAndView createProcessing(ResponseEntity response, String createViewPage, String modelName, T oldObject, T freshObject) {
-        Map<String, Object> responseMap = new HashMap<>();
+    public ModelAndView postCreateProcessing(Class<T> entityClass, ResponseEntity response, String createViewPage, String modelName, T oldObject, T freshObject, BindingResult result, String... messagePlaceHolder) {
+        Map<String, Object> responseMap = new HashMap<>(getConfigMap());
         ModelAndView mv = new ModelAndView();
 
-        if (response == null || response.getBody() == null) {
-            responseMap.put(NOT_CREATED_KEY, FAILURE_MESSAGE);
-            responseMap.put(modelName, oldObject);
+        if (response == null || response.getStatusCode() == null) {
+            result.addError(new FieldError(entityClass.getSimpleName(), "error", FAILURE_MESSAGE));
+
         } else {
-            responseMap.put(SUCCESSFULLY_CREATED_KEY, SUCCESS_MESSAGE);
-            responseMap.put(modelName, freshObject);
+            HttpStatus status = response.getStatusCode();
+            processing(status, result, entityClass, responseMap, modelName, oldObject, freshObject, createDuplicateMessage, messagePlaceHolder);
         }
 
         mv.addAllObjects(responseMap);
@@ -189,32 +210,43 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         return mv;
     }
 
-
-    public ModelAndView updateProcessing(ResponseEntity<Response> response, String createViewPage) {
-        Map<String, String> responseMap = new HashMap<>();
-
+    public ModelAndView postUpdateProcessing(Class<T> entityClass, ResponseEntity<Response> response, String createViewPage,
+                                             String modelName, T oldObject, T freshObject,
+                                             BindingResult result, String... messagePlaceHolder) {
+        Map<String, Object> responseMap = new HashMap<>(getConfigMap());
         ModelAndView mv = new ModelAndView();
-        Response responseResult;
-        if (response == null || response.getBody() == null) {
-            responseMap.put(NOT_UPDATED_KEY, FAILURE_MESSAGE);
-        } else {
-            responseResult = response.getBody();
-            switch (responseResult.getResponseStatus()) {
-                case SUCCESSFUL:
-                    responseMap.put(SUCCESSFULLY_UPDATED_KEY, responseResult.getResponseMessage());
-                    break;
-                case FAILED:
-                    responseMap.put(NOT_UPDATED_KEY, responseResult.getResponseMessage());
-                    break;
-            }
 
+        Response responseResult;
+        if (response == null || response.getStatusCode() == null) {
+            result.addError(new FieldError(entityClass.getSimpleName(), "error", FAILURE_MESSAGE));
+
+        } else {
+            HttpStatus status = response.getStatusCode();
+            processing(status, result, entityClass, responseMap, modelName, oldObject, freshObject, updateDuplicateMessage, messagePlaceHolder);
         }
 
-
         mv.addAllObjects(responseMap);
-        mv.addAllObjects(getConfigMap());
         mv.setViewName(createViewPage);
         return mv;
+    }
+
+    private void processing(HttpStatus status, BindingResult result, Class<T> entityClass, Map<String, Object> responseMap, String modelName, T oldObject, T freshObject, String messageFormat, String... messagePlaceHolder) {
+        switch (status) {
+            case CONFLICT:
+                result.addError(new FieldError(entityClass.getSimpleName(), "error", String.format(messageFormat, messagePlaceHolder)));
+                responseMap.put(modelName, oldObject);
+                break;
+
+            case OK:
+                responseMap.put(SUCCESSFULLY_CREATED_KEY, SUCCESS_MESSAGE);
+                responseMap.put(modelName, freshObject);
+                break;
+
+            default:
+                result.addError(new FieldError(entityClass.getSimpleName(), "error", FAILURE_MESSAGE));
+                responseMap.put(modelName, oldObject);
+                break;
+        }
     }
 
 
@@ -244,7 +276,7 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
     }
 
 
-    public ModelAndView listProcessing(ResponseEntity<List<T>> response, String baseJSPPageName, String createViewPage) {
+    public ModelAndView postListProcessing(ResponseEntity<List<T>> response, String baseJSPPageName, String createViewPage) {
         List<T> list = response.getBody();
         HashMap<String, Object> map = new HashMap<>();
         map.put(baseJSPPageName, list);
@@ -335,7 +367,5 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         }
 
         return user;
-
     }
-
 }

@@ -1,5 +1,6 @@
 package com.deped.repository.utils;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -7,6 +8,7 @@ import org.hibernate.boot.Metadata;
 import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
+import org.hibernate.exception.ConstraintViolationException;
 import org.hibernate.query.NativeQuery;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Component;
@@ -46,7 +48,7 @@ public class HibernateFacade {
     }
 
     @Transactional
-    public Boolean updateEntity(Object entity) {
+    public Boolean updateEntity(Object entity) throws DatabaseRolesViolationException {
         Session hibernateSession;
         try {
             hibernateSession = getSessionFactory().openSession();
@@ -61,8 +63,11 @@ public class HibernateFacade {
             tx = hibernateSession.beginTransaction();
             hibernateSession.update(entity);
             tx.commit();
+        } catch (ConstraintViolationException e) {
+            String messageFormat = "You're trying to update the object [%s] into database with same constraint";
+            throw new DatabaseRolesViolationException(
+                    String.format(messageFormat, entity.toString()));
         } catch (Exception e) {
-            e.printStackTrace();
             if (tx != null)
                 tx.rollback();
             return false;
@@ -74,7 +79,7 @@ public class HibernateFacade {
     }
 
     @Transactional
-    public <T> T saveEntity(Class<T> entityClass, T object) {
+    public <T> T saveEntity(Class<T> entityClass, T object) throws DatabaseRolesViolationException {
         Session hibernateSession;
         try {
             hibernateSession = getSessionFactory().openSession();
@@ -89,6 +94,11 @@ public class HibernateFacade {
             tx = hibernateSession.beginTransaction();
             hibernateSession.save(entityClass.getSimpleName(), object);
             tx.commit();
+
+        } catch (ConstraintViolationException e) {
+            String messageFormat = "You're trying to save the object [%s] into database with same constraint";
+            throw new DatabaseRolesViolationException(
+                    String.format(messageFormat, entityClass.getSimpleName()));
         } catch (Exception e) {
             e.printStackTrace();
             if (tx != null)
@@ -338,7 +348,7 @@ public class HibernateFacade {
     }
 
     @Transactional
-    public <T> Boolean createOrUpdateAll(Class<T> entityClass, T... entities) {
+    public <T> Boolean createOrUpdateAll(Class<T> entityClass, T... entities) throws DatabaseRolesViolationException {
         Session hibernateSession;
         try {
             hibernateSession = getSessionFactory().openSession();
@@ -359,6 +369,11 @@ public class HibernateFacade {
             tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
+            if (e instanceof ConstraintViolationException) {
+                String messageFormat = "You're trying to persist an object [%s] into database with same constraint";
+                throw new DatabaseRolesViolationException(
+                        String.format(messageFormat, entityClass.getSimpleName()));
+            }
             if (tx != null)
                 tx.rollback();
             return false;

@@ -1,5 +1,6 @@
 package com.deped.service.request;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.request.Request;
@@ -8,6 +9,7 @@ import com.deped.repository.request.RequestRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +24,26 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public ResponseEntity<Request> create(Request entity) {
-        Request savedEntity = requestRepository.create(entity);
+        Request savedEntity = null;
+        try {
+            savedEntity = requestRepository.create(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         ResponseEntity<Request> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }
 
     @Override
     public ResponseEntity<Response> update(Request entity) {
-        Boolean isUpdated = requestRepository.update(entity);
+        Boolean isUpdated = null;
+        try {
+            isUpdated = requestRepository.update(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, Request.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
@@ -58,7 +72,13 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public ResponseEntity<Response> remove(Request... entities) {
-        Boolean isRemoved = requestRepository.remove(entities);
+        Boolean isRemoved = null;
+        try {
+            isRemoved = requestRepository.remove(entities);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isRemoved, Operation.DELETE, Request.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;

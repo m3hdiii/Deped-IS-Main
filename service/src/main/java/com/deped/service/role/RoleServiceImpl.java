@@ -1,5 +1,6 @@
 package com.deped.service.role;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.security.Role;
@@ -7,6 +8,7 @@ import com.deped.repository.role.RoleRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +22,26 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public ResponseEntity<Role> create(Role entity) {
-        Role savedEntity = roleRepository.create(entity);
+        Role savedEntity = null;
+        try {
+            savedEntity = roleRepository.create(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         ResponseEntity<Role> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }
 
     @Override
     public ResponseEntity<Response> update(Role entity) {
-        Boolean isUpdated = roleRepository.update(entity);
+        Boolean isUpdated = null;
+        try {
+            isUpdated = roleRepository.update(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, Role.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
@@ -56,7 +70,13 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public ResponseEntity<Response> remove(Role... entities) {
-        Boolean isRemoved = roleRepository.remove(entities);
+        Boolean isRemoved = null;
+        try {
+            isRemoved = roleRepository.remove(entities);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isRemoved, Operation.DELETE, Role.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;

@@ -1,5 +1,6 @@
 package com.deped.service.category;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.category.Category;
@@ -7,6 +8,7 @@ import com.deped.repository.category.CategoryRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -20,14 +22,26 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity<Category> create(Category entity) {
-        Category savedEntity = categoryRepository.create(entity);
+        Category savedEntity = null;
+        try {
+            savedEntity = categoryRepository.create(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         ResponseEntity<Category> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }
 
     @Override
     public ResponseEntity<Response> update(Category entity) {
-        Boolean isUpdated = categoryRepository.update(entity);
+        Boolean isUpdated = null;
+        try {
+            isUpdated = categoryRepository.update(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, Category.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
@@ -56,7 +70,13 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public ResponseEntity<Response> remove(Category... entities) {
-        Boolean isRemoved = categoryRepository.remove(entities);
+        Boolean isRemoved = null;
+        try {
+            isRemoved = categoryRepository.remove(entities);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isRemoved, Operation.DELETE, Category.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;

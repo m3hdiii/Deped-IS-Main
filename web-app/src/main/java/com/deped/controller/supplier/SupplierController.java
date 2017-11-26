@@ -68,7 +68,7 @@ public class SupplierController extends AbstractMainController<Supplier, Long> {
 
         entity.setCreationDate(new Date());
         ResponseEntity<Supplier> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Supplier.class);
-        ModelAndView mv = createProcessing(response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Supplier());
+        ModelAndView mv = postCreateProcessing(Supplier.class, response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Supplier(), bindingResult, BASE_NAME);
         return mv;
     }
 
@@ -123,7 +123,7 @@ public class SupplierController extends AbstractMainController<Supplier, Long> {
 
         entity.setCreationDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Supplier.class);
-        ModelAndView mv = updateProcessing(response, UPDATE_VIEW_PAGE);
+        ModelAndView mv = postUpdateProcessing(Supplier.class, response, UPDATE_VIEW_PAGE, BASE_NAME, entity, new Supplier(), bindingResult, BASE_NAME);
         return mv;
     }
 
@@ -132,7 +132,7 @@ public class SupplierController extends AbstractMainController<Supplier, Long> {
     public ModelAndView renderListPage() {
         ResponseEntity<List<Supplier>> response = makeFetchAllRestRequest(BASE_NAME, HttpMethod.POST, new ParameterizedTypeReference<List<Supplier>>() {
         });
-        ModelAndView mv = listProcessing(response, "suppliers", LIST_VIEW_PAGE);
+        ModelAndView mv = postListProcessing(response, "suppliers", LIST_VIEW_PAGE);
         return mv;
     }
 

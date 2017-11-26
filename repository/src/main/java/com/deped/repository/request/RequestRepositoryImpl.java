@@ -1,5 +1,6 @@
 package com.deped.repository.request;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.request.Request;
 import com.deped.model.request.RequestStatus;
 import com.deped.repository.utils.HibernateFacade;
@@ -20,7 +21,7 @@ public class RequestRepositoryImpl implements RequestRepository {
     private HibernateFacade hibernateFacade;
 
     @Override
-    public Request create(Request entity) {
+    public Request create(Request entity) throws DatabaseRolesViolationException {
         if (entity.getRequestStatus() == null)
             entity.setRequestStatus(RequestStatus.SAVED);
 
@@ -29,7 +30,7 @@ public class RequestRepositoryImpl implements RequestRepository {
     }
 
     @Override
-    public Boolean update(Request entity) {
+    public Boolean update(Request entity) throws DatabaseRolesViolationException {
         return hibernateFacade.updateEntity(entity);
     }
 
@@ -50,12 +51,12 @@ public class RequestRepositoryImpl implements RequestRepository {
     }
 
     @Override
-    public Boolean remove(Request... entities) {
+    public Boolean remove(Request... entities) throws DatabaseRolesViolationException {
         return hibernateFacade.removeEntities(REQUEST_TABLE, REQUEST_TABLE_ID, entities);
     }
 
     @Override
-    public Boolean createOrUpdateAll(Request... entities) {
+    public Boolean createOrUpdateAll(Request... entities) throws DatabaseRolesViolationException {
         return null;
     }
 

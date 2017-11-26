@@ -210,7 +210,7 @@ public class OrderController extends AbstractMainController<Order, Long> {
     public ModelAndView renderListPage() {
         ResponseEntity<List<Order>> response = makeFetchAllRestRequest(BASE_NAME, HttpMethod.POST, new ParameterizedTypeReference<List<Order>>() {
         });
-        ModelAndView mv = listProcessing(response, "orders", LIST_VIEW_PAGE);
+        ModelAndView mv = postListProcessing(response, "orders", LIST_VIEW_PAGE);
         return mv;
     }
 

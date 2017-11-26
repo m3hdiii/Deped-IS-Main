@@ -1,5 +1,6 @@
 package com.deped.service.request;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.request.RequestDetails;
@@ -8,6 +9,7 @@ import com.deped.repository.request.RequestDetailsRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +24,26 @@ public class RequestDetailsServiceImpl implements RequestDetailsService {
 
     @Override
     public ResponseEntity<RequestDetails> create(RequestDetails entity) {
-        RequestDetails savedEntity = requestDetailsRepository.create(entity);
+        RequestDetails savedEntity = null;
+        try {
+            savedEntity = requestDetailsRepository.create(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         ResponseEntity<RequestDetails> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }
 
     @Override
     public ResponseEntity<Response> update(RequestDetails entity) {
-        Boolean isUpdated = requestDetailsRepository.update(entity);
+        Boolean isUpdated = null;
+        try {
+            isUpdated = requestDetailsRepository.update(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, RequestDetails.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
@@ -58,7 +72,13 @@ public class RequestDetailsServiceImpl implements RequestDetailsService {
 
     @Override
     public ResponseEntity<Response> remove(RequestDetails... entities) {
-        Boolean isRemoved = requestDetailsRepository.remove(entities);
+        Boolean isRemoved = null;
+        try {
+            isRemoved = requestDetailsRepository.remove(entities);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isRemoved, Operation.DELETE, RequestDetails.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
@@ -66,7 +86,13 @@ public class RequestDetailsServiceImpl implements RequestDetailsService {
 
     @Override
     public ResponseEntity<Response> createOrUpdateAll(RequestDetails... entities) {
-        Boolean isCreated = requestDetailsRepository.createOrUpdateAll(entities);
+        Boolean isCreated = null;
+        try {
+            isCreated = requestDetailsRepository.createOrUpdateAll(entities);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isCreated, Operation.CREATE, RequestDetails.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;

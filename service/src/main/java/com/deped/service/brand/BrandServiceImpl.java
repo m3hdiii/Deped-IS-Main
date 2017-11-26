@@ -1,5 +1,6 @@
 package com.deped.service.brand;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.brand.Brand;
@@ -7,6 +8,7 @@ import com.deped.repository.brand.BrandRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -27,14 +29,26 @@ public class BrandServiceImpl implements BrandService {
         String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, BASE_FILE_FOLDER);
         entity.setLogoUrl(fileName);
 
-        Brand savedEntity = brandRepository.create(entity);
+        Brand savedEntity = null;
+        try {
+            savedEntity = brandRepository.create(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         ResponseEntity<Brand> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }
 
     @Override
     public ResponseEntity<Response> update(Brand entity) {
-        Boolean isUpdated = brandRepository.update(entity);
+        Boolean isUpdated = null;
+        try {
+            isUpdated = brandRepository.update(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, Brand.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
@@ -63,7 +77,13 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public ResponseEntity<Response> remove(Brand... entities) {
-        Boolean isRemoved = brandRepository.remove(entities);
+        Boolean isRemoved = null;
+        try {
+            isRemoved = brandRepository.remove(entities);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
         Response response = ServiceUtils.makeResponse(isRemoved, Operation.DELETE, Brand.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;

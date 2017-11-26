@@ -1,5 +1,6 @@
 package com.deped.repository.order;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.order.Order;
 import com.deped.model.order.OrderState;
 import com.deped.repository.utils.HibernateFacade;
@@ -23,7 +24,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     private HibernateFacade hibernateFacade;
 
     @Override
-    public Order create(Order entity) {
+    public Order create(Order entity) throws DatabaseRolesViolationException {
         if (entity.getOrderState() == null)
             entity.setOrderState(OrderState.SAVED);
 
@@ -32,7 +33,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Boolean update(Order entity) {
+    public Boolean update(Order entity) throws DatabaseRolesViolationException {
         Boolean isUpdated = hibernateFacade.updateEntity(entity);
         return isUpdated;
     }
@@ -69,13 +70,13 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Boolean remove(Order... entities) {
+    public Boolean remove(Order... entities) throws DatabaseRolesViolationException {
         Boolean isOrderDeleted = hibernateFacade.removeEntities(ITEM_TABLE, ITEM_TABLE_ID, entities);
         return isOrderDeleted;
     }
 
     @Override
-    public Boolean createOrUpdateAll(Order... entities) {
+    public Boolean createOrUpdateAll(Order... entities) throws DatabaseRolesViolationException {
         return null;
     }
 

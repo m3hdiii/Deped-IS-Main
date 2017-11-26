@@ -1,5 +1,6 @@
 package com.deped.repository.items;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.items.Item;
 import com.deped.model.items.ItemType;
 import com.deped.repository.utils.HibernateFacade;
@@ -20,13 +21,13 @@ public class ItemRepositoryImpl implements ItemRepository {
     private HibernateFacade hibernateFacade;
 
     @Override
-    public Item create(Item entity) {
+    public Item create(Item entity) throws DatabaseRolesViolationException {
         Item savedItem = hibernateFacade.saveEntity(Item.class, entity);
         return savedItem;
     }
 
     @Override
-    public Boolean update(Item entity) {
+    public Boolean update(Item entity) throws DatabaseRolesViolationException {
         Boolean isUpdated = hibernateFacade.updateEntity(entity);
         return isUpdated;
     }
@@ -50,13 +51,13 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public Boolean remove(Item... entities) {
+    public Boolean remove(Item... entities) throws DatabaseRolesViolationException {
         Boolean isItemDeleted = hibernateFacade.removeEntities(ITEM_TABLE, ITEM_TABLE_ID, entities);
         return isItemDeleted;
     }
 
     @Override
-    public Boolean createOrUpdateAll(Item... entities) {
+    public Boolean createOrUpdateAll(Item... entities) throws DatabaseRolesViolationException {
         return null;
     }
 
