@@ -42,28 +42,6 @@ public class Brand implements Serializable {
     @XSS
     private String description;
 
-    @Column(name = "contact_no1")
-    @NotEmpty(message = "Contact number field can not be blank")
-    @Length(min = 2, max = 45, message = "Contact number field must be between 2 to 45 character")
-    @XSS
-    private String contactNumber;
-
-    @Column(name = "contact_no2")
-    @Length(min = 2, max = 45, message = "Contact number field 2 must be between 2 to 45 character")
-    @XSS
-    private String contactNumber2;
-
-    @Column(name = "central_office_address")
-    @NotEmpty(message = "Central office address field can not be blank")
-    @Length(min = 2, max = 100, message = "Central office address field must be between 2 to 100 character")
-    @XSS
-    private String centralOfficeAddress;
-
-    @Column(name = "service_center_address")
-    @Length(min = 2, max = 100, message = "Service Center address field must be between 2 to 100 character")
-    @XSS
-    private String serviceCenterAddress;
-
     @Column(name = "creation_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
@@ -105,38 +83,6 @@ public class Brand implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public String getContactNumber() {
-        return contactNumber;
-    }
-
-    public void setContactNumber(String contactNumber) {
-        this.contactNumber = contactNumber;
-    }
-
-    public String getContactNumber2() {
-        return contactNumber2;
-    }
-
-    public void setContactNumber2(String contactNumber2) {
-        this.contactNumber2 = contactNumber2;
-    }
-
-    public String getCentralOfficeAddress() {
-        return centralOfficeAddress;
-    }
-
-    public void setCentralOfficeAddress(String centralOfficeAddress) {
-        this.centralOfficeAddress = centralOfficeAddress;
-    }
-
-    public String getServiceCenterAddress() {
-        return serviceCenterAddress;
-    }
-
-    public void setServiceCenterAddress(String serviceCenterAddress) {
-        this.serviceCenterAddress = serviceCenterAddress;
     }
 
     public Date getCreationDate() {

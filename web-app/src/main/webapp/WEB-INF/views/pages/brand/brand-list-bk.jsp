@@ -35,10 +35,6 @@
                 <tr>
                     <th class="col-md-5">Name</th>
                     <th class="col-md-5">Description</th>
-                    <th class="col-md-5">Contact Number</th>
-                    <th class="col-md-5">Contact Number 2</th>
-                    <th class="col-md-5">Contact Office Address</th>
-                    <th class="col-md-5">Service Center Address</th>
                     <th class="col-md-5">Creation Date</th>
                     <th class="col-md-2">Edit</th>
                     <th class="col-md-2">Delete</th>
@@ -50,10 +46,6 @@
                     <tr>
                         <td class="col-md-2"><a href="/brand/${brand.brandId}">${brand.name}</a></td>
                         <td class="col-md-2">${brand.description}</td>
-                        <td class="col-md-2">${brand.contactNumber}</td>
-                        <td class="col-md-2">${brand.contactNumber2}</td>
-                        <td class="col-md-2">${brand.centralOfficeAddress}</td>
-                        <td class="col-md-2">${brand.serviceCenterAddress}</td>
                         <td class="col-md-2">${brand.creationDate}</td>
                         <td><a href="/brand/update/${brand.brandId}"><img src="${resourceURL}/images/edit.png"
                                                                           width="16"/></a></td>

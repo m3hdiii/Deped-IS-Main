@@ -83,27 +83,7 @@
                                                        cols="3" rows="3" id="newBrandDesc" maxlength="100" placeholder="Enter Description Here..."/>
                                         <!--<span class="word-count">0</span> / <span class="word-left">100</span>-->
                                     </div>
-
-                                    <div class="form-group">
-                                        <label for="newBrandPhone">Phone Number</label>
-                                        <form:input path="contactNumber" type="number" class="form-control"
-                                                    id="newBrandPhone" placeholder="ex. 09123456789"/>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="newBrandTelephone">Telephone Number</label>
-                                        <form:input path="contactNumber2" type="number" class="form-control"
-                                                    id="newBrandTelephone" placeholder="ex. 477-2380-32"/>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="newOfficeAddress">Central Office Address</label>
-                                        <form:input path="centralOfficeAddress" type="text" class="form-control"
-                                                    id="newOfficeAddress" placeholder="Brand Central Office"/>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="newServiceAddress">Service Center Address</label>
-                                        <form:input path="serviceCenterAddress" type="text" class="form-control"
-                                                    id="newServiceAddress" placeholder="Brand Service Center"/>
-                                    </div>
+                                    
                                     <div class="form-group">
                                         <label for="newBrandPic">Brand Logo</label>
                                         <input type="file" name="brandPic" id="newBrandPic"/>

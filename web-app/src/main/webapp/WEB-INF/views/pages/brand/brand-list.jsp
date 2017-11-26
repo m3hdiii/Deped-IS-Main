@@ -86,22 +86,6 @@
                                 </c:otherwise>
                             </c:choose>
                             <hr size="30">
-                            <div class="address col-xs-6">
-                                <details>
-                                    <summary class="officeAddress">Office Address</summary>
-                                    <small>${brand.centralOfficeAddress}</small>
-                                </details>
-                                <details>
-                                    <summary class="serviceCenter">Service Center Address</summary>
-                                    <small>${brand.serviceCenterAddress}</small>
-                                </details>
-                            </div>
-
-                            <div class="col-xs-6 contacts">
-                                <p><label><i class="fa fa-mobile-phone"></i></label>${brand.contactNumber}</p>
-                                <p><label><i class="fa fa-phone"></i></label>${brand.contactNumber2}</p>
-                            </div>
-
                         </div>
                     </div>
                 </c:forEach>
