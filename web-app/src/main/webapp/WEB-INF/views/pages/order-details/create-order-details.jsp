@@ -62,104 +62,108 @@
             </div>
         </c:if>
 
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Basic DataTable</div>
+                    <div class="panel-body">
 
-        <div class="panel panel-default">
-            <div class="panel-heading">Basic DataTable</div>
-            <div class="panel-body">
-
-                <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered"
-                       id="basic-datatable">
-                    <thead>
-                    <tr>
-                        <th>Image</th>
-                        <th>Name</th>
-                        <th>Available QTY</th>
-                        <th>Package Capacity</th>
-                        <th>Packages</th>
-                        <th>No. of Packs</th>
-                        <th>Item QTY</th>
-                        <th>Category</th>
-                        <th>Item Type</th>
-                        <th>Unit Price</th>
-                        <th>Suppliers</th>
-                        <th>Add To Order</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                        <c:forEach items="${itemList}" var="item" varStatus="loop">
+                        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered"
+                               id="basic-datatable">
+                            <thead>
                             <tr>
-                            <form:form commandName="orderDetail" id="orderDetails${loop.index}" method="post">
+                                <th class="col-sm-1">Image</th>
+                                <th class="col-sm-1">Name</th>
+                                <th class="col-sm-1">Available QTY</th>
+                                <th class="col-sm-1">Package Capacity</th>
+                                <th class="col-sm-1">Packages</th>
+                                <th class="col-sm-1">No. of Packs</th>
+                                <th class="col-sm-1">Item QTY</th>
+                                <th class="col-sm-1">Category</th>
+                                <th class="col-sm-1">Item Type</th>
+                                <th class="col-sm-1">Unit Price</th>
+                                <th class="col-sm-1">Suppliers</th>
+                                <th class="col-sm-1">Add To Order</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+
+                            <c:forEach items="${itemList}" var="item" varStatus="loop">
+                                <tr>
+                                <form:form commandName="orderDetail" id="orderDetails${loop.index}" method="post">
 
                                     <c:choose>
                                         <c:when test="${not empty item.picName}">
-                                            <td><img width="64" src="${baseUrl}${item.picName}" alt="item image"/></td>
+                                            <td class="col-sm-2"><img width="64" src="${baseUrl}${item.picName}" alt="item image"/></td>
                                         </c:when>
                                         <c:otherwise>
-                                            <td><img width="64" src="${resourceURL}/images/shared-images/no-item.png"
-                                                     alt="item image"/>
+                                            <td class="col-sm-2"><img width="64" src="${resourceURL}/images/shared-images/no-item.png"
+                                                                      alt="item image"/>
                                             </td>
                                         </c:otherwise>
                                     </c:choose>
 
-                                    <td>${item.name}</td>
+                                    <td class="col-sm-2">${item.name}</td>
 
-                                    <td>${item.quantity}</td>
+                                    <td class="col-sm-2">${item.quantity}</td>
 
-                                    <td>
-                                        <div class="col-md-2">
-                                            <form:input type="number" min="0" path="packCapacity"/>
+                                    <td class="col-sm-2">
+                                        <div class="col-sm-2">
+                                            <form:input class="col-sm-2" type="number" min="0" path="packCapacity"/>
                                         </div>
                                     </td>
 
-                                    <td>
-                                        <form:select path="pack">
-                                            <form:options items="${packs}" itemLabel="name" itemValue="packId"/>
+                                    <td class="col-sm-4">
+                                        <form:select class="col-sm-4" path="pack">
+                                            <form:options class="col-sm-4" items="${packs}" itemLabel="name" itemValue="packId"/>
                                         </form:select>
                                     </td>
 
-                                    <td>
-                                        <form:input type="number" min="0" path="noOfPacks"/>
+                                    <td class="col-sm-2">
+                                        <form:input class="col-sm-2" type="number" min="0" path="noOfPacks"/>
                                     </td>
 
-                                    <td>
-                                        <form:input type="number" min="0" path="totalQuantityRequestNo"/>
+                                    <td class="col-sm-2">
+                                        <form:input class="col-sm-2" ype="number" min="0" path="totalQuantityRequestNo"/>
                                     </td>
 
 
-                                    <td>
-                                        <form:select path="category">
-                                            <form:options items="${categories}" itemLabel="name" itemValue="categoryId"/>
+                                    <td class="col-sm-4">
+                                        <form:select class="col-sm-4" path="category">
+                                            <form:options class="col-sm-4" items="${categories}" itemLabel="name" itemValue="categoryId"/>
                                         </form:select>
                                     </td>
 
-                                    <td>${item.itemType}</td>
+                                    <td class="col-sm-3">${item.itemType}</td>
 
-                                    <td>
-                                        <form:input path="unitPrice"/>
+                                    <td class="col-sm-3">
+                                        <form:input class="col-sm-3" path="unitPrice"/>
                                     </td>
 
-                                    <td>
-                                        <form:select path="supplier">
-                                            <form:options items="${suppliers}" itemLabel="name" itemValue="supplierId"/>
+                                    <td class="col-sm-4">
+                                        <form:select class="col-sm-4" path="supplier">
+                                            <form:options class="col-sm-4" items="${suppliers}" itemLabel="name" itemValue="supplierId"/>
                                         </form:select>
                                     </td>
 
-                                <input type="hidden" name="order" value="${relatedOrder.orderId}"/>
-                                <input type="hidden" name="item" value="${item.itemId}"/>
+                                    <input type="hidden" name="order" value="${relatedOrder.orderId}"/>
+                                    <input type="hidden" name="item" value="${item.itemId}"/>
 
-                                    <td>
-                                        <button class="btn btn-success btn-block" type="submit">Add To Order</button>
+                                    <td class="col-sm-2">
+                                        <button class="col-sm-2 btn btn-success btn-block" type="submit">Add To Order</button>
                                     </td>
-                                </tr>
-                            </form:form>
-                        </c:forEach>
+                                    </tr>
+                                </form:form>
+                            </c:forEach>
 
-                    </tbody>
-                </table>
+                            </tbody>
+                        </table>
 
+                    </div>
+                </div>
             </div>
         </div>
+
     </div>
 
             <c:import url="../../includes/footer.jsp"/>
