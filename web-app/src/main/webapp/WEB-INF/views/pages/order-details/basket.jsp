@@ -72,9 +72,9 @@
             <th>Item Type</th>
             <th>Available Quantity</th>
             <th>Item Picture</th>
-            <th>Packages</th>
-            <th>Package Capacity</th>
-            <th>No of Packs</th>
+            <th>Units</th>
+            <th>Unit Capacity</th>
+            <th>No of Units</th>
             <th>Total Capacity</th>
             <th>Category</th>
             <th>Unit Price</th>
@@ -111,21 +111,21 @@
                         </c:choose>
 
                         <td>
-                            <form:select multiple="single" path="map['${strKey}'].pack">
-                                <form:option value="${orderDet.pack.packId}" selected="true"
-                                             label="${orderDet.pack.name}"/>
+                            <form:select multiple="single" path="map['${strKey}'].unit">
+                                <form:option value="${orderDet.unit.name}" selected="true"
+                                             label="${orderDet.unit.name}"/>
                                 <option disabled>──────────</option>
-                                <form:options items="${packs}" itemLabel="name" itemValue="packId"/>
+                                <form:options items="${units}" itemLabel="name" itemValue="name"/>
                             </form:select>
                         </td>
 
                         <td>
-                            <form:input path="map['${strKey}'].packCapacity" value="${orderDet.packCapacity}"/>
+                            <form:input path="map['${strKey}'].unitCapacity" value="${orderDet.unitCapacity}"/>
                         </td>
 
                         <td>
-                            <form:input path="map['${strKey}'].noOfPacks"
-                                        value="${orderDet.noOfPacks}"/>
+                            <form:input path="map['${strKey}'].noOfUnits"
+                                        value="${orderDet.noOfUnits}"/>
                         </td>
 
                         <td>
@@ -135,10 +135,10 @@
 
                         <td>
                             <form:select multiple="single" path="map['${strKey}'].category">
-                                <form:option value="${orderDet.category.categoryId}" selected="true"
+                                <form:option value="${orderDet.category.name}" selected="true"
                                              label="${orderDet.category.name}"/>
                                 <option disabled>──────────</option>
-                                <form:options items="${categories}" itemLabel="name" itemValue="categoryId"/>
+                                <form:options items="${categories}" itemLabel="name" itemValue="name"/>
                             </form:select>
                         </td>
 
@@ -156,11 +156,11 @@
                         </td>
 
                         <form:hidden path="map['${strKey}'].order" value="${relatedOrder.orderId}"/>
-                        <form:hidden path="map['${strKey}'].item" value="${orderDet.item.itemId}"/>
-                        <form:hidden path="map['${strKey}'].orderDetailsID.categoryId"
-                                     value="${orderDet.category.categoryId}"/>
+                        <form:hidden path="map['${strKey}'].item" value="${orderDet.item.name}"/>
+                        <form:hidden path="map['${strKey}'].orderDetailsID.categoryName"
+                                     value="${orderDet.category.name}"/>
                         <form:hidden path="map['${strKey}'].orderDetailsID.orderId" value="${orderDet.order.orderId}"/>
-                        <form:hidden path="map['${strKey}'].orderDetailsID.itemId" value="${orderDet.item.itemId}"/>
+                        <form:hidden path="map['${strKey}'].orderDetailsID.itemName" value="${orderDet.item.name}"/>
 
                         <td><img src="${resourceURL}/images/edit.png"></td>
                         <td>

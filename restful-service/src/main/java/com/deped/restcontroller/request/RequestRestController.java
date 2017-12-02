@@ -69,8 +69,8 @@ public class RequestRestController extends AbstractMainRestController<Request, L
     }
 
     @RequestMapping(value = FETCH_MAPPING_BY_USER, method = RequestMethod.POST)
-    public ResponseEntity<List<Request>> fetchAllByUserId(@PathVariable(ID_STRING_LITERAL) Long userId) {
-        ResponseEntity<List<Request>> response = requestService.fetchAllByUserId(userId);
+    public ResponseEntity<List<Request>> fetchAllByUsername(@PathVariable(ID_STRING_LITERAL) String username) {
+        ResponseEntity<List<Request>> response = requestService.fetchAllByUsername(username);
         return response;
     }
 

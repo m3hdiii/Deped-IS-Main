@@ -69,7 +69,9 @@
                                 <td>${section.department.name}</td>
                                 <td>
                                     <div class="btn-group visible-lg-inline-block">
-                                        <a href="/section/update/${section.sectionId}" class="btn btn-purple tooltip-btn" data-toggle="tooltip" data-placement="top" title="Edit Section"><i
+                                        <a href="<c:url value='/section/update/${section.name}'/>"
+                                           class="btn btn-purple tooltip-btn" data-toggle="tooltip" data-placement="top"
+                                           title="Edit Section"><i
                                                 class="fa fa-pencil"></i></a>
                                         <button type="button" class="btn btn-danger tooltip-btn" data-toggle="tooltip" data-placement="top" title="Delete" ><i class="fa fa-trash"></i></button>
                                     </div>
@@ -82,39 +84,6 @@
                 </div>
             </div>
         </div>
-        <!-- Warper Ends Here (working area) -->
-
-    <%--<div class="row">--%>
-        <%--<div class="col col-lg-12">--%>
-            <%--<div class="panel-heading"><h1>Section List</h1><div/>--%>
-            <%--<div class="panel panel-default">--%>
-                <%--<table class="table table-hover">--%>
-                    <%--<thead>--%>
-                    <%--<tr>--%>
-                        <%--<th>Name</th>--%>
-                        <%--<th>Description</th>--%>
-                        <%--<th>Department</th>--%>
-                        <%--<th>Edit Section</th>--%>
-                        <%--<th>Remove Section</th>--%>
-
-                    <%--</tr>--%>
-                    <%--</thead>--%>
-                    <%--<tbody>--%>
-                    <%--<c:forEach items="${sections}" var="section">--%>
-                        <%--<tr>--%>
-                            <%--<td>${section.name}</td>--%>
-                            <%--<td>${section.description}</td>--%>
-                            <%--<td>${section.department.name}</td>--%>
-                            <%--<td><a href="/section/update/${section.sectionId}"><img src="${resourceURL}/images/edit.png"--%>
-                                                                                    <%--width="16"/></a></td>--%>
-                            <%--<td><img src="${resourceURL}/images/delete.png" width="16"/></td>--%>
-                        <%--</tr>--%>
-                    <%--</c:forEach>--%>
-                    <%--</tbody>--%>
-                <%--</table>--%>
-            <%--</div>--%>
-        <%--</div>--%>
-    <%--</div>--%>
 
             <c:import url="../../includes/footer.jsp"/>
 </section>

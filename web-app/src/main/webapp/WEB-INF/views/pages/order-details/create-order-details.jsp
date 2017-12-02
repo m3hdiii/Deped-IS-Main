@@ -75,9 +75,9 @@
                                 <th class="col-sm-1">Image</th>
                                 <th class="col-sm-1">Name</th>
                                 <th class="col-sm-1">Available QTY</th>
-                                <th class="col-sm-1">Package Capacity</th>
-                                <th class="col-sm-1">Packages</th>
-                                <th class="col-sm-1">No. of Packs</th>
+                                <th class="col-sm-1">Unit Capacity</th>
+                                <th class="col-sm-1">Unit</th>
+                                <th class="col-sm-1">No. of Units</th>
                                 <th class="col-sm-1">Item QTY</th>
                                 <th class="col-sm-1">Category</th>
                                 <th class="col-sm-1">Item Type</th>
@@ -109,18 +109,19 @@
 
                                     <td class="col-sm-2">
                                         <div class="col-sm-2">
-                                            <form:input class="col-sm-2" type="number" min="0" path="packCapacity"/>
+                                            <form:input class="col-sm-2" type="number" min="0" path="unitCapacity"/>
                                         </div>
                                     </td>
 
                                     <td class="col-sm-4">
-                                        <form:select class="col-sm-4" path="pack">
-                                            <form:options class="col-sm-4" items="${packs}" itemLabel="name" itemValue="packId"/>
+                                        <form:select class="col-sm-4" path="unit">
+                                            <form:options class="col-sm-4" items="${units}" itemLabel="name"
+                                                          itemValue="name"/>
                                         </form:select>
                                     </td>
 
                                     <td class="col-sm-2">
-                                        <form:input class="col-sm-2" type="number" min="0" path="noOfPacks"/>
+                                        <form:input class="col-sm-2" type="number" min="0" path="noOfUnits"/>
                                     </td>
 
                                     <td class="col-sm-2">
@@ -130,7 +131,8 @@
 
                                     <td class="col-sm-4">
                                         <form:select class="col-sm-4" path="category">
-                                            <form:options class="col-sm-4" items="${categories}" itemLabel="name" itemValue="categoryId"/>
+                                            <form:options class="col-sm-4" items="${categories}" itemLabel="name"
+                                                          itemValue="name"/>
                                         </form:select>
                                     </td>
 
@@ -147,7 +149,7 @@
                                     </td>
 
                                     <input type="hidden" name="order" value="${relatedOrder.orderId}"/>
-                                    <input type="hidden" name="item" value="${item.itemId}"/>
+                                    <input type="hidden" name="item" value="${item.name}"/>
 
                                     <td class="col-sm-2">
                                         <button class="col-sm-2 btn btn-success btn-block" type="submit">Add To Order</button>

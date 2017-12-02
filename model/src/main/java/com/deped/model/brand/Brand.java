@@ -25,17 +25,17 @@ import static com.deped.repository.utils.ConstantValues.FETCH_ALL_BRAND_RANGES;
 @Table(name = "brand")
 public class Brand implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "brand_id")
-    private Long brandId;
 
-    @Column(name = "name")
     @NotEmpty(message = "Name field can not be blank")
     @Length(min = 2, max = 45, message = "Name filed length must be between 2 to 45 character")
     @XSS
     @Pattern(regexp = "^[a-zA-Z0-9_\\s]*$", message = "Name field must contain number, alphabet, space and underscore only")
+    @Id
+    @Column(name = "brand_name")
     private String name;
+
+    @Transient
+    private String previousIdName;
 
     @Column(name = "description")
     @Length(max = 400, message = "Description field must not be more than 400 character")
@@ -46,7 +46,7 @@ public class Brand implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "modelNumber")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "brand")
     private List<BrandModel> brandModels;
 
     @Column(name = "logo_url")
@@ -59,14 +59,6 @@ public class Brand implements Serializable {
 //    private Set<Item> items;
 
     public Brand() {
-    }
-
-    public Long getBrandId() {
-        return brandId;
-    }
-
-    public void setBrandId(Long brandId) {
-        this.brandId = brandId;
     }
 
     public String getName() {
@@ -115,6 +107,14 @@ public class Brand implements Serializable {
 
     public void setLogoPic(String logoPic) {
         this.logoPic = logoPic;
+    }
+
+    public String getPreviousIdName() {
+        return previousIdName;
+    }
+
+    public void setPreviousIdName(String previousIdName) {
+        this.previousIdName = previousIdName;
     }
 
     //    public Set<Item> getItems() {

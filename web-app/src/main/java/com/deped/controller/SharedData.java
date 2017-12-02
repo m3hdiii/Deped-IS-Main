@@ -8,9 +8,9 @@ import com.deped.model.items.Item;
 import com.deped.model.location.City;
 import com.deped.model.location.Country;
 import com.deped.model.location.office.Department;
-import com.deped.model.pack.Pack;
 import com.deped.model.security.Role;
 import com.deped.model.supply.Supplier;
+import com.deped.model.unit.Unit;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
@@ -27,7 +27,7 @@ public class SharedData {
     private static List<Department> departments;
     private static Map<ClientEnumKey, String> clientConfigsMap;
     private static List<Item> items;
-    private static List<Pack> packs;
+    private static List<Unit> packs;
     private static List<Category> categories;
     private static List<Supplier> suppliers;
     private static String restBaseUrl;
@@ -44,7 +44,7 @@ public class SharedData {
 
     public static synchronized void refreshAll() {
         getItems(true);
-        getPacks(true);
+        getUnits(true);
         getCategories(true);
         getSuppliers(true);
         getCountries(true);
@@ -63,9 +63,9 @@ public class SharedData {
         return items;
     }
 
-    public static synchronized List<Pack> getPacks(boolean dataIsUpdated) {
+    public static synchronized List<Unit> getUnits(boolean dataIsUpdated) {
         if (packs == null || dataIsUpdated) {
-            packs = fetchAll("pack", new ParameterizedTypeReference<List<Pack>>() {
+            packs = fetchAll("unit", new ParameterizedTypeReference<List<Unit>>() {
             });
         }
         return packs;

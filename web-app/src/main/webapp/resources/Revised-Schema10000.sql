@@ -506,7 +506,7 @@ LOCK TABLES `order_item` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `pack`
+-- Table structure for table `unit`
 --
 
 DROP TABLE IF EXISTS `pack`;
@@ -523,13 +523,13 @@ CREATE TABLE `pack` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `pack`
+-- Dumping data for table `unit`
 --
 
 LOCK TABLES `pack` WRITE;
-/*!40000 ALTER TABLE `pack` DISABLE KEYS */;
+/*!40000 ALTER TABLE `unit` DISABLE KEYS */;
 INSERT INTO `pack` VALUES (1,'Pack Test 200','Pack Test 200 Description',50,'2017-10-08 08:43:35'),(2,'Pack','Pack Description',100,'2017-10-08 13:03:15');
-/*!40000 ALTER TABLE `pack` ENABLE KEYS */;
+/*!40000 ALTER TABLE `unit` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --

@@ -59,7 +59,7 @@ public class BorrowRequestController extends AbstractMainController<Request, Lon
     @Override
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
     public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Request> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Request.class);
+        ResponseEntity<Request> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(aLong), Request.class);
         ModelAndView mv = renderProcessing(response, aLong, BASE_NAME, INFO_VIEW_PAGE);
         return mv;
     }
@@ -67,7 +67,7 @@ public class BorrowRequestController extends AbstractMainController<Request, Lon
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
     public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Request> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Request.class);
+        ResponseEntity<Request> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(aLong), Request.class);
         Request item = response.getBody();
         return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, item);
     }

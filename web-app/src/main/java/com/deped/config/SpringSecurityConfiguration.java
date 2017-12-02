@@ -46,7 +46,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/refresh-all").hasRole("ADMIN")
 
                 .antMatchers("/category/list").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_SUPPLY_OFFICER')")
-                .antMatchers("/pack/list").access("hasRole('ROLE_ADMIN')  OR hasRole('ROLE_SUPPLY_OFFICER')")
+                .antMatchers("/unit/list").access("hasRole('ROLE_ADMIN')  OR hasRole('ROLE_SUPPLY_OFFICER')")
                 .antMatchers("/brand/list").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_SUPPLY_OFFICER')")
                 .antMatchers("/order/list").access("hasRole('ROLE_ADMIN')")
                 .antMatchers("/request/list").access("hasRole('ROLE_ADMIN')")
@@ -60,7 +60,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/item/**").hasRole("SUPPLY_OFFICER")
                 .antMatchers("/category/**").hasRole("SUPPLY_OFFICER")
                 .antMatchers("/brand/**").hasRole("SUPPLY_OFFICER")
-                .antMatchers("/pack/**").hasRole("SUPPLY_OFFICER")
+                .antMatchers("/unit/**").hasRole("SUPPLY_OFFICER")
                 .antMatchers("/department/**").hasRole("ADMIN")
                 .antMatchers("/section/**").hasRole("ADMIN")
 
@@ -68,7 +68,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 .antMatchers("/user/update/*", "/user/create").hasRole("ADMIN")
                 .antMatchers("/user/list").access("hasRole('ROLE_CHIEF') OR hasRole('ROLE_ADMIN')")
-                .antMatchers("/user/{userId}").access("@centralizedAccessControl.checkUserChangeInfoAccess(authentication, #userId) OR hasRole('ROLE_CHIEF') OR hasRole('ROLE_ADMIN')")
+                .antMatchers("/user/{username}").access("@centralizedAccessControl.checkUserChangeInfoAccess(authentication, #username) OR hasRole('ROLE_CHIEF') OR hasRole('ROLE_ADMIN')")
 
                 .antMatchers("/request/create").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_PERSONNEL') OR hasRole('ROLE_CHIEF') OR hasRole('ROLE_SUPPLY_OFFICER')")
                 .antMatchers("/request-details/create/*").access("hasRole('ROLE_ADMIN') OR hasRole('ROLE_PERSONNEL') OR hasRole('ROLE_CHIEF') OR hasRole('ROLE_SUPPLY_OFFICER')")

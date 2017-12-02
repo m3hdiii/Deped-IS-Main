@@ -18,7 +18,7 @@ import java.util.List;
  */
 
 @RestController
-public class UserRestController extends AbstractMainRestController<User, Long> {
+public class UserRestController extends AbstractMainRestController<User, String> {
 
     private static final String BASE_NAME = "user";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
@@ -66,8 +66,8 @@ public class UserRestController extends AbstractMainRestController<User, Long> {
 
     @Override
     @RequestMapping(value = FETCH_BY_ID_MAPPING, method = RequestMethod.GET)
-    public ResponseEntity<User> fetchById(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<User> response = userService.fetchById(aLong);
+    public ResponseEntity<User> fetchById(@PathVariable(ID_STRING_LITERAL) String id) {
+        ResponseEntity<User> response = userService.fetchById(id);
         return response;
     }
 
@@ -105,13 +105,13 @@ public class UserRestController extends AbstractMainRestController<User, Long> {
 
     @RequestMapping(value = "/user/check-token/", method = RequestMethod.POST)
     public ResponseEntity<Response> checkToken(@RequestBody String[] values) {
-        ResponseEntity<Response> response = userService.checkToken(Long.valueOf(values[0]), values[1]);
+        ResponseEntity<Response> response = userService.checkToken(values[0], values[1]);
         return response;
     }
 
     @RequestMapping(value = "/user/change-password/", method = RequestMethod.POST)
     public ResponseEntity<Response> changePassword(@RequestBody String[] values) {
-        ResponseEntity<Response> response = userService.changePasswordByToken(Long.valueOf(values[0]), values[1], values[2]);
+        ResponseEntity<Response> response = userService.changePasswordByToken(values[0], values[1], values[2]);
         return response;
     }
 

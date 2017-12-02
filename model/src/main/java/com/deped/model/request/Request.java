@@ -51,7 +51,7 @@ public class Request implements Serializable {
     private RequestStatus requestStatus;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "username")
     private User user;
 
     @Column(name = "admin_notice")

@@ -30,7 +30,7 @@ public class RequestItemServiceImpl implements RequestItemService {
     }
 
     @Override
-    public ResponseEntity<Item> fetchById(Object id) {
+    public ResponseEntity<Item> fetchById(Long id) {
         return null;
     }
 

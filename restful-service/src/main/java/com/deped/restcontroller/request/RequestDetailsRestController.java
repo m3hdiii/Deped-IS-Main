@@ -101,9 +101,9 @@ public class RequestDetailsRestController extends AbstractMainRestController<Req
     }
 
     @RequestMapping(value = UPDATE_STATUS_MAPPING, method = RequestMethod.POST)
-    public ResponseEntity<Response> updateOrderStatus(@PathVariable(ID_STRING_LITERAL) Long userId, @PathVariable("state") Integer orderDetailsState, @RequestBody RequestDetails... entities) {
+    public ResponseEntity<Response> updateOrderStatus(@PathVariable(ID_STRING_LITERAL) String username, @PathVariable("state") Integer orderDetailsState, @RequestBody RequestDetails... entities) {
         RequestDetailsStatus status = RequestDetailsStatus.values()[orderDetailsState];
-        ResponseEntity<Response> response = requestDetailsService.updateRequestStatus(userId, status, entities);
+        ResponseEntity<Response> response = requestDetailsService.updateRequestStatus(username, status, entities);
         return response;
     }
 }

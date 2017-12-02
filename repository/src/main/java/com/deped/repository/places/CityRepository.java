@@ -5,6 +5,6 @@ import com.deped.repository.BaseRepository;
 
 import java.util.List;
 
-public interface CityRepository extends BaseRepository<City> {
+public interface CityRepository extends BaseRepository<City, Long> {
     List<City> fetchAllByCountryCode(String countryCode);
 }

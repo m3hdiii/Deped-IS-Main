@@ -46,7 +46,7 @@ public class RequestRepositoryImpl implements RequestRepository {
     }
 
     @Override
-    public Request fetchById(Object id) {
+    public Request fetchById(Long id) {
         return hibernateFacade.fetchEntityById(Request.class, id);
     }
 
@@ -70,10 +70,10 @@ public class RequestRepositoryImpl implements RequestRepository {
     }
 
     @Override
-    public List<Request> fetchAllByUserId(Long userId) {
-        String nativeQuery = "SELECT * FROM request WHERE user_id = :userId ORDER BY request_date DESC";
+    public List<Request> fetchAllByUsername(String username) {
+        String nativeQuery = "SELECT * FROM request WHERE username = :username ORDER BY request_date DESC";
         Map<String, Object> parameterMap = new HashMap<>();
-        parameterMap.put("userId", userId);
+        parameterMap.put("username", username);
         List<Request> requests = hibernateFacade.fetchAllEntityBySqlQuery(nativeQuery, null, Request.class, parameterMap);
         return requests;
     }

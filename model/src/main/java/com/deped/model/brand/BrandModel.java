@@ -40,7 +40,7 @@ public class BrandModel implements Serializable{
     private byte[] picture;
 
     @ManyToOne
-    @JoinColumn(name = "brand_id")
+    @JoinColumn(name = "brand_name")
     private Brand brand;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "brandModel")

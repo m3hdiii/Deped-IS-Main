@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface ItemService extends BaseService<Item> {
+public interface ItemService extends BaseService<Item, String> {
 
     ResponseEntity<List<Item>> fetchAllGoods();
 

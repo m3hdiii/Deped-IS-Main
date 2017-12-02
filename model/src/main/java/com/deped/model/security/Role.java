@@ -29,19 +29,18 @@ import static com.deped.repository.utils.ConstantValues.FETCH_ALL_ROLE;
 @Table(name = "role")
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "roleId", scope = Role.class)
+        property = "name", scope = Role.class)
 public class Role implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "role_id")
-    private Long roleId;
-
-    @Column(name = "name")
+    @Column(name = "role_name")
     @NotEmpty(message = "Name field can not be blank")
     @Length(min = 2, max = 45, message = "Name filed length must be between 2 to 45 character")
     @XSS
     private String name;
+
+    @Transient
+    private String previousRoleIdName;
 
     @Column(name = "simple_name")
     @NotEmpty(message = "Simple Name field can not be blank")
@@ -60,26 +59,18 @@ public class Role implements Serializable {
 
 
     @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
-//    @JsonBackReference("user-role-binding")
     private Set<User> users;
 
     @ManyToMany
     @JoinTable(
             name = "role_privilege",
             joinColumns = @JoinColumn(
-                    name = "role_id", referencedColumnName = "role_id"),
+                    name = "role_name", referencedColumnName = "role_name"),
             inverseJoinColumns = @JoinColumn(
                     name = "privilege_id", referencedColumnName = "privilege_id"))
 //    @JsonManagedReference("role-privileges-binding")
     private Set<Privilege> privileges;
 
-    public Long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(Long roleId) {
-        this.roleId = roleId;
-    }
 
     public String getName() {
         return name;
@@ -127,5 +118,13 @@ public class Role implements Serializable {
 
     public void setSimpleName(String simpleName) {
         this.simpleName = simpleName;
+    }
+
+    public String getPreviousRoleIdName() {
+        return previousRoleIdName;
+    }
+
+    public void setPreviousRoleIdName(String previousRoleIdName) {
+        this.previousRoleIdName = previousRoleIdName;
     }
 }

@@ -33,17 +33,16 @@ import static com.deped.repository.utils.ConstantValues.FETCH_ALL_ITEMS_BY_TYPE;
 @DynamicUpdate
 public class Item implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_id")
-    private Long itemId;
-
-    @Column(name = "name")
+    @Column(name = "item_name")
     @Length(min = 2, max = 45, message = "name must be between 2 to 45 character character")
     @NotEmpty(message = "Name field can not be blank")
     @XSS
     @Pattern(regexp = "^[a-zA-Z0-9_ ]*$", message = "Name field must contain number, alphabet, space and underscore only")
+    @Id
     protected String name;
+
+    @Transient
+    private String previousIdName;
 
     @Column(name = "description")
     @Length(max = 400, message = "Description must not be more than 400 character")
@@ -98,14 +97,6 @@ public class Item implements Serializable {
 //TODO
 //    @ManyToMany
 //    private Set<Supplier> suppliers;
-
-    public Long getItemId() {
-        return itemId;
-    }
-
-    public void setItemId(Long itemId) {
-        this.itemId = itemId;
-    }
 
     public String getName() {
         return name;
@@ -196,6 +187,14 @@ public class Item implements Serializable {
 //    }
 
 
+    public String getPreviousIdName() {
+        return previousIdName;
+    }
+
+    public void setPreviousIdName(String previousIdName) {
+        this.previousIdName = previousIdName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -203,14 +202,14 @@ public class Item implements Serializable {
 
         Item item = (Item) o;
 
-        return itemId != null ? itemId.equals(item.itemId) : item.itemId == null;
+        return name != null ? name.equals(item.name) : item.name == null;
     }
 
     @Override
     public int hashCode() {
-        if (itemId == null || itemId == 0L)
+        if (name == null || name.isEmpty())
             return super.hashCode();
         else
-            return itemId.hashCode();
+            return name.hashCode();
     }
 }

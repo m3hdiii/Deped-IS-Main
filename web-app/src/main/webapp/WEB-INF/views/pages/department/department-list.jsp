@@ -65,13 +65,15 @@
                                     </label>
                                 </td>
                                 <td>
-                                    <a href="/department/${department.departmentId}">${department.name}</a>
+                                    <a href="<c:url value='/department/${department.name}' />">${department.name}</a>
                                 </td>
                                 <td>${department.description}</td>
                                 <td>${department.departmentHead}</td>
                                 <td>
                                     <div class="btn-group visible-lg-inline-block">
-                                        <a href="/department/update/${department.departmentId}" class="btn btn-purple tooltip-btn" data-toggle="tooltip" data-placement="top" title="Edit Department"><i
+                                        <a href="<c:url value='/department/update/${department.name}' />"
+                                           class="btn btn-purple tooltip-btn" data-toggle="tooltip" data-placement="top"
+                                           title="Edit Department"><i
                                                 class="fa fa-pencil"></i></a>
                                         <button type="button" class="btn btn-danger tooltip-btn" data-toggle="tooltip" data-placement="top" title="Delete" ><i class="fa fa-trash"></i></button>
                                     </div>
@@ -86,34 +88,6 @@
         </div>
         <!-- Warper Ends Here (working area) -->
 
-    <%--<div class="row">--%>
-        <%--<div class="col col-lg-12">--%>
-            <%--<div class="panel-heading"><h1>Department List</h1></div>--%>
-            <%--<div class="panel panel-default">--%>
-                <%--<table class="table table-hover">--%>
-                    <%--<thead>--%>
-                    <%--<tr>--%>
-                        <%--<th class="col-md-3">Name</th>--%>
-                        <%--<th class="col-md-3">Description</th>--%>
-                        <%--<th class="col-md-3">Department Head</th>--%>
-                        <%--<th class="col-md-3">Edit</th>--%>
-                    <%--</tr>--%>
-                    <%--</thead>--%>
-                    <%--<tbody>--%>
-                    <%--<c:forEach items="${departments}" var="department">--%>
-                        <%--<tr>--%>
-                            <%--<td><a href="/department/${department.departmentId}">${department.name}</a></td>--%>
-                            <%--<td>${department.description}</td>--%>
-                            <%--<td>${department.departmentHead}</td>--%>
-                            <%--<td><a href="/department/update/${department.departmentId}"><img--%>
-                                    <%--src="${resourceURL}/images/edit.png" width="16"/></a></td>--%>
-                        <%--</tr>--%>
-                    <%--</c:forEach>--%>
-                    <%--</tbody>--%>
-                <%--</table>--%>
-            <%--</div>--%>
-        <%--</div>--%>
-    <%--</div>--%>
             <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>

@@ -30,7 +30,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-public class ItemDetailsController extends AbstractMainController<ItemDetails, Long> {
+public class ItemDetailsController extends AbstractMainController<ItemDetails, String> {
 
     private static final String BASE_NAME = "item-info";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
@@ -55,16 +55,16 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, L
         return mv;
     }
 
-    @RequestMapping(value = "/item-details/create/{requestId}/{itemId}/{quantity}", method = GET)
-    public ModelAndView createMultipleItemDetails(@PathVariable("requestId") Long requestId, @PathVariable("itemId") Long itemId, @PathVariable("quantity") Integer quantity, HttpSession session) {
-        ModelAndView mav = createModelAndView(itemId, quantity, null);
+    @RequestMapping(value = "/item-details/create/{requestId}/{itemName}/{quantity}", method = GET)
+    public ModelAndView createMultipleItemDetails(@PathVariable("requestId") Long requestId, @PathVariable("itemName") String itemName, @PathVariable("quantity") Integer quantity, HttpSession session) {
+        ModelAndView mav = createModelAndView(itemName, quantity, null);
         return mav;
 
     }
 
-    private ModelAndView createModelAndView(Long itemId, Integer quantity, ItemDetailsForm itemDetailsForm) {
+    private ModelAndView createModelAndView(String itemName, Integer quantity, ItemDetailsForm itemDetailsForm) {
         if (itemDetailsForm == null) {
-            Item discoveredItem = fetchItemById(itemId);
+            Item discoveredItem = fetchItemByName(itemName);
             ArrayList<ItemDetails> itemDetailsList = new ArrayList<>();
             for (int i = 0; i < quantity; i++) {
                 ItemDetails itemDetails = new ItemDetails();
@@ -78,16 +78,16 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, L
         return new ModelAndView("pages/item-details/create-item-details", "itemDetailsForm", itemDetailsForm);
     }
 
-    @RequestMapping(value = "/item-details/create/{requestId}/{itemId}/{quantity}", method = POST)
-    public ModelAndView createMultipleItemDetails(@PathVariable("requestId") Long requestId, @PathVariable("itemId") Long itemId, @PathVariable("quantity") Integer quantity, @ModelAttribute("itemDetailsForm") ItemDetailsForm itemDetailsForm, BindingResult bindingResult, HttpSession session) {
+    @RequestMapping(value = "/item-details/create/{requestId}/{itemName}/{quantity}", method = POST)
+    public ModelAndView createMultipleItemDetails(@PathVariable("requestId") Long requestId, @PathVariable("itemName") String itemName, @PathVariable("quantity") Integer quantity, @ModelAttribute("itemDetailsForm") ItemDetailsForm itemDetailsForm, BindingResult bindingResult, HttpSession session) {
 
         checkItemDetailsList(itemDetailsForm.getItemDetailsList(), bindingResult);
         if (bindingResult.hasErrors()) {
-            ModelAndView mav = createModelAndView(itemId, quantity, itemDetailsForm);
+            ModelAndView mav = createModelAndView(itemName, quantity, itemDetailsForm);
             return mav;
         }
 
-        session.setAttribute(String.format("ItemDetails%d%d%d", requestId, itemId, quantity), itemDetailsForm.getItemDetailsList());
+        session.setAttribute(String.format("ItemDetails%d%s%d", requestId, itemName, quantity), itemDetailsForm.getItemDetailsList());
 
         ModelAndView mav = new ModelAndView("redirect:/request-details/issue/" + requestId);
 
@@ -125,26 +125,26 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, L
 
     @Override
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
-    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<ItemDetails> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, ItemDetails.class);
-        ModelAndView mv = renderProcessing(response, aLong, BASE_NAME, INFO_VIEW_PAGE);
+    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) String officeSerialNumber) {
+        ResponseEntity<ItemDetails> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, officeSerialNumber, ItemDetails.class);
+        ModelAndView mv = renderProcessing(response, officeSerialNumber, BASE_NAME, INFO_VIEW_PAGE);
         return mv;
     }
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
-    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<ItemDetails> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, ItemDetails.class);
+    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) String officeSerialNumber) {
+        ResponseEntity<ItemDetails> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(officeSerialNumber), ItemDetails.class);
         ItemDetails itemDetails = response.getBody();
         return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, itemDetails);
     }
 
     @Override
-    public ModelAndView updateAction(Long aLong, ItemDetails entity, BindingResult bindingResult) {
+    public ModelAndView updateAction(String officeSerialNumber, ItemDetails entity, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
         }
-        entity.setItemDetailsId(aLong);
+        entity.setOfficeSerialNo(officeSerialNumber);
         //This is actually the update date
         entity.setCreationDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, ItemDetails.class);

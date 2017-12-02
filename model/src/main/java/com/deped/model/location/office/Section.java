@@ -15,7 +15,7 @@ import java.util.Date;
 
 @NamedQueries({
         @NamedQuery(name = "fetchAllSections", query = "SELECT sec FROM Section sec"),
-        @NamedQuery(name = "deleteSectionById", query = "DELETE FROM Section sec WHERE sec.sectionId = :sectionId")
+        @NamedQuery(name = "deleteSectionById", query = "DELETE FROM Section sec WHERE sec.name = :sectionName")
 })
 @Entity
 @Table(name = "section")
@@ -24,17 +24,16 @@ import java.util.Date;
 //        property = "sectionId", scope = Section.class)
 public class Section implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "section_id")
-    private Long sectionId;
-
-    @Column(name = "name")
     @Length(min = 2, max = 45, message = "Name filed length must be between 2 to 45 character")
     @NotEmpty(message = "Name field can not be blank")
     @XSS
     @Pattern(regexp = "^[a-zA-Z0-9_ ]*$", message = "Name field must contain number, alphabet, underscore and space only")
+    @Id
+    @Column(name = "section_name")
     private String name;
+
+    @Transient
+    private String previousIdName;
 
     @Column(name = "description")
     @Length(max = 400, message = "Description must not be more than 400 character")
@@ -42,7 +41,7 @@ public class Section implements Serializable {
     private String description;
 
     @ManyToOne
-    @JoinColumn(name = "department_id")
+    @JoinColumn(name = "department_name")
     private Department department;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -57,14 +56,6 @@ public class Section implements Serializable {
         this.description = description;
         this.department = department;
         this.creationDate = creationDate;
-    }
-
-    public Long getSectionId() {
-        return sectionId;
-    }
-
-    public void setSectionId(Long sectionId) {
-        this.sectionId = sectionId;
     }
 
     public String getName() {
@@ -97,5 +88,13 @@ public class Section implements Serializable {
 
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public String getPreviousIdName() {
+        return previousIdName;
+    }
+
+    public void setPreviousIdName(String previousIdName) {
+        this.previousIdName = previousIdName;
     }
 }

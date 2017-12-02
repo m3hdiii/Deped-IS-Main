@@ -64,7 +64,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Order fetchById(Object id) {
+    public Order fetchById(Long id) {
         Order item = hibernateFacade.fetchEntityById(Order.class, id);
         return item;
     }
@@ -90,10 +90,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public List<Order> fetchAllByUserId(Long userId) {
-        String nativeQuery = "SELECT * FROM order_ WHERE user_id = :userId";
+    public List<Order> fetchAllByUsername(String username) {
+        String nativeQuery = "SELECT * FROM order_ WHERE username = :username";
         Map<String, Object> parameterMap = new HashMap<>();
-        parameterMap.put("userId", userId);
+        parameterMap.put("username", username);
         List<Order> requests = hibernateFacade.fetchAllEntityBySqlQuery(nativeQuery, null, Order.class, parameterMap);
         return requests;
     }

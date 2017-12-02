@@ -9,9 +9,9 @@ import com.deped.model.items.Item;
 import com.deped.model.location.City;
 import com.deped.model.location.Country;
 import com.deped.model.location.office.Department;
-import com.deped.model.pack.Pack;
 import com.deped.model.security.Role;
 import com.deped.model.supply.Supplier;
+import com.deped.model.unit.Unit;
 import com.deped.repository.utils.Range;
 import com.deped.security.UserDetailsServiceImpl;
 import com.deped.utils.ImageUtils;
@@ -45,7 +45,7 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
     public static final String FETCH_RANGE_URL = BASE_URL + "%s/fetch-all/%d/%d";
     public static final String REMOVE_URL = BASE_URL + "%s/remove";
     public static final String CREATE_ALL_URL = BASE_URL + "%s/create-all";
-    public static final String FETCH_BY_ID_URL = BASE_URL + "%s/%d";
+    public static final String FETCH_BY_ID_URL = BASE_URL + "%s/%s";
 
     private String createDuplicateMessage = "This %s already exist";
     private String updateDuplicateMessage = "Update failed! This %s already exist";
@@ -79,8 +79,7 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
 
     public Item fetchItemByStringId(String text) {
         try {
-            Long itemId = Long.parseLong(text);
-            Item discoveredItem = fetchItemById(itemId);
+            Item discoveredItem = fetchItemByName(text);
             return discoveredItem;
         } catch (NumberFormatException e) {
             e.printStackTrace();
@@ -88,9 +87,9 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         }
     }
 
-    public Item fetchItemById(Long itemId) {
+    public Item fetchItemByName(String itemName) {
         Item item = new Item();
-        item.setItemId(itemId);
+        item.setName(itemName);
 
         List<Item> items = SharedData.getItems(false);
         Item discoveredItem = SystemUtils.findElementInList(items, item);
@@ -148,7 +147,7 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         return response;
     }
 
-    public ResponseEntity<T> makeFetchByIdRequest(String baseName, HttpMethod method, Long id, Class<T> entityClass) {
+    public ResponseEntity<T> makeFetchByIdRequest(String baseName, HttpMethod method, String id, Class<T> entityClass) {
         RestTemplate restTemplate = new RestTemplate();
         String restUrl = String.format(FETCH_BY_ID_URL, baseName, id);
         ResponseEntity<T> response = restTemplate.getForEntity(restUrl, entityClass);
@@ -250,7 +249,7 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
     }
 
 
-    public ModelAndView renderProcessing(ResponseEntity<T> response, Long entityId, String baseJSPPageName, String createViewPage) {
+    public ModelAndView renderProcessing(ResponseEntity<T> response, ID entityId, String baseJSPPageName, String createViewPage) {
         Map<String, Object> modelMap = new HashMap<>();
         ModelAndView mv = new ModelAndView();
 
@@ -328,8 +327,8 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
             SharedData.getItems(isUpdated);
         }
 
-        if (entityClass == Pack.class) {
-            SharedData.getPacks(isUpdated);
+        if (entityClass == Unit.class) {
+            SharedData.getUnits(isUpdated);
         }
 
         if (entityClass == Category.class) {

@@ -4,7 +4,6 @@ import com.deped.model.Response;
 import com.deped.model.location.office.Department;
 import com.deped.repository.utils.Range;
 import com.deped.restcontroller.AbstractMainRestController;
-import com.deped.model.Operation;
 import com.deped.service.places.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class DepartmentRestController extends AbstractMainRestController<Department, Long> {
+public class DepartmentRestController extends AbstractMainRestController<Department, String> {
 
     private static final String BASE_NAME = "department";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
@@ -58,8 +57,8 @@ public class DepartmentRestController extends AbstractMainRestController<Departm
 
     @Override
     @RequestMapping(value = FETCH_BY_ID_MAPPING, method = RequestMethod.GET)
-    public ResponseEntity<Department> fetchById(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Department> response = departmentService.fetchById(aLong);
+    public ResponseEntity<Department> fetchById(@PathVariable(ID_STRING_LITERAL) String id) {
+        ResponseEntity<Department> response = departmentService.fetchById(id);
         return response;
     }
 

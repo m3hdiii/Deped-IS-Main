@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class RoleRestController extends AbstractMainRestController<Role, Long> {
+public class RoleRestController extends AbstractMainRestController<Role, String> {
 
     private static final String BASE_NAME = "/role";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
@@ -55,8 +55,8 @@ public class RoleRestController extends AbstractMainRestController<Role, Long> {
 
     @Override
     @RequestMapping(value = FETCH_BY_ID_MAPPING, method = RequestMethod.GET)
-    public ResponseEntity<Role> fetchById(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Role> response = roleService.fetchById(aLong);
+    public ResponseEntity<Role> fetchById(@PathVariable(ID_STRING_LITERAL) String id) {
+        ResponseEntity<Role> response = roleService.fetchById(id);
         return response;
     }
 

@@ -75,7 +75,7 @@ public class SupplierServiceImpl implements SupplierService {
     }
 
     @Override
-    public ResponseEntity<Supplier> fetchById(Object id) {
+    public ResponseEntity<Supplier> fetchById(Long id) {
         Supplier supply = supplyRepository.fetchById(id);
         ResponseEntity<Supplier> responseEntity = new ResponseEntity<>(supply, OK);
         return responseEntity;

@@ -5,7 +5,7 @@ import com.deped.repository.utils.Range;
 
 import java.util.List;
 
-public interface BaseRepository<T> {
+public interface BaseRepository<T, ID> {
 
     T create(T entity) throws DatabaseRolesViolationException;
 
@@ -15,7 +15,7 @@ public interface BaseRepository<T> {
 
     List<T> fetchByRange(Range range);
 
-    T fetchById(Object id);
+    T fetchById(ID id);
 
     Boolean remove(T... entities) throws DatabaseRolesViolationException;
 

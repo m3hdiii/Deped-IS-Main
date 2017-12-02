@@ -13,8 +13,8 @@
 
 <c:url value="/public" var="resourceURL" scope="request"/>
 <c:import url="../../includes/head.jsp">
-    <c:param name="title" value="Registration"/>
-    <c:param name="description" value="Registeration page for new personnel and employees"/>
+    <c:param name="title" value="Update User"/>
+    <c:param name="description" value="Update page for new personnel and employees"/>
 </c:import>
 <html>
 <body>
@@ -215,7 +215,7 @@
                                     <select onchange="getSections(this)" class="form-control">
                                         <option>--Choose a Department</option>
                                         <c:forEach items="${departments}" var="departmet">
-                                            <option value="${departmet.departmentId}">${departmet.name}</option>
+                                            <option value="${departmet.name}">${departmet.name}</option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -276,11 +276,12 @@
                                 </div>
                             </div>
                         </div>
+                        <form:hidden path="previousIdUsername" value="${user.username}"/>
                         <div class="modal-footer">
                             <a href="#" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i> Back</a>
                             <div class="button-footer pull-right">
                                 <input type="reset" class="btn btn-default" value="Clear"/>
-                                <button type="submit" class="btn btn-primary">Register</button>
+                                <button type="submit" class="btn btn-primary">Update</button>
                             </div>
                         </div>
                     </div>

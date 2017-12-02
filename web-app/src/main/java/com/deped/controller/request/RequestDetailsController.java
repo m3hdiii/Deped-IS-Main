@@ -62,12 +62,12 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     private static final String SUMMARY_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + "-summary";
 
     private static final String BASKET_VIEW_PAGE = BASE_NAME + URL_SEPARATOR + "basket" + URL_SEPARATOR + ID_PATTERN;
-    private static final String APPROVAL_PAGE = BASE_NAME + URL_SEPARATOR + "approval" + URL_SEPARATOR + ID_PATTERN;
+    private static final String APPROVAL_MAPPING = BASE_NAME + URL_SEPARATOR + "approval" + URL_SEPARATOR + ID_PATTERN;
     private static final String RELEASED_PAGE = BASE_NAME + URL_SEPARATOR + "issue" + URL_SEPARATOR + ID_PATTERN;
 
     private static final String SUMMARY_PAGE = BASE_NAME + URL_SEPARATOR + "summary" + URL_SEPARATOR + ID_PATTERN;
 
-    private static final String UPDATE_STATUS_REST = BASE_NAME + URL_SEPARATOR + "update-status/user/%d/status/%d";
+    private static final String UPDATE_STATUS_REST = BASE_NAME + URL_SEPARATOR + "update-status/user/%s/status/%d";
 
 
     @RequestMapping(value = CREATE_MAPPING, method = GET)
@@ -165,7 +165,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     private void checkIfTheSameItemExisting(HashMap<String, RequestDetails> basket, RequestDetails requestDetails, BindingResult bindingResult) {
         Collection<RequestDetails> requestDetailsList = basket.values();
         for (RequestDetails rd : requestDetailsList) {
-            if (rd.getItem().getItemId() == requestDetails.getItem().getItemId()) {
+            if (rd.getItem().getName().equals(requestDetails.getItem().getName())) {
                 bindingResult.addError(new FieldError("RequestDetails", "item", "You can not add the same item twice, but you can edit it"));
                 break;
             }
@@ -293,7 +293,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     }
 
     //Administrative Tasks
-    @RequestMapping(value = APPROVAL_PAGE, method = GET)
+    @RequestMapping(value = APPROVAL_MAPPING, method = GET)
     public ModelAndView approvalActionRender(@PathVariable(ID_STRING_LITERAL) Long requestId) {
         Request request = fetchRequest(requestId);
         ModelAndView requestChecking = requestChecking(request, RequestStatus.PENDING);
@@ -315,7 +315,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         );
     }
 
-    @RequestMapping(value = APPROVAL_PAGE, method = POST)
+    @RequestMapping(value = APPROVAL_MAPPING, method = POST)
     public ModelAndView approvalActionSubmit(@ModelAttribute("requestDetailsForm") RequestDetailsForm orderDetailsForm) {
         ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, RequestDetailsStatus.APPROVED);
         Response response = updateResponse.getBody();
@@ -482,8 +482,8 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         HttpEntity<RequestDetails[]> httpEntity = new HttpEntity<>(requestDetailsArray, headers);
 
         User user = getUserFromSpringSecurityContext();
-        Long userId = user.getUserId();
-        String restUrl = String.format((BASE_URL + UPDATE_STATUS_REST), userId, status.ordinal());
+        String username = user.getUsername();
+        String restUrl = String.format((BASE_URL + UPDATE_STATUS_REST), username, status.ordinal());
 
         ResponseEntity<Response> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, Response.class);
         return response;

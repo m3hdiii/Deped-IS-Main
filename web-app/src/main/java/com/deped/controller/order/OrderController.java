@@ -186,7 +186,7 @@ public class OrderController extends AbstractMainController<Order, Long> {
     @Override
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
     public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Order> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Order.class);
+        ResponseEntity<Order> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(aLong), Order.class);
         ModelAndView mv = renderProcessing(response, aLong, BASE_NAME, INFO_VIEW_PAGE);
         return mv;
     }
@@ -194,7 +194,7 @@ public class OrderController extends AbstractMainController<Order, Long> {
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
     public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Order> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Order.class);
+        ResponseEntity<Order> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(aLong), Order.class);
         Order item = response.getBody();
         return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, item);
     }

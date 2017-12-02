@@ -18,7 +18,7 @@ public class DashboardRepositoryImpl implements DashboardRepository {
     public Dashboard getBasicInfo() {
         String lastWeekRequestNo = "SELECT count(*) FROM request WHERE request_date BETWEEN date_sub(now(),INTERVAL 1 WEEK) AND now()";
         String lastWeekOrdersNo = "SELECT count(*) FROM order_ WHERE order_date BETWEEN date_sub(now(),INTERVAL 1 WEEK) AND now()";
-        String belowThreshold = "SELECT count(*) from (SELECT name from item WHERE quantity <= threshold group by name) s";
+        String belowThreshold = "SELECT count(*) from (SELECT item_name from item WHERE quantity <= threshold group by item_name) s";
         String totalUserNo = "SELECT count(*) FROM user";
 
         Long lastWeekRequestNoLong = 0L;

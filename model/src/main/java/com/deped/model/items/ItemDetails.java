@@ -17,10 +17,13 @@ import java.util.Date;
 @Table(name = "item_details")
 public class ItemDetails {
 
+
+    @NotEmpty(message = "Office serial number field can not be blank")
+    @Length(min = 1, max = 45, message = "Office serial number filed length must be between 1 to 45 character")
+    @XSS
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_details_id")
-    private Long itemDetailsId;
+    @Column(name = "office_serial_number")
+    private String officeSerialNo;
 
     @Column(name = "colour")
     @Enumerated(EnumType.STRING)
@@ -37,11 +40,7 @@ public class ItemDetails {
     @Enumerated(EnumType.STRING)
     private EquipmentAvailability equipmentAvailability;
 
-    @Column(name = "office_serial_number")
-    @NotEmpty(message = "Office serial number field can not be blank")
-    @Length(min = 1, max = 45, message = "Office serial number filed length must be between 1 to 45 character")
-    @XSS
-    private String officeSerialNo;
+
 
     @Column(name = "equipment_serial_number")
     @NotEmpty(message = "Equipment serial number field can not be blank")
@@ -66,7 +65,7 @@ public class ItemDetails {
     private Short lifeSpan;
 
     @ManyToOne
-    @JoinColumn(name = "item_id")
+    @JoinColumn(name = "item_name")
     private Item item;
 
     @ManyToOne
@@ -75,14 +74,6 @@ public class ItemDetails {
 
     @Column(name = "pic_url")
     private String picUrl;
-
-    public Long getItemDetailsId() {
-        return itemDetailsId;
-    }
-
-    public void setItemDetailsId(Long itemDetailsId) {
-        this.itemDetailsId = itemDetailsId;
-    }
 
     public Colour getColour() {
         return colour;

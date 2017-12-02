@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class SectionRestController extends AbstractMainRestController<Section, Long> {
+public class SectionRestController extends AbstractMainRestController<Section, String> {
 
     private static final String BASE_NAME = "section";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
     private static final String FETCH_MAPPING = BASE_NAME + FETCH_PATTERN;
-    private static final String FETCH_MAPPING_BY_DEPARTMENT_ID = BASE_NAME + FETCH_PATTERN + FETCH_BY_ID_PATTERN;
+    private static final String FETCH_MAPPING_BY_DEPARTMENT_NAME = BASE_NAME + FETCH_PATTERN + FETCH_BY_ID_PATTERN;
     private static final String FETCH_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String FETCH_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
@@ -47,9 +47,9 @@ public class SectionRestController extends AbstractMainRestController<Section, L
         return response;
     }
 
-    @RequestMapping(value = FETCH_MAPPING_BY_DEPARTMENT_ID, method = RequestMethod.POST)
-    public ResponseEntity<List<Section>> fetchAllByDepartmentId(@PathVariable(ID_STRING_LITERAL) Long departmentId) {
-        ResponseEntity<List<Section>> response = sectionService.fetchAllByDepartment(departmentId);
+    @RequestMapping(value = FETCH_MAPPING_BY_DEPARTMENT_NAME, method = RequestMethod.POST)
+    public ResponseEntity<List<Section>> fetchAllByDepartmentId(@PathVariable(ID_STRING_LITERAL) String departmentName) {
+        ResponseEntity<List<Section>> response = sectionService.fetchAllByDepartment(departmentName);
         return response;
     }
 
@@ -62,8 +62,8 @@ public class SectionRestController extends AbstractMainRestController<Section, L
 
     @Override
     @RequestMapping(value = FETCH_BY_ID_MAPPING, method = RequestMethod.GET)
-    public ResponseEntity<Section> fetchById(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Section> response = sectionService.fetchById(aLong);
+    public ResponseEntity<Section> fetchById(@PathVariable(ID_STRING_LITERAL) String id) {
+        ResponseEntity<Section> response = sectionService.fetchById(id);
         return response;
     }
 

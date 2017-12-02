@@ -17,7 +17,7 @@ public class RequestTracker {
     private Long requestTrackerId;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "item_details_id")
+    @JoinColumn(name = "office_serial_number")
     private ItemDetails itemDetails;
 
     @Column(name = "return_date")
@@ -30,7 +30,7 @@ public class RequestTracker {
     @ManyToOne
     @JoinColumns({
             @JoinColumn(name = "request_id"),
-            @JoinColumn(name = "item_id")
+            @JoinColumn(name = "item_name")
     })
     private RequestDetails requestDetails;
 

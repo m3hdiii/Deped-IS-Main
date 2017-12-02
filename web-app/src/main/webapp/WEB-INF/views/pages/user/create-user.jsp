@@ -209,8 +209,8 @@
                                 <div class="col-sm-7">
                                     <select onchange="getSections(this)" class="form-control">
                                         <option>--Choose a Department</option>
-                                        <c:forEach items="${departments}" var="departmet">
-                                            <option value="${departmet.departmentId}">${departmet.name}</option>
+                                        <c:forEach items="${departments}" var="department">
+                                            <option value="${department.name}">${department.name}</option>
                                         </c:forEach>
                                     </select>
                                 </div>
@@ -297,7 +297,7 @@
             var html = '<option value="">--Please Select</option>';
             var len = data.length;
             for (var i = 0; i < len; i++) {
-                html += '<option value="' + data[i].sectionId + '">'
+                html += '<option value="' + data[i].name + '">'
                     + data[i].name + '</option>';
             }
             html += '</option>';

@@ -4,6 +4,7 @@ import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.request.RequestDetails;
+import com.deped.model.request.RequestDetailsID;
 import com.deped.model.request.RequestDetailsStatus;
 import com.deped.repository.request.RequestDetailsRepository;
 import com.deped.repository.utils.Range;
@@ -64,9 +65,9 @@ public class RequestDetailsServiceImpl implements RequestDetailsService {
     }
 
     @Override
-    public ResponseEntity<RequestDetails> fetchById(Object id) {
-        RequestDetails brand = requestDetailsRepository.fetchById(id);
-        ResponseEntity<RequestDetails> responseEntity = new ResponseEntity<>(brand, OK);
+    public ResponseEntity<RequestDetails> fetchById(RequestDetailsID id) {
+        RequestDetails requestDetails = requestDetailsRepository.fetchById(id);
+        ResponseEntity<RequestDetails> responseEntity = new ResponseEntity<>(requestDetails, OK);
         return responseEntity;
     }
 
@@ -107,8 +108,8 @@ public class RequestDetailsServiceImpl implements RequestDetailsService {
     }
 
     @Override
-    public ResponseEntity<Response> updateRequestStatus(Long userId, RequestDetailsStatus requestDetailsStatus, RequestDetails[] entities) {
-        Boolean isUpdated = requestDetailsRepository.updateRequestStatus(userId, requestDetailsStatus, entities);
+    public ResponseEntity<Response> updateRequestStatus(String username, RequestDetailsStatus requestDetailsStatus, RequestDetails[] entities) {
+        Boolean isUpdated = requestDetailsRepository.updateRequestStatus(username, requestDetailsStatus, entities);
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, RequestDetails.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;

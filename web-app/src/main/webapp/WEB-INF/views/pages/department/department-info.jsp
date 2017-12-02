@@ -53,7 +53,8 @@
                    <tr>
                        <div class="row">
                            <div class="col-sm-4">
-                               <a href="/department/update/${departmentId}" class="btn btn-success btn-block">Edit Department Info</a>
+                               <a href="<c:url value='/department/update/${departmentId}' />"
+                                  class="btn btn-success btn-block">Edit Department Info</a>
                            </div>
                        </div>
                    </tr>

@@ -17,7 +17,7 @@ public interface ConstantValues {
     String FETCH_ALL_EQUIPMENTS_RANGE = "fetchEquipmentsByRange";
     String FETCH_ALL_EQUIPMENT_INFO = "fetchEquipmentInfo";
     String FETCH_ALL_EQUIPMENT_INFO_RANGE = "fetchEquipmentInfoByRange";
-    String FETCH_ALL_PACKS = "fetchPacks";
+    String FETCH_ALL_UNITS = "fetchPacks";
     String FETCH_ALL_PACKS_RANGE = "fetchPacksByRange";
     String FETCH_ALL_CATEGORY = "fetchCategories1";
     String FETCH_ALL_CATEGORY_RANGE = "fetchCategoriesByRange";
@@ -53,8 +53,8 @@ public interface ConstantValues {
     String EQUIPMENTS_TABLE_ID = "equipment_id";
     String EQUIPMENT_INFO_TABLE = "equipment_info";
     String EQUIPMENT_INFO_TABLE_ID = "equipment_info_id";
-    String PACK_TABLE = "pack";
-    String PACK_TABLE_ID = "pack_id";
+    String UNIT_TABLE = "unit";
+    String UNIT_TABLE_ID = "unit_id";
     String CATEGORY_TABLE = "category";
     String CATEGORY_TABLE_ID = "category_id";
     String ROLE_TABLE = "role";

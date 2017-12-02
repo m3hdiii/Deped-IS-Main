@@ -5,8 +5,10 @@ import com.deped.model.location.office.Section;
 import com.deped.model.security.Role;
 import com.deped.protection.validators.fieldmatcher.FieldMatch;
 import com.deped.protection.validators.xss.XSS;
+import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -69,17 +71,17 @@ import static com.deped.repository.utils.ConstantValues.*;
 })
 public class User implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id ")
-    private Long userId;
 
-    @Column(name = "username")
     @NotEmpty(message = "Username field can not be blank")
     @Length(min = 3, max = 45, message = "Username field must be between 3 to 45 character")
     @XSS
     @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = "Name field must contain number, underscore and alphabet only")
+    @Column(name = "username")
+    @Id
     private String username;
+
+    @Transient
+    private String previousIdUsername;
 
 
     @NotEmpty(message = "Password field can not be blank")
@@ -115,7 +117,8 @@ public class User implements Serializable {
 
     @Column(name = "email_address", unique = true)
     @NotEmpty(message = "Email address field can not be blank")
-    @Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Please provide correct email address")
+//    @Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Please provide correct email address")
+    @Email(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Please provide correct email address")
     @Length(min = 5, max = 100, message = "Email address field must be between 5 to 100 character")
     private String emailAddress;
 
@@ -151,7 +154,8 @@ public class User implements Serializable {
 
     @Column(name = "website")
     @Length(max = 100, message = "your website field can not be more than 100 character")
-    @Pattern(regexp = "^(http://|https://)?(www.)?([a-zA-Z0-9]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)?$")
+//    @Pattern(regexp = "^(http://|https://)?(www.)?([a-zA-Z0-9]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)?$")
+    @URL(regexp = "^(http://|https://)?(www.)?([a-zA-Z0-9]+).[a-zA-Z0-9]*.[a-z]{3}.?([a-z]+)?$", message = "Your website url is wrong")
     private String website;
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -182,7 +186,7 @@ public class User implements Serializable {
 
 
     @ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "section_id")
+    @JoinColumn(name = "section_name")
     private Section section;
 
 //    @Column(name = "manager_id")
@@ -210,17 +214,13 @@ public class User implements Serializable {
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(
-                    name = "user_id"/*, referencedColumnName = "user_id"*/),
+                    name = "username"/*, referencedColumnName = "user_id"*/),
             inverseJoinColumns = @JoinColumn(
-                    name = "role_id"/*, referencedColumnName = "role_id"*/))
+                    name = "role_name"/*, referencedColumnName = "role_id"*/))
 //    @JsonManagedReference("user-role-binding")
     private Set<Role> roles;
 
     public User() {
-    }
-
-    public User(Long userId) {
-        this.userId = userId;
     }
 
     public User(String username, String password, AccountStatus accountStatus, String firstName, String lastName, String middleName, String emailAddress, String phoneNo1, String phoneNo2, Gender gender, Date birthDate, Date employmentDate, Position position, String address, String website, Date creationDate, String referrerName, String referrerAddress, String referrerPhoneNo1, String referrerPhoneNo2, Section section, Integer age) {
@@ -246,15 +246,6 @@ public class User implements Serializable {
         this.referrerPhoneNo2 = referrerPhoneNo2;
         this.section = section;
         this.age = age;
-    }
-
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public String getUsername() {
@@ -471,5 +462,13 @@ public class User implements Serializable {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public String getPreviousIdUsername() {
+        return previousIdUsername;
+    }
+
+    public void setPreviousIdUsername(String previousIdUsername) {
+        this.previousIdUsername = previousIdUsername;
     }
 }

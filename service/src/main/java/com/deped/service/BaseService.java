@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface BaseService<T> {
+public interface BaseService<T, ID> {
     HttpStatus OK = HttpStatus.OK;
 
     ResponseEntity<T> create(T entity);
@@ -18,7 +18,7 @@ public interface BaseService<T> {
 
     ResponseEntity<List<T>> fetchByRange(Range range);
 
-    ResponseEntity<T> fetchById(Object id);
+    ResponseEntity<T> fetchById(ID id);
 
     ResponseEntity<Response> remove(T... entities);
 

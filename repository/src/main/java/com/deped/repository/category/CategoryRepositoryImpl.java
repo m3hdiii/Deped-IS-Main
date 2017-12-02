@@ -7,7 +7,9 @@ import com.deped.repository.utils.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.deped.repository.utils.ConstantValues.*;
 
@@ -24,7 +26,14 @@ public class CategoryRepositoryImpl implements CategoryRepository {
 
     @Override
     public Boolean update(Category entity) throws DatabaseRolesViolationException {
-        return hibernateFacade.updateEntity(entity);
+        String sqlQuery = "UPDATE category SET category_name = :categoryName , description = :description WHERE category_name = :oldCategoryName ";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("categoryName", entity.getName());
+        paramMap.put("description", entity.getDescription());
+        paramMap.put("oldCategoryName", entity.getPreviousIdName());
+
+        int rowAffected = hibernateFacade.updateEntitySqlQuery(sqlQuery, Category.class, paramMap);
+        return rowAffected < 0;
     }
 
     @Override
@@ -38,7 +47,7 @@ public class CategoryRepositoryImpl implements CategoryRepository {
     }
 
     @Override
-    public Category fetchById(Object id) {
+    public Category fetchById(String id) {
         return hibernateFacade.fetchEntityById(Category.class, id);
     }
 

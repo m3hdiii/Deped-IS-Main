@@ -1,10 +1,10 @@
-package com.deped.service.pack;
+package com.deped.service.unit;
 
 import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.Operation;
 import com.deped.model.Response;
-import com.deped.model.pack.Pack;
-import com.deped.repository.pack.PackRepository;
+import com.deped.model.unit.Unit;
+import com.deped.repository.unit.UnitRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,75 +15,75 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class PackServiceImpl implements PackService {
+public class UnitServiceImpl implements UnitService {
 
     @Autowired
-    private PackRepository packRepository;
+    private UnitRepository unitRepository;
 
     @Override
-    public ResponseEntity<Pack> create(Pack entity) {
-        Pack savedEntity = null;
+    public ResponseEntity<Unit> create(Unit entity) {
+        Unit savedEntity = null;
         try {
-            savedEntity = packRepository.create(entity);
+            savedEntity = unitRepository.create(entity);
         } catch (DatabaseRolesViolationException e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
-        ResponseEntity<Pack> responseEntity = new ResponseEntity<>(savedEntity, OK);
+        ResponseEntity<Unit> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }
 
     @Override
-    public ResponseEntity<Response> update(Pack entity) {
+    public ResponseEntity<Response> update(Unit entity) {
         Boolean isUpdated = null;
         try {
-            isUpdated = packRepository.update(entity);
+            isUpdated = unitRepository.update(entity);
         } catch (DatabaseRolesViolationException e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
-        Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, Pack.class);
+        Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, Unit.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
     }
 
     @Override
-    public ResponseEntity<List<Pack>> fetchAll() {
-        List<Pack> packs = packRepository.fetchAll();
-        ResponseEntity<List<Pack>> responseEntity = new ResponseEntity<>(packs, OK);
+    public ResponseEntity<List<Unit>> fetchAll() {
+        List<Unit> units = unitRepository.fetchAll();
+        ResponseEntity<List<Unit>> responseEntity = new ResponseEntity<>(units, OK);
         return responseEntity;
     }
 
     @Override
-    public ResponseEntity<List<Pack>> fetchByRange(Range range) {
-        List<Pack> packs = packRepository.fetchByRange(range);
-        ResponseEntity<List<Pack>> responseEntity = new ResponseEntity<>(packs, OK);
+    public ResponseEntity<List<Unit>> fetchByRange(Range range) {
+        List<Unit> units = unitRepository.fetchByRange(range);
+        ResponseEntity<List<Unit>> responseEntity = new ResponseEntity<>(units, OK);
         return responseEntity;
     }
 
     @Override
-    public ResponseEntity<Pack> fetchById(Object id) {
-        Pack pack = packRepository.fetchById(id);
-        ResponseEntity<Pack> responseEntity = new ResponseEntity<>(pack, OK);
+    public ResponseEntity<Unit> fetchById(String id) {
+        Unit unit = unitRepository.fetchById(id);
+        ResponseEntity<Unit> responseEntity = new ResponseEntity<>(unit, OK);
         return responseEntity;
     }
 
     @Override
-    public ResponseEntity<Response> remove(Pack... entities) {
+    public ResponseEntity<Response> remove(Unit... entities) {
         Boolean isRemoved = null;
         try {
-            isRemoved = packRepository.remove(entities);
+            isRemoved = unitRepository.remove(entities);
         } catch (DatabaseRolesViolationException e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
-        Response response = ServiceUtils.makeResponse(isRemoved, Operation.DELETE, Pack.class);
+        Response response = ServiceUtils.makeResponse(isRemoved, Operation.DELETE, Unit.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;
     }
 
     @Override
-    public ResponseEntity<Response> createOrUpdateAll(Pack... entities) {
+    public ResponseEntity<Response> createOrUpdateAll(Unit... entities) {
         return null;
     }
 }

@@ -112,7 +112,7 @@
                         </td>
 
                         <td>
-                            <form:input path="noOfPacks"/>
+                            <form:input path="noOfUnits"/>
                         </td>
 
                         <td>

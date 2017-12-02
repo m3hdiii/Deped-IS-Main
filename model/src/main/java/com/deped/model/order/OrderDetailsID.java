@@ -1,28 +1,29 @@
 package com.deped.model.order;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import java.io.Serializable;
 
 @Embeddable
 public class OrderDetailsID implements Serializable{
 
-    @Column(name = "category_id")
-    private Long categoryId;
+    @Column(name = "category_name")
+    private String categoryName;
 
     @Column(name = "order_id")
     private Long orderId;
 
-    @Column(name = "item_id")
-    private Long itemId;
+    @Column(name = "item_name")
+    private String itemName;
 
 
     public OrderDetailsID() {
     }
 
-    public OrderDetailsID(Long orderId, Long itemId, Long categoryId) {
+    public OrderDetailsID(Long orderId, String itemName, String categoryName) {
         this.orderId = orderId;
-        this.itemId = itemId;
-        this.categoryId = categoryId;
+        this.itemName = itemName;
+        this.categoryName = categoryName;
     }
 
     public Long getOrderId() {
@@ -33,19 +34,19 @@ public class OrderDetailsID implements Serializable{
         this.orderId = orderId;
     }
 
-    public Long getItemId() {
-        return itemId;
+    public String getItemName() {
+        return itemName;
     }
 
-    public void setItemId(Long itemId) {
-        this.itemId = itemId;
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 
-    public Long getCategoryId() {
-        return categoryId;
+    public String getCategoryName() {
+        return categoryName;
     }
 
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 }

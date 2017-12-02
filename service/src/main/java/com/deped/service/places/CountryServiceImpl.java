@@ -62,7 +62,7 @@ public class CountryServiceImpl implements CountryService {
     }
 
     @Override
-    public ResponseEntity<Country> fetchById(Object id) {
+    public ResponseEntity<Country> fetchById(String id) {
         Country country = countryRepository.fetchById(id);
         ResponseEntity<Country> responseEntity = new ResponseEntity<>(country, OK);
         return responseEntity;

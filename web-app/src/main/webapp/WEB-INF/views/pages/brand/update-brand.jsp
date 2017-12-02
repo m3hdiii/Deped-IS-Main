@@ -90,7 +90,7 @@
                                     </div>
                                 </div>
                             </div><!-- New Brand Body closing -->
-
+                            <form:hidden path="previousIdName" value="${brand.name}"/>
                             <div class="modal-footer">
                                 <a href="/brand/list" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i>
                                     Back</a>

@@ -46,7 +46,7 @@ public class CountryRepositoryImpl implements CountryRepository {
     }
 
     @Override
-    public Country fetchById(Object id) {
+    public Country fetchById(String id) {
         return hibernateFacade.fetchEntityById(Country.class, id);
     }
 

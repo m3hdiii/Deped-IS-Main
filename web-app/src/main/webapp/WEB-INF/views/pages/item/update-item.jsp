@@ -129,6 +129,7 @@
                                         </form:select>
                                     </div>
 
+                                    <form:hidden path="previousIdName" value="${item.name}"/>
                                     <form:hidden path="quantity"/>
                                     <form:hidden path="picName"/>
                                 </div>

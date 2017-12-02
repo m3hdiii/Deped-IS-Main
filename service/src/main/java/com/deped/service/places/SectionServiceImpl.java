@@ -55,7 +55,7 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public ResponseEntity<List<Section>> fetchAllByDepartment(Long departmentId) {
+    public ResponseEntity<List<Section>> fetchAllByDepartment(String departmentId) {
         List<Section> sections = sectionRepository.fetchAllByDepartment(departmentId);
         ResponseEntity<List<Section>> responseEntity = new ResponseEntity<>(sections, OK);
         return responseEntity;
@@ -69,7 +69,7 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
-    public ResponseEntity<Section> fetchById(Object id) {
+    public ResponseEntity<Section> fetchById(String id) {
         Section section = sectionRepository.fetchById(id);
         ResponseEntity<Section> responseEntity = new ResponseEntity<>(section, OK);
         return responseEntity;

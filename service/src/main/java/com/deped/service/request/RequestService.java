@@ -7,8 +7,8 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface RequestService extends BaseService<Request> {
+public interface RequestService extends BaseService<Request, Long> {
     ResponseEntity<List<Request>> fetchAllByRequestStatus(RequestStatus requestStatus);
 
-    ResponseEntity<List<Request>> fetchAllByUserId(Long userId);
+    ResponseEntity<List<Request>> fetchAllByUsername(String username);
 }

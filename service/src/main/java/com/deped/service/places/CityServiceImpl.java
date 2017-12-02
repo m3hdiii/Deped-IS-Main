@@ -63,7 +63,7 @@ public class CityServiceImpl implements CityService {
     }
 
     @Override
-    public ResponseEntity<City> fetchById(Object id) {
+    public ResponseEntity<City> fetchById(Long id) {
         City city = cityRepository.fetchById(id);
         ResponseEntity<City> responseEntity = new ResponseEntity<>(city, OK);
         return responseEntity;

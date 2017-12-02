@@ -32,7 +32,7 @@ public class Order implements Serializable {
     private Date requiredDate;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "username")
     private User user;
 
     @Column(name = "order_schedule")

@@ -67,8 +67,8 @@
                             <th>Image</th>
                             <th>Name</th>
                             <th>Available QTY</th>
-                            <th>Packages</th>
-                            <th>Pack Capacity</th>
+                            <th>Unit</th>
+                            <th>Unit Capacity</th>
                             <th>Ordered QTY</th>
                             <c:if test="${currentOrderDetailsState eq 'ARRIVED'}">
                                 <th>Quantity Arrived</th>
@@ -101,8 +101,8 @@
                                 </td>
                                 <th>${orderDet.item.name}</th>
                                 <td>${orderDet.item.quantity}</td>
-                                <td>${orderDet.pack.name}</td>
-                                <td>${orderDet.packCapacity}</td>
+                                <td>${orderDet.unit.name}</td>
+                                <td>${orderDet.unitCapacity}</td>
                                 <td>${orderDet.totalQuantityRequestNo}</td>
                                 <c:if test="${currentOrderDetailsState eq 'ARRIVED'}">
                                     <th>

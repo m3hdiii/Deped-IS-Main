@@ -9,6 +9,10 @@ import java.io.IOException;
 public class ControllerImageUtils {
 
     public static String imageUploadProcessing(MultipartFile pic, BindingResult bindingResult) {
+
+        if (pic == null)
+            return null;
+
         try {
             byte[] fileBytes = pic.getBytes();
             if (pic != null && fileBytes != null && fileBytes.length != 0) {

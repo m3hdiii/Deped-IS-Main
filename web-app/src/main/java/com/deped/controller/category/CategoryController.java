@@ -24,7 +24,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-public class CategoryController extends AbstractMainController<Category, Long> {
+public class CategoryController extends AbstractMainController<Category, String> {
 
     private static final String BASE_NAME = "category";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
@@ -65,28 +65,28 @@ public class CategoryController extends AbstractMainController<Category, Long> {
 
     @Override
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
-    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Category> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Category.class);
-        ModelAndView mv = renderProcessing(response, aLong, BASE_NAME, INFO_VIEW_PAGE);
+    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) String id) {
+        ResponseEntity<Category> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(id), Category.class);
+        ModelAndView mv = renderProcessing(response, id, BASE_NAME, INFO_VIEW_PAGE);
         return mv;
     }
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
-    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Category> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Category.class);
+    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) String id) {
+        ResponseEntity<Category> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(id), Category.class);
         Category category = response.getBody();
         return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, category);
     }
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Category entity, BindingResult result) {
+    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) String id, @Valid @ModelAttribute(BASE_NAME) Category entity, BindingResult result) {
 
         if (result.hasErrors()) {
             return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
         }
-        entity.setCategoryId(aLong);
+
         entity.setCreationDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Category.class);
         ModelAndView mv = postUpdateProcessing(Category.class, response, UPDATE_VIEW_PAGE, BASE_NAME, entity, new Category(), result, BASE_NAME);

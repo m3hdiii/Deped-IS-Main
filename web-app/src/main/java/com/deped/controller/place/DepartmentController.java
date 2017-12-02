@@ -22,7 +22,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
-public class DepartmentController extends AbstractMainController<Department, Long> {
+public class DepartmentController extends AbstractMainController<Department, String> {
 
     private static final String BASE_NAME = "department";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
@@ -61,33 +61,30 @@ public class DepartmentController extends AbstractMainController<Department, Lon
 
     @Override
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
-    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Department> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Department.class);
+    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) String name) {
+        ResponseEntity<Department> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(name), Department.class);
         Department department = response.getBody();
         Map<String, Object> modelMap = new HashMap<>();
         modelMap.put("departmentInfo", department);
-        modelMap.put("departmentId", aLong);
+        modelMap.put("departmentId", name);
         return new ModelAndView(INFO_VIEW_PAGE, modelMap);
     }
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
-    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Department> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Department.class);
+    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) String name) {
+        ResponseEntity<Department> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(name), Department.class);
         Department department = response.getBody();
         return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, department);
     }
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Department entity, BindingResult bindingResult) {
+    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) String name, @Valid @ModelAttribute(BASE_NAME) Department entity, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
         }
 
-        entity.setDepartmentId(aLong);
-        //This is actually the update date
-        entity.setCreationDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Department.class);
         ModelAndView mv = postUpdateProcessing(Department.class, response, UPDATE_VIEW_PAGE, BASE_NAME, entity, new Department(), bindingResult, BASE_NAME);
         return mv;

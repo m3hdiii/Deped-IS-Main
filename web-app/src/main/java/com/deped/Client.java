@@ -19,7 +19,6 @@ public class Client {
 
     static {
         User user = new User();
-        user.setUserId(4L);
         user.setUsername("Jooje");
         user.setPassword("123");
         user.setFirstName("Mehdi Star");
@@ -27,7 +26,6 @@ public class Client {
         user.setEmailAddress("ix67@yahoo.com");
 
         User user2 = new User();
-        user2.setUserId(2L);
         user2.setUsername("Jooje2");
         user2.setPassword("12344");
         user2.setFirstName("Mehdi Star3w");
@@ -50,7 +48,7 @@ public class Client {
         for (User user : users) {
             ResponseEntity<User> result = new UserController().makeCreateRestRequest(user, baseName, HttpMethod.POST, User.class);
             System.out.println(result.getStatusCode().toString());
-            System.out.println(String.format("user-id: %d and username: %s", result.getBody().getUserId(), result.getBody().getUsername()));
+            System.out.println(String.format("username: %s", result.getBody().getUsername()));
         }
     }
 
@@ -69,7 +67,7 @@ public class Client {
         System.out.println(result.getStatusCode());
         for (User user : result.getBody()) {
             System.out.println(result.getStatusCode().toString());
-            System.out.println(String.format("user-id: %d and username: %s", user.getUserId(), user.getUsername()));
+            System.out.println(String.format("username: %s", user.getUsername()));
         }
     }
 
@@ -79,7 +77,7 @@ public class Client {
         System.out.println(result.getStatusCode());
         for (User user : result.getBody()) {
             System.out.println(result.getStatusCode().toString());
-            System.out.println(String.format("user-id: %d and username: %s", user.getUserId(), user.getUsername()));
+            System.out.println(String.format("username: %s", user.getUsername()));
         }
     }
 }

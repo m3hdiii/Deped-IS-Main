@@ -123,7 +123,7 @@ public class RequestController extends AbstractMainController<Request, Long> {
         User user = getUserFromSpringSecurityContext();
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity httpEntity = makeHttpEntity(null);
-        String restUrl = String.format(FETCH_URL, BASE_NAME).concat("/").concat("user").concat("/").concat(user.getUserId() + "");
+        String restUrl = String.format(FETCH_URL, BASE_NAME).concat("/").concat("user").concat("/").concat(user.getUsername());
         ResponseEntity<List<Request>> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<Request>>() {
         });
 
@@ -157,7 +157,7 @@ public class RequestController extends AbstractMainController<Request, Long> {
     @Override
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
     public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Request> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Request.class);
+        ResponseEntity<Request> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(aLong), Request.class);
         ModelAndView mv = renderProcessing(response, aLong, BASE_NAME, INFO_VIEW_PAGE);
         return mv;
     }
@@ -165,7 +165,7 @@ public class RequestController extends AbstractMainController<Request, Long> {
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
     public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Request> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Request.class);
+        ResponseEntity<Request> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(aLong), Request.class);
         Request item = response.getBody();
         return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, item);
     }

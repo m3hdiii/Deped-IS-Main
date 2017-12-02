@@ -1,4 +1,4 @@
-package com.deped.model.pack;
+package com.deped.model.unit;
 
 import com.deped.protection.validators.integer.IntegerRange;
 import com.deped.protection.validators.xss.XSS;
@@ -10,7 +10,7 @@ import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
 
-import static com.deped.repository.utils.ConstantValues.FETCH_ALL_PACKS;
+import static com.deped.repository.utils.ConstantValues.FETCH_ALL_UNITS;
 
 /**
  * Created by mehdi on 7/6/17.
@@ -18,28 +18,29 @@ import static com.deped.repository.utils.ConstantValues.FETCH_ALL_PACKS;
 
 @NamedQueries({
         @NamedQuery(
-                name = FETCH_ALL_PACKS,
-                query = "SELECT p FROM Pack p"
+                name = FETCH_ALL_UNITS,
+                query = "SELECT u FROM Unit u"
         )
 })
 @Entity
-@Table(name = "pack")
+@Table(name = "unit")
 //@JsonIdentityInfo(
 //        generator = ObjectIdGenerators.PropertyGenerator.class,
 //        property = "packId", scope = Serializable.class)
-public class Pack implements Serializable {
+public class Unit implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "pack_id")
-    private Long packId;
 
-    @Column(name = "name")
+
     @NotEmpty(message = "Name field can not be blank")
     @Length(min = 2, max = 45, message = "Name filed length must be between 2 to 45 character")
     @XSS
     @Pattern(regexp = "^[a-zA-Z0-9_\\s]*$", message = "Name field must contain number, alphabet, space and underscore only")
+    @Id
+    @Column(name = "unit_name")
     private String name;
+
+    @Transient
+    private String previousIdName;
 
     @Column(name = "description")
     @Length(max = 400, message = "Description field must not be more than 400 character")
@@ -54,25 +55,17 @@ public class Pack implements Serializable {
     @Column(name = "creation_date")
     private Date creationDate;
 
-//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "pack")
+//    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "unit")
 //    private List<OrderDetails> orderDetailsList;
 
 
-    public Pack() {
+    public Unit() {
     }
 
-    public Pack(String name, String description, Date creationDate) {
+    public Unit(String name, String description, Date creationDate) {
         this.name = name;
         this.description = description;
         this.creationDate = creationDate;
-    }
-
-    public Long getPackId() {
-        return packId;
-    }
-
-    public void setPackId(Long packId) {
-        this.packId = packId;
     }
 
     public String getName() {
@@ -107,21 +100,29 @@ public class Pack implements Serializable {
         this.capacity = capacity;
     }
 
+    public String getPreviousIdName() {
+        return previousIdName;
+    }
+
+    public void setPreviousIdName(String previousIdName) {
+        this.previousIdName = previousIdName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Pack)) return false;
+        if (!(o instanceof Unit)) return false;
 
-        Pack pack = (Pack) o;
+        Unit unit = (Unit) o;
 
-        return packId.equals(pack.packId);
+        return name.equals(unit.getName());
     }
 
     @Override
     public int hashCode() {
-        if (packId == null || packId == 0L)
+        if (name == null || name.isEmpty())
             return super.hashCode();
         else
-            return packId.hashCode();
+            return name.hashCode();
     }
 }

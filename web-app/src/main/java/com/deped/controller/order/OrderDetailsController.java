@@ -13,8 +13,8 @@ import com.deped.model.order.Order;
 import com.deped.model.order.OrderDetails;
 import com.deped.model.order.OrderDetailsState;
 import com.deped.model.order.OrderState;
-import com.deped.model.pack.Pack;
 import com.deped.model.supply.Supplier;
+import com.deped.model.unit.Unit;
 import com.deped.utils.SystemUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -64,7 +64,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
     private static final String REQUISITION_PAGE = BASE_NAME + URL_SEPARATOR + "requisition" + URL_SEPARATOR + ID_PATTERN;
     private static final String ARRIVAL_PAGE = BASE_NAME + URL_SEPARATOR + "arrival" + URL_SEPARATOR + ID_PATTERN;
 
-    private static final String UPDATE_STATE_REST = BASE_NAME + URL_SEPARATOR + "update-state/user/%d/state/%d";
+    private static final String UPDATE_STATE_REST = BASE_NAME + URL_SEPARATOR + "update-state/user/%s/state/%d";
 
     public enum ActionParam {
         UPDATE_ALL, DELETE_ALL, SAVE_ALL, ORDER_ALL
@@ -116,7 +116,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         Map<String, Object> modelMap = new HashMap<>(getConfigMap());
         modelMap.put("orderId", orderId);
         modelMap.put("itemList", SharedData.getItems(false));
-        modelMap.put("packs", SharedData.getPacks(false));
+        modelMap.put("units", SharedData.getUnits(false));
         modelMap.put("categories", SharedData.getCategories(false));
         modelMap.put("suppliers", SharedData.getSuppliers(false));
         modelMap.put("orderDetail", orderDetails);
@@ -534,9 +534,9 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         HttpEntity<OrderDetails[]> httpEntity = new HttpEntity<>(orderDetailsArray, headers);
 
         User user = getUserFromSpringSecurityContext();
-        Long userId = user.getUserId();
+        String username = user.getUsername();
 
-        String restUrl = String.format((BASE_URL + UPDATE_STATE_REST), userId, state.ordinal());
+        String restUrl = String.format((BASE_URL + UPDATE_STATE_REST), username, state.ordinal());
 
         ResponseEntity<Response> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, Response.class);
         return response;
@@ -583,17 +583,16 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
     @InitBinder
     public void initBinder(WebDataBinder binder, HttpServletRequest request) {
-        binder.registerCustomEditor(Pack.class, new PropertyEditorSupport() {
+        binder.registerCustomEditor(Unit.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
                 if (text != null) {
                     try {
-                        Long packId = Long.parseLong(text);
-                        Pack pack = new Pack();
-                        pack.setPackId(packId);
+                        Unit pack = new Unit();
+                        pack.setName(text);
 
-                        List<Pack> packs = SharedData.getPacks(false);
-                        Pack discoveredPack = SystemUtils.findElementInList(packs, pack);
+                        List<Unit> packs = SharedData.getUnits(false);
+                        Unit discoveredPack = SystemUtils.findElementInList(packs, pack);
                         setValue(discoveredPack);
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
@@ -629,9 +628,8 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
             public void setAsText(String text) {
                 if (text != null) {
                     try {
-                        Long categoryId = Long.parseLong(text);
                         Category category = new Category();
-                        category.setCategoryId(categoryId);
+                        category.setName(text);
 
                         List<Category> categories = SharedData.getCategories(false);
                         Category discoveredCategories = SystemUtils.findElementInList(categories, category);

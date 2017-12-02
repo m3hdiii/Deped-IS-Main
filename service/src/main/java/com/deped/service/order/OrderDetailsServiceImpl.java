@@ -4,6 +4,7 @@ import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.order.OrderDetails;
+import com.deped.model.order.OrderDetailsID;
 import com.deped.model.order.OrderDetailsState;
 import com.deped.repository.order.OrderDetailsRepository;
 import com.deped.repository.utils.Range;
@@ -63,7 +64,7 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
     }
 
     @Override
-    public ResponseEntity<OrderDetails> fetchById(Object id) {
+    public ResponseEntity<OrderDetails> fetchById(OrderDetailsID id) {
         OrderDetails brand = orderDetailsRepository.fetchById(id);
         ResponseEntity<OrderDetails> responseEntity = new ResponseEntity<>(brand, OK);
         return responseEntity;
@@ -97,8 +98,8 @@ public class OrderDetailsServiceImpl implements OrderDetailsService {
     }
 
     @Override
-    public ResponseEntity<Response> updateOrderState(Long userId, OrderDetailsState orderDetailsState, OrderDetails... entities) {
-        Boolean isUpdated = orderDetailsRepository.updateOrderState(userId, orderDetailsState, entities);
+    public ResponseEntity<Response> updateOrderState(String username, OrderDetailsState orderDetailsState, OrderDetails... entities) {
+        Boolean isUpdated = orderDetailsRepository.updateOrderState(username, orderDetailsState, entities);
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, OrderDetails.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
         return responseEntity;

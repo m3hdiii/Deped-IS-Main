@@ -21,7 +21,7 @@ public class PasswordResetToken implements Serializable {
     @Column(name = "creation_date")
     private Date creationDate;
 
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "username")
     @OneToOne(cascade = CascadeType.DETACH)
     private User user;
 

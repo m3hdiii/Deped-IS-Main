@@ -8,10 +8,10 @@ import org.springframework.stereotype.Controller;
 @Controller(value = "centralizedAccessControl")
 public class CentralizedAccessControl {
 
-    public boolean checkUserChangeInfoAccess(Authentication authentication, Long id) {
+    public boolean checkUserChangeInfoAccess(Authentication authentication, String id) {
         User user = ((UserDetailsServiceImpl.CustomSpringSecurityUser) authentication.getPrincipal()).getUser();
-        Long userId = user.getUserId();
-        boolean isTheSamePerson = (userId == id);
+        String username = user.getUsername();
+        boolean isTheSamePerson = (username.equals(id));
         return isTheSamePerson;
 
     }

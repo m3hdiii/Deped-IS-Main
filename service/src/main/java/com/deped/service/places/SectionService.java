@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface SectionService extends BaseService<Section> {
+public interface SectionService extends BaseService<Section, String> {
 
-    ResponseEntity<List<Section>> fetchAllByDepartment(Long departmentId);
+    ResponseEntity<List<Section>> fetchAllByDepartment(String departmentId);
 }

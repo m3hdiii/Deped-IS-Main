@@ -1,6 +1,7 @@
 package com.deped.repository.places;
 
 import com.deped.exceptions.DatabaseRolesViolationException;
+import com.deped.model.location.office.Department;
 import com.deped.model.location.office.Section;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
@@ -26,7 +27,15 @@ public class SectionRepositoryImpl implements SectionRepository {
 
     @Override
     public Boolean update(Section entity) throws DatabaseRolesViolationException {
-        return hibernateFacade.updateEntity(entity);
+        String sqlQuery = "UPDATE section SET section_name = :sectionName , description = :description , department_name = :departmentName WHERE category_name = :oldSectionName ";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("section_name", entity.getName());
+        paramMap.put("description", entity.getDescription());
+        paramMap.put("departmentName", entity.getDepartment() != null ? entity.getDepartment().getName() : null);
+        paramMap.put("oldSectionName", entity.getPreviousIdName());
+
+        int rowAffected = hibernateFacade.updateEntitySqlQuery(sqlQuery, Department.class, paramMap);
+        return rowAffected < 0;
     }
 
     @Override
@@ -43,7 +52,7 @@ public class SectionRepositoryImpl implements SectionRepository {
     }
 
     @Override
-    public Section fetchById(Object id) {
+    public Section fetchById(String id) {
         Section section
 
 
@@ -63,10 +72,10 @@ public class SectionRepositoryImpl implements SectionRepository {
     }
 
     @Override
-    public List<Section> fetchAllByDepartment(Long departmentId) {
-        String sqlQuery = "SELECT * FROM section WHERE department_id = :departmentId";
+    public List<Section> fetchAllByDepartment(String departmentName) {
+        String sqlQuery = "SELECT * FROM section WHERE department_name = :departmentName";
         Map<String, Object> parameterMap = new HashMap<>();
-        parameterMap.put("departmentId", departmentId);
+        parameterMap.put("departmentName", departmentName);
         List<Section> list = hibernateFacade.fetchAllEntityBySqlQuery(sqlQuery, null, Section.class, parameterMap);
         return list;
     }

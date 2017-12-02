@@ -54,7 +54,6 @@
             <table class="table table-hover">
                 <thead>
                 <tr>
-                    <th>User ID</th>
                     <th>Username</th>
                     <th>Account Status</th>
                     <th>First Name</th>
@@ -74,7 +73,6 @@
                 <tbody>
                 <c:forEach items="${user}" var="user">
                     <tr>
-                        <td>${user.userId}</td>
                         <td>${user.username}</td>
                         <td>${user.accountStatus}</td>
                         <td>${user.firstName}</td>

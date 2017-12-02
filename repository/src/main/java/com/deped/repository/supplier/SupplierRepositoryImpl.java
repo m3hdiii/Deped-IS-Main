@@ -38,7 +38,7 @@ public class SupplierRepositoryImpl implements SupplierRepository {
     }
 
     @Override
-    public Supplier fetchById(Object id) {
+    public Supplier fetchById(Long id) {
         return hibernateFacade.fetchEntityById(Supplier.class, id);
     }
 

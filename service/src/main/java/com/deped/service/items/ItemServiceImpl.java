@@ -75,7 +75,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ResponseEntity<Item> fetchById(Object id) {
+    public ResponseEntity<Item> fetchById(String id) {
         Item item = itemRepository.fetchById(id);
         ResponseEntity<Item> responseEntity = new ResponseEntity<>(item, OK);
         return responseEntity;

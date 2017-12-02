@@ -43,6 +43,11 @@ public class BrandServiceImpl implements BrandService {
     @Override
     public ResponseEntity<Response> update(Brand entity) {
         Boolean isUpdated = null;
+
+        String pictureBase64 = entity.getLogoPic();
+        String fileName = ServiceUtils.saveImageIntoDisk(pictureBase64, BASE_FILE_FOLDER);
+        entity.setLogoUrl(fileName);
+
         try {
             isUpdated = brandRepository.update(entity);
         } catch (DatabaseRolesViolationException e) {
@@ -69,7 +74,7 @@ public class BrandServiceImpl implements BrandService {
     }
 
     @Override
-    public ResponseEntity<Brand> fetchById(Object id) {
+    public ResponseEntity<Brand> fetchById(String id) {
         Brand brand = brandRepository.fetchById(id);
         ResponseEntity<Brand> responseEntity = new ResponseEntity<>(brand, OK);
         return responseEntity;

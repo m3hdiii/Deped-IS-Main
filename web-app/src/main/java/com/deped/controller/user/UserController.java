@@ -42,7 +42,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  */
 
 @Controller
-public class UserController extends AbstractMainController<User, Long> {
+public class UserController extends AbstractMainController<User, String> {
 
     @FancyLogger
     private Logger log;
@@ -101,16 +101,16 @@ public class UserController extends AbstractMainController<User, Long> {
 
     @Override
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
-    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<User> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, User.class);
-        ModelAndView mv = renderProcessing(response, aLong, BASE_NAME, INFO_VIEW_PAGE);
+    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) String username) {
+        ResponseEntity<User> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, username, User.class);
+        ModelAndView mv = renderProcessing(response, username, BASE_NAME, INFO_VIEW_PAGE);
         return mv;
     }
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
-    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<User> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, User.class);
+    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) String username) {
+        ResponseEntity<User> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(username), User.class);
         User user = response.getBody();
         Map<String, Object> modelMap = makeCreateModel(user);
 
@@ -119,7 +119,7 @@ public class UserController extends AbstractMainController<User, Long> {
 
 
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@RequestParam MultipartFile userPic, @PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) User entity, BindingResult bindingResult) {
+    public ModelAndView updateAction(@RequestParam MultipartFile userPic, @PathVariable(ID_STRING_LITERAL) String username, @Valid @ModelAttribute(BASE_NAME) User entity, BindingResult bindingResult) {
 
         String encodeBase64 = ControllerImageUtils.imageUploadProcessing(userPic, bindingResult);
 
@@ -129,7 +129,7 @@ public class UserController extends AbstractMainController<User, Long> {
         }
 
         entity.setPictureBase64(encodeBase64);
-        entity.setUserId(aLong);
+        entity.setUsername(username);
         entity.setCreationDate(new Date());
 
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, User.class);
@@ -168,7 +168,7 @@ public class UserController extends AbstractMainController<User, Long> {
             public void setAsText(String text) {
                 if (text != null && !text.isEmpty()) {
                     Section section = new Section();
-                    section.setSectionId(Long.parseLong(text));
+                    section.setName(text);
                     setValue(section);
                 }
             }
@@ -222,7 +222,7 @@ public class UserController extends AbstractMainController<User, Long> {
 
 
     @Override
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) User entity, BindingResult bindingResult) {
+    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) String username, @Valid @ModelAttribute(BASE_NAME) User entity, BindingResult bindingResult) {
         return null;
     }
 

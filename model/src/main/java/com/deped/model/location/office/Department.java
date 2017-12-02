@@ -29,17 +29,17 @@ import static com.deped.repository.utils.ConstantValues.FETCH_ALL_DEPARTMENTS;
 //        property = "departmentId", scope = Department.class)
 public class Department implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "department_id")
-    private Long departmentId;
-
-    @Column(name = "name")
     @Length(min = 2, max = 45, message = "Name filed length must be between 2 to 45 character")
     @NotEmpty(message = "Name field can not be blank")
     @XSS
     @Pattern(regexp = "^[a-zA-Z0-9_\\s]*$", message = "Name field must contain number, alphabet, space and underscore only")
+    @Id
+    @Column(name = "department_name")
     private String name;
+
+    @Transient
+    private String previousIdName;
+
 
     @Column(name = "description")
     @Length(max = 400, message = "Description must not be more than 400 character")
@@ -64,14 +64,6 @@ public class Department implements Serializable {
         this.description = description;
         this.creationDate = creationDate;
         this.departmentHead = departmentHead;
-    }
-
-    public Long getDepartmentId() {
-        return departmentId;
-    }
-
-    public void setDepartmentId(Long departmentId) {
-        this.departmentId = departmentId;
     }
 
     public String getName() {
@@ -104,5 +96,13 @@ public class Department implements Serializable {
 
     public void setDepartmentHead(String departmentHead) {
         this.departmentHead = departmentHead;
+    }
+
+    public String getPreviousIdName() {
+        return previousIdName;
+    }
+
+    public void setPreviousIdName(String previousIdName) {
+        this.previousIdName = previousIdName;
     }
 }
