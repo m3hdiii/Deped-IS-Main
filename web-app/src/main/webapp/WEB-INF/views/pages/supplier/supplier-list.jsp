@@ -30,10 +30,14 @@
             </h3>
         </div>
 
-        <div class="btn-group visible-lg-inline-block">
-            <a href="/supplier/create" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
-               title="Add Supplier"><i class="fa fa-plus"></i></a>
-        </div>
+        <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
+            <div class="btn-group visible-lg-inline-block">
+                <a href="/supplier/create" class="btn btn-default tooltip-btn" data-toggle="tooltip"
+                   data-placement="top"
+                   title="Add Supplier"><i class="fa fa-plus"></i></a>
+            </div>
+        </sec:authorize>
+
         <hr class="clean">
 
 

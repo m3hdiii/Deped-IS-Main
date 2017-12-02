@@ -43,9 +43,7 @@
 
         <div>
             <c:if test="${not empty sessionScope[basketName]}">
-                <a href="/order-details/basket/${orderIdValue}"><img width="16"
-                                                                     src="${resourceURL}/images/order/add-to-cart.png"
-                                                                     alt="add to cart"/><span>${fn:length(sessionScope[basketName])}</span></a>
+                <a href="/order-details/basket/${orderIdValue}" class="btn btn-primary"> Check Cart<span>${fn:length(sessionScope[basketName])}</span></a>
             </c:if>
         </div>
         <c:set var="errors"

@@ -58,12 +58,15 @@
             </ul>
         </div>
 
-        <div class="btn-group visible-lg-inline-block">
-            <a href="/item/create" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
-               title="Add Item"><i class="fa fa-plus"></i></a>
-            <button type="button" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
-                    title="Delete"><i class="fa fa-trash"></i></button>
-        </div>
+        <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
+            <div class="btn-group visible-lg-inline-block">
+                <a href="/item/create" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
+                   title="Add Item"><i class="fa fa-plus"></i></a>
+                <button type="button" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
+                        title="Delete"><i class="fa fa-trash"></i></button>
+            </div>
+        </sec:authorize>
+
         <hr class="clean">
 
 
@@ -140,7 +143,7 @@
         </div>
     </div>
 
-        <c:import url="../../includes/footer.jsp"/>
+    <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>
 
