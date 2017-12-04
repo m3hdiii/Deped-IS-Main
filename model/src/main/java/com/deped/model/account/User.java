@@ -210,14 +210,13 @@ public class User implements Serializable {
     @Transient
     private String pictureBase64;
 
-    @ManyToMany/*(cascade = CascadeType.ALL)*/
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(
                     name = "username"/*, referencedColumnName = "user_id"*/),
             inverseJoinColumns = @JoinColumn(
                     name = "role_name"/*, referencedColumnName = "role_id"*/))
-//    @JsonManagedReference("user-role-binding")
     private Set<Role> roles;
 
     public User() {

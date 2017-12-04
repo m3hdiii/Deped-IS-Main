@@ -27,6 +27,9 @@ public class SharedData {
     private static List<Department> departments;
     private static Map<ClientEnumKey, String> clientConfigsMap;
     private static List<Item> items;
+    private static List<Item> goods;
+    private static List<Item> semiExpendables;
+    private static List<Item> equipment;
     private static List<Unit> packs;
     private static List<Category> categories;
     private static List<Supplier> suppliers;
@@ -62,6 +65,31 @@ public class SharedData {
         }
         return items;
     }
+
+    public static synchronized List<Item> getGoods(boolean dataIsUpdated) {
+        if (goods == null || dataIsUpdated) {
+            goods = fetchAll("good", new ParameterizedTypeReference<List<Item>>() {
+            });
+        }
+        return goods;
+    }
+
+    public static synchronized List<Item> getSemiExpendables(boolean dataIsUpdated) {
+        if (semiExpendables == null || dataIsUpdated) {
+            semiExpendables = fetchAll("semi-expendable", new ParameterizedTypeReference<List<Item>>() {
+            });
+        }
+        return semiExpendables;
+    }
+
+    public static synchronized List<Item> getEquipment(boolean dataIsUpdated) {
+        if (equipment == null || dataIsUpdated) {
+            equipment = fetchAll("equipment", new ParameterizedTypeReference<List<Item>>() {
+            });
+        }
+        return equipment;
+    }
+
 
     public static synchronized List<Unit> getUnits(boolean dataIsUpdated) {
         if (packs == null || dataIsUpdated) {

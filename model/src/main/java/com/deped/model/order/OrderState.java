@@ -5,6 +5,7 @@ public enum OrderState {
     PENDING("Pending"),
     CONSIDERED("Considered"),
     ORDERED("Ordered"),
+    PARTIALLY_ARRIVED("Partially Arrived"),
     FINALIZED("Finalized");
 
     private final String name;

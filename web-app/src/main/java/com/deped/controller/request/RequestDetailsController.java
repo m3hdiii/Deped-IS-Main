@@ -114,8 +114,20 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
 
 
         Map<String, Object> modelMap = new HashMap<>(getConfigMap());
+
+        switch (request.getItemType()) {
+            case GOODS:
+                modelMap.put("itemList", SharedData.getGoods(false));
+                break;
+            case SEMI_EXPENDABLE:
+                modelMap.put("itemList", SharedData.getSemiExpendables(false));
+                break;
+            case EQUIPMENT:
+                modelMap.put("itemList", SharedData.getEquipment(false));
+                break;
+        }
+
         modelMap.put("requestId", requestId);
-        modelMap.put("itemList", SharedData.getItems(false));
         modelMap.put("requestDetails", new RequestDetails());
         ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
         return mv;
@@ -400,17 +412,22 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
 
     //Administrative Tasks
     @RequestMapping(value = SUMMARY_PAGE, method = GET)
-    public ModelAndView summaryActionRender(@PathVariable(ID_STRING_LITERAL) Long requestId) {
+    public ModelAndView summaryActionRender(@PathVariable(ID_STRING_LITERAL) Long requestId, final RedirectAttributes redirectAttributes) {
         Request request = fetchRequest(requestId);
 
         if (request == null) {
             return new ModelAndView("redirect:/dashboard");
         }
 
+
         List<RequestDetails> requestDetailsList = fetchRequestDetails(requestId);
         ModelAndView requestDetailsChecking = requestDetailsChecking(requestDetailsList);
         if (requestDetailsChecking != null) {
-            return requestDetailsChecking;
+            redirectAttributes.addFlashAttribute("request", request);
+            ModelAndView mav = new ModelAndView();
+            final String redirectUrl = String.format("redirect:/request-details/create/%d", request.getRequestId());
+            mav.setViewName(redirectUrl);
+            return mav;
         }
 
         Map<String, Object> modelMap = new HashMap<>(getConfigMap());
@@ -425,13 +442,9 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
 
 
     private ModelAndView requestDetailsChecking(List<RequestDetails> requestDetailsList) {
-        String newRequestRedirectUrl;
         if (requestDetailsList == null || requestDetailsList.isEmpty()) {
-            //TODO message this request does not have any request details which is wrong ...
-            newRequestRedirectUrl = "redirect:/dashboard";
-            return new ModelAndView(newRequestRedirectUrl);
+            return new ModelAndView();
         }
-
         return null;
     }
 

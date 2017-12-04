@@ -78,7 +78,7 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
 
         Session hibernateSession;
         try {
-            hibernateSession = hibernateFacade.getSessionFactory().openSession();
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -101,9 +101,6 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
             if (tx != null)
                 tx.rollback();
             return false;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
         return true;
     }
@@ -123,7 +120,7 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
         List<StateUpdateBean> stateUpdateBeanList = makeStateUpdateBeanList(entities, username, orderDetailsState);
         Session hibernateSession;
         try {
-            hibernateSession = hibernateFacade.getSessionFactory().openSession();
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -149,6 +146,11 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
                 case ORDERED:
                     nextOrderState = OrderState.ORDERED;
                     break;
+
+                case PARTIALLY_ARRIVED:
+                    nextOrderState = OrderState.PARTIALLY_ARRIVED;
+                    break;
+
                 case ARRIVED:
                 case NOT_ARRIVED:
                 case CANCELED:
@@ -216,9 +218,6 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
             if (tx != null)
                 tx.rollback();
             return false;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
 
         return true;
@@ -242,7 +241,7 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
 
         Session hibernateSession;
         try {
-            hibernateSession = hibernateFacade.getSessionFactory().openSession();
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -269,10 +268,8 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
             if (tx != null)
                 tx.rollback();
             return false;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
+
         return true;
     }
 
@@ -301,7 +298,7 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
 
         Session hibernateSession = null;
         try {
-            hibernateSession = hibernateFacade.getSessionFactory().openSession();
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -319,10 +316,8 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
             if (tx != null)
                 tx.rollback();
             return null;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
+
         return list;
     }
 
@@ -392,7 +387,7 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
         }
 
         String strFormat = "UPDATE order_details SET order_details_state = :orderDetailsState %s "
-                .concat("WHERE (order_order_id, item_item_name, category_category_nae) IN (");
+                .concat("WHERE (order_order_id, item_item_name, category_category_name) IN (");
 
         final String baseQuery = String.format(strFormat, stitch);
 

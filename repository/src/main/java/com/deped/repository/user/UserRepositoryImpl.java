@@ -121,7 +121,7 @@ public class UserRepositoryImpl implements UserRepository {
     public User loginUser(User userInfo, LoginMethod loginMethod) {
         Session hibernateSession = null;
         try {
-            hibernateSession = sessionFactory.openSession();
+            hibernateSession = sessionFactory.getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -158,9 +158,6 @@ public class UserRepositoryImpl implements UserRepository {
             if (tx != null)
                 tx.rollback();
             return null;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
 
         return result;
@@ -244,10 +241,8 @@ public class UserRepositoryImpl implements UserRepository {
             if (tx != null)
                 tx.rollback();
             return false;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
+
         return true;
     }
 }

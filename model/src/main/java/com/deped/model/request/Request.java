@@ -2,11 +2,13 @@ package com.deped.model.request;
 
 
 import com.deped.model.account.User;
+import com.deped.model.items.ItemType;
 import com.deped.protection.validators.xss.XSS;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -58,6 +60,11 @@ public class Request implements Serializable {
     @Length(max = 400, message = "Description field must not be more than 400 character")
     @XSS
     private String adminNotice;
+
+    @Column(name = "item_type")
+    @Enumerated(value = EnumType.STRING)
+    @NotNull(message = "Item Type field can not be blank")
+    private ItemType itemType;
 
 
     public Long getRequestId() {
@@ -114,5 +121,13 @@ public class Request implements Serializable {
 
     public void setRequestStatus(RequestStatus requestStatus) {
         this.requestStatus = requestStatus;
+    }
+
+    public ItemType getItemType() {
+        return itemType;
+    }
+
+    public void setItemType(ItemType itemType) {
+        this.itemType = itemType;
     }
 }

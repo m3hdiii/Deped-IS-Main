@@ -65,9 +65,9 @@ public class OrderDetails implements Serializable {
     private Integer totalQuantityRequestNo;
 
     @Column(name = "total_quantity_arrived_no")
-    @Min(value = 1, message = "Total quantity arrived can not be a negative")
+    @Min(value = 0, message = "Total quantity arrived can not be a negative")
     @Max(value = 2500000, message = "Total quantity arrived can not be more than 2500000")
-    private Integer totalQuantityArrivedNo;
+    private Integer totalQuantityArrivedNo = 0;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "order_details_state")
@@ -90,15 +90,15 @@ public class OrderDetails implements Serializable {
     @Transient
     private OrderDetailsState transientUpdateState;
 
-    @JoinColumn(name = "considered_by_user_id")
+    @JoinColumn(name = "considered_by_username")
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User consideredByUser;
 
-    @JoinColumn(name = "ordered_by_user_id")
+    @JoinColumn(name = "ordered_by_username")
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User orderedByUser;
 
-    @JoinColumn(name = "received_by_user_id")
+    @JoinColumn(name = "received_by_username")
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User receivedByUser;
 

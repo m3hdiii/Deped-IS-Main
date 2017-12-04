@@ -63,6 +63,7 @@ public class OrderRestController extends AbstractMainRestController<Order, Long>
             case PENDING:
             case ORDERED:
             case CONSIDERED:
+            case PARTIALLY_ARRIVED:
                 break;
         }
 

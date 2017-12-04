@@ -16,7 +16,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 @Configuration
-@EnableWebSecurity(debug = true)
+@EnableWebSecurity/*(debug = true)*/
 public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 

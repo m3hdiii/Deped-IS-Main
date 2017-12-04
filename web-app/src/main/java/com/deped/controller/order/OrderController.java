@@ -6,9 +6,7 @@ import com.deped.model.order.Order;
 import com.deped.model.order.OrderState;
 import com.deped.model.order.Schedule;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -128,7 +126,7 @@ public class OrderController extends AbstractMainController<Order, Long> {
 
     @RequestMapping(value = RENDER_LIST_ARRIVAL_MAPPING, method = GET)
     public ModelAndView releaseListRender() {
-        List<Order> orderList = fetchByState(OrderState.ORDERED);
+        List<Order> orderList = fetchByState(OrderState.ORDERED, OrderState.PARTIALLY_ARRIVED);
         ModelAndView mav = createListModelMapping(
                 orderList,
                 ORDER_CONSIDERATION_PAGE,
@@ -154,13 +152,23 @@ public class OrderController extends AbstractMainController<Order, Long> {
     }
 
 
-    private List<Order> fetchByState(OrderState orderState) {
+    private List<Order> fetchByState(OrderState... orderState) {
+        Integer ordinals[] = new Integer[orderState.length];
+        for (int i = 0; i < orderState.length; i++) {
+            ordinals[i] = orderState[i].ordinal();
+        }
+
         RestTemplate restTemplate = new RestTemplate();
-        HttpEntity httpEntity = makeHttpEntity(null);
-        String restUrl = String.format(FETCH_URL, BASE_NAME).concat("/").concat(orderState.ordinal() + "");
-        ResponseEntity<List<Order>> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<Order>>() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Integer[]> httpEntity = new HttpEntity<>(ordinals, headers);
+        String restUrl = String.format(FETCH_URL, "order").concat("/").concat("by-states");
+        ResponseEntity<List<Order>> responseDetails = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<Order>>() {
         });
-        return response.getBody();
+
+        List<Order> list = responseDetails.getBody();
+        return list;
+
     }
 
 
@@ -175,7 +183,7 @@ public class OrderController extends AbstractMainController<Order, Long> {
         List<Order> requests = response.getBody();
         Map<String, Object> modelMap = new HashMap<>();
         modelMap.put("requests", requests);
-        modelMap.put("orderUrll", "/order-details/");
+        modelMap.put("orderUrl", "/order-details/");
         modelMap.put("anchorName", "More Info");
         ModelAndView mav = new ModelAndView(ORDER_CONSIDERATION_PAGE, modelMap);
         return mav;

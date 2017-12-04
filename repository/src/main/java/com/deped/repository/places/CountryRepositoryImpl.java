@@ -33,7 +33,7 @@ public class CountryRepositoryImpl implements CountryRepository {
     @Override
     public List<Country> fetchAll() {
         SessionFactory factory = HibernateFacade.getSessionFactory();
-        Session session = factory.openSession();
+        Session session = factory.getCurrentSession();
         NativeQuery<Country> nativeQuery = session.createNativeQuery("SELECT * FROM country", Country.class);
         return nativeQuery.list();
 

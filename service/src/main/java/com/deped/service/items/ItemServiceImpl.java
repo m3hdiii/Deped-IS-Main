@@ -4,6 +4,7 @@ import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.items.Item;
+import com.deped.model.items.ItemType;
 import com.deped.repository.items.ItemRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
@@ -101,15 +102,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public ResponseEntity<List<Item>> fetchAllGoods() {
-        List<Item> items = itemRepository.fetchAllGoods();
-        ResponseEntity<List<Item>> responseEntity = new ResponseEntity<>(items, OK);
-        return responseEntity;
-    }
-
-    @Override
-    public ResponseEntity<List<Item>> fetchAllSemiExpendable() {
-        List<Item> items = itemRepository.fetchAllSemiExpendable();
+    public ResponseEntity<List<Item>> fetchAllByItemType(ItemType itemType) {
+        List<Item> items = itemRepository.fetchAllByItemType(itemType);
         ResponseEntity<List<Item>> responseEntity = new ResponseEntity<>(items, OK);
         return responseEntity;
     }

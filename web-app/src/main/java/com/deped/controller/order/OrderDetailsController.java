@@ -357,24 +357,65 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         );
     }
 
+    public enum OrderActionParam {
+        PARTIAL_DELIVERY, FINALIZE_DELIVERY
+    }
+
+    //TODO
     @RequestMapping(value = ARRIVAL_PAGE, method = POST)
-    public ModelAndView arrivalActionSubmit(@ModelAttribute("orderDetailsForm") OrderDetailsForm orderDetailsForm) {
-        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, OrderDetailsState.ARRIVED);
-        Response response = updateResponse.getBody();
+    public ModelAndView arrivalActionSubmit(@RequestParam OrderActionParam actionParam, @ModelAttribute("orderDetailsForm") OrderDetailsForm orderDetailsForm, BindingResult bindingResult) {
 
-        String headTagTitle = "Arrival Result";
-        String headTagDescription = "Arrival Result Summary";
-        String heading = "Operation Result";
-        String successMessage = response.getResponseStatus() == ResponseStatus.SUCCESSFUL ? "You Successfully Process The Arrival Process" : null;
-        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "Something Went Wrong In Arrival Process" : null;
-
-        if (response.getResponseStatus() == ResponseStatus.SUCCESSFUL) {
-            SharedData.getItems(true);
+        if (bindingResult.hasErrors()) {
+            //TODO VALIDATIONS
         }
 
-        ResultBean resultBean = new ResultBean(headTagTitle, headTagDescription, heading, successMessage, failureMessage);
-        ModelAndView mav = createResultPage(resultBean);
-        return mav;
+        switch (actionParam) {
+            case PARTIAL_DELIVERY:
+                break;
+            case FINALIZE_DELIVERY:
+                break;
+        }
+
+        if (actionParam == OrderActionParam.PARTIAL_DELIVERY) {
+            ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, OrderDetailsState.PARTIALLY_ARRIVED);
+            Response response = updateResponse.getBody();
+
+            String headTagTitle = "Partially Arrival Result";
+            String headTagDescription = "Partially Arrival Result Summary";
+            String heading = "Operation Result";
+            String successMessage = response.getResponseStatus() == ResponseStatus.SUCCESSFUL ? "You Successfully Process The Partial Delivery Process" : null;
+            String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "Something Went Wrong In Partial Delivery Process" : null;
+
+            if (response.getResponseStatus() == ResponseStatus.SUCCESSFUL) {
+                SharedData.getItems(true);
+            }
+
+            ResultBean resultBean = new ResultBean(headTagTitle, headTagDescription, heading, successMessage, failureMessage);
+            ModelAndView mav = createResultPage(resultBean);
+            return mav;
+        }
+
+        if (actionParam == OrderActionParam.FINALIZE_DELIVERY) {
+            ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, OrderDetailsState.ARRIVED);
+            Response response = updateResponse.getBody();
+
+            String headTagTitle = "Arrival Result";
+            String headTagDescription = "Arrival Result Summary";
+            String heading = "Operation Result";
+            String successMessage = response.getResponseStatus() == ResponseStatus.SUCCESSFUL ? "You Successfully Process The Arrival Process" : null;
+            String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "Something Went Wrong In Arrival Process" : null;
+
+            if (response.getResponseStatus() == ResponseStatus.SUCCESSFUL) {
+                SharedData.getItems(true);
+            }
+
+            ResultBean resultBean = new ResultBean(headTagTitle, headTagDescription, heading, successMessage, failureMessage);
+            ModelAndView mav = createResultPage(resultBean);
+            return mav;
+        }
+
+        //TODO it won't get here
+        return null;
     }
 
     /**

@@ -32,7 +32,8 @@
     <div class="warper container-fluid">
 
         <div class="page-header">
-            <h3>Manage Request &nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small></h3>
+            <h3>Manage Request &nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
+            </h3>
         </div>
 
 
@@ -45,9 +46,11 @@
                     <tr>
                         <th>User</th>
                         <th>Reason</th>
+                        <th>Item Type</th>
                         <th>Date Requested</th>
                         <th>Status</th>
                         <th>Action</th>
+                        <th></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -55,10 +58,23 @@
                         <tr>
                             <th>${request.user.firstName} ${request.user.middleName} ${request.user.lastName}</th>
                             <td>${request.userMessage}</td>
+                            <td>${request.itemType}</td>
                             <td>${request.requestDate}</td>
                             <td>${request.requestStatus}</td>
                             <td>
-                                <a href="${requestUrl}${request.requestId}" class="btn btn-primary btn-sm">${anchorName}</a>
+                                <c:choose>
+                                    <c:when test="${request.requestStatus eq 'SAVED'}">
+                                        <a href="/request-details/create/${request.requestId}"
+                                           class="btn btn-primary btn-sm">
+                                            Complete it
+                                        </a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="${requestUrl}${request.requestId}"
+                                           class="btn btn-primary btn-sm">${anchorName}</a>
+                                    </c:otherwise>
+                                </c:choose>
+
                             </td>
                         </tr>
                     </c:forEach>
@@ -70,51 +86,7 @@
     </div>
     <!-- Warper Ends Here (working area) -->
 
-    <%--<div class="warper container-fluid">--%>
-
-        <%--<div class="page-header">--%>
-            <%--<h1>Manage Request--%>
-                <%--<small>DepEd-Baguio City Division Office</small>--%>
-            <%--</h1>--%>
-
-        <%--</div>--%>
-
-        <%--<div class="row item-body">--%>
-            <%--<div class="panel panel-default">--%>
-                <%--<h3 class="text-center">Request Info</h3>--%>
-                <%--<div class="panel-body">--%>
-
-                    <%--<table class="table table-hover">--%>
-                        <%--<thead>--%>
-                        <%--<tr>--%>
-                            <%--<th>User</th>--%>
-                            <%--<th>Reason</th>--%>
-                            <%--<th>Date Requested</th>--%>
-                            <%--<th>Status</th>--%>
-                            <%--<th>Action</th>--%>
-                        <%--</tr>--%>
-                        <%--</thead>--%>
-                        <%--<tbody>--%>
-                            <%--<c:forEach items="${requests}" var="request">--%>
-                                <%--<tr>--%>
-                                    <%--<th>${request.user.firstName} ${request.user.middleName} ${request.user.lastName}</th>--%>
-                                    <%--<td>${request.userMessage}</td>--%>
-                                    <%--<td>${request.requestDate}</td>--%>
-                                    <%--<td>${request.requestStatus}</td>--%>
-                                    <%--<td>--%>
-                                        <%--<a href="${requestUrl}${request.requestId}" class="btn btn-primary btn-sm">${anchorName}</a>--%>
-                                    <%--</td>--%>
-                                <%--</tr>--%>
-                            <%--</c:forEach>--%>
-                        <%--</tbody>--%>
-                    <%--</table>--%>
-                <%--</div>--%>
-            <%--</div>--%>
-
-        <%--</div>--%>
-    <%--</div> <!-- Warper Ends Here (working area) -->--%>
-
-            <c:import url="../../includes/footer.jsp"/>
+    <c:import url="../../includes/footer.jsp"/>
     <script type="text/javascript" src="${resourceURL}/js/additional/request.js"></script>
 
 </body>

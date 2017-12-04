@@ -325,6 +325,9 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         boolean isUpdated = true;
         if (entityClass == Item.class) {
             SharedData.getItems(isUpdated);
+            SharedData.getGoods(isUpdated);
+            SharedData.getSemiExpendables(isUpdated);
+            SharedData.getEquipment(isUpdated);
         }
 
         if (entityClass == Unit.class) {

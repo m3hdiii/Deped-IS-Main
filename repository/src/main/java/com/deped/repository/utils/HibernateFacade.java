@@ -51,7 +51,7 @@ public class HibernateFacade {
     public Boolean updateEntity(Object entity) throws DatabaseRolesViolationException {
         Session hibernateSession;
         try {
-            hibernateSession = getSessionFactory().openSession();
+            hibernateSession = getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -71,10 +71,8 @@ public class HibernateFacade {
             if (tx != null)
                 tx.rollback();
             return false;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
+
         return true;
     }
 
@@ -82,7 +80,7 @@ public class HibernateFacade {
     public <T> T saveEntity(Class<T> entityClass, T object) throws DatabaseRolesViolationException {
         Session hibernateSession;
         try {
-            hibernateSession = getSessionFactory().openSession();
+            hibernateSession = getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -104,9 +102,6 @@ public class HibernateFacade {
             if (tx != null)
                 tx.rollback();
             return null;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
 
         return object;
@@ -116,7 +111,7 @@ public class HibernateFacade {
     public <T> List<T> fetchAllByParameterMap(String nameQuery, Class<T> entityClass, Map<String, Object> parameterMap) {
         Session hibernateSession;
         try {
-            hibernateSession = getSessionFactory().openSession();
+            hibernateSession = getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -141,10 +136,8 @@ public class HibernateFacade {
             if (tx != null)
                 tx.rollback();
             return null;
-        } finally {
-//            if (hibernateSession != null)
-//                hibernateSession.close();
         }
+
         return rows;
     }
 
@@ -162,7 +155,7 @@ public class HibernateFacade {
     public <T> List<T> fetchAllEntity(String nameQuery, Range range, Class<T> entityClass, Map<String, Object> parameterMap) {
         Session hibernateSession;
         try {
-            hibernateSession = getSessionFactory().openSession();
+            hibernateSession = getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -191,10 +184,8 @@ public class HibernateFacade {
             if (tx != null)
                 tx.rollback();
             return null;
-        } finally {
-//            if (hibernateSession != null)
-//                hibernateSession.close();
         }
+
         return rows;
     }
 
@@ -212,7 +203,7 @@ public class HibernateFacade {
     public <T> List<T> fetchAllEntityBySqlQuery(String sqlQuery, Range range, Class<T> entityClass, Map<String, Object> parameterMap) {
         Session hibernateSession;
         try {
-            hibernateSession = getSessionFactory().openSession();
+            hibernateSession = getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -242,17 +233,15 @@ public class HibernateFacade {
             if (tx != null)
                 tx.rollback();
             return null;
-        } finally {
-//            if (hibernateSession != null)
-//                hibernateSession.close();
         }
+
         return rows;
     }
 
     public <T> int updateEntitySqlQuery(String sqlQuery, Class<T> entityClass, Map<String, Object> parameterMap) {
         Session hibernateSession;
         try {
-            hibernateSession = getSessionFactory().openSession();
+            hibernateSession = getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return 0;
@@ -276,17 +265,15 @@ public class HibernateFacade {
             e.printStackTrace();
             if (tx != null)
                 tx.rollback();
-        } finally {
-//            if (hibernateSession != null)
-//                hibernateSession.close();
         }
+
         return effectedRows;
     }
 
     public <T> Boolean removeEntities(String tableName, String tableIdName, T... entities) {
         Session hibernateSession;
         try {
-            hibernateSession = getSessionFactory().openSession();
+            hibernateSession = getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -310,10 +297,8 @@ public class HibernateFacade {
             if (tx != null)
                 tx.rollback();
             return false;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
+
         return true;
     }
 
@@ -321,7 +306,7 @@ public class HibernateFacade {
     public <T> T fetchEntityById(Class<T> entityClass, Object entityId) {
         Session hibernateSession;
         try {
-            hibernateSession = getSessionFactory().openSession();
+            hibernateSession = getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -339,9 +324,6 @@ public class HibernateFacade {
             if (tx != null)
                 tx.rollback();
             return null;
-        } finally {
-//            if (hibernateSession != null)
-//                hibernateSession.close();
         }
 
         return entity;
@@ -351,7 +333,7 @@ public class HibernateFacade {
     public <T> Boolean createOrUpdateAll(Class<T> entityClass, T... entities) throws DatabaseRolesViolationException {
         Session hibernateSession;
         try {
-            hibernateSession = getSessionFactory().openSession();
+            hibernateSession = getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -377,10 +359,8 @@ public class HibernateFacade {
             if (tx != null)
                 tx.rollback();
             return false;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
+
         return true;
     }
 

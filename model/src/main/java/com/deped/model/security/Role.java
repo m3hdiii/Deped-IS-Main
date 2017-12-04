@@ -3,6 +3,7 @@ package com.deped.model.security;
 import com.deped.model.account.User;
 import com.deped.protection.validators.xss.XSS;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -59,16 +60,18 @@ public class Role implements Serializable {
 
 
     @ManyToMany(mappedBy = "roles", cascade = CascadeType.ALL)
+    @JsonIgnore
     private Set<User> users;
 
-    @ManyToMany
-    @JoinTable(
-            name = "role_privilege",
-            joinColumns = @JoinColumn(
-                    name = "role_name", referencedColumnName = "role_name"),
-            inverseJoinColumns = @JoinColumn(
-                    name = "privilege_id", referencedColumnName = "privilege_id"))
-//    @JsonManagedReference("role-privileges-binding")
+    //    @ManyToMany
+//    @JoinTable(
+//            name = "role_privilege",
+//            joinColumns = @JoinColumn(
+//                    name = "role_name", referencedColumnName = "role_name"),
+//            inverseJoinColumns = @JoinColumn(
+//                    name = "privilege_id", referencedColumnName = "privilege_id"))
+//
+    @Transient
     private Set<Privilege> privileges;
 
 

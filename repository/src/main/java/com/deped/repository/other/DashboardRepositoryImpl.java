@@ -27,7 +27,7 @@ public class DashboardRepositoryImpl implements DashboardRepository {
         Long totalUserLong = 0L;
         Session hibernateSession;
         try {
-            hibernateSession = hibernateFacade.getSessionFactory().openSession();
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -95,9 +95,6 @@ public class DashboardRepositoryImpl implements DashboardRepository {
             if (tx != null)
                 tx.rollback();
             return null;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
 
         return dashboard;

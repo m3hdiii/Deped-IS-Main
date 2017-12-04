@@ -32,4 +32,10 @@ public class SpringMVCRestConfiguration extends WebMvcConfigurerAdapter {
         cmr.setMaxUploadSizePerFile(MAX_UPLOAD_SIZE_IN_MB);
         return cmr;
     }
+
+//    @Bean
+//    public MappingJackson2HttpMessageConverter getMappingJacksonConverter(){
+//        return new MappingJackson2HttpMessageConverter(new HibernateAwareObjectMapper());
+//    }
+
 }

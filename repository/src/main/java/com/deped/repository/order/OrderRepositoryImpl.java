@@ -115,7 +115,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
         Session hibernateSession = null;
         try {
-            hibernateSession = hibernateFacade.getSessionFactory().openSession();
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -134,8 +134,8 @@ public class OrderRepositoryImpl implements OrderRepository {
                 tx.rollback();
             return null;
         } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
+//            if (hibernateSession != null && hibernateSession.isOpen())
+//                hibernateSession.close();
         }
         return list;
 

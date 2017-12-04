@@ -2,6 +2,7 @@ package com.deped.restcontroller.items;
 
 import com.deped.model.Response;
 import com.deped.model.items.Item;
+import com.deped.model.items.ItemType;
 import com.deped.repository.utils.Range;
 import com.deped.restcontroller.AbstractMainRestController;
 import com.deped.service.items.ItemService;
@@ -18,12 +19,12 @@ public class ItemRestController extends AbstractMainRestController<Item, String>
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
     private static final String FETCH_MAPPING = BASE_NAME + FETCH_PATTERN;
+    private static final String FETCH_MAPPING_GOODS = "good" + FETCH_PATTERN;
+    private static final String FETCH_MAPPING_SEMI_EXPENDABLES = "semi-expendable" + FETCH_PATTERN;
+    private static final String FETCH_MAPPING_EQUIPMENT = "equipment" + FETCH_PATTERN;
     private static final String FETCH_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String FETCH_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
-
-    private static final String FETCH_GOODS_MAPPING = "goods" + FETCH_PATTERN;
-    private static final String FETCH_SEMI_EXPENDABLE_MAPPING = "semi-expendable" + FETCH_PATTERN;
 
     @Autowired
     private ItemService itemService;
@@ -46,6 +47,26 @@ public class ItemRestController extends AbstractMainRestController<Item, String>
     @RequestMapping(value = FETCH_MAPPING, method = RequestMethod.POST)
     public ResponseEntity<List<Item>> fetchAll() {
         ResponseEntity<List<Item>> response = itemService.fetchAll();
+        return response;
+    }
+
+    @RequestMapping(value = FETCH_MAPPING_GOODS, method = RequestMethod.POST)
+    public ResponseEntity<List<Item>> fetchAllGoods() {
+        ResponseEntity<List<Item>> response = itemService.fetchAllByItemType(ItemType.GOODS);
+        return response;
+    }
+
+
+    @RequestMapping(value = FETCH_MAPPING_SEMI_EXPENDABLES, method = RequestMethod.POST)
+    public ResponseEntity<List<Item>> fetchAllSemiExpendable() {
+        ResponseEntity<List<Item>> response = itemService.fetchAllByItemType(ItemType.SEMI_EXPENDABLE);
+        return response;
+    }
+
+
+    @RequestMapping(value = FETCH_MAPPING_EQUIPMENT, method = RequestMethod.POST)
+    public ResponseEntity<List<Item>> fetchAllEquipment() {
+        ResponseEntity<List<Item>> response = itemService.fetchAllByItemType(ItemType.EQUIPMENT);
         return response;
     }
 
@@ -73,18 +94,5 @@ public class ItemRestController extends AbstractMainRestController<Item, String>
     @Override
     public ResponseEntity<Response> createOrUpdateAll(Item... entities) {
         return null;
-    }
-
-    @RequestMapping(value = FETCH_GOODS_MAPPING, method = RequestMethod.POST)
-    public ResponseEntity<List<Item>> fetchAllGoods() {
-        ResponseEntity<List<Item>> response = itemService.fetchAllGoods();
-        return response;
-    }
-
-
-    @RequestMapping(value = FETCH_SEMI_EXPENDABLE_MAPPING, method = RequestMethod.POST)
-    public ResponseEntity<List<Item>> fetchAllSemiExpendable() {
-        ResponseEntity<List<Item>> response = itemService.fetchAllSemiExpendable();
-        return response;
     }
 }

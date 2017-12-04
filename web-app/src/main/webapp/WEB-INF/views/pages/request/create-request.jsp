@@ -46,7 +46,7 @@
                             <c:if test="${not empty errors}">
                                 <div>
                                     <ul class="list-group">
-                                        <c:forEach items="${fieldErrors}" var="error" varStatus="loop">
+                                        <c:forEach items="${errors}" var="error" varStatus="loop">
                                             <li class="list-group-item list-group-item-warning text-danger"><span
                                                     class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
                                             </li>
@@ -60,7 +60,20 @@
 
                                     <div class="form-group">
                                         <label for="newReason">Explain Your Reason For Requesting</label>
-                                            <form:textarea path="userMessage" class="form-control" id="newReason"/>
+                                        <form:textarea path="userMessage" class="form-control" id="newReason"/>
+                                    </div>
+
+                                </div>
+
+                                <div class="col-md-10 col-sm-offset-1">
+
+                                    <div class="form-group">
+                                        <label for="newReason">* Type of your Item</label>
+                                        <form:select path="itemType" id="newItemType" class="form-control chosen-select"
+                                                     data-placeholder="Select a Type">
+                                            <form:option value="" label="--Please Select"/>
+                                            <form:options items="${itemType}" itemLabel="name"/>
+                                        </form:select>
                                     </div>
 
                                 </div>
@@ -88,15 +101,15 @@
 
 
         <%--<c:choose>--%>
-            <%--<c:when test="${not empty notCreated}">--%>
-                <%--<p style="color: red;">${notCreated}</p>--%>
-            <%--</c:when>--%>
+        <%--<c:when test="${not empty notCreated}">--%>
+        <%--<p style="color: red;">${notCreated}</p>--%>
+        <%--</c:when>--%>
 
 
-            <%--<c:when test="${not empty successfullyCreated}">--%>
-                <%--<p style="color: green;">${successfullyCreated}</p>--%>
-                <%--&nbsp;&nbsp;<a href="/order-details/create">Add Item to YourOrder</a>--%>
-            <%--</c:when>--%>
+        <%--<c:when test="${not empty successfullyCreated}">--%>
+        <%--<p style="color: green;">${successfullyCreated}</p>--%>
+        <%--&nbsp;&nbsp;<a href="/order-details/create">Add Item to YourOrder</a>--%>
+        <%--</c:when>--%>
 
         <%--</c:choose>--%>
     <%--</div>--%>
@@ -104,37 +117,37 @@
     <%--<div class="row">--%>
 
         <%--<div class="col-md-12">--%>
-            <%--<div class="panel panel-default">--%>
-                <%--<div class="panel-heading">Item Information</div>--%>
-                <%--<div class="panel-body">--%>
-                    <%--<form:form commandName="request" method="post" class="form-horizontal" role="form">--%>
-                        <%--<div class="form-group">--%>
-                            <%--<label class="col-sm-2 control-label">Explain Your Reason For Requesting</label>--%>
-                            <%--<div class="col-sm-2">--%>
-                                <%--<form:textarea path="userMessage" class="form-control"/>--%>
-                            <%--</div>--%>
-                        <%--</div>--%>
+        <%--<div class="panel panel-default">--%>
+        <%--<div class="panel-heading">Item Information</div>--%>
+        <%--<div class="panel-body">--%>
+        <%--<form:form commandName="request" method="post" class="form-horizontal" role="form">--%>
+        <%--<div class="form-group">--%>
+        <%--<label class="col-sm-2 control-label">Explain Your Reason For Requesting</label>--%>
+        <%--<div class="col-sm-2">--%>
+        <%--<form:textarea path="userMessage" class="form-control"/>--%>
+        <%--</div>--%>
+        <%--</div>--%>
 
-                        <%--<hr class="style13">--%>
+        <%--<hr class="style13">--%>
 
-                        <%--<div class="btn-group-sm row">--%>
-                            <%--<div class="col-sm-2">--%>
-                                <%--<button type="submit" class="btn btn-success btn-block">Confirm</button>--%>
-                            <%--</div>--%>
-                            <%--<div class="form-group col-sm-2">--%>
-                                <%--<button type="reset" class="btn btn-primary btn-block">Reset Fields</button>--%>
-                            <%--</div>--%>
-                        <%--</div>--%>
+        <%--<div class="btn-group-sm row">--%>
+        <%--<div class="col-sm-2">--%>
+        <%--<button type="submit" class="btn btn-success btn-block">Confirm</button>--%>
+        <%--</div>--%>
+        <%--<div class="form-group col-sm-2">--%>
+        <%--<button type="reset" class="btn btn-primary btn-block">Reset Fields</button>--%>
+        <%--</div>--%>
+        <%--</div>--%>
 
-                        <%--<hr class="style13">--%>
+        <%--<hr class="style13">--%>
 
-                    <%--</form:form>--%>
-                <%--</div>--%>
-            <%--</div>--%>
+        <%--</form:form>--%>
+        <%--</div>--%>
+        <%--</div>--%>
         <%--</div>--%>
 
     <%--</div>--%>
-            <c:import url="../../includes/footer.jsp"/>
+        <c:import url="../../includes/footer.jsp"/>
 
 </body>
 </html>

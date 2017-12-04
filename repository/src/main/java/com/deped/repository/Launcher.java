@@ -61,7 +61,7 @@ public class Launcher {
     private static void fetchUserByUsername(String username) {
         Session hibernateSession = null;
         try {
-            hibernateSession = HibernateFacade.getSessionFactory().openSession();
+            hibernateSession = HibernateFacade.getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -91,7 +91,7 @@ public class Launcher {
 
 
     private static void requestDetails() {
-        Session session = Launcher.getSessionFactory().openSession();
+        Session session = Launcher.getSessionFactory().getCurrentSession();
         Transaction tr = session.beginTransaction();
         NativeQuery<Request> nativeQuery = session.createNativeQuery("SELECT * FROM request WHERE request_id = 19", Request.class);
         List<Request> requests = nativeQuery.list();
@@ -119,7 +119,7 @@ public class Launcher {
     }
 
     private static void OrderDetailsWithRequestTracker() {
-        Session session = Launcher.getSessionFactory().openSession();
+        Session session = Launcher.getSessionFactory().getCurrentSession();
         Transaction tr = session.beginTransaction();
         session.get(User.class, 13L);
         User user = createUser();
@@ -199,7 +199,7 @@ public class Launcher {
     }
 
     private static void OrderBindings() {
-        Session session = Launcher.getSessionFactory().openSession();
+        Session session = Launcher.getSessionFactory().getCurrentSession();
 
         Transaction tr = session.beginTransaction();
         User user = createUser();
@@ -470,7 +470,7 @@ public class Launcher {
     }
 
     private static void bindLeftAssociationFacadeMethod() {
-        Session session = Launcher.getSessionFactory().openSession();
+        Session session = Launcher.getSessionFactory().getCurrentSession();
 
         Transaction tr = session.beginTransaction();
         Department department = createDepartment();

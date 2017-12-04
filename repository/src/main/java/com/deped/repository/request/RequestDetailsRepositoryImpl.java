@@ -84,7 +84,7 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
 
         Session hibernateSession;
         try {
-            hibernateSession = hibernateFacade.getSessionFactory().openSession();
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -109,10 +109,8 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
             if (tx != null)
                 tx.rollback();
             return false;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
+
         return true;
     }
 
@@ -122,7 +120,7 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
         List<StatusUpdateBean> statusUpdateBeanList = makeStatusUpdateBeanList(entities, username, requestDetailsStatus);
         Session hibernateSession;
         try {
-            hibernateSession = hibernateFacade.getSessionFactory().openSession();
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -200,9 +198,6 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
             if (tx != null)
                 tx.rollback();
             return false;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
 
         return true;

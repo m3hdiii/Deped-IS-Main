@@ -71,7 +71,7 @@ public class RequestRepositoryImpl implements RequestRepository {
 
     @Override
     public List<Request> fetchAllByUsername(String username) {
-        String nativeQuery = "SELECT * FROM request WHERE username = :username ORDER BY request_date DESC";
+        String nativeQuery = "SELECT * FROM request WHERE username = :username ORDER BY request_status, request_date DESC";
         Map<String, Object> parameterMap = new HashMap<>();
         parameterMap.put("username", username);
         List<Request> requests = hibernateFacade.fetchAllEntityBySqlQuery(nativeQuery, null, Request.class, parameterMap);

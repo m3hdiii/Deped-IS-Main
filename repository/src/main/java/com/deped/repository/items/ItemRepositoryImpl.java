@@ -72,17 +72,9 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public List<Item> fetchAllGoods() {
+    public List<Item> fetchAllByItemType(ItemType itemType) {
         Map<String, Object> parameterMap = new HashMap<>();
-        parameterMap.put("itemType", ItemType.GOODS);
-        List<Item> items = hibernateFacade.fetchAllByParameterMap(FETCH_ALL_ITEMS_BY_TYPE, Item.class, parameterMap);
-        return items;
-    }
-
-    @Override
-    public List<Item> fetchAllSemiExpendable() {
-        Map<String, Object> parameterMap = new HashMap<>();
-        parameterMap.put("itemType", ItemType.SEMI_EXPENDABLE);
+        parameterMap.put("itemType", itemType);
         List<Item> items = hibernateFacade.fetchAllByParameterMap(FETCH_ALL_ITEMS_BY_TYPE, Item.class, parameterMap);
         return items;
     }

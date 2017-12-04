@@ -3,7 +3,9 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
+
     <session-factory>
+
         <property name="hibernate.dialect">
             org.hibernate.dialect.MySQLDialect
         </property>
@@ -20,15 +22,16 @@
         </property>
         <property name="hibernate.connection.password"></property>
 
-        <property name="connection.pool_size">30</property>
-
+        <property name="connection.pool_size">1000</property>
+        <!--<property name="hibernate.enable_lazy_load_no_trans">true</property>-->
+        <property name="hibernate.current_session_context_class">thread</property>
         <!-- List of XML mapping files -->
         <mapping class="com.deped.model.account.User"/>
         <mapping class="com.deped.model.location.City"/>
         <mapping class="com.deped.model.location.Country"/>
 
-        <mapping class="com.deped.model.order.Order" />
-        <mapping class="com.deped.model.order.OrderDetails" />
+        <mapping class="com.deped.model.order.Order"/>
+        <mapping class="com.deped.model.order.OrderDetails"/>
         <mapping class="com.deped.model.config.server.ServerConfig"/>
         <!--<mapping class="com.deped.model.order.OrderDetailsID" />-->
 
@@ -37,7 +40,7 @@
         <mapping class="com.deped.model.brand.Brand"/>
         <mapping class="com.deped.model.brand.BrandModel"/>
         <mapping class="com.deped.model.category.Category"/>
-        <mapping class="com.deped.model.pack.Pack"/>
+        <mapping class="com.deped.model.unit.Unit"/>
         <mapping class="com.deped.model.location.office.Department"/>
         <mapping class="com.deped.model.location.office.Section"/>
         <mapping class="com.deped.model.request.Request"/>
@@ -50,4 +53,6 @@
         <mapping class="com.deped.model.security.PasswordResetToken"/>
 
     </session-factory>
+
+
 </hibernate-configuration>

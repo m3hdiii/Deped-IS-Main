@@ -5,7 +5,6 @@ import com.deped.repository.utils.HibernateFacade;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.NativeQuery;
-import org.junit.Test;
 
 import java.util.List;
 
@@ -19,7 +18,7 @@ public class UserTest {
     public void UserTransactionsTest() {
         try {
             hibernateSessionFactory = HibernateFacade.getSessionFactory();
-            session = hibernateSessionFactory.openSession();
+            session = hibernateSessionFactory.getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return;
