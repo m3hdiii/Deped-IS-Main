@@ -1,6 +1,7 @@
 package com.deped.restcontroller.order;
 
 import com.deped.model.Response;
+import com.deped.model.items.ItemType;
 import com.deped.model.order.OrderDetails;
 import com.deped.model.order.OrderDetailsID;
 import com.deped.model.order.OrderDetailsState;
@@ -23,6 +24,7 @@ public class OrderDetailsRestController extends AbstractMainRestController<Order
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
     private static final String FETCH_MAPPING = BASE_NAME + FETCH_PATTERN;
     private static final String FETCH_MAPPING_BY_ORDER_ID = BASE_NAME + FETCH_PATTERN + FETCH_BY_ID_PATTERN;
+    private static final String FETCH_MAPPING_BY_ORDER_ID_AND_ITEM_TYPE = BASE_NAME + "/fetch-by-item-type" + FETCH_BY_ID_PATTERN;
     private static final String FETCH_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String FETCH_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String FETCH_BY_STATES = FETCH_MAPPING + URL_SEPARATOR + "by-states";
@@ -63,6 +65,16 @@ public class OrderDetailsRestController extends AbstractMainRestController<Order
     @RequestMapping(value = FETCH_MAPPING_BY_ORDER_ID, method = RequestMethod.POST)
     public ResponseEntity<List<OrderDetails>> fetchAllByOrderId(@PathVariable(ID_STRING_LITERAL) Long id) {
         ResponseEntity<List<OrderDetails>> response = orderDetailsService.fetchAllById(id);
+        return response;
+    }
+
+    @RequestMapping(value = FETCH_MAPPING_BY_ORDER_ID_AND_ITEM_TYPE, method = RequestMethod.POST)
+    public ResponseEntity<List<OrderDetails>> fetchAllByOrderIdAndItemType(@PathVariable(ID_STRING_LITERAL) Long id, @RequestBody Integer... itemTypeOrdinals) {
+        ItemType[] itemTypes = new ItemType[itemTypeOrdinals.length];
+        for (int i = 0; i < itemTypeOrdinals.length; i++) {
+            itemTypes[i] = ItemType.values()[itemTypeOrdinals[i]];
+        }
+        ResponseEntity<List<OrderDetails>> response = orderDetailsService.fetchAllByIdAndItemType(id, itemTypes);
         return response;
     }
 

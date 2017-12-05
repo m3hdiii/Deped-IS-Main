@@ -2,6 +2,7 @@ package com.deped.repository.order;
 
 import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.items.Item;
+import com.deped.model.items.ItemType;
 import com.deped.model.order.*;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
@@ -283,6 +284,48 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
     }
 
     @Override
+    public List<OrderDetails> fetchAllByIdAndItemType(Long orderId, ItemType[] itemTypes) {
+        String fetchQuery = "SELECT * FROM order_details INNER JOIN item on order_details.item_item_name = item_name WHERE item_type IN ( %s ) AND order_order_id = :orderId ORDER BY order_details_state";
+        StringBuilder sb = new StringBuilder();
+        for (ItemType it : itemTypes) {
+            sb
+                    .append("'")
+                    .append(it.toString())
+                    .append("' ,");
+        }
+
+        String formatValue = sb.toString().substring(0, sb.toString().lastIndexOf(","));
+        String query = String.format(fetchQuery, formatValue);
+
+        Session hibernateSession = null;
+        try {
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        Transaction tx = null;
+
+        List<OrderDetails> list;
+        try {
+            tx = hibernateSession.beginTransaction();
+            NativeQuery<OrderDetails> nativeQuery = hibernateSession.createNativeQuery(query, OrderDetails.class);
+            nativeQuery.setParameter("orderId", orderId);
+            list = nativeQuery.list();
+
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null)
+                tx.rollback();
+            return null;
+        }
+
+        return list;
+    }
+
+    @Override
     public List<OrderDetails> fetchAllByStates(List<OrderDetailsState> orderDetailsStates) {
         String fetchQuery = "SELECT * FROM order_details WHERE order_details_state IN ( %s ) ORDER BY order_details_state";
         StringBuilder sb = new StringBuilder();
@@ -311,6 +354,7 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
             tx = hibernateSession.beginTransaction();
             NativeQuery<OrderDetails> nativeQuery = hibernateSession.createNativeQuery(query, OrderDetails.class);
             list = nativeQuery.list();
+            tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
             if (tx != null)
@@ -382,6 +426,7 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
                 break;
             case ARRIVED:
             case NOT_ARRIVED:
+            case PARTIALLY_ARRIVED:
                 stitch = ", received_by_username = :username";
                 break;
         }

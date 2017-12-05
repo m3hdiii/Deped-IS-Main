@@ -65,6 +65,8 @@ public class HibernateFacade {
             tx.commit();
         } catch (ConstraintViolationException e) {
             String messageFormat = "You're trying to update the object [%s] into database with same constraint";
+            if (tx != null)
+                tx.rollback();
             throw new DatabaseRolesViolationException(
                     String.format(messageFormat, entity.toString()));
         } catch (Exception e) {

@@ -42,6 +42,10 @@ public class OrderDetails implements Serializable {
     @JoinColumn(name = "category_category_name")
     private Category category;
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_details_constant_key", unique = true)
+    private Long constantKey;
+
     @ManyToOne
     @JoinColumn(name = "unit_name")
     private Unit unit;
@@ -132,6 +136,14 @@ public class OrderDetails implements Serializable {
 
     public void setOrderDetailsID(OrderDetailsID orderDetailsID) {
         this.orderDetailsID = orderDetailsID;
+    }
+
+    public Long getConstantKey() {
+        return constantKey;
+    }
+
+    public void setConstantKey(Long constantKey) {
+        this.constantKey = constantKey;
     }
 
     public Unit getUnit() {

@@ -128,15 +128,14 @@ public class OrderRepositoryImpl implements OrderRepository {
             tx = hibernateSession.beginTransaction();
             NativeQuery<Order> nativeQuery = hibernateSession.createNativeQuery(query, Order.class);
             list = nativeQuery.list();
+            tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
             if (tx != null)
                 tx.rollback();
             return null;
-        } finally {
-//            if (hibernateSession != null && hibernateSession.isOpen())
-//                hibernateSession.close();
         }
+
         return list;
 
     }

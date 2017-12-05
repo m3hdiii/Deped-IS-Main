@@ -48,7 +48,7 @@ public class Order implements Serializable {
 //    @JsonManagedReference(value = "order-orderDetails")
 //    private Set<OrderDetails> orderDetails;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "order")
     private List<DeliveryInformation> deliveryInformation;
 
     @Column(name = "order_state")
