@@ -26,7 +26,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-public class SectionController extends AbstractMainController<Section, Long> {
+public class SectionController extends AbstractMainController<Section, String> {
 
     private static final String BASE_NAME = "section";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
@@ -34,7 +34,7 @@ public class SectionController extends AbstractMainController<Section, Long> {
     private static final String RENDER_UPDATE_MAPPING = BASE_NAME + RENDER_UPDATE_PATTERN;
     private static final String RENDER_LIST_MAPPING = BASE_NAME + FETCH_PATTERN;
     private static final String RENDER_LIST_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
-    private static final String RENDER_LIST_MAPPING_BY_COUNTRY_CODE = BASE_NAME + FETCH_PATTERN + FETCH_BY_ID_PATTERN;
+    private static final String RENDER_LIST_MAPPING_BY_DEPARTMENT_NAME = BASE_NAME + FETCH_PATTERN + FETCH_BY_ID_PATTERN;
     private static final String RENDER_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
 
@@ -74,16 +74,16 @@ public class SectionController extends AbstractMainController<Section, Long> {
 
     @Override
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
-    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Section> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Section.class);
-        ModelAndView mv = renderProcessing(response, aLong, BASE_NAME, INFO_VIEW_PAGE);
+    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) String name) {
+        ResponseEntity<Section> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(name), Section.class);
+        ModelAndView mv = renderProcessing(response, name, BASE_NAME, INFO_VIEW_PAGE);
         return mv;
     }
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
-    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Section> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Section.class);
+    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) String name) {
+        ResponseEntity<Section> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, name, Section.class);
         Section section = response.getBody();
         HashMap<String, Object> modelMap = new HashMap<>();
         modelMap.put(BASE_NAME, section);
@@ -94,7 +94,7 @@ public class SectionController extends AbstractMainController<Section, Long> {
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Section entity, BindingResult bindingResult) {
+    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) String name, @Valid @ModelAttribute(BASE_NAME) Section entity, BindingResult bindingResult) {
 
         List<Department> departments = fetchAllDepartment();
 
@@ -104,9 +104,7 @@ public class SectionController extends AbstractMainController<Section, Long> {
             modelMap.put(BASE_NAME, entity);
             return new ModelAndView(UPDATE_VIEW_PAGE, modelMap);
         }
-        entity.setSectionId(aLong);
-        //This is actually the update date
-        entity.setCreationDate(new Date());
+
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Section.class);
 
         ModelAndView mv = postUpdateProcessing(Section.class, response, UPDATE_VIEW_PAGE, BASE_NAME, entity, new Section(), bindingResult, BASE_NAME);
@@ -140,10 +138,10 @@ public class SectionController extends AbstractMainController<Section, Long> {
         return SharedData.getDepartments(false);
     }
 
-    @RequestMapping(value = RENDER_LIST_MAPPING_BY_COUNTRY_CODE, method = RequestMethod.POST)
+    @RequestMapping(value = RENDER_LIST_MAPPING_BY_DEPARTMENT_NAME, method = RequestMethod.POST)
     public @ResponseBody
-    List<Section> renderListPage(@PathVariable(ID_STRING_LITERAL) Long departmentId) {
-        ResponseEntity<List<Section>> response = makeFetchRestRequestByForeignKey(BASE_NAME, String.valueOf(departmentId), HttpMethod.POST, new ParameterizedTypeReference<List<Section>>() {
+    List<Section> renderListPage(@PathVariable(ID_STRING_LITERAL) String departmentName) {
+        ResponseEntity<List<Section>> response = makeFetchRestRequestByForeignKey(BASE_NAME, departmentName, HttpMethod.POST, new ParameterizedTypeReference<List<Section>>() {
         });
         return response.getBody();
     }

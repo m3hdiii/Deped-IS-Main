@@ -19,24 +19,23 @@ import com.deped.model.order.Order;
 import com.deped.model.order.OrderDetails;
 import com.deped.model.order.OrderDetailsState;
 import com.deped.model.order.Schedule;
-import com.deped.model.pack.Pack;
 import com.deped.model.request.Request;
 import com.deped.model.request.RequestDetails;
 import com.deped.model.request.RequestDetailsID;
 import com.deped.model.request.RequestDetailsStatus;
 import com.deped.model.tracker.RequestTracker;
 import com.deped.model.tracker.TrackingStatus;
+import com.deped.model.unit.Unit;
+import com.deped.repository.other.DashboardRepositoryImpl;
+import com.deped.repository.utils.HibernateFacade;
 import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.boot.Metadata;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.query.NativeQuery;
+import org.hibernate.query.Query;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,7 +45,11 @@ import java.util.UUID;
 
 public class Launcher {
     public static void main(String[] args) {
-        requestDetails();
+
+        new DashboardRepositoryImpl().getBasicInfo();
+        //        fetchUserByUsername("mehdi");
+
+        //requestDetails();
 
         //bindLeftAssociationFacadeMethod();
         //bindLeftAssociationFacadeMethod();
@@ -55,9 +58,40 @@ public class Launcher {
 
     }
 
+    private static void fetchUserByUsername(String username) {
+        Session hibernateSession = null;
+        try {
+            hibernateSession = HibernateFacade.getSessionFactory().getCurrentSession();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Transaction tx = null;
+
+        List<User> rows;
+
+        try {
+            tx = hibernateSession.beginTransaction();
+            Query<User> namedQuery = hibernateSession.createNamedQuery("SELECT user FROM User user WHERE user.username = :username", User.class);
+            namedQuery.setParameter("uername", username);
+
+            rows = namedQuery.list();
+            tx.commit();
+            System.out.println(rows);
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null)
+                tx.rollback();
+        } finally {
+//            if (hibernateSession != null)
+//                hibernateSession.close();
+        }
+
+    }
+
 
     private static void requestDetails() {
-        Session session = Launcher.getSessionFactory().openSession();
+        Session session = Launcher.getSessionFactory().getCurrentSession();
         Transaction tr = session.beginTransaction();
         NativeQuery<Request> nativeQuery = session.createNativeQuery("SELECT * FROM request WHERE request_id = 19", Request.class);
         List<Request> requests = nativeQuery.list();
@@ -85,7 +119,7 @@ public class Launcher {
     }
 
     private static void OrderDetailsWithRequestTracker() {
-        Session session = Launcher.getSessionFactory().openSession();
+        Session session = Launcher.getSessionFactory().getCurrentSession();
         Transaction tr = session.beginTransaction();
         session.get(User.class, 13L);
         User user = createUser();
@@ -98,8 +132,8 @@ public class Launcher {
         it1.setItem(equipment);
         session.save("ItemDetails", it1);
 
-        Pack pack = createPack();
-//        pack.setOrderDetailsList();
+        Unit pack = createUnit();
+//        unit.setOrderDetailsList();
         session.save("Pack", pack);
 
         Category category = createCategory();
@@ -118,7 +152,7 @@ public class Launcher {
         requestDetails.setRequest(request);
         requestDetails.setRequestDetailsStatus(RequestDetailsStatus.WAITING);
         requestDetails.setRequestQuantity(100);
-        requestDetails.setRequestDetailsID(new RequestDetailsID(request.getRequestId(), equipment.getItemId()));
+        requestDetails.setRequestDetailsID(new RequestDetailsID(request.getRequestId(), equipment.getName()));
         session.save("RequestDetails", requestDetails);
 
         Brand brand = createBrand();
@@ -165,7 +199,7 @@ public class Launcher {
     }
 
     private static void OrderBindings() {
-        Session session = Launcher.getSessionFactory().openSession();
+        Session session = Launcher.getSessionFactory().getCurrentSession();
 
         Transaction tr = session.beginTransaction();
         User user = createUser();
@@ -178,9 +212,9 @@ public class Launcher {
         it1.setItem(equipment);
         session.save("ItemDetails", it1);
 
-        Pack pack = createPack();
-//        pack.setOrderDetailsList();
-        session.save("Pack", pack);
+        Unit unit = createUnit();
+//        unit.setOrderDetailsList();
+        session.save("unit", unit);
 
         Category category = createCategory();
 //        category.setOrderDetailsSet();
@@ -197,7 +231,7 @@ public class Launcher {
         details.setItem(equipment);
         details.setOrder(order);
         details.setCategory(category);
-        details.setPack(pack);
+        details.setUnit(unit);
         session.save(details);
 
         tr.commit();
@@ -225,12 +259,12 @@ public class Launcher {
         return order;
     }
 
-    private static Pack createPack() {
-        Pack pack = new Pack();
+    private static Unit createUnit() {
+        Unit pack = new Unit();
         pack.setCreationDate(new Date());
         pack.setDescription("Box Description");
         pack.setName("Pack");
-        //FIXME pack capacity
+        //FIXME unit capacity
         return pack;
     }
 
@@ -388,12 +422,8 @@ public class Launcher {
 
     private static Brand createBrand() {
         Brand brand = new Brand();
-        brand.setCentralOfficeAddress("Manila Makati");
-        brand.setContactNumber("09056352410");
-        brand.setContactNumber2("09057474747");
         brand.setCreationDate(new Date());
         brand.setName("NIKE");
-        brand.setServiceCenterAddress("Baguio Harrison Road");
         brand.setDescription("NIKE brand Description");
         brand.setLogoUrl("/brand/nike.png");
         return brand;
@@ -440,7 +470,7 @@ public class Launcher {
     }
 
     private static void bindLeftAssociationFacadeMethod() {
-        Session session = Launcher.getSessionFactory().openSession();
+        Session session = Launcher.getSessionFactory().getCurrentSession();
 
         Transaction tr = session.beginTransaction();
         Department department = createDepartment();
@@ -567,22 +597,6 @@ public class Launcher {
     }
 
     public static SessionFactory getSessionFactory() {
-        if (sessionInstance == null) {
-            synchronized (Launcher.class) {
-                if (sessionInstance == null) {
-                    try {
-                        StandardServiceRegistry standardRegistry =
-                                new StandardServiceRegistryBuilder().configure("hibernate.configs.xml").build();
-                        Metadata metaData = new MetadataSources(standardRegistry).getMetadataBuilder().build();
-                        sessionInstance = metaData.getSessionFactoryBuilder().build();
-
-                    } catch (Throwable th) {
-                        System.err.println("Enitial SessionFactory creation failed" + th);
-                        throw new ExceptionInInitializerError(th);
-                    }
-                }
-            }
-        }
-        return sessionInstance;
+        return HibernateFacade.getSessionFactory();
     }
 }

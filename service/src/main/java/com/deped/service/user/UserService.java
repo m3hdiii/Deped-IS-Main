@@ -5,7 +5,7 @@ import com.deped.model.account.User;
 import com.deped.service.BaseService;
 import org.springframework.http.ResponseEntity;
 
-public interface UserService extends BaseService<User> {
+public interface UserService extends BaseService<User, String> {
 
     boolean isUserAlreadyExist(User user);
 
@@ -17,8 +17,8 @@ public interface UserService extends BaseService<User> {
 
     ResponseEntity<Response> createPasswordResetTokenForUser(User user, String context);
 
-    ResponseEntity<Response> checkToken(Long userId, String token);
+    ResponseEntity<Response> checkToken(String username, String token);
 
 
-    ResponseEntity<Response> changePasswordByToken(Long userId, String token, String newPassword);
+    ResponseEntity<Response> changePasswordByToken(String username, String token, String newPassword);
 }

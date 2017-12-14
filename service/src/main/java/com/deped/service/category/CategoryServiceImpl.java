@@ -62,7 +62,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public ResponseEntity<Category> fetchById(Object id) {
+    public ResponseEntity<Category> fetchById(String id) {
         Category category = categoryRepository.fetchById(id);
         ResponseEntity<Category> responseEntity = new ResponseEntity<>(category, OK);
         return responseEntity;

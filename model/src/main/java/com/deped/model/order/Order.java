@@ -32,7 +32,7 @@ public class Order implements Serializable {
     private Date requiredDate;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "username")
     private User user;
 
     @Column(name = "order_schedule")
@@ -48,7 +48,7 @@ public class Order implements Serializable {
 //    @JsonManagedReference(value = "order-orderDetails")
 //    private Set<OrderDetails> orderDetails;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "order")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "order")
     private List<DeliveryInformation> deliveryInformation;
 
     @Column(name = "order_state")

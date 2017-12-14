@@ -2,6 +2,7 @@ package com.deped.controller.request;
 
 import com.deped.controller.AbstractMainController;
 import com.deped.model.account.User;
+import com.deped.model.items.ItemType;
 import com.deped.model.request.Request;
 import com.deped.model.request.RequestStatus;
 import org.springframework.core.ParameterizedTypeReference;
@@ -59,9 +60,36 @@ public class RequestController extends AbstractMainController<Request, Long> {
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = GET)
     public ModelAndView renderCreatePage(@ModelAttribute("request") Request entity) {
-        ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE);
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("itemTypes", ItemType.values());
+        ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
         return mv;
 
+    }
+
+    @RequestMapping(value = {CREATE_MAPPING}, method = POST)
+    public ModelAndView createActionWithRedirect(@Valid @ModelAttribute("request") Request entity, BindingResult bindingResult, final RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            Map<String, Object> modelMap = new HashMap<>();
+            modelMap.put("itemTypes", ItemType.values());
+            modelMap.put("request", entity);
+            ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
+            return mv;
+        }
+
+        //TODO CREATE WHEN ITEMS ADDED
+        entity.setRequestDate(new Date());
+        User user = getUserFromSpringSecurityContext();
+        entity.setUser(user);
+
+        ResponseEntity<Request> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Request.class);
+        Request request = response.getBody();
+        redirectAttributes.addFlashAttribute("request", request);
+        ModelAndView mav = new ModelAndView();
+        final String redirectUrl = String.format("redirect:/request-details/create/%d", request.getRequestId());
+        mav.setViewName(redirectUrl);
+        return mav;
     }
 
     @RequestMapping(value = RENDER_LIST_APPROVAL_MAPPING, method = GET)
@@ -123,7 +151,7 @@ public class RequestController extends AbstractMainController<Request, Long> {
         User user = getUserFromSpringSecurityContext();
         RestTemplate restTemplate = new RestTemplate();
         HttpEntity httpEntity = makeHttpEntity(null);
-        String restUrl = String.format(FETCH_URL, BASE_NAME).concat("/").concat("user").concat("/").concat(user.getUserId() + "");
+        String restUrl = String.format(FETCH_URL, BASE_NAME).concat("/").concat("user").concat("/").concat(user.getUsername());
         ResponseEntity<List<Request>> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<Request>>() {
         });
 
@@ -138,38 +166,25 @@ public class RequestController extends AbstractMainController<Request, Long> {
     }
 
 
-    @RequestMapping(value = {CREATE_MAPPING}, method = POST)
-    public ModelAndView createActionWithRedirect(@Valid @ModelAttribute("request") Request entity, final RedirectAttributes redirectAttributes) {
-        entity.setRequestDate(new Date());
-        User user = getUserFromSpringSecurityContext();
-        entity.setUser(user);
-
-        ResponseEntity<Request> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Request.class);
-        Request request = response.getBody();
-        redirectAttributes.addFlashAttribute("request", request);
-        ModelAndView mav = new ModelAndView();
-        final String redirectUrl = String.format("redirect:/request-details/create/%d", request.getRequestId());
-        mav.setViewName(redirectUrl);
-        return mav;
-    }
-
-
     @Override
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
     public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Request> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Request.class);
+        ResponseEntity<Request> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(aLong), Request.class);
         ModelAndView mv = renderProcessing(response, aLong, BASE_NAME, INFO_VIEW_PAGE);
         return mv;
     }
 
+    //FIXME
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
     public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Request> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Request.class);
+        ResponseEntity<Request> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(aLong), Request.class);
         Request item = response.getBody();
         return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, item);
     }
 
+
+    //FIXME
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
     public ModelAndView updateAction(Long aLong, Request entity, BindingResult bindingResult) {

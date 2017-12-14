@@ -32,7 +32,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-public class ItemController extends AbstractMainController<Item, Long> {
+public class ItemController extends AbstractMainController<Item, String> {
 
     private static final String BASE_NAME = "item";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
@@ -80,16 +80,16 @@ public class ItemController extends AbstractMainController<Item, Long> {
 
     @Override
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
-    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Item> response = makeFetchByIdRequest(BASE_ENTITY_URL_NAME, HttpMethod.POST, aLong, Item.class);
-        ModelAndView mv = renderProcessing(response, aLong, BASE_NAME, INFO_VIEW_PAGE);
+    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) String name) {
+        ResponseEntity<Item> response = makeFetchByIdRequest(BASE_ENTITY_URL_NAME, HttpMethod.POST, String.valueOf(name), Item.class);
+        ModelAndView mv = renderProcessing(response, name, BASE_NAME, INFO_VIEW_PAGE);
         return mv;
     }
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
-    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Item> response = makeFetchByIdRequest(BASE_ENTITY_URL_NAME, HttpMethod.POST, aLong, Item.class);
+    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) String name) {
+        ResponseEntity<Item> response = makeFetchByIdRequest(BASE_ENTITY_URL_NAME, HttpMethod.POST, name, Item.class);
         Item item = response.getBody();
 
         Map<String, Object> modelMap = new HashMap<>(getConfigMap());
@@ -98,7 +98,7 @@ public class ItemController extends AbstractMainController<Item, Long> {
     }
 
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateActionWithPic(@PathVariable MultipartFile itemPic, @PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Item entity, BindingResult bindingResult) {
+    public ModelAndView updateActionWithPic(@PathVariable MultipartFile itemPic, @PathVariable(ID_STRING_LITERAL) String name, @Valid @ModelAttribute(BASE_NAME) Item entity, BindingResult bindingResult) {
         String encodeBase64 = ControllerImageUtils.imageUploadProcessing(itemPic, bindingResult);
 
         if (bindingResult.hasErrors()) {
@@ -109,7 +109,6 @@ public class ItemController extends AbstractMainController<Item, Long> {
         }
         entity.setPictureBase64(encodeBase64);
         entity.setCreationDate(new Date());
-        entity.setItemId(aLong);
 
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_ENTITY_URL_NAME, HttpMethod.POST, Item.class);
         ModelAndView mv = postUpdateProcessing(Item.class, response, UPDATE_VIEW_PAGE, BASE_NAME, entity, new Item(), bindingResult, BASE_NAME);
@@ -192,7 +191,7 @@ public class ItemController extends AbstractMainController<Item, Long> {
     }
 
     @Override
-    public ModelAndView updateAction(Long aLong, Item entity, BindingResult bindingResult) {
+    public ModelAndView updateAction(String name, Item entity, BindingResult bindingResult) {
         return null;
     }
 }

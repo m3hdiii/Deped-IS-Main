@@ -54,7 +54,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <a href="#" data-column="0" class="toggle-vis btn btn-default btn-sm">Image</a>
-                    <a href="#" data-column="7" class="toggle-vis btn btn-default btn-sm">Category</a>
+                    <a href="#" data-column="7" class="toggle-vis btn btn-default btn-sm">Unit</a>
                     <a href="#" data-column="8" class="toggle-vis btn btn-default btn-sm">Unit Price</a>
                     <a href="#" data-column="9" class="toggle-vis btn btn-default btn-sm">Supplier</a>
                 </div>
@@ -67,11 +67,12 @@
                             <th>Image</th>
                             <th>Name</th>
                             <th>Available QTY</th>
-                            <th>Packages</th>
-                            <th>Pack Capacity</th>
-                            <th>Ordered QTY</th>
+                            <th>Unit</th>
+                            <th>Unit Capacity</th>
+                            <th>Total Ordered QTY</th>
                             <c:if test="${currentOrderDetailsState eq 'ARRIVED'}">
-                                <th>Quantity Arrived</th>
+                                <th>QTY Remaining</th>
+                                <th>QTY Arrived</th>
                             </c:if>
                             <th>Category</th>
                             <th>Unit Price</th>
@@ -101,19 +102,25 @@
                                 </td>
                                 <th>${orderDet.item.name}</th>
                                 <td>${orderDet.item.quantity}</td>
-                                <td>${orderDet.pack.name}</td>
-                                <td>${orderDet.packCapacity}</td>
+                                <td>${orderDet.unit.name}</td>
+                                <td>${orderDet.unitCapacity}</td>
                                 <td>${orderDet.totalQuantityRequestNo}</td>
                                 <c:if test="${currentOrderDetailsState eq 'ARRIVED'}">
+                                    <th>
+                                            ${orderDet.totalQuantityRequestNo - orderDet.totalQuantityArrivedNo}
+                                    </th>
                                     <th>
                                         <div class="col-md-12">
                                             <form:input min="0" type="number"
                                                         class="form-control form-control-flat no-margn"
                                                         path="map['${strKey}'].totalQuantityArrivedNo"
-                                                        value="${orderDet.totalQuantityRequestNo}"/>
+                                                        value="${orderDet.totalQuantityRequestNo}"
+                                                        max="${orderDet.totalQuantityRequestNo - orderDet.totalQuantityArrivedNo}"
+                                            />
                                         </div>
 
                                     </th>
+
                                 </c:if>
                                 <td>${orderDet.category.name}</td>
                                 <td>${orderDet.unitPrice}</td>
@@ -125,12 +132,12 @@
                                     </form:select>
                                 </td>
 
-                                <form:hidden path="map['${strKey}'].orderDetailsID.categoryId"
-                                             value="${orderDet.category.categoryId}"/>
+                                <form:hidden path="map['${strKey}'].orderDetailsID.categoryName"
+                                             value="${orderDet.category.name}"/>
                                 <form:hidden path="map['${strKey}'].orderDetailsID.orderId"
                                              value="${orderDet.order.orderId}"/>
-                                <form:hidden path="map['${strKey}'].orderDetailsID.itemId"
-                                             value="${orderDet.item.itemId}"/>
+                                <form:hidden path="map['${strKey}'].orderDetailsID.itemName"
+                                             value="${orderDet.item.name}"/>
                             </tr>
                         </c:forEach>
 
@@ -142,14 +149,27 @@
                 <div class="modal-footer">
                     <a href="/order/approval-list" class="btn btn-default pull-left"><i
                             class="fa fa-chevron-left"></i><span> Back</span></a>
-                    <button type="submit" class="btn btn-purple pull-right">Confirm</button>
+
+                    <c:choose>
+                        <c:when test="${currentOrderDetailsState eq 'ARRIVED'}">
+                            <button type="submit" name="actionParam" value="FINALIZE_DELIVERY"
+                                    class="btn btn-purple pull-right">End The Process
+                            </button>
+                            <button type="submit" name="actionParam" value="PARTIAL_DELIVERY"
+                                    class="btn btn-purple pull-right">Items Partially Delivered
+                            </button>
+                        </c:when>
+                        <c:otherwise>
+                            <button type="submit" class="btn btn-purple pull-right">Confirm</button>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
         </form:form>
     </div>
     <!-- Warper Ends Here (working area) -->
-            <c:import url="../../includes/footer.jsp"/>
-            <script type="text/javascript" src="${resourceURL}/js/additional/order.js"></script>
+        <c:import url="../../includes/footer.jsp"/>
+        <script type="text/javascript" src="${resourceURL}/js/additional/order.js"></script>
 
 </body>
 </html>

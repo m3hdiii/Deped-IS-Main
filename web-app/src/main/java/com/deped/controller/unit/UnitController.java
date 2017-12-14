@@ -1,10 +1,10 @@
-package com.deped.controller.pack;
+package com.deped.controller.unit;
 
 import com.deped.controller.AbstractMainController;
 import com.deped.controller.SharedData;
 import com.deped.model.Response;
 import com.deped.model.items.Item;
-import com.deped.model.pack.Pack;
+import com.deped.model.unit.Unit;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -29,9 +29,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-public class PackController extends AbstractMainController<Pack, Long> {
+public class UnitController extends AbstractMainController<Unit, String> {
 
-    private static final String BASE_NAME = "pack";
+    private static final String BASE_NAME = "unit";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
     private static final String RENDER_UPDATE_MAPPING = BASE_NAME + RENDER_UPDATE_PATTERN;
@@ -48,7 +48,7 @@ public class PackController extends AbstractMainController<Pack, Long> {
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = GET)
-    public ModelAndView renderCreatePage(@ModelAttribute(BASE_NAME) Pack entity) {
+    public ModelAndView renderCreatePage(@ModelAttribute(BASE_NAME) Unit entity) {
         List<Item> items = SharedData.getItems(false);
         HashMap<String, Object> modelMap = new HashMap<>();
         modelMap.put(BASE_NAME, entity);
@@ -59,37 +59,37 @@ public class PackController extends AbstractMainController<Pack, Long> {
 
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = POST)
-    public ModelAndView createAction(@Valid @ModelAttribute(BASE_NAME) Pack entity, BindingResult bindingResult) {
+    public ModelAndView createAction(@Valid @ModelAttribute(BASE_NAME) Unit entity, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             HashMap<String, Object> modelMap = new HashMap<>();
             modelMap.put(BASE_NAME, entity);
-            List<Item> items = SharedData.getItems(false);
-            modelMap.put("items", items);
+//            List<Item> items = SharedData.getItems(false);
+//            modelMap.put("items", items);
             ModelAndView mav = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
             return mav;
         }
         entity.setCreationDate(new Date());
-        ResponseEntity<Pack> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Pack.class);
-        ModelAndView mv = postCreateProcessing(Pack.class, response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Pack(), bindingResult, BASE_NAME);
+        ResponseEntity<Unit> response = makeCreateRestRequest(entity, BASE_NAME, HttpMethod.POST, Unit.class);
+        ModelAndView mv = postCreateProcessing(Unit.class, response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Unit(), bindingResult, BASE_NAME);
         return mv;
     }
 
     @Override
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
-    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Pack> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Pack.class);
-        ModelAndView mv = renderProcessing(response, aLong, BASE_NAME, INFO_VIEW_PAGE);
+    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) String name) {
+        ResponseEntity<Unit> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, name, Unit.class);
+        ModelAndView mv = renderProcessing(response, name, BASE_NAME, INFO_VIEW_PAGE);
         return mv;
     }
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
-    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Pack> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Pack.class);
-        Pack pack = response.getBody();
+    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) String name) {
+        ResponseEntity<Unit> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, name, Unit.class);
+        Unit unit = response.getBody();
         HashMap<String, Object> modelMap = new HashMap<>();
-        modelMap.put(BASE_NAME, pack);
+        modelMap.put(BASE_NAME, unit);
         List<Item> items = SharedData.getItems(false);
         modelMap.put("items", items);
         return new ModelAndView(UPDATE_VIEW_PAGE, modelMap);
@@ -97,21 +97,22 @@ public class PackController extends AbstractMainController<Pack, Long> {
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @ModelAttribute(BASE_NAME) Pack entity, BindingResult bindingResult) {
-        entity.setPackId(aLong);
-        //This is actually the update date
-        entity.setCreationDate(new Date());
-        ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Pack.class);
-        ModelAndView mv = postUpdateProcessing(Pack.class, response, UPDATE_VIEW_PAGE, BASE_NAME, entity, new Pack(), bindingResult, BASE_NAME);
+    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) String name, @Valid @ModelAttribute(BASE_NAME) Unit entity, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ModelAndView(CREATE_VIEW_PAGE, BASE_NAME, entity);
+        }
+
+        ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Unit.class);
+        ModelAndView mv = postUpdateProcessing(Unit.class, response, UPDATE_VIEW_PAGE, BASE_NAME, entity, new Unit(), bindingResult, BASE_NAME);
         return mv;
     }
 
     @Override
     @RequestMapping(value = RENDER_LIST_MAPPING, method = GET)
     public ModelAndView renderListPage() {
-        ResponseEntity<List<Pack>> response = makeFetchAllRestRequest(BASE_NAME, HttpMethod.POST, new ParameterizedTypeReference<List<Pack>>() {
+        ResponseEntity<List<Unit>> response = makeFetchAllRestRequest(BASE_NAME, HttpMethod.POST, new ParameterizedTypeReference<List<Unit>>() {
         });
-        ModelAndView mv = postListProcessing(response, "packs", LIST_VIEW_PAGE);
+        ModelAndView mv = postListProcessing(response, "units", LIST_VIEW_PAGE);
         return mv;
     }
 
@@ -123,7 +124,7 @@ public class PackController extends AbstractMainController<Pack, Long> {
 
     @Override
     @RequestMapping(value = REMOVE_MAPPING, method = POST)
-    public ModelAndView removeAction(@Valid Pack... entity) {
+    public ModelAndView removeAction(@Valid Unit... entity) {
         return null;
     }
 

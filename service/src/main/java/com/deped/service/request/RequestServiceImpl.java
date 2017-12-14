@@ -64,7 +64,7 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public ResponseEntity<Request> fetchById(Object id) {
+    public ResponseEntity<Request> fetchById(Long id) {
         Request request = requestRepository.fetchById(id);
         ResponseEntity<Request> responseEntity = new ResponseEntity<>(request, OK);
         return responseEntity;
@@ -97,8 +97,8 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public ResponseEntity<List<Request>> fetchAllByUserId(Long userId) {
-        List<Request> requests = requestRepository.fetchAllByUserId(userId);
+    public ResponseEntity<List<Request>> fetchAllByUsername(String username) {
+        List<Request> requests = requestRepository.fetchAllByUsername(username);
         ResponseEntity<List<Request>> responseEntity = new ResponseEntity<>(requests, OK);
         return responseEntity;
     }

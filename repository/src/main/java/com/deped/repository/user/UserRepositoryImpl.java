@@ -35,8 +35,58 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Boolean update(User entity) throws DatabaseRolesViolationException {
-        Boolean isUpdated = hibernateFacade.updateEntity(entity);
-        return isUpdated;
+        StringBuilder sb = new StringBuilder("UPDATE user SET ");
+        sb
+                .append("username = :username , ")
+                .append("password = :password , ")
+                .append("account_status = :accountStatus , ")
+                .append("first_name = :firstName , ")
+                .append("last_name = :lastName , ")
+                .append("middle_name = :middleName , ")
+                .append("email_address = :emailAddress , ")
+                .append("phone_no1 = :phoneNo1 , ")
+                .append("phone_no2 = :phoneNo2 , ")
+                .append("gender = :gender , ")
+                .append("birth_date = :birthDate , ")
+                .append("position = :position , ")
+                .append("address = :address , ")
+                .append("website = :website , ")
+                .append("referrer_name = :referrerName , ")
+                .append("referrer_address = :referrerAddress , ")
+                .append("referrer_phone_no1 = :referrerPhone1 , ")
+                .append("referrer_phone_no2 = :referrerPhone2 , ")
+                .append("section_name = :sectionName , ")
+                .append("city_of_born = :cityOfBorn , ")
+                .append("pic_url = :picUrl ")
+                .append("WHERE username = :previousUsername");
+        String sqlQuery = sb.toString();
+
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("username", entity.getUsername());
+        paramMap.put("password", entity.getPassword());
+        paramMap.put("accountStatus", entity.getAccountStatus() != null ? entity.getAccountStatus().toString() : null);
+        paramMap.put("firstName", entity.getFirstName());
+        paramMap.put("lastName", entity.getLastName());
+        paramMap.put("middleName", entity.getMiddleName());
+        paramMap.put("emailAddress", entity.getEmailAddress());
+        paramMap.put("phoneNo1", entity.getPhoneNo1());
+        paramMap.put("phoneNo2", entity.getPhoneNo2());
+        paramMap.put("gender", entity.getGender() != null ? entity.getGender().toString() : null);
+        paramMap.put("birthDate", entity.getBirthDate());
+        paramMap.put("position", entity.getPosition() != null ? entity.getPosition().toString() : null);
+        paramMap.put("address", entity.getAddress());
+        paramMap.put("website", entity.getWebsite());
+        paramMap.put("referrerName", entity.getReferrerName());
+        paramMap.put("referrerAddress", entity.getReferrerAddress());
+        paramMap.put("referrerPhone1", entity.getReferrerPhoneNo1());
+        paramMap.put("referrerPhone2", entity.getReferrerPhoneNo2());
+        paramMap.put("sectionName", entity.getSection() != null ? entity.getSection().getName() : null);
+        paramMap.put("cityOfBorn", entity.getCityOfBorn() != null ? entity.getCityOfBorn().getCityId() : null);
+        paramMap.put("picUrl", entity.getPicUrl());
+        paramMap.put("previousUsername", entity.getPreviousIdUsername());
+
+        int rowAffected = hibernateFacade.updateEntitySqlQuery(sqlQuery, User.class, paramMap);
+        return rowAffected < 0;
     }
 
     @Override
@@ -52,7 +102,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User fetchById(Object entityId) {
+    public User fetchById(String entityId) {
         return hibernateFacade.fetchEntityById(User.class, entityId);
     }
 
@@ -71,7 +121,7 @@ public class UserRepositoryImpl implements UserRepository {
     public User loginUser(User userInfo, LoginMethod loginMethod) {
         Session hibernateSession = null;
         try {
-            hibernateSession = sessionFactory.openSession();
+            hibernateSession = sessionFactory.getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -108,9 +158,6 @@ public class UserRepositoryImpl implements UserRepository {
             if (tx != null)
                 tx.rollback();
             return null;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
 
         return result;
@@ -155,7 +202,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public boolean changePasswordByToken(Long userId, String token, String newPassword, int period) throws DatabaseRolesViolationException {
+    public boolean changePasswordByToken(String username, String token, String newPassword, int period) throws DatabaseRolesViolationException {
         Session hibernateSession = null;
         try {
             hibernateSession = sessionFactory.openSession();
@@ -170,15 +217,15 @@ public class UserRepositoryImpl implements UserRepository {
             tx = hibernateSession.beginTransaction();
 
 
-            String userPasswordUpdateQuery = "UPDATE `user` SET password = :pass WHERE user_id = :userId";
+            String userPasswordUpdateQuery = "UPDATE `user` SET password = :pass WHERE user_name = :username";
             NativeQuery<User> userUpdate = hibernateSession.createNativeQuery(userPasswordUpdateQuery, User.class);
             userUpdate.setParameter("pass", newPassword);
-            userUpdate.setParameter("userId", userId);
+            userUpdate.setParameter("username", username);
             int userRowNoAffected = userUpdate.executeUpdate();
 
-            String resetTokenUpdateQuery = "UPDATE password_reset_token SET token_state = :newTokenState WHERE user_id = :userId AND token = :token AND token_state = :currentTokenState AND NOW() BETWEEN creation_date AND (creation_date + INTERVAL 3 DAY)";
+            String resetTokenUpdateQuery = "UPDATE password_reset_token SET token_state = :newTokenState WHERE username = :username AND token = :token AND token_state = :currentTokenState AND NOW() BETWEEN creation_date AND (creation_date + INTERVAL 3 DAY)";
             NativeQuery<PasswordResetToken> passwordResetTokenUpdate = hibernateSession.createNativeQuery(resetTokenUpdateQuery, PasswordResetToken.class);
-            passwordResetTokenUpdate.setParameter("userId", userId);
+            passwordResetTokenUpdate.setParameter("username", username);
             passwordResetTokenUpdate.setParameter("token", token);
             passwordResetTokenUpdate.setParameter("currentTokenState", TokenState.AVAILABLE.toString());
             passwordResetTokenUpdate.setParameter("newTokenState", TokenState.USED.toString());
@@ -194,10 +241,8 @@ public class UserRepositoryImpl implements UserRepository {
             if (tx != null)
                 tx.rollback();
             return false;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
+
         return true;
     }
 }

@@ -25,17 +25,16 @@ import static com.deped.repository.utils.ConstantValues.FETCH_ALL_CATEGORY;
 @Table(name = "category")
 public class Category implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "category_id")
-    private Long categoryId;
-
-    @Column(name = "name")
+    @Column(name = "category_name")
     @Length(min = 2, max = 45, message = "Name filed length must be between 2 to 45 character")
     @NotEmpty(message = "Name field can not be blank")
     @Pattern(regexp = "^[a-zA-Z0-9_\\s]*$", message = "Name field must contain number, alphabet, space and underscore only")
     @XSS
+    @Id
     private String name;
+
+    @Transient
+    private String previousIdName;
 
     @Column(name = "description")
     @Length(max = 400, message = "Description must not be more than 400 character")
@@ -44,15 +43,6 @@ public class Category implements Serializable {
 
     @Column(name = "creation_date")
     private Date creationDate;
-
-
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
 
     public String getName() {
         return name;
@@ -78,6 +68,14 @@ public class Category implements Serializable {
         this.creationDate = creationDate;
     }
 
+    public String getPreviousIdName() {
+        return previousIdName;
+    }
+
+    public void setPreviousIdName(String previousIdName) {
+        this.previousIdName = previousIdName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -85,13 +83,13 @@ public class Category implements Serializable {
 
         Category category = (Category) o;
 
-        return categoryId.equals(category.categoryId);
+        return name.equals(category.name);
     }
 
     @Override
     public int hashCode() {
-        if (categoryId != null)
-            return categoryId.hashCode();
+        if (name != null)
+            return name.hashCode();
         else
             return super.hashCode();
     }

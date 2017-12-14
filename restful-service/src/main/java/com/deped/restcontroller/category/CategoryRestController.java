@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class CategoryRestController extends AbstractMainRestController<Category, Long> {
+public class CategoryRestController extends AbstractMainRestController<Category, String> {
 
     private static final String BASE_NAME = "/category";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
@@ -55,8 +55,8 @@ public class CategoryRestController extends AbstractMainRestController<Category,
 
     @Override
     @RequestMapping(value = FETCH_BY_ID_MAPPING, method = RequestMethod.GET)
-    public ResponseEntity<Category> fetchById(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Category> response = categoryService.fetchById(aLong);
+    public ResponseEntity<Category> fetchById(@PathVariable(ID_STRING_LITERAL) String id) {
+        ResponseEntity<Category> response = categoryService.fetchById(id);
         return response;
     }
 

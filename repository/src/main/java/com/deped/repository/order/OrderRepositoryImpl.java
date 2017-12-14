@@ -64,7 +64,7 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public Order fetchById(Object id) {
+    public Order fetchById(Long id) {
         Order item = hibernateFacade.fetchEntityById(Order.class, id);
         return item;
     }
@@ -90,10 +90,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     }
 
     @Override
-    public List<Order> fetchAllByUserId(Long userId) {
-        String nativeQuery = "SELECT * FROM order_ WHERE user_id = :userId";
+    public List<Order> fetchAllByUsername(String username) {
+        String nativeQuery = "SELECT * FROM order_ WHERE username = :username";
         Map<String, Object> parameterMap = new HashMap<>();
-        parameterMap.put("userId", userId);
+        parameterMap.put("username", username);
         List<Order> requests = hibernateFacade.fetchAllEntityBySqlQuery(nativeQuery, null, Order.class, parameterMap);
         return requests;
     }
@@ -115,7 +115,7 @@ public class OrderRepositoryImpl implements OrderRepository {
 
         Session hibernateSession = null;
         try {
-            hibernateSession = hibernateFacade.getSessionFactory().openSession();
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -128,15 +128,14 @@ public class OrderRepositoryImpl implements OrderRepository {
             tx = hibernateSession.beginTransaction();
             NativeQuery<Order> nativeQuery = hibernateSession.createNativeQuery(query, Order.class);
             list = nativeQuery.list();
+            tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
             if (tx != null)
                 tx.rollback();
             return null;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
+
         return list;
 
     }

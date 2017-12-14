@@ -3,8 +3,8 @@ package com.deped.model.order;
 import com.deped.model.account.User;
 import com.deped.model.category.Category;
 import com.deped.model.items.Item;
-import com.deped.model.pack.Pack;
 import com.deped.model.supply.Supplier;
+import com.deped.model.unit.Unit;
 import com.deped.protection.validators.decimal.DoubleRange;
 import com.deped.protection.validators.integer.IntegerRange;
 import com.deped.protection.validators.xss.XSS;
@@ -33,41 +33,45 @@ public class OrderDetails implements Serializable {
     private Order order;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @MapsId("itemId")
-    @JoinColumn(name = "item_item_id")
+    @MapsId("itemName")
+    @JoinColumn(name = "item_item_name")
     private Item item;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
-    @MapsId("categoryId")
-    @JoinColumn(name = "category_category_id")
+    @MapsId("categoryName")
+    @JoinColumn(name = "category_category_name")
     private Category category;
 
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_details_constant_key", unique = true)
+    private Long constantKey;
+
     @ManyToOne
-    @JoinColumn(name = "pack_id")
-    private Pack pack;
+    @JoinColumn(name = "unit_name")
+    private Unit unit;
 
     @Column(name = "item_unit_price")
     @DoubleRange(min = 1.0, message = "Unit price must have a value more than 1 Peso")
     private Double unitPrice;
 
-    @Column(name = "package_capacity")
-    @Min(value = 1, message = "package can not have a negative capacity")
-    @Max(value = 5000, message = "package can not have more than 5000 capacity")
-    private Integer packCapacity;
+    @Column(name = "unit_capacity")
+    @Min(value = 1, message = "unit can not have a negative capacity")
+    @Max(value = 5000, message = "unit can not have more than 5000 capacity")
+    private Integer unitCapacity;
 
-    @Column(name = "no_of_packs")
-    @Min(value = 1, message = "Number of packages can not be negative")
-    @Max(value = 500, message = "Number of packages can not be more than 500")
-    private Integer noOfPacks;
+    @Column(name = "no_of_units")
+    @Min(value = 1, message = "Number of units can not be negative")
+    @Max(value = 500, message = "Number of units can not be more than 500")
+    private Integer noOfUnits;
 
     @Column(name = "total_quantity_requested_no")
     @IntegerRange(min = 1, max = 2500000, mandatory = true, message = "Total quantity must be between 1 and 2500000")
     private Integer totalQuantityRequestNo;
 
     @Column(name = "total_quantity_arrived_no")
-    @Min(value = 1, message = "Total quantity arrived can not be a negative")
+    @Min(value = 0, message = "Total quantity arrived can not be a negative")
     @Max(value = 2500000, message = "Total quantity arrived can not be more than 2500000")
-    private Integer totalQuantityArrivedNo;
+    private Integer totalQuantityArrivedNo = 0;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "order_details_state")
@@ -90,15 +94,15 @@ public class OrderDetails implements Serializable {
     @Transient
     private OrderDetailsState transientUpdateState;
 
-    @JoinColumn(name = "considered_by_user_id")
+    @JoinColumn(name = "considered_by_username")
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User consideredByUser;
 
-    @JoinColumn(name = "ordered_by_user_id")
+    @JoinColumn(name = "ordered_by_username")
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User orderedByUser;
 
-    @JoinColumn(name = "received_by_user_id")
+    @JoinColumn(name = "received_by_username")
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User receivedByUser;
 
@@ -134,12 +138,20 @@ public class OrderDetails implements Serializable {
         this.orderDetailsID = orderDetailsID;
     }
 
-    public Pack getPack() {
-        return pack;
+    public Long getConstantKey() {
+        return constantKey;
     }
 
-    public void setPack(Pack pack) {
-        this.pack = pack;
+    public void setConstantKey(Long constantKey) {
+        this.constantKey = constantKey;
+    }
+
+    public Unit getUnit() {
+        return unit;
+    }
+
+    public void setUnit(Unit unit) {
+        this.unit = unit;
     }
 
     public Double getUnitPrice() {
@@ -150,20 +162,20 @@ public class OrderDetails implements Serializable {
         this.unitPrice = unitPrice;
     }
 
-    public Integer getPackCapacity() {
-        return packCapacity;
+    public Integer getUnitCapacity() {
+        return unitCapacity;
     }
 
-    public void setPackCapacity(Integer packCapacity) {
-        this.packCapacity = packCapacity;
+    public void setUnitCapacity(Integer unitCapacity) {
+        this.unitCapacity = unitCapacity;
     }
 
-    public Integer getNoOfPacks() {
-        return noOfPacks;
+    public Integer getNoOfUnits() {
+        return noOfUnits;
     }
 
-    public void setNoOfPacks(Integer noOfPacks) {
-        this.noOfPacks = noOfPacks;
+    public void setNoOfUnits(Integer noOfUnits) {
+        this.noOfUnits = noOfUnits;
     }
 
     public Integer getTotalQuantityRequestNo() {

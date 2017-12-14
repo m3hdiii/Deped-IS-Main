@@ -7,7 +7,9 @@ import com.deped.repository.utils.Range;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.deped.repository.utils.ConstantValues.*;
 
@@ -24,7 +26,15 @@ public class RoleRepositoryImpl implements RoleRepository {
 
     @Override
     public Boolean update(Role entity) throws DatabaseRolesViolationException {
-        return hibernateFacade.updateEntity(entity);
+        String sqlQuery = "UPDATE role SET role_name = :roleName , simple_name = :simpleName , description = :description WHERE role_name = :oldRoleName ";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("roleName", entity.getName());
+        paramMap.put("simpleName", entity.getSimpleName());
+        paramMap.put("description", entity.getDescription());
+        paramMap.put("oldRoleName", entity.getPreviousRoleIdName());
+
+        int rowAffected = hibernateFacade.updateEntitySqlQuery(sqlQuery, Role.class, paramMap);
+        return rowAffected < 0;
     }
 
     @Override
@@ -38,7 +48,7 @@ public class RoleRepositoryImpl implements RoleRepository {
     }
 
     @Override
-    public Role fetchById(Object id) {
+    public Role fetchById(String id) {
         return hibernateFacade.fetchEntityById(Role.class, id);
     }
 

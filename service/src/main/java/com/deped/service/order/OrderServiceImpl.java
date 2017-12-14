@@ -63,7 +63,7 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<Order> fetchById(Object id) {
+    public ResponseEntity<Order> fetchById(Long id) {
         Order category = orderRepository.fetchById(id);
         ResponseEntity<Order> responseEntity = new ResponseEntity<>(category, OK);
         return responseEntity;
@@ -96,8 +96,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public ResponseEntity<List<Order>> fetchAllByUserId(Long userId) {
-        List<Order> requests = orderRepository.fetchAllByUserId(userId);
+    public ResponseEntity<List<Order>> fetchAllByUsername(String username) {
+        List<Order> requests = orderRepository.fetchAllByUsername(username);
         ResponseEntity<List<Order>> responseEntity = new ResponseEntity<>(requests, OK);
         return responseEntity;
     }

@@ -1,3 +1,4 @@
+
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page isELIgnored="false" %>
@@ -66,7 +67,7 @@
                                 </label>
                             </td>
                             <td>
-                                <a href="/role/${role.roleId}">${role.simpleName}</a>
+                                <a href="<c:url value='/role/${role.name}' />">${role.simpleName}</a>
                             </td>
                             <td>
                                     ${role.description}
@@ -74,7 +75,8 @@
                             <sec:authorize access="hasRole('ROLE_ADMIN')">
                                 <td>
                                     <div class="btn-group visible-lg-inline-block">
-                                        <a href="/role/update/${role.roleId}" class="btn btn-purple tooltip-btn"
+                                        <a href="<c:url value='/role/update/${role.name}' />"
+                                           class="btn btn-purple tooltip-btn"
                                            data-toggle="tooltip" data-placement="top" title="Edit Role"><i
                                                 class="fa fa-pencil"></i></a>
                                         <button type="button" class="btn btn-danger tooltip-btn" data-toggle="tooltip" data-placement="top" title="Delete" ><i class="fa fa-trash"></i></button>
@@ -90,38 +92,6 @@
         </div>
     </div>
     <!-- Warper Ends Here (working area) -->
-
-
-    <%--<div class="page-header">--%>
-    <%--<h3> &nbsp; Category </h3>--%>
-    <%--</div>--%>
-
-    <%--<div class="row">--%>
-    <%--<div class="col col-lg-3"/>--%>
-    <%--<div class="col col-lg-9">--%>
-    <%--<table class="table table-hover">--%>
-    <%--<thead>--%>
-    <%--<tr>--%>
-    <%--<th class="col-md-5">Name</th>--%>
-    <%--<th class="col-md-5">Description</th>--%>
-    <%--<th class="col-md-2">Edit</th>--%>
-    <%--<th class="col-md-2">Delete</th>--%>
-    <%--</tr>--%>
-    <%--</thead>--%>
-    <%--<tbody>--%>
-    <%--<c:forEach items="${categories}" var="category">--%>
-    <%--<tr>--%>
-    <%--<td class="col-md-2"><a href="/category/${category.categoryId}">${category.name}</a></td>--%>
-    <%--<td class="col-md-2">${category.description}</td>--%>
-    <%--<td><a href="/category/update/${category.categoryId}"><img src="${resourceURL}/images/edit.png"--%>
-    <%--width="16"/></a></td>--%>
-    <%--<td><img src="${resourceURL}/images/delete.png" width="16"/></td>--%>
-    <%--</tr>--%>
-    <%--</c:forEach>--%>
-    <%--</tbody>--%>
-    <%--</table>--%>
-    <%--</div>--%>
-    <%--</div>--%>
     <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>

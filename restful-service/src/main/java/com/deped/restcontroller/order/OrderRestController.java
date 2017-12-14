@@ -63,6 +63,7 @@ public class OrderRestController extends AbstractMainRestController<Order, Long>
             case PENDING:
             case ORDERED:
             case CONSIDERED:
+            case PARTIALLY_ARRIVED:
                 break;
         }
 
@@ -71,8 +72,8 @@ public class OrderRestController extends AbstractMainRestController<Order, Long>
     }
 
     @RequestMapping(value = FETCH_MAPPING_BY_USER, method = RequestMethod.POST)
-    public ResponseEntity<List<Order>> fetchAllByUserId(@PathVariable(ID_STRING_LITERAL) Long userId) {
-        ResponseEntity<List<Order>> response = orderService.fetchAllByUserId(userId);
+    public ResponseEntity<List<Order>> fetchAllByUsername(@PathVariable(ID_STRING_LITERAL) String username) {
+        ResponseEntity<List<Order>> response = orderService.fetchAllByUsername(username);
         return response;
     }
 

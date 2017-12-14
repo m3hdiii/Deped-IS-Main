@@ -1,7 +1,6 @@
 package com.deped.model.security;
 
 import com.deped.protection.validators.xss.XSS;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.hibernate.validator.constraints.Length;
@@ -39,8 +38,9 @@ public class Privilege implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate;
 
-    @ManyToMany(mappedBy = "privileges", cascade = CascadeType.ALL)
-    @JsonBackReference("role-privileges-binding")
+    //    @ManyToMany(mappedBy = "privileges", cascade = CascadeType.ALL)
+//    @JsonBackReference
+    @Transient
     private Set<Role> roles;
 
     public Long getPrivilegeId() {

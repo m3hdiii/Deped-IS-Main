@@ -43,8 +43,7 @@
 
         <div>
             <c:if test="${not empty sessionScope[basketName]}">
-                <a href="/order-details/basket/${orderIdValue}" class="btn btn-primary"> Check
-                    Cart<span>${fn:length(sessionScope[basketName])}</span></a>
+                <a href="/order-details/basket/${orderIdValue}" class="btn btn-primary"> Check Cart<span>${fn:length(sessionScope[basketName])}</span></a>
             </c:if>
         </div>
         <c:set var="errors"
@@ -74,9 +73,9 @@
                                 <th class="col-sm-1">Image</th>
                                 <th class="col-sm-1">Name</th>
                                 <th class="col-sm-1">Available QTY</th>
-                                <th class="col-sm-1">Package Capacity</th>
-                                <th class="col-sm-1">Packages</th>
-                                <th class="col-sm-1">No. of Packs</th>
+                                <th class="col-sm-1">Unit Capacity</th>
+                                <th class="col-sm-1">Unit</th>
+                                <th class="col-sm-1">No. of Units</th>
                                 <th class="col-sm-1">Item QTY</th>
                                 <th class="col-sm-1">Category</th>
                                 <th class="col-sm-1">Item Type</th>
@@ -93,12 +92,10 @@
 
                                     <c:choose>
                                         <c:when test="${not empty item.picName}">
-                                            <td class="col-sm-2"><img width="64" src="${baseUrl}${item.picName}"
-                                                                      alt="item image"/></td>
+                                            <td class="col-sm-2"><img width="64" src="${baseUrl}${item.picName}" alt="item image"/></td>
                                         </c:when>
                                         <c:otherwise>
-                                            <td class="col-sm-2"><img width="64"
-                                                                      src="${resourceURL}/images/shared-images/no-item.png"
+                                            <td class="col-sm-2"><img width="64" src="${resourceURL}/images/shared-images/no-item.png"
                                                                       alt="item image"/>
                                             </td>
                                         </c:otherwise>
@@ -110,31 +107,30 @@
 
                                     <td class="col-sm-2">
                                         <div class="col-sm-2">
-                                            <form:input class="col-sm-2" type="number" min="0" path="packCapacity"/>
+                                            <form:input class="col-sm-2" type="number" min="0" path="unitCapacity"/>
                                         </div>
                                     </td>
 
                                     <td class="col-sm-4">
-                                        <form:select class="col-sm-4" path="pack">
-                                            <form:options class="col-sm-4" items="${packs}" itemLabel="name"
-                                                          itemValue="packId"/>
+                                        <form:select class="col-sm-4" path="unit">
+                                            <form:options class="col-sm-4" items="${units}" itemLabel="name"
+                                                          itemValue="name"/>
                                         </form:select>
                                     </td>
 
                                     <td class="col-sm-2">
-                                        <form:input class="col-sm-2" type="number" min="0" path="noOfPacks"/>
+                                        <form:input class="col-sm-2" type="number" min="0" path="noOfUnits"/>
                                     </td>
 
                                     <td class="col-sm-2">
-                                        <form:input class="col-sm-2" ype="number" min="0"
-                                                    path="totalQuantityRequestNo"/>
+                                        <form:input class="col-sm-2" ype="number" min="0" path="totalQuantityRequestNo"/>
                                     </td>
 
 
                                     <td class="col-sm-4">
                                         <form:select class="col-sm-4" path="category">
                                             <form:options class="col-sm-4" items="${categories}" itemLabel="name"
-                                                          itemValue="categoryId"/>
+                                                          itemValue="name"/>
                                         </form:select>
                                     </td>
 
@@ -146,17 +142,15 @@
 
                                     <td class="col-sm-4">
                                         <form:select class="col-sm-4" path="supplier">
-                                            <form:options class="col-sm-4" items="${suppliers}" itemLabel="name"
-                                                          itemValue="supplierId"/>
+                                            <form:options class="col-sm-4" items="${suppliers}" itemLabel="name" itemValue="supplierId"/>
                                         </form:select>
                                     </td>
 
                                     <input type="hidden" name="order" value="${relatedOrder.orderId}"/>
-                                    <input type="hidden" name="item" value="${item.itemId}"/>
+                                    <input type="hidden" name="item" value="${item.name}"/>
 
                                     <td class="col-sm-2">
-                                        <button class="col-sm-2 btn btn-success btn-block" type="submit">Add To Order
-                                        </button>
+                                        <button class="col-sm-2 btn btn-success btn-block" type="submit">Add To Order</button>
                                     </td>
                                     </tr>
                                 </form:form>
@@ -172,7 +166,7 @@
 
     </div>
 
-    <c:import url="../../includes/footer.jsp"/>
+            <c:import url="../../includes/footer.jsp"/>
 
 </body>
 </html>

@@ -2,6 +2,7 @@ package com.deped.repository.order;
 
 import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.items.Item;
+import com.deped.model.items.ItemType;
 import com.deped.model.order.*;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
@@ -59,7 +60,7 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
     }
 
     @Override
-    public OrderDetails fetchById(Object id) {
+    public OrderDetails fetchById(OrderDetailsID id) {
         return hibernateFacade.fetchEntityById(OrderDetails.class, id);
     }
 
@@ -78,7 +79,7 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
 
         Session hibernateSession;
         try {
-            hibernateSession = hibernateFacade.getSessionFactory().openSession();
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -101,9 +102,6 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
             if (tx != null)
                 tx.rollback();
             return false;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
         return true;
     }
@@ -119,11 +117,11 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
         }
     }
 
-    public boolean updateOrderState(Long userId, OrderDetailsState orderDetailsState, OrderDetails... entities) {
-        List<StateUpdateBean> stateUpdateBeanList = makeStateUpdateBeanList(entities, userId, orderDetailsState);
+    public boolean updateOrderState(String username, OrderDetailsState orderDetailsState, OrderDetails... entities) {
+        List<StateUpdateBean> stateUpdateBeanList = makeStateUpdateBeanList(entities, username, orderDetailsState);
         Session hibernateSession;
         try {
-            hibernateSession = hibernateFacade.getSessionFactory().openSession();
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -149,6 +147,11 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
                 case ORDERED:
                     nextOrderState = OrderState.ORDERED;
                     break;
+
+                case PARTIALLY_ARRIVED:
+                    nextOrderState = OrderState.PARTIALLY_ARRIVED;
+                    break;
+
                 case ARRIVED:
                 case NOT_ARRIVED:
                 case CANCELED:
@@ -184,8 +187,8 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
             }
 
 
-            String notArrivalReasonQuery = "UPDATE order_details SET not_arrival_message = :reason WHERE order_order_id = :orderId AND item_item_id = :itemId AND category_category_id = :categoryId";
-            String disapprovalReasonQuery = "UPDATE order_details SET disapproval_message = :reason WHERE order_order_id = :orderId AND item_item_id = :itemId AND category_category_id = :categoryId";
+            String notArrivalReasonQuery = "UPDATE order_details SET not_arrival_message = :reason WHERE order_order_id = :orderId AND item_item_name = :itemName AND category_category_name = :categoryName";
+            String disapprovalReasonQuery = "UPDATE order_details SET disapproval_message = :reason WHERE order_order_id = :orderId AND item_item_name = :itemName AND category_category_name = :categoryName";
             for (OrderDetails od : entities) {
                 String notArrivalReason = od.getNotArrivalMessage();
                 String disapprovalMessage = od.getDisapprovalMessage();
@@ -204,7 +207,7 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
                     if (od.getOrderDetailsState() == OrderDetailsState.ARRIVED) {
                         NativeQuery<Item> nativeQuery = hibernateSession.createNativeQuery(updateItemQuantityQuery, Item.class);
                         nativeQuery.setParameter("newQuantity", od.getTotalQuantityArrivedNo());
-                        nativeQuery.setParameter("itemId", od.getOrderDetailsID().getItemId());
+                        nativeQuery.setParameter("itemId", od.getOrderDetailsID().getItemName());
                         nativeQuery.executeUpdate();
                     }
                 }
@@ -216,9 +219,6 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
             if (tx != null)
                 tx.rollback();
             return false;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
 
         return true;
@@ -228,8 +228,8 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
     private void notArrivalOrDisapprovalProcessor(OrderDetails orderDetails, String reason, Session hibernateSession, String query) {
         NativeQuery<OrderDetails> updateMessagesNativeQuery = hibernateSession.createNativeQuery(query, OrderDetails.class);
         updateMessagesNativeQuery.setParameter("orderId", orderDetails.getOrderDetailsID().getOrderId());
-        updateMessagesNativeQuery.setParameter("itemId", orderDetails.getOrderDetailsID().getItemId());
-        updateMessagesNativeQuery.setParameter("categoryId", orderDetails.getOrderDetailsID().getCategoryId());
+        updateMessagesNativeQuery.setParameter("itemName", orderDetails.getOrderDetailsID().getItemName());
+        updateMessagesNativeQuery.setParameter("categoryName", orderDetails.getOrderDetailsID().getCategoryName());
         updateMessagesNativeQuery.setParameter("reason", reason);
         updateMessagesNativeQuery.executeUpdate();
     }
@@ -242,7 +242,7 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
 
         Session hibernateSession;
         try {
-            hibernateSession = hibernateFacade.getSessionFactory().openSession();
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -269,10 +269,8 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
             if (tx != null)
                 tx.rollback();
             return false;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
+
         return true;
     }
 
@@ -282,6 +280,48 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
         parameterMap.put("orderId", orderId);
         String sqlQuery = "SELECT * FROM order_details WHERE order_order_id = :orderId AND order_details_state NOT IN ('DISAPPROVED', 'NOT_ARRIVED', 'CANCELLED') ";
         List<OrderDetails> list = hibernateFacade.fetchAllEntityBySqlQuery(sqlQuery, null, OrderDetails.class, parameterMap);
+        return list;
+    }
+
+    @Override
+    public List<OrderDetails> fetchAllByIdAndItemType(Long orderId, ItemType[] itemTypes) {
+        String fetchQuery = "SELECT * FROM order_details INNER JOIN item on order_details.item_item_name = item_name WHERE item_type IN ( %s ) AND order_order_id = :orderId ORDER BY order_details_state";
+        StringBuilder sb = new StringBuilder();
+        for (ItemType it : itemTypes) {
+            sb
+                    .append("'")
+                    .append(it.toString())
+                    .append("' ,");
+        }
+
+        String formatValue = sb.toString().substring(0, sb.toString().lastIndexOf(","));
+        String query = String.format(fetchQuery, formatValue);
+
+        Session hibernateSession = null;
+        try {
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        Transaction tx = null;
+
+        List<OrderDetails> list;
+        try {
+            tx = hibernateSession.beginTransaction();
+            NativeQuery<OrderDetails> nativeQuery = hibernateSession.createNativeQuery(query, OrderDetails.class);
+            nativeQuery.setParameter("orderId", orderId);
+            list = nativeQuery.list();
+
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null)
+                tx.rollback();
+            return null;
+        }
+
         return list;
     }
 
@@ -301,7 +341,7 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
 
         Session hibernateSession = null;
         try {
-            hibernateSession = hibernateFacade.getSessionFactory().openSession();
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -314,22 +354,21 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
             tx = hibernateSession.beginTransaction();
             NativeQuery<OrderDetails> nativeQuery = hibernateSession.createNativeQuery(query, OrderDetails.class);
             list = nativeQuery.list();
+            tx.commit();
         } catch (Exception e) {
             e.printStackTrace();
             if (tx != null)
                 tx.rollback();
             return null;
-        } finally {
-            if (hibernateSession != null)
-                hibernateSession.close();
         }
+
         return list;
     }
 
     private void setMap(Map<String, Object> parameterMap, OrderDetails temp, String orderIdMapKey, String itemIdMapKey, String categoryIdMapKey) {
         parameterMap.put(orderIdMapKey, temp.getOrderDetailsID().getOrderId());
-        parameterMap.put(itemIdMapKey, temp.getOrderDetailsID().getItemId());
-        parameterMap.put(categoryIdMapKey, temp.getOrderDetailsID().getCategoryId());
+        parameterMap.put(itemIdMapKey, temp.getOrderDetailsID().getItemName());
+        parameterMap.put(categoryIdMapKey, temp.getOrderDetailsID().getCategoryName());
     }
 
     private boolean doUpdate(String query, Map<String, Object> parameterMap) {
@@ -357,42 +396,43 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
             if (i % 2 == 0) {
                 OrderDetails od = new OrderDetails();
                 Long id = Long.parseLong(i + "");
-                od.setOrderDetailsID(new OrderDetailsID(id, id, id));
+                od.setOrderDetailsID(new OrderDetailsID(id, String.valueOf(id), String.valueOf(id)));
                 od.setOrderDetailsState(OrderDetailsState.APPROVED);
                 orderDetailsList[i] = od;
             } else {
                 OrderDetails od = new OrderDetails();
                 Long id = Long.parseLong(i + "");
-                od.setOrderDetailsID(new OrderDetailsID(id, id, id));
+                od.setOrderDetailsID(new OrderDetailsID(id, String.valueOf(id), String.valueOf(id)));
                 od.setOrderDetailsState(OrderDetailsState.DISAPPROVED);
                 orderDetailsList[i] = od;
             }
         }
 
-        new OrderDetailsRepositoryImpl().updateOrderState(0L, OrderDetailsState.WAITING, orderDetailsList);
+        new OrderDetailsRepositoryImpl().updateOrderState("", OrderDetailsState.WAITING, orderDetailsList);
     }
 
 
-    private List<StateUpdateBean> makeStateUpdateBeanList(OrderDetails[] entities, Long userId, OrderDetailsState orderDetailsState) {
+    private List<StateUpdateBean> makeStateUpdateBeanList(OrderDetails[] entities, String username, OrderDetailsState orderDetailsState) {
 
         List<StateUpdateBean> stateUpdateBeanList = new ArrayList<>();
         String stitch = "";
         switch (orderDetailsState) {
             case APPROVED:
             case DISAPPROVED:
-                stitch = ", considered_by_user_id = :userId";
+                stitch = ", considered_by_username = :username";
                 break;
             case ORDERED:
-                stitch = ", ordered_by_user_id = :userId";
+                stitch = ", ordered_by_username = :username";
                 break;
             case ARRIVED:
             case NOT_ARRIVED:
-                stitch = ", received_by_user_id = :userId";
+            case PARTIALLY_ARRIVED:
+                stitch = ", received_by_username = :username";
                 break;
         }
 
         String strFormat = "UPDATE order_details SET order_details_state = :orderDetailsState %s "
-                .concat("WHERE (order_order_id, item_item_id, category_category_id) IN (");
+                .concat("WHERE (order_order_id, item_item_name, category_category_name) IN (");
 
         final String baseQuery = String.format(strFormat, stitch);
 
@@ -408,8 +448,8 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
         Map<String, Object> parameterMap = new HashMap<>();
 
         final String orderIdMapKeyFormat = "orderId%d";
-        final String itemIdMapKeyFormat = "itemId%d";
-        final String categoryIdMapKeyFormat = "categoryId%d";
+        final String itemIdMapKeyFormat = "itemIdName%d";
+        final String categoryIdMapKeyFormat = "categoryName%d";
         final String colonStr = ":";
 
         for (int i = 0; i < orderDetailsList.size(); i++) {
@@ -433,7 +473,7 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
 
             if (isLastElement || nextIndexState != firstElementState) {
                 parameterMap.put("orderDetailsState", firstElementState.toString());
-                parameterMap.put("userId", userId);
+                parameterMap.put("username", username);
                 String query = sb.toString();
                 query = query.substring(0, query.lastIndexOf(",")).concat(")");
                 stateUpdateBeanList.add(new StateUpdateBean(query, parameterMap));

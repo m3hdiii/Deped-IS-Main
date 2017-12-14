@@ -44,7 +44,8 @@
                         <p><label class="col-sm-2"> Creation Date: </label> ${roleInfo.creationDate}</p>
                     </div>
                     <div class="col-md-3">
-                        <a class="btn btn-info" role="button" href="/role/update/${roleInfo.roleId}">Update Info </a>
+                        <a class="btn btn-info" role="button" href="<c:url value='/role/update/${roleInfo.name}' />">Update
+                            Info </a>
                     </div>
                 </div>
             </div>

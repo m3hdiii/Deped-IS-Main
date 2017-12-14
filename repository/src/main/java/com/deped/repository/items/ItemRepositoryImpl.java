@@ -28,8 +28,18 @@ public class ItemRepositoryImpl implements ItemRepository {
 
     @Override
     public Boolean update(Item entity) throws DatabaseRolesViolationException {
-        Boolean isUpdated = hibernateFacade.updateEntity(entity);
-        return isUpdated;
+        String sqlQuery = "UPDATE item SET item_name = :itemName , description = :description, item_type = :itemType , function_type = :functionType , threshold = :threshold , pic_name = :picName WHERE item_name = :oldItemName ";
+        Map<String, Object> paramMap = new HashMap<>();
+        paramMap.put("itemName", entity.getName());
+        paramMap.put("description", entity.getDescription());
+        paramMap.put("itemType", entity.getItemType().toString());
+        paramMap.put("functionType", entity.getFunctionType().toString());
+        paramMap.put("threshold", entity.getThreshold());
+        paramMap.put("picName", entity.getPicName());
+        paramMap.put("oldItemName", entity.getPreviousIdName());
+
+        int rowAffected = hibernateFacade.updateEntitySqlQuery(sqlQuery, Item.class, paramMap);
+        return rowAffected < 0;
     }
 
     @Override
@@ -45,7 +55,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public Item fetchById(Object id) {
+    public Item fetchById(String id) {
         Item item = hibernateFacade.fetchEntityById(Item.class, id);
         return item;
     }
@@ -62,17 +72,9 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public List<Item> fetchAllGoods() {
+    public List<Item> fetchAllByItemType(ItemType itemType) {
         Map<String, Object> parameterMap = new HashMap<>();
-        parameterMap.put("itemType", ItemType.GOODS);
-        List<Item> items = hibernateFacade.fetchAllByParameterMap(FETCH_ALL_ITEMS_BY_TYPE, Item.class, parameterMap);
-        return items;
-    }
-
-    @Override
-    public List<Item> fetchAllSemiExpendable() {
-        Map<String, Object> parameterMap = new HashMap<>();
-        parameterMap.put("itemType", ItemType.SEMI_EXPENDABLE);
+        parameterMap.put("itemType", itemType);
         List<Item> items = hibernateFacade.fetchAllByParameterMap(FETCH_ALL_ITEMS_BY_TYPE, Item.class, parameterMap);
         return items;
     }

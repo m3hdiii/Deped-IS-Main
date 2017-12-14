@@ -26,8 +26,8 @@ public class RequestDetails implements Serializable {
     private Request request;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "item_item_id")
-    @MapsId("itemId")
+    @JoinColumn(name = "item_item_name")
+    @MapsId("itemName")
     private Item item;
 
     @Column(name = "request_quantity")
@@ -61,11 +61,11 @@ public class RequestDetails implements Serializable {
     @Column(name = "supply_office_remark")
     private String supplyOfficeRemark;
 
-    @JoinColumn(name = "considered_by_user_id")
+    @JoinColumn(name = "considered_by_username")
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User consideredByUser;
 
-    @JoinColumn(name = "issued_by_user_id")
+    @JoinColumn(name = "issued_by_username")
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User issuedByUser;
 

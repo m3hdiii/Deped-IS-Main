@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<User> fetchById(Object id) {
+    public ResponseEntity<User> fetchById(String id) {
         User user = userRepository.fetchById(id);
         ResponseEntity<User> responseEntity = new ResponseEntity<>(user, OK);
         return responseEntity;
@@ -163,12 +163,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<Response> changePasswordByToken(Long userId, String token, String newPassword) {
+    public ResponseEntity<Response> changePasswordByToken(String username, String token, String newPassword) {
         Map<ServerEnumKey, String> configMap = SharedConfigData.getAppConfigs(false);
         int period = Integer.parseInt(configMap.get(ServerEnumKey.PASSWORD_RESET_TOKEN_PERIOD));
         boolean isUpdated = false;
         try {
-            isUpdated = userRepository.changePasswordByToken(userId, token, newPassword, period);
+            isUpdated = userRepository.changePasswordByToken(username, token, newPassword, period);
         } catch (DatabaseRolesViolationException e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.CONFLICT);
@@ -186,7 +186,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<Response> checkToken(Long userId, String token) {
+    public ResponseEntity<Response> checkToken(String username, String token) {
         Map<ServerEnumKey, String> configMap = SharedConfigData.getAppConfigs(false);
         int period = Integer.parseInt(configMap.get(ServerEnumKey.PASSWORD_RESET_TOKEN_PERIOD));
         PasswordResetToken passwordResetToken = userRepository.findByToken(token);
@@ -203,7 +203,7 @@ public class UserServiceImpl implements UserService {
             return responseEntity;
         }
 
-        if (passwordResetToken.getUser() == null || passwordResetToken.getUser().getUserId() != userId) {
+        if (passwordResetToken.getUser() == null || passwordResetToken.getUser().getUsername() != username) {
             Response response = new Response(ResponseStatus.FAILED, "This token does not belong to you");
             ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
             return responseEntity;
@@ -235,11 +235,11 @@ public class UserServiceImpl implements UserService {
 //            resetPasswordUrl = getBaseUrl();
 //        }
 
-        Long userId = passwordResetToken.getUser().getUserId();
+        String username = passwordResetToken.getUser().getUsername();
         String token = passwordResetToken.getToken();
 
-        String urlFormat = "%s/change-password?id=%d&token=%s";
-        String url = String.format(urlFormat, contextPath, userId, token);
+        String urlFormat = "%s/change-password?id=%s&token=%s";
+        String url = String.format(urlFormat, contextPath, username, token);
 
         StringBuilder sb = new StringBuilder();
         sb

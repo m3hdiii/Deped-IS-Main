@@ -3,18 +3,19 @@ package com.deped.controller.order;
 import com.deped.ResultBean;
 import com.deped.controller.AbstractMainController;
 import com.deped.controller.SharedData;
+import com.deped.form.ItemDetailsBean;
+import com.deped.form.ItemDetailsBeanForm;
 import com.deped.form.OrderDetailsForm;
 import com.deped.model.Response;
 import com.deped.model.ResponseStatus;
 import com.deped.model.account.User;
 import com.deped.model.category.Category;
 import com.deped.model.items.Item;
-import com.deped.model.order.Order;
-import com.deped.model.order.OrderDetails;
-import com.deped.model.order.OrderDetailsState;
-import com.deped.model.order.OrderState;
-import com.deped.model.pack.Pack;
+import com.deped.model.items.ItemDetails;
+import com.deped.model.items.ItemType;
+import com.deped.model.order.*;
 import com.deped.model.supply.Supplier;
+import com.deped.model.unit.Unit;
 import com.deped.utils.SystemUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -42,6 +43,8 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
     private static final String BASKET = "orderDetailsMap-OrderNo";
     private static final String ORDER = "orderSessionNo";
 
+    private static final String ARRIVAL_OR_PARTIAL_ARRIVAL_BASKET = "arrivalOrPartialArrivalBasketNo";
+
     //TODO TAKE NOTE THIS MAPPING IS DIFFERENT WITH OTHER CLASSES
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN + URL_SEPARATOR + ID_PATTERN;
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
@@ -63,8 +66,9 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
     private static final String APPROVAL_PAGE = BASE_NAME + URL_SEPARATOR + "approval" + URL_SEPARATOR + ID_PATTERN;
     private static final String REQUISITION_PAGE = BASE_NAME + URL_SEPARATOR + "requisition" + URL_SEPARATOR + ID_PATTERN;
     private static final String ARRIVAL_PAGE = BASE_NAME + URL_SEPARATOR + "arrival" + URL_SEPARATOR + ID_PATTERN;
+    private static final String INSERT_DATA = BASE_NAME + URL_SEPARATOR + "insert-data" + URL_SEPARATOR + ID_PATTERN;
 
-    private static final String UPDATE_STATE_REST = BASE_NAME + URL_SEPARATOR + "update-state/user/%d/state/%d";
+    private static final String UPDATE_STATE_REST = BASE_NAME + URL_SEPARATOR + "update-state/user/%s/state/%d";
 
     public enum ActionParam {
         UPDATE_ALL, DELETE_ALL, SAVE_ALL, ORDER_ALL
@@ -99,7 +103,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
             }
 
-            List<OrderDetails> orderDetailsList = fetchRequestDetails(orderId);
+            List<OrderDetails> orderDetailsList = fetchOrderDetails(orderId);
             if (orderDetailsList != null && !orderDetailsList.isEmpty()) {
                 httpSession.setAttribute(BASKET + order.getOrderId(), putOrderDetailsListIntoMap(new HashSet<>(orderDetailsList)));
             }
@@ -116,7 +120,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         Map<String, Object> modelMap = new HashMap<>(getConfigMap());
         modelMap.put("orderId", orderId);
         modelMap.put("itemList", SharedData.getItems(false));
-        modelMap.put("packs", SharedData.getPacks(false));
+        modelMap.put("units", SharedData.getUnits(false));
         modelMap.put("categories", SharedData.getCategories(false));
         modelMap.put("suppliers", SharedData.getSuppliers(false));
         modelMap.put("orderDetail", orderDetails);
@@ -254,7 +258,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
             return requestChecking;
         }
 
-        List<OrderDetails> requestDetailsList = fetchRequestDetails(orderId);
+        List<OrderDetails> requestDetailsList = fetchOrderDetails(orderId);
         ModelAndView requestDetailsChecking = orderDetailsChecking(requestDetailsList);
         if (requestDetailsChecking != null) {
             return requestDetailsChecking;
@@ -297,7 +301,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
             return requestChecking;
         }
 
-        List<OrderDetails> requestDetailsList = fetchRequestDetails(orderId);
+        List<OrderDetails> requestDetailsList = fetchOrderDetails(orderId);
         ModelAndView requestDetailsChecking = orderDetailsChecking(requestDetailsList);
         if (requestDetailsChecking != null) {
             return requestDetailsChecking;
@@ -332,18 +336,19 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
     }
 
     @RequestMapping(value = ARRIVAL_PAGE, method = GET)
-    public ModelAndView arrivalActionRender(@ModelAttribute("order") Order order, @PathVariable(ID_STRING_LITERAL) Long orderId) {
+    public ModelAndView arrivalActionRender(@ModelAttribute("order") Order order, @PathVariable(ID_STRING_LITERAL) Long orderId, HttpSession session) {
         Order fetchedOrder = fetchOrder(orderId);
-        ModelAndView requestChecking = orderChecking(fetchedOrder, OrderState.ORDERED);
+        ModelAndView requestChecking = orderChecking(fetchedOrder, OrderState.ORDERED, OrderState.PARTIALLY_ARRIVED);
         if (requestChecking != null) {
             return requestChecking;
         }
 
-        List<OrderDetails> requestDetailsList = fetchRequestDetails(orderId);
+        List<OrderDetails> requestDetailsList = fetchOrderDetails(orderId);
         ModelAndView requestDetailsChecking = orderDetailsChecking(requestDetailsList);
         if (requestDetailsChecking != null) {
             return requestDetailsChecking;
         }
+
 
         OrderDetailsState[] nextRequestDetailsStatuses = new OrderDetailsState[]{OrderDetailsState.ARRIVED, OrderDetailsState.NOT_ARRIVED, OrderDetailsState.CANCELED};
         return renderActions(
@@ -357,16 +362,53 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         );
     }
 
-    @RequestMapping(value = ARRIVAL_PAGE, method = POST)
-    public ModelAndView arrivalActionSubmit(@ModelAttribute("orderDetailsForm") OrderDetailsForm orderDetailsForm) {
-        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, OrderDetailsState.ARRIVED);
-        Response response = updateResponse.getBody();
 
-        String headTagTitle = "Arrival Result";
-        String headTagDescription = "Arrival Result Summary";
-        String heading = "Operation Result";
-        String successMessage = response.getResponseStatus() == ResponseStatus.SUCCESSFUL ? "You Successfully Process The Arrival Process" : null;
-        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "Something Went Wrong In Arrival Process" : null;
+    private enum OrderActionParam {
+        PARTIAL_DELIVERY, FINALIZE_DELIVERY
+    }
+
+    //TODO
+    @RequestMapping(value = ARRIVAL_PAGE, method = POST)
+    public ModelAndView arrivalActionSubmit(@PathVariable(ID_STRING_LITERAL) Long orderId, @RequestParam OrderActionParam actionParam, @ModelAttribute("orderDetailsForm") OrderDetailsForm orderDetailsForm, BindingResult bindingResult, HttpSession session) {
+
+        if (bindingResult.hasErrors()) {
+            //TODO VALIDATIONS
+        }
+
+        switch (actionParam) {
+            case PARTIAL_DELIVERY:
+                break;
+            case FINALIZE_DELIVERY:
+                break;
+        }
+        ModelAndView mav = null;
+
+        if (actionParam == OrderActionParam.PARTIAL_DELIVERY) {
+            String processName = "Partial Delivery";
+            String headTagTitle = "Partially Arrival Result";
+            String headTagDescription = "Partially Arrival Result Summary";
+            String heading = "Operation Result";
+
+            mav = createOutput(orderDetailsForm, OrderDetailsState.PARTIALLY_ARRIVED, processName, headTagTitle, headTagDescription, heading);
+        }
+
+        if (actionParam == OrderActionParam.FINALIZE_DELIVERY) {
+            String processName = "Arrival";
+            String headTagTitle = "Arrival Result";
+            String headTagDescription = "Arrival Result Summary";
+            String heading = "Operation Result";
+
+            mav = createOutput(orderDetailsForm, OrderDetailsState.ARRIVED, processName, headTagTitle, headTagDescription, heading);
+        }
+
+        return mav;
+    }
+
+    private ModelAndView createOutput(OrderDetailsForm orderDetailsForm, OrderDetailsState orderDetailsState, String processName, String headTagTitle, String headTagDescription, String heading) {
+        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, orderDetailsState);
+        Response response = updateResponse.getBody();
+        String successMessage = response.getResponseStatus() == ResponseStatus.SUCCESSFUL ? String.format("You Successfully Process The %s Process", processName) : null;
+        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? String.format("Something Went Wrong In %s Process", processName) : null;
 
         if (response.getResponseStatus() == ResponseStatus.SUCCESSFUL) {
             SharedData.getItems(true);
@@ -376,6 +418,63 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         ModelAndView mav = createResultPage(resultBean);
         return mav;
     }
+
+
+    @RequestMapping(value = INSERT_DATA, method = RequestMethod.GET)
+    public ModelAndView captureData(@PathVariable("id") Long orderId) {
+        Order fetchedOrder = fetchOrder(orderId);
+        ModelAndView requestChecking = orderChecking(fetchedOrder, OrderState.ORDERED, OrderState.PARTIALLY_ARRIVED);
+        if (requestChecking != null) {
+            //TODO
+            return requestChecking;
+        }
+
+        List<CaptureInfo> captureInfoList = fetchCaptureInfoByItemTypes(orderId, new ItemType[]{ItemType.EQUIPMENT});
+
+        ModelAndView mav = createModelAndView(captureInfoList);
+
+        return mav;
+    }
+
+    private ModelAndView createModelAndView(List<CaptureInfo> captureInfoList) {
+        List<ItemDetailsBean> itemDetailsBeans = new ArrayList<>();
+
+        for (int i = 0; i < captureInfoList.size(); i++) {
+            CaptureInfo ci = captureInfoList.get(i);
+            List<ItemDetails> itemDetailsList = null;
+            if (ci.getNumberOfRemainingCapturedItems() > 0) {
+                itemDetailsList = new ArrayList<>();
+                for (int j = 0; j < ci.getNumberOfRemainingCapturedItems(); j++) {
+                    itemDetailsList.add(new ItemDetails());
+                }
+            }
+            itemDetailsBeans.add(new ItemDetailsBean(itemDetailsList, ci));
+        }
+
+        ItemDetailsBeanForm itemDetailsBeanForm = new ItemDetailsBeanForm(itemDetailsBeans);
+
+        return new ModelAndView("pages/order-details/insert-item-info", "itemDetailsBeanForm", itemDetailsBeanForm);
+    }
+
+    private ModelAndView insertEquipmentsInformation2(Long orderId, OrderDetailsForm orderDetailsForm, HttpSession session) {
+
+        Collection<OrderDetails> orderDetailsList = orderDetailsForm.getMap().values();
+        List<OrderDetails> orderDetailsSubList = new ArrayList<>();
+        for (OrderDetails od : orderDetailsList) {
+            if (od.getItem().getItemType() == ItemType.EQUIPMENT) {
+                orderDetailsSubList.add(od);
+            }
+        }
+
+        if (orderDetailsSubList.isEmpty()) {
+            return null;
+        }
+
+        String attName = ARRIVAL_OR_PARTIAL_ARRIVAL_BASKET + orderId;
+        session.setAttribute(attName, orderDetailsForm);
+        return null;
+    }
+
 
     /**
      * For Canceled, Disapproved or Not Arrived Items
@@ -436,26 +535,26 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
     }
 
 
-    private Order fetchOrder(Long requestId) {
+    private Order fetchOrder(Long orderId) {
         RestTemplate restTemplate = new RestTemplate();
-        String restUrl = String.format(FETCH_BY_ID_URL, "order", requestId);
+        String restUrl = String.format(FETCH_BY_ID_URL, "order", orderId);
         ResponseEntity<Order> response = restTemplate.getForEntity(restUrl, Order.class);
         Order order = response.getBody();
         return order;
     }
 
-    private List<OrderDetails> fetchRequestDetails(Long requestId) {
+    private List<OrderDetails> fetchOrderDetails(Long orderId) {
         RestTemplate restTemplate = new RestTemplate();
         //get RequestDetails if there is any
         HttpEntity httpEntity = makeHttpEntity(null);
-        String restUrl = String.format(FETCH_URL, "order-details").concat("/").concat(requestId + "");
+        String restUrl = String.format(FETCH_URL, "order-details").concat("/").concat(orderId + "");
         ResponseEntity<List<OrderDetails>> responseDetails = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<OrderDetails>>() {
         });
         List<OrderDetails> requestDetailsList = responseDetails.getBody();
         return requestDetailsList;
     }
 
-    private ModelAndView orderChecking(Order order, OrderState mustBeInStatus) {
+    private ModelAndView orderChecking(Order order, OrderState... mustBeInStatuses) {
         String newRequestRedirectUrl;
         if (order == null) {
             //TODO message this order does not exist
@@ -464,11 +563,19 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         }
 
         OrderState orderState = order.getOrderState();
-        if (orderState != mustBeInStatus) {
+        boolean inRightStatus = false;
+        for (OrderState os : mustBeInStatuses) {
+            if (orderState == os) {
+                inRightStatus = true;
+            }
+        }
+
+        if (!inRightStatus) {
             //TODO message this order is not in proper state as of now
             newRequestRedirectUrl = "redirect:/dashboard";
             return new ModelAndView(newRequestRedirectUrl);
         }
+
         return null;
     }
 
@@ -534,9 +641,9 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         HttpEntity<OrderDetails[]> httpEntity = new HttpEntity<>(orderDetailsArray, headers);
 
         User user = getUserFromSpringSecurityContext();
-        Long userId = user.getUserId();
+        String username = user.getUsername();
 
-        String restUrl = String.format((BASE_URL + UPDATE_STATE_REST), userId, state.ordinal());
+        String restUrl = String.format((BASE_URL + UPDATE_STATE_REST), username, state.ordinal());
 
         ResponseEntity<Response> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, Response.class);
         return response;
@@ -583,17 +690,16 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
     @InitBinder
     public void initBinder(WebDataBinder binder, HttpServletRequest request) {
-        binder.registerCustomEditor(Pack.class, new PropertyEditorSupport() {
+        binder.registerCustomEditor(Unit.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
                 if (text != null) {
                     try {
-                        Long packId = Long.parseLong(text);
-                        Pack pack = new Pack();
-                        pack.setPackId(packId);
+                        Unit pack = new Unit();
+                        pack.setName(text);
 
-                        List<Pack> packs = SharedData.getPacks(false);
-                        Pack discoveredPack = SystemUtils.findElementInList(packs, pack);
+                        List<Unit> packs = SharedData.getUnits(false);
+                        Unit discoveredPack = SystemUtils.findElementInList(packs, pack);
                         setValue(discoveredPack);
                     } catch (NumberFormatException e) {
                         e.printStackTrace();
@@ -629,9 +735,8 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
             public void setAsText(String text) {
                 if (text != null) {
                     try {
-                        Long categoryId = Long.parseLong(text);
                         Category category = new Category();
-                        category.setCategoryId(categoryId);
+                        category.setName(text);
 
                         List<Category> categories = SharedData.getCategories(false);
                         Category discoveredCategories = SystemUtils.findElementInList(categories, category);
@@ -711,6 +816,63 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
         }
 
+    }
+
+    private List<OrderDetails> fetchOrderDetailsByItemTypes(Long orderId, ItemType[] itemTypes) {
+        Integer ordinals[] = new Integer[itemTypes.length];
+        for (int i = 0; i < itemTypes.length; i++) {
+            ordinals[i] = itemTypes[i].ordinal();
+        }
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Integer[]> httpEntity = new HttpEntity<>(ordinals, headers);
+        String format = AbstractMainController.BASE_URL.concat("%s%s").concat("/").concat(orderId + "");
+        String restUrl = String.format(format, BASE_NAME, "/fetch-by-item-type");
+        ResponseEntity<List<OrderDetails>> responseDetails = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<OrderDetails>>() {
+        });
+        List<OrderDetails> requestDetailsList = responseDetails.getBody();
+        return requestDetailsList;
+    }
+
+    private List<ItemDetails> fetchItemDetailsByItemTypes(Long orderId, ItemType[] itemTypes) {
+        Integer ordinals[] = new Integer[itemTypes.length];
+        for (int i = 0; i < itemTypes.length; i++) {
+            ordinals[i] = itemTypes[i].ordinal();
+        }
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Integer[]> httpEntity = new HttpEntity<>(ordinals, headers);
+        String format = AbstractMainController.BASE_URL.concat("%s%s").concat("/").concat(orderId + "");
+        String restUrl = String.format(format, "item-details", "/find-by-order-type");
+        ResponseEntity<List<ItemDetails>> responseDetails = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<ItemDetails>>() {
+        });
+        List<ItemDetails> requestDetailsList = responseDetails.getBody();
+        return requestDetailsList;
+    }
+
+    private List<CaptureInfo> fetchCaptureInfoByItemTypes(Long orderId, ItemType[] itemTypes) {
+        Integer ordinals[] = new Integer[itemTypes.length];
+        for (int i = 0; i < itemTypes.length; i++) {
+            ordinals[i] = itemTypes[i].ordinal();
+        }
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Integer[]> httpEntity = new HttpEntity<>(ordinals, headers);
+        String format = AbstractMainController.BASE_URL.concat("%s%s").concat("/").concat(orderId + "");
+        String restUrl = String.format(format, "item-details", "/capture-info");
+        ResponseEntity<List<CaptureInfo>> responseDetails = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<CaptureInfo>>() {
+        });
+        List<CaptureInfo> requestDetailsList = responseDetails.getBody();
+        return requestDetailsList;
     }
 
 

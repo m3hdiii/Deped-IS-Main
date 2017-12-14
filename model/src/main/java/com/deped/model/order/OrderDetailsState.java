@@ -6,6 +6,7 @@ public enum OrderDetailsState {
     DISAPPROVED("Disapproved", "Disapprove"), // when order for that specific item got disapproved
     ORDERED("Ordered", "Order"), //when supply officer is ordered and waiting to receive the Item
     ARRIVED("Arrived", "Arrived"), //when order for that specific item arrived
+    PARTIALLY_ARRIVED("Partially Arrived", "Partially Arrived"), //When we have partial delivery
     NOT_ARRIVED("Not Arrived", "Not Arrived"), //when order for that specific item didn't arrived (this is a problem from supplier part)
     CANCELED("Canceled", "Cancel");
 

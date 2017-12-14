@@ -174,16 +174,16 @@
             </sec:authorize>
 
             <sec:authorize access="hasRole('ROLE_ADMIN') OR hasRole('ROLE_SUPPLY_OFFICER')">
-                <li class="has-submenu" data-toggle="tooltip" title="Package"><a href="#"><i class="fa fa-folder-open"></i>
+                <li class="has-submenu" data-toggle="tooltip" title="Unit"><a href="#"><i class="fa fa-folder-open"></i>
                     <span
-                            class="nav-label">Package</span></a>
+                            class="nav-label">Unit</span></a>
                     <ul class="list-unstyled">
                         <sec:authorize access="hasRole('ROLE_ADMIN') OR hasRole('ROLE_SUPPLY_OFFICER')">
-                            <li><a href="/pack/list">Pack List</a></li>
+                            <li><a href="/unit/list">Unit List</a></li>
                         </sec:authorize>
 
                         <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
-                            <li><a href="/pack/create">Create Pack</a></li>
+                            <li><a href="/unit/create">Create Unit</a></li>
                         </sec:authorize>
                     </ul>
                 </li>

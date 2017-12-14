@@ -40,7 +40,7 @@ public class CityRepositoryImpl implements CityRepository {
     }
 
     @Override
-    public City fetchById(Object id) {
+    public City fetchById(Long id) {
         return hibernateFacade.fetchEntityById(City.class, id);
     }
 

@@ -14,8 +14,8 @@
 
 <c:url value="/" var="routePath" scope="request"/>
 <c:import url="../../includes/head.jsp">
-    <c:param name="title" value="Pack List"/>
-    <c:param name="description" value="Pack List Page"/>
+    <c:param name="title" value="Unit List"/>
+    <c:param name="description" value="Unit List Page"/>
 </c:import>
 
 <body>
@@ -29,20 +29,17 @@
     <div class="warper container-fluid">
 
         <div class="page-header">
-            <h3>Pack
+            <h3>Unit
                 <small>for Goods, Semi-Expendable and Equipment</small>
             </h3>
         </div>
 
-        <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
-            <div class="btn-group visible-lg-inline-block">
-                <a href="/pack/create" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
-                   title="Add Package"><i class="fa fa-plus"></i></a>
-                <button type="button" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
-                        title="Delete"><i class="fa fa-trash"></i></button>
-            </div>
-        </sec:authorize>
-
+        <div class="btn-group visible-lg-inline-block">
+            <a href="/unit/create" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
+               title="Add Unit"><i class="fa fa-plus"></i></a>
+            <button type="button" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
+                    title="Delete"><i class="fa fa-trash"></i></button>
+        </div>
         <hr class="clean">
 
         <div class="panel panel-default">
@@ -67,7 +64,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${packs}" var="pack">
+                    <c:forEach items="${units}" var="unit">
                         <tr>
                             <td>
                                 <label class="cr-styled">
@@ -75,14 +72,14 @@
                                     <i class="fa"></i>
                                 </label>
                             </td>
-                            <td>${pack.name}</td>
-                            <td>${pack.description}</td>
-                                <%--<td>${pack.item}</td>--%>
+                            <td>${unit.name}</td>
+                            <td>${unit.description}</td>
                             <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
                                 <td>
                                     <div class="btn-group visible-lg-inline-block">
-                                        <a href="/pack/update/${pack.packId}" class="btn btn-purple tooltip-btn"
-                                           data-toggle="tooltip" data-placement="top" title="Edit Package"><i
+                                        <a href="<c:url value='/unit/update/${unit.name}' />"
+                                           class="btn btn-purple tooltip-btn" data-toggle="tooltip" data-placement="top"
+                                           title="Edit Unit"><i
                                                 class="fa fa-pencil"></i></a>
                                         <button type="button" class="btn btn-danger tooltip-btn" data-toggle="tooltip"
                                                 data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
@@ -98,41 +95,6 @@
         </div>
     </div>
     <!-- Warper Ends Here (working area) -->
-
-
-    <%--<div class="page-header">--%>
-    <%--<h3> Pack List </h3>--%>
-    <%--</div>--%>
-
-    <%--<div class="row">--%>
-    <%--<div class="col col-lg-3"/>--%>
-    <%--<div class="col col-lg-9">--%>
-    <%--<table class="table table-hover">--%>
-    <%--<thead>--%>
-    <%--<tr>--%>
-    <%--<th class="col-md-5">Name</th>--%>
-    <%--<th class="col-md-5">Description</th>--%>
-    <%--<th class="col-md-5">Associated Item</th>--%>
-    <%--<th class="col-md-5">Edit Section</th>--%>
-    <%--<th class="col-md-5">Remove Section</th>--%>
-
-    <%--</tr>--%>
-    <%--</thead>--%>
-    <%--<tbody>--%>
-    <%--<c:forEach items="${packs}" var="pack">--%>
-    <%--<tr>--%>
-    <%--<td class="col-md-2">${pack.name}</td>--%>
-    <%--<td class="col-md-2">${pack.description}</td>--%>
-    <%--<td class="col-md-2">${pack.item.name}</td>--%>
-    <%--<td class="col-md-2"><a href="/pack/update/${pack.packId}"><img src="${resourceURL}/images/edit.png"--%>
-    <%--width="16"/></a></td>--%>
-    <%--<td class="col-md-2"><img src="${resourceURL}/images/delete.png" width="16"/></td>--%>
-    <%--</tr>--%>
-    <%--</c:forEach>--%>
-    <%--</tbody>--%>
-    <%--</table>--%>
-    <%--</div>--%>
-    <%--</div>--%>
 
     <c:import url="../../includes/footer.jsp"/>
 </body>

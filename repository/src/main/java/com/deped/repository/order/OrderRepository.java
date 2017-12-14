@@ -6,10 +6,10 @@ import com.deped.repository.BaseRepository;
 
 import java.util.List;
 
-public interface OrderRepository extends BaseRepository<Order> {
+public interface OrderRepository extends BaseRepository<Order, Long> {
     List<Order> fetchAllByOrderState(OrderState orderState);
 
-    List<Order> fetchAllByUserId(Long userId);
+    List<Order> fetchAllByUsername(String username);
 
     List<Order> fetchAllByStates(List<OrderState> orderStates);
 }

@@ -125,6 +125,7 @@
                                     </div>
                                 </div>
                             </div>
+                            <form:hidden path="previousIdName" value="${item.name}"/>
 
                             <div class="modal-footer">
                                 <a href="/item/list" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i> Back</a>

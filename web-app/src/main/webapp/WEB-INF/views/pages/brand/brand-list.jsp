@@ -45,16 +45,12 @@
                 <!-- Brand-thumbnail-and-content-of-the-brand-thumbnail -->
                 <c:forEach items="${brands}" var="brand">
                     <div class='col-xs-4 thumbnail brand-content-thumbnail padd-md'>
-                            <%--<div class="round">
-                                <input class="pull-left" type="checkbox" id="checkbox ${brand.brandId}"/>
-                                <label for="checkbox ${brand.brandId}"></label>
-                            </div>--%>
                         <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
                             <div class="dropdown pull-right">
                                 <a href="#" data-toggle="dropdown"><i class="fa fa-ellipsis-v text-purple"></i></a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="/brand/update/${brand.brandId}" class="btn btn-purple"><i
+                                        <a href="/brand/update/${brand.name}" class="btn btn-purple"><i
                                                 class="fa fa-pencil text-primary"></i>
                                             Edit</a></li>
                                     <li><a href="#"><i class="fa fa-trash text-danger"></i> Delete</a></li>
@@ -64,16 +60,15 @@
                         <div class="item-infomation text-center">
                             <h3>
                                 <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')"><a
-                                    href="/brand/${brand.brandId}">
+                                    href="/brand/${brand.name}">
                                 </sec:authorize>
                                     ${brand.name}
                                 <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
                             </a></sec:authorize></h3>
                             <!-- <small>The .img-thumbnail class creates a thumbnail of the image:</small> -->
-                            <details>
-                                <summary class="officeAddress">Brand Name</summary>
+                            <p>
                                 <small>${brand.name}</small>
-                            </details>
+                            </p>
                             <c:choose>
                                 <c:when test="${not empty brand.logoUrl}">
                                     <img width="104px" height="76px" src="${baseUrl}${brand.logoUrl}"

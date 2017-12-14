@@ -41,7 +41,8 @@
                         <p><label class="col-sm-2"> Creation Date: </label> ${categoryInfo.creationDate}</p>
                     </div>
                     <div class="col-md-3">
-                        <a class="btn btn-info" role="button" href="/category/update/${categoryInfo.categoryId}"> Update
+                        <a class="btn btn-info" role="button"
+                           href="<c:url value='/category/update/${categoryInfo.name}' />"> Update
                             Info </a>
                     </div>
                 </div>

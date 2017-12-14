@@ -11,11 +11,11 @@ public class RequestDetailsID implements Serializable {
     private Long requestId;
 
     @Column(name = "item")
-    private Long itemId;
+    private String itemName;
 
-    public RequestDetailsID(Long requestId, Long itemId) {
+    public RequestDetailsID(Long requestId, String itemName) {
         this.requestId = requestId;
-        this.itemId = itemId;
+        this.itemName = itemName;
     }
 
     public RequestDetailsID() {
@@ -29,11 +29,11 @@ public class RequestDetailsID implements Serializable {
         this.requestId = requestId;
     }
 
-    public Long getItemId() {
-        return itemId;
+    public String getItemName() {
+        return itemName;
     }
 
-    public void setItemId(Long itemId) {
-        this.itemId = itemId;
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
     }
 }

@@ -11,8 +11,8 @@
 
 <c:url value="/" var="routePath" scope="request"/>
 <c:import url="../../includes/head.jsp">
-    <c:param name="title" value="Pack Info"/>
-    <c:param name="description" value="Pack Info Page"/>
+    <c:param name="title" value="Unit Info"/>
+    <c:param name="description" value="Unit Info Page"/>
 </c:import>
 
 <body>
@@ -24,7 +24,7 @@
     <c:import url="../../includes/top-nav.jsp"/>
 
     <div class="page-header">
-        <h3> &nbsp; Pack Info </h3>
+        <h3> &nbsp; Unit Info </h3>
     </div>
 
     <div class="row">
@@ -32,18 +32,14 @@
             <div class="panel panel-default">
                 <div class="panel-body">
                     <div class="col-md-11">
-                        <p> <label class="col-sm-2"> Name: </label> ${packInfo.name}</p>
+                        <p><label class="col-sm-2"> Name: </label> ${unitInfo.name}</p>
                     </div>
                     <div class="col-md-11">
-                        <p> <label class="col-sm-2"> Description: </label> ${packInfo.description}</p>
+                        <p><label class="col-sm-2"> Description: </label> ${unitInfo.description}</p>
                     </div>
-
-                    <div class="col-md-11">
-                        <p> <label class="col-sm-2"> Pack for the Item: </label> ${packInfo.item.name}</p>
-                    </div>
-
                     <div class="col-md-3">
-                        <button type="button" class="btn btn-green"> <a href="/pack/update/${packId}"> Update Info </a> </button>
+                        <button type="button" class="btn btn-green"><a href="<c:url value='/unit/update/${unitId}' />">
+                            Update Info </a></button>
                     </div>
                 </div>
             </div>

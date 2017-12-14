@@ -63,7 +63,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public ResponseEntity<Department> fetchById(Object id) {
+    public ResponseEntity<Department> fetchById(String id) {
         Department department = departmentRepository.fetchById(id);
         ResponseEntity<Department> responseEntity = new ResponseEntity<>(department, OK);
         return responseEntity;

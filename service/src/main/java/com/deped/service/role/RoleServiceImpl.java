@@ -62,7 +62,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public ResponseEntity<Role> fetchById(Object id) {
+    public ResponseEntity<Role> fetchById(String id) {
         Role role= roleRepository.fetchById(id);
         ResponseEntity<Role> responseEntity = new ResponseEntity<>(role, OK);
         return responseEntity;

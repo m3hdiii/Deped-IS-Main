@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-public class BrandRestController extends AbstractMainRestController<Brand, Long> {
+public class BrandRestController extends AbstractMainRestController<Brand, String> {
 
     private static final String BASE_NAME = "brand";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
@@ -56,8 +56,8 @@ public class BrandRestController extends AbstractMainRestController<Brand, Long>
 
     @Override
     @RequestMapping(value = FETCH_BY_ID_MAPPING, method = RequestMethod.GET)
-    public ResponseEntity<Brand> fetchById(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Brand> response = brandService.fetchById(aLong);
+    public ResponseEntity<Brand> fetchById(@PathVariable(ID_STRING_LITERAL) String aStr) {
+        ResponseEntity<Brand> response = brandService.fetchById(aStr);
         return response;
     }
 

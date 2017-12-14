@@ -27,7 +27,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-public class RoleController extends AbstractMainController<Role, Long> {
+public class RoleController extends AbstractMainController<Role, String> {
 
     private static final String BASE_NAME = "role";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
@@ -68,30 +68,28 @@ public class RoleController extends AbstractMainController<Role, Long> {
 
     @Override
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
-    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Role> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Role.class);
-        ModelAndView mv = renderProcessing(response, aLong, BASE_NAME, INFO_VIEW_PAGE);
+    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) String name) {
+        ResponseEntity<Role> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, name, Role.class);
+        ModelAndView mv = renderProcessing(response, name, BASE_NAME, INFO_VIEW_PAGE);
         return mv;
     }
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
-    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Role> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Role.class);
+    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) String name) {
+        ResponseEntity<Role> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(name), Role.class);
         Role role = response.getBody();
         return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, role);
     }
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute(BASE_NAME) Role entity, BindingResult bindingResult) {
+    public ModelAndView updateAction(@PathVariable(ID_STRING_LITERAL) String name, @Valid @ModelAttribute(BASE_NAME) Role entity, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
         }
-        entity.setRoleId(aLong);
-        //This is actually the update date
-        entity.setCreationDate(new Date());
+
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Role.class);
         ModelAndView mv = postUpdateProcessing(Role.class, response, UPDATE_VIEW_PAGE, BASE_NAME, entity, new Role(), bindingResult, BASE_NAME);
         return mv;

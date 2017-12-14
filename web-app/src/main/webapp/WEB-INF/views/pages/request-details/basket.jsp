@@ -133,9 +133,9 @@
                                     </td> -->
                                     <form:hidden path="map['${strKey}'].request"
                                                  value="${relatedRequest.requestId}"/>
-                                    <form:hidden path="map['${strKey}'].item" value="${requestDet.item.itemId}"/>
-                                    <form:hidden path="map['${strKey}'].requestDetailsID.itemId"
-                                                 value="${requestDet.item.itemId}"/>
+                                    <form:hidden path="map['${strKey}'].item" value="${requestDet.item.name}"/>
+                                    <form:hidden path="map['${strKey}'].requestDetailsID.itemName"
+                                                 value="${requestDet.item.name}"/>
                                     <form:hidden path="map['${strKey}'].requestDetailsID.requestId"
                                                  value="${relatedRequest.requestId}"/>
 
@@ -152,24 +152,6 @@
 
 
                             </c:forEach>
-                            <!-- <tr>
-                            <td colspan="3">
-                            <button name="actionParam" value="UPDATE_ALL">Update the List And Request More</button>
-                            </td>
-
-                            <td colspan="3">
-                            <button name="actionParam" value="DELETE_ALL">DELETE the List and Re-Request</button>
-                            </td>
-
-                            <td colspan="3">
-                            <button name="actionParam" value="SAVE_ALL">Update all and SAVE the List</button>
-                            </td>
-
-                            <td colspan="3">
-                            <button name="actionParam" value="REQUEST_ALL">Update all and Send The Request</button>
-                            </td>
-                            </tr> -->
-
                             </tbody>
                             </table>
                             </div>

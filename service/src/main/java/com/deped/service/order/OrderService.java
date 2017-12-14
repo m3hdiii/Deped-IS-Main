@@ -7,10 +7,10 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
-public interface OrderService extends BaseService<Order> {
+public interface OrderService extends BaseService<Order, Long> {
     ResponseEntity<List<Order>> fetchAllByOrderState(OrderState orderState);
 
-    ResponseEntity<List<Order>> fetchAllByUserId(Long userId);
+    ResponseEntity<List<Order>> fetchAllByUsername(String username);
 
     ResponseEntity<List<Order>> fetchAllByStates(List<OrderState> orderStates);
 }

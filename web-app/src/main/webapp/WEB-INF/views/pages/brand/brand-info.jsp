@@ -37,22 +37,9 @@
                     <div class="col-md-11">
                         <p><label class="col-sm-2"> Description: </label> ${brandInfo.description}</p>
                     </div>
-                    <div class="col-md-11">
-                        <p><label class="col-sm-2"> Contact Number: </label> ${brandInfo.contactNumber}</p>
-                    </div>
-                    <div class="col-md-11">
-                        <p><label class="col-sm-2"> Contact Number 2: </label> ${brandInfo.contactNumber2}</p>
-                    </div>
-                    <div class="col-md-11">
-                        <p><label class="col-sm-2"> Central Office Address: </label> ${brandInfo.centralOfficeAddress}
-                        </p>
-                    </div>
-                    <div class="col-md-11">
-                        <p><label class="col-sm-2"> Service Center Address: </label> ${brandInfo.serviceCenterAddress}
-                        </p>
-                    </div>
                     <div class="col-md-3">
-                        <a class="btn btn-info" role="button" href="/brand/update/${brandInfo.brandId}">Update Info </a>
+                        <a class="btn btn-info" role="button" href="<c:url value='/brand/update/${brandInfo.name}' />">Update
+                            Info </a>
                     </div>
                 </div>
             </div>

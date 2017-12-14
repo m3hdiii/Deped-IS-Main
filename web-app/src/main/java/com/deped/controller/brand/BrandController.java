@@ -23,7 +23,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
-public class BrandController extends AbstractMainController<Brand, Long> {
+public class BrandController extends AbstractMainController<Brand, String> {
 
     private static final String BASE_NAME = "brand";
 
@@ -70,22 +70,22 @@ public class BrandController extends AbstractMainController<Brand, Long> {
 
     @Override
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
-    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Brand> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Brand.class);
-        ModelAndView mv = renderProcessing(response, aLong, BASE_NAME, INFO_VIEW_PAGE);
+    public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) String strID) {
+        ResponseEntity<Brand> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(strID), Brand.class);
+        ModelAndView mv = renderProcessing(response, strID, BASE_NAME, INFO_VIEW_PAGE);
         return mv;
     }
 
     @Override
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
-    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) Long aLong) {
-        ResponseEntity<Brand> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, aLong, Brand.class);
+    public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) String aLong) {
+        ResponseEntity<Brand> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(aLong), Brand.class);
         Brand item = response.getBody();
         return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, item);
     }
 
     @RequestMapping(value = RENDER_UPDATE_MAPPING, method = POST)
-    public ModelAndView updateActionWithPicture(@RequestParam MultipartFile brandPic, @PathVariable(ID_STRING_LITERAL) Long aLong, @Valid @ModelAttribute Brand entity, BindingResult bindingResult) {
+    public ModelAndView updateActionWithPicture(@RequestParam MultipartFile brandPic, @PathVariable(ID_STRING_LITERAL) String name, @Valid @ModelAttribute Brand entity, BindingResult bindingResult) {
 
         String encodeBase64 = ControllerImageUtils.imageUploadProcessing(brandPic, bindingResult);
 
@@ -94,9 +94,7 @@ public class BrandController extends AbstractMainController<Brand, Long> {
             return mv;
         }
 
-        entity.setCreationDate(new Date());
         entity.setLogoPic(encodeBase64);
-        entity.setBrandId(aLong);
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, Brand.class);
         ModelAndView mv = postUpdateProcessing(Brand.class, response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Brand(), bindingResult, BASE_NAME);
         return mv;
@@ -135,7 +133,7 @@ public class BrandController extends AbstractMainController<Brand, Long> {
     }
 
     @Override
-    public ModelAndView updateAction(Long aLong, Brand entity, BindingResult bindingResult) {
+    public ModelAndView updateAction(String s, Brand entity, BindingResult bindingResult) {
         return null;
     }
 }
