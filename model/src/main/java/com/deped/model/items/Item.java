@@ -34,7 +34,7 @@ import static com.deped.repository.utils.ConstantValues.FETCH_ALL_ITEMS_BY_TYPE;
 public class Item implements Serializable {
 
     @Column(name = "item_name")
-    @Length(min = 2, max = 45, message = "name must be between 2 to 45 character character")
+    @Length(min = 2, max = 25, message = "name must be between 2 to 45 character character")
     @NotEmpty(message = "Name field can not be blank")
     @XSS
     @Pattern(regexp = "^[a-zA-Z0-9_ ]*$", message = "Name field must contain number, alphabet, space and underscore only")

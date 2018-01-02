@@ -38,6 +38,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 //.antMatchers("/user/update/{userId}").access("@centralizedAccessControl.checkUserChangeInfoAccess(authentication, #userId) or hasRole('ROLE_ADMIN')")
 
 
+                .antMatchers("/public/**").permitAll()
                 .antMatchers("/order/create").hasRole("SUPPLY_OFFICER")
                 .antMatchers("/order-details/create/*").hasRole("SUPPLY_OFFICER")
                 .antMatchers("/order/approval-list").hasRole("CHIEF")
@@ -112,7 +113,7 @@ public class SpringSecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .xssProtection().and()
                 .frameOptions().and()
                 .httpStrictTransportSecurity().and()
-                .cacheControl().and().referrerPolicy();
+                .referrerPolicy();
 
     }
 

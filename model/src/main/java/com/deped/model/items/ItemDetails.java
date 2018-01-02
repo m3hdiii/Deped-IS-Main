@@ -20,7 +20,7 @@ public class ItemDetails {
 
 
     @NotEmpty(message = "Office serial number field can not be blank")
-    @Length(min = 1, max = 45, message = "Office serial number filed length must be between 1 to 45 character")
+    @Length(min = 1, max = 25, message = "Office serial number filed length must be between 1 to 45 character")
     @XSS
     @Id
     @Column(name = "office_serial_number")

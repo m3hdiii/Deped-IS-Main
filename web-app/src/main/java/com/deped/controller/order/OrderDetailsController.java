@@ -3,8 +3,8 @@ package com.deped.controller.order;
 import com.deped.ResultBean;
 import com.deped.controller.AbstractMainController;
 import com.deped.controller.SharedData;
-import com.deped.form.ItemDetailsBean;
 import com.deped.form.ItemDetailsBeanForm;
+import com.deped.form.ItemDetailsForm;
 import com.deped.form.OrderDetailsForm;
 import com.deped.model.Response;
 import com.deped.model.ResponseStatus;
@@ -13,6 +13,8 @@ import com.deped.model.category.Category;
 import com.deped.model.items.Item;
 import com.deped.model.items.ItemDetails;
 import com.deped.model.items.ItemType;
+import com.deped.model.items.features.Colour;
+import com.deped.model.items.features.Material;
 import com.deped.model.order.*;
 import com.deped.model.supply.Supplier;
 import com.deped.model.unit.Unit;
@@ -431,14 +433,18 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
         List<CaptureInfo> captureInfoList = fetchCaptureInfoByItemTypes(orderId, new ItemType[]{ItemType.EQUIPMENT});
 
-        ModelAndView mav = createModelAndView(captureInfoList);
+        ModelAndView mav = createInsertDataModelAndView(captureInfoList);
 
         return mav;
     }
 
-    private ModelAndView createModelAndView(List<CaptureInfo> captureInfoList) {
-        List<ItemDetailsBean> itemDetailsBeans = new ArrayList<>();
+    @RequestMapping(value = INSERT_DATA, method = RequestMethod.POST)
+    public ModelAndView captureDataAction(@PathVariable("id") Long orderId, @Valid @ModelAttribute("itemDetailsBeanForm") ItemDetailsForm itemDetailsForm, BindingResult bindingResult) {
+        ModelAndView mav = new ModelAndView();
+        return mav;
+    }
 
+    private ModelAndView createInsertDataModelAndView(List<CaptureInfo> captureInfoList) {
         for (int i = 0; i < captureInfoList.size(); i++) {
             CaptureInfo ci = captureInfoList.get(i);
             List<ItemDetails> itemDetailsList = null;
@@ -447,13 +453,16 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
                 for (int j = 0; j < ci.getNumberOfRemainingCapturedItems(); j++) {
                     itemDetailsList.add(new ItemDetails());
                 }
+                ci.setItemDetailsList(itemDetailsList);
             }
-            itemDetailsBeans.add(new ItemDetailsBean(itemDetailsList, ci));
         }
 
-        ItemDetailsBeanForm itemDetailsBeanForm = new ItemDetailsBeanForm(itemDetailsBeans);
-
-        return new ModelAndView("pages/order-details/insert-item-info", "itemDetailsBeanForm", itemDetailsBeanForm);
+        ItemDetailsBeanForm itemDetailsBeanForm = new ItemDetailsBeanForm(captureInfoList);
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("itemDetailsBeanForm", itemDetailsBeanForm);
+        modelMap.put("colours", Colour.values());
+        modelMap.put("materials", Material.values());
+        return new ModelAndView("pages/order-details/insert-item-info", modelMap);
     }
 
     private ModelAndView insertEquipmentsInformation2(Long orderId, OrderDetailsForm orderDetailsForm, HttpSession session) {

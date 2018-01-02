@@ -1,6 +1,9 @@
 package com.deped.model.order;
 
+import com.deped.model.items.ItemDetails;
+
 import java.io.Serializable;
+import java.util.List;
 
 public class CaptureInfo implements Serializable {
 
@@ -25,6 +28,8 @@ public class CaptureInfo implements Serializable {
     private String pictureName;
 
     private Long quantityAvailableInSupplyOffice;
+
+    private List<ItemDetails> itemDetailsList;
 
 
     //    @Column(name = "order_details")
@@ -105,5 +110,13 @@ public class CaptureInfo implements Serializable {
 
     public void setQuantityAvailableInSupplyOffice(Long quantityAvailableInSupplyOffice) {
         this.quantityAvailableInSupplyOffice = quantityAvailableInSupplyOffice;
+    }
+
+    public List<ItemDetails> getItemDetailsList() {
+        return itemDetailsList;
+    }
+
+    public void setItemDetailsList(List<ItemDetails> itemDetailsList) {
+        this.itemDetailsList = itemDetailsList;
     }
 }

@@ -183,8 +183,13 @@ public class SharedData {
     }
 
     private static <T> T fetchAll(String baseUrl, ParameterizedTypeReference<T> param) {
-        RestTemplate restTemplate = new RestTemplate();
         String restUrl = String.format(AbstractMainController.FETCH_URL, baseUrl);
+        T result = fetchAllByUrl(restUrl, param);
+        return result;
+    }
+
+    public static <T> T fetchAllByUrl(String restUrl, ParameterizedTypeReference<T> param) {
+        RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity httpEntity = new HttpEntity(null, headers);

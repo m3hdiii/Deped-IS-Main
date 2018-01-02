@@ -24,6 +24,8 @@ public class RequestRestController extends AbstractMainRestController<Request, L
     private static final String FETCH_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String FETCH_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
+    private static final String APPROVED_REQUEST_MAPPING = BASE_NAME + URL_SEPARATOR + "approved-list";
+    private static final String DISAPPROVED_REQUEST_MAPPING = BASE_NAME + URL_SEPARATOR + "disapproved-list";
 
 
     @Autowired
@@ -98,6 +100,16 @@ public class RequestRestController extends AbstractMainRestController<Request, L
     @Override
     public @RequestMapping(value = CREATE_ALL_PATTERN, method = RequestMethod.POST)
     ResponseEntity<Response> createOrUpdateAll(@RequestBody Request... entities) {
+        return null;
+    }
+
+    @RequestMapping(value = APPROVED_REQUEST_MAPPING, method = RequestMethod.POST)
+    public ResponseEntity<Request> fetchApprovedRequests() {
+        return null;
+    }
+
+    @RequestMapping(value = DISAPPROVED_REQUEST_MAPPING, method = RequestMethod.POST)
+    public ResponseEntity<Request> fetchDisapprovedRequests() {
         return null;
     }
 }

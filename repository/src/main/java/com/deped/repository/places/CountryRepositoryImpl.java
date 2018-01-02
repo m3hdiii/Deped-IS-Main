@@ -6,6 +6,7 @@ import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -33,11 +34,25 @@ public class CountryRepositoryImpl implements CountryRepository {
     @Override
     public List<Country> fetchAll() {
         SessionFactory factory = HibernateFacade.getSessionFactory();
-        Session session = factory.getCurrentSession();
-        NativeQuery<Country> nativeQuery = session.createNativeQuery("SELECT * FROM country", Country.class);
-        return nativeQuery.list();
+        Session session;
+        Transaction tr = null;
+        List<Country> list = null;
 
-//        return hibernateFacade.fetchAllEntity(FETCH_ALL_COUNTRIES, Country.class);
+        try {
+            session = factory.getCurrentSession();
+            tr = session.beginTransaction();
+
+            NativeQuery<Country> nativeQuery = session.createNativeQuery("SELECT * FROM country", Country.class);
+            list = nativeQuery.list();
+            tr.commit();
+        } catch (Exception e) {
+            if (tr != null) {
+                tr.rollback();
+                e.printStackTrace();
+            }
+        }
+
+        return list;
     }
 
     @Override

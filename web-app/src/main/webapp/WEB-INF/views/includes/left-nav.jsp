@@ -108,6 +108,10 @@
                         <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
                             <li><a href="/request/release-list">Release Request</a></li>
                         </sec:authorize>
+
+                        <sec:authorize access="hasRole('ROLE_CHIEF')">
+                            <li><a href="/request/search-list">Approve List</a></li>
+                        </sec:authorize>
                     </ul>
                 </li>
             </sec:authorize>

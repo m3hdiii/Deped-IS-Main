@@ -1,10 +1,12 @@
 package com.deped.controller.request;
 
 import com.deped.controller.AbstractMainController;
+import com.deped.controller.SharedData;
 import com.deped.model.account.User;
 import com.deped.model.items.ItemType;
 import com.deped.model.request.Request;
 import com.deped.model.request.RequestStatus;
+import com.deped.model.search.RequestSearch;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -47,12 +49,14 @@ public class RequestController extends AbstractMainController<Request, Long> {
     private static final String RENDER_LIST_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String RENDER_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
+    private static final String SEARCH_REQUEST = BASE_NAME + URL_SEPARATOR + "search-list";
 
     private static final String BASE_SHOW_PAGE = JSP_PAGES + URL_SEPARATOR + BASE_NAME + URL_SEPARATOR;
     private static final String CREATE_VIEW_PAGE = BASE_SHOW_PAGE + CREATE_PAGE + BASE_NAME;
     private static final String INFO_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + INFO_PAGE;
     private static final String UPDATE_VIEW_PAGE = BASE_SHOW_PAGE + UPDATE_PAGE + BASE_NAME;
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
+    private static final String SEARCH_LIST_VIEW_PAGE = BASE_SHOW_PAGE + "search" + LIST_PAGE;
 
     private static final String OPERATION_LIST = BASE_SHOW_PAGE + BASE_NAME + "-selected" + LIST_PAGE;
 
@@ -207,6 +211,25 @@ public class RequestController extends AbstractMainController<Request, Long> {
     @RequestMapping(value = RENDER_LIST_BY_RANGE_MAPPING, method = GET)
     public ModelAndView renderListPage(@PathVariable(FROM_STRING_LITERAL) int from, @PathVariable(TO_STRING_LITERAL) int to) {
         return new ModelAndView(LIST_VIEW_PAGE);
+    }
+
+    @RequestMapping(value = SEARCH_REQUEST, method = GET)
+    public ModelAndView searchListRender(@ModelAttribute("requestSearch") RequestSearch entity, BindingResult bindingResult) {
+        return new ModelAndView(SEARCH_LIST_VIEW_PAGE);
+    }
+
+    @RequestMapping(value = SEARCH_REQUEST, method = POST)
+    public ModelAndView searchListAction(@Valid @ModelAttribute("requestSearch") RequestSearch entity, BindingResult bindingResult) {
+        String disapprovedListStr = "disapproved-list";
+        String url = BASE_URL + BASE_NAME + URL_SEPARATOR + disapprovedListStr;
+        List<Request> disapprovedList = SharedData.fetchAllByUrl(url, new ParameterizedTypeReference<List<Request>>() {
+        });
+
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("disapprovedRequests", disapprovedList);
+        ModelAndView mav = new ModelAndView(disapprovedListStr, modelMap);
+        return mav;
+
     }
 
     @Override
