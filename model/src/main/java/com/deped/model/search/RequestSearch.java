@@ -23,7 +23,7 @@ public class RequestSearch {
 
     private String adminNotice;
 
-    private ItemType itemType;
+    private List<ItemType> itemTypes;
 
     private List<Item> items;
 
@@ -45,9 +45,9 @@ public class RequestSearch {
 
     private Date releaseDateTo;
 
-    private RequestStatus requestStatus;
+    private List<RequestStatus> requestStatuses;
 
-    private RequestDetailsStatus requestDetailsStatus;
+    private List<RequestDetailsStatus> requestDetailsStatuses;
 
     private String cancellationReason;
 
@@ -58,6 +58,35 @@ public class RequestSearch {
     private List<User> issuedByUsers;
 
     private Set<RequestTracker> requestTrackers;
+
+    public RequestSearch() {
+    }
+
+    public RequestSearch(String userMessage, Date requestDateFrom, Date requestDateTo, List<User> requestedUsers, String adminNotice, List<ItemType> itemTypes, List<Item> items, Integer requestQuantityFrom, Integer requestQuantityTo, Integer approvedQuantityFrom, Integer approvedQuantityTo, Date approvalDisapprovalDateFrom, Date approvalDisapprovalDateTo, String disapprovalMessage, Date releaseDateFrom, Date releaseDateTo, List<RequestStatus> requestStatuses, List<RequestDetailsStatus> requestDetailsStatuses, String cancellationReason, String supplyOfficeRemark, List<User> consideredByUsers, List<User> issuedByUsers, Set<RequestTracker> requestTrackers) {
+        this.userMessage = userMessage;
+        this.requestDateFrom = requestDateFrom;
+        this.requestDateTo = requestDateTo;
+        this.requestedUsers = requestedUsers;
+        this.adminNotice = adminNotice;
+        this.itemTypes = itemTypes;
+        this.items = items;
+        this.requestQuantityFrom = requestQuantityFrom;
+        this.requestQuantityTo = requestQuantityTo;
+        this.approvedQuantityFrom = approvedQuantityFrom;
+        this.approvedQuantityTo = approvedQuantityTo;
+        this.approvalDisapprovalDateFrom = approvalDisapprovalDateFrom;
+        this.approvalDisapprovalDateTo = approvalDisapprovalDateTo;
+        this.disapprovalMessage = disapprovalMessage;
+        this.releaseDateFrom = releaseDateFrom;
+        this.releaseDateTo = releaseDateTo;
+        this.requestStatuses = requestStatuses;
+        this.requestDetailsStatuses = requestDetailsStatuses;
+        this.cancellationReason = cancellationReason;
+        this.supplyOfficeRemark = supplyOfficeRemark;
+        this.consideredByUsers = consideredByUsers;
+        this.issuedByUsers = issuedByUsers;
+        this.requestTrackers = requestTrackers;
+    }
 
     public String getUserMessage() {
         return userMessage;
@@ -99,14 +128,13 @@ public class RequestSearch {
         this.adminNotice = adminNotice;
     }
 
-    public ItemType getItemType() {
-        return itemType;
+    public List<ItemType> getItemTypes() {
+        return itemTypes;
     }
 
-    public void setItemType(ItemType itemType) {
-        this.itemType = itemType;
+    public void setItemTypes(List<ItemType> itemTypes) {
+        this.itemTypes = itemTypes;
     }
-
 
     public List<Item> getItems() {
         return items;
@@ -188,20 +216,20 @@ public class RequestSearch {
         this.releaseDateTo = releaseDateTo;
     }
 
-    public RequestStatus getRequestStatus() {
-        return requestStatus;
+    public List<RequestStatus> getRequestStatuses() {
+        return requestStatuses;
     }
 
-    public void setRequestStatus(RequestStatus requestStatus) {
-        this.requestStatus = requestStatus;
+    public void setRequestStatuses(List<RequestStatus> requestStatuses) {
+        this.requestStatuses = requestStatuses;
     }
 
-    public RequestDetailsStatus getRequestDetailsStatus() {
-        return requestDetailsStatus;
+    public List<RequestDetailsStatus> getRequestDetailsStatuses() {
+        return requestDetailsStatuses;
     }
 
-    public void setRequestDetailsStatus(RequestDetailsStatus requestDetailsStatus) {
-        this.requestDetailsStatus = requestDetailsStatus;
+    public void setRequestDetailsStatuses(List<RequestDetailsStatus> requestDetailsStatuses) {
+        this.requestDetailsStatuses = requestDetailsStatuses;
     }
 
     public String getCancellationReason() {

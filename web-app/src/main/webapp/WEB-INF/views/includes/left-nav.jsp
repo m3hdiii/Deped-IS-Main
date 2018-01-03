@@ -110,7 +110,7 @@
                         </sec:authorize>
 
                         <sec:authorize access="hasRole('ROLE_CHIEF')">
-                            <li><a href="/request/search-list">Approve List</a></li>
+                            <li><a href="/request/search-list">Search List</a></li>
                         </sec:authorize>
                     </ul>
                 </li>

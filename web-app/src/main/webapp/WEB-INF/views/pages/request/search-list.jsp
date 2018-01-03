@@ -34,48 +34,92 @@
 
         <div>
             <form:form commandName="requestSearch">
-                <p>User Message Contain: <form:input path="userMessage"/></p>
-                <p>Request Date From: <form:input type="date" path="requestDateFrom"/></p>
-                <p>Request Date To: <form:input type="date" path="requestDateTo"/></p>
-                <p>Requested Users:
-                    <form:checkboxes path="requestedUsers" items="">
 
-                    </form:checkboxes>
+                    <span>Request Date From: <form:input type="date" path="requestDateFrom" class="form-control"
+                                                         placeholder="request date fro"/></span>
+                <span>Request Date To: <form:input type="date" path="requestDateTo" class="form-control"
+                                                   placeholder="requested date to"/></span>
+                <span>Items:
+                    <form:select multiple="true" path="items" items="${itemList}" itemLabel="name" itemValue="name"
+                                 class="form-control"/>
+                </span>
+
+
+                <span>Requested Users:
+                    <form:select multiple="true" path="requestedUsers" items="${userList}" itemLabel="username"
+                                 itemValue="username" class="form-control" placeholder="requested users"/>
+                    </span>
+
+                <span>Considered By Users: <form:select multiple="true" path="consideredByUsers" items="${userList}"
+                                                        itemLabel="username" itemValue="username"
+                                                        class="form-control"/></span>
+                <span>Issued By Users: <form:select multiple="true" path="issuedByUsers" items="${userList}"
+                                                    itemLabel="username" itemValue="username"
+                                                    class="form-control"/></span>
+
+
+                <span>User Message Contain: <form:input path="userMessage" class="form-control"
+                                                        placeholder="user message contains"/></span>
+                <span>Admin Notice Contains: <form:input path="adminNotice" class="form-control"
+                                                         placeholder="admin notice"/></span>
+
+                <span>Disapproval Message Contains: <form:input path="disapprovalMessage" class="form-control"
+                                                                placeholder="Disapproval Message Contains"/></span>
+                <span>Cancellation Reason Contains: <form:input path="cancellationReason" class="form-control"
+                                                                placeholder="Cancellation Reason Contains"/></span>
+                <span>Supply Officer Remark Contains: <form:input path="supplyOfficeRemark" class="form-control"
+                                                                  placeholder="Supply Officer Remark Contains"/></span>
+
+
+                <span>Item Type:
+                     <form:select multiple="true" path="itemTypes" items="${itemTypes}" itemLabel="name"
+                                  class="form-control"/>
+                </span>
+
+                <span>Requested Quantity From: <form:input path="requestQuantityFrom" class="form-control"
+                                                           placeholder="Requested Quantity From"/></span>
+                <span>Requested Quantity To: <form:input path="requestQuantityTo" class="form-control"
+                                                         placeholder="Requested Quantity To"/></span>
+
+                <span>Approved Quantity From: <form:input path="approvedQuantityFrom" class="form-control"
+                                                          placeholder="Approved Quantity From"/></span>
+                <span>Approved Quantity To: <form:input path="approvedQuantityTo" class="form-control"
+                                                        placeholder="Approved Quantity To"/></span>
+                <span>Consideration Date From: <form:input type="date" path="approvalDisapprovalDateFrom"
+                                                           class="form-control"
+                                                           placeholder="Consideration Date From"/></span>
+                <span>Consideration Date To: <form:input type="date" path="approvalDisapprovalDateTo"
+                                                         class="form-control"
+                                                         placeholder="Consideration Date To"/></span>
+
+
+                <span>Release Date From: <form:input type="date" path="releaseDateFrom" class="form-control"
+                                                     placeholder="Release Date From"/></span>
+                <span>Release Date To: <form:input type="date" path="releaseDateTo" class="form-control"
+                                                   placeholder="Release Date To"/></span>
+                <span>Request Status:
+                    <form:select multiple="true" path="requestStatuses" class="form-control"
+                                 items="${statuses}" itemLabel="name"/>
+                        </span>
+
+                <span>Request Details Status:
+                <form:select multiple="true" path="requestDetailsStatuses" class="form-control"
+                             items="${detailsStatuses}" itemLabel="name"/>
+
+                </span>
+
+
+                <p>
+                    <button type="submit" class="btn btn-primary">Search</button>
                 </p>
-                <p>Admin Notice Contains: <form:input path="adminNotice"/></p>
-                <p>Item Type:
-                    <form:select path="itemType" items="">
-
-                    </form:select>
-                </p>
-                <p>Items:
-                    <form:select path="items" items="">
-
-                    </form:select>
-                </p>
-                <p>Requested Quantity From: <form:input path="requestQuantityFrom"/></p>
-                <p>Requested Quantity To: <form:input path="requestQuantityTo"/></p>
-
-                <p>Approved Quantity From: <form:input path="approvedQuantityFrom"/></p>
-                <p>Approved Quantity To: <form:input path="approvedQuantityTo"/></p>
-                <p>Consideration Date From: <form:input path="approvalDisapprovalDateFrom"/></p>
-                <p>Consideration Date To: <form:input path="approvalDisapprovalDateTo"/></p>
-
-                <p>Disapproval Message Contains: <form:input path="disapprovalMessage"/></p>
-
-                <p>Release Date From: <form:input path="releaseDateFrom"/></p>
-                <p>Release Date To: <form:input path="releaseDateTo"/></p>
-                <p>Request Status: <form:input path="requestStatus"/></p>
-                <p>Request Details Status: <form:input path="requestDetailsStatus"/></p>
-                <p>User Message Contain: <form:input path="cancellationReason"/></p>
-                <p>User Message Contain: <form:input path="supplyOfficeRemark"/></p>
-                <p>User Message Contain: <form:input path="consideredByUsers"/></p>
-                <p>User Message Contain: <form:input path="issuedByUsers"/></p>
             </form:form>
 
+            <br/>
+            <br/>
+            <br/>
         </div>
 
-        <div class="row item-body">
+        <%--<div class="row item-body">
 
             <c:forEach items="${requests}" var="request" varStatus="loop">
                 <form:form class="panel panel-warning col-md-4 no-padd">
@@ -103,41 +147,41 @@
                                 </li>
                             </ul>
                         </nav>
-                            <%--<c:forEach items="${requestDetails}">--%>
-                            <%--<div class="panel panel-default no-padd col-md-12">--%>
-                            <%--<div class="panel-body">--%>
-                            <%--<label class="label label-info pull-left padd-xs text-right">HBW Ballpen</label>--%>
-                            <%--<p class="pull-right"><label>QTY: </label> 3 box</p>--%>
-                            <%--<div class="request-info col-md-12">--%>
+                            &lt;%&ndash;<c:forEach items="${requestDetails}">&ndash;%&gt;
+                            &lt;%&ndash;<div class="panel panel-default no-padd col-md-12">&ndash;%&gt;
+                            &lt;%&ndash;<div class="panel-body">&ndash;%&gt;
+                            &lt;%&ndash;<label class="label label-info pull-left padd-xs text-right">HBW Ballpen</label>&ndash;%&gt;
+                            &lt;%&ndash;<p class="pull-right"><label>QTY: </label> 3 box</p>&ndash;%&gt;
+                            &lt;%&ndash;<div class="request-info col-md-12">&ndash;%&gt;
 
-                            <%--<p>This Ballpen is for teachers of Boys High Baguio.</p>--%>
-                            <%--<div class="req-footer margn-t-sm">--%>
-                            <%--<p class="pull-left margn-t-xs text-gray">12/04/2017 11:21:00</p>--%>
-                            <%--<div class="btn-group pull-right">--%>
-                            <%--<button class="btn btn-danger btn-sm"><i class="fa fa-close"></i></button>--%>
-                            <%--<button class="btn btn-success btn-sm"><i class="fa fa-check"></i> </button>--%>
-                            <%--</div>--%>
-                            <%--</div>--%>
+                            &lt;%&ndash;<p>This Ballpen is for teachers of Boys High Baguio.</p>&ndash;%&gt;
+                            &lt;%&ndash;<div class="req-footer margn-t-sm">&ndash;%&gt;
+                            &lt;%&ndash;<p class="pull-left margn-t-xs text-gray">12/04/2017 11:21:00</p>&ndash;%&gt;
+                            &lt;%&ndash;<div class="btn-group pull-right">&ndash;%&gt;
+                            &lt;%&ndash;<button class="btn btn-danger btn-sm"><i class="fa fa-close"></i></button>&ndash;%&gt;
+                            &lt;%&ndash;<button class="btn btn-success btn-sm"><i class="fa fa-check"></i> </button>&ndash;%&gt;
+                            &lt;%&ndash;</div>&ndash;%&gt;
+                            &lt;%&ndash;</div>&ndash;%&gt;
 
-                            <%--</div>--%>
-                            <%--</div>--%>
-                            <%--</div>--%>
-                            <%--</c:forEach>--%>
+                            &lt;%&ndash;</div>&ndash;%&gt;
+                            &lt;%&ndash;</div>&ndash;%&gt;
+                            &lt;%&ndash;</div>&ndash;%&gt;
+                            &lt;%&ndash;</c:forEach>&ndash;%&gt;
 
 
                     </div>
                 </form:form>
             </c:forEach>
 
-            <%--
+            &lt;%&ndash;
                 <a href="/item/${item.itemId}">
                 ${item.functionType}
                 ${item.threshold}
                 <a href="/item/update/${item.itemId}"><img src="${resourceURL}/images/edit.png" width="16"/></a>
                 <img src="${resourceURL}/images/delete.png" width="16"/>
-            --%>
+            &ndash;%&gt;
 
-        </div>
+        </div>--%>
         <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>

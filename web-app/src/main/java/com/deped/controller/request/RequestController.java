@@ -3,10 +3,13 @@ package com.deped.controller.request;
 import com.deped.controller.AbstractMainController;
 import com.deped.controller.SharedData;
 import com.deped.model.account.User;
+import com.deped.model.items.Item;
 import com.deped.model.items.ItemType;
 import com.deped.model.request.Request;
+import com.deped.model.request.RequestDetailsStatus;
 import com.deped.model.request.RequestStatus;
 import com.deped.model.search.RequestSearch;
+import com.deped.utils.SystemUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -25,10 +28,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
 import java.beans.PropertyEditorSupport;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -215,14 +215,22 @@ public class RequestController extends AbstractMainController<Request, Long> {
 
     @RequestMapping(value = SEARCH_REQUEST, method = GET)
     public ModelAndView searchListRender(@ModelAttribute("requestSearch") RequestSearch entity, BindingResult bindingResult) {
-        return new ModelAndView(SEARCH_LIST_VIEW_PAGE);
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("itemTypes", ItemType.values());
+        modelMap.put("itemList", SharedData.getItems(false));
+        modelMap.put("userList", SharedData.getUsers(false));
+        modelMap.put("statuses", RequestStatus.values());
+        modelMap.put("detailsStatuses", RequestDetailsStatus.values());
+
+        ModelAndView mav = new ModelAndView(SEARCH_LIST_VIEW_PAGE, modelMap);
+        return mav;
     }
 
     @RequestMapping(value = SEARCH_REQUEST, method = POST)
     public ModelAndView searchListAction(@Valid @ModelAttribute("requestSearch") RequestSearch entity, BindingResult bindingResult) {
-        String disapprovedListStr = "disapproved-list";
+        String disapprovedListStr = "search-list";
         String url = BASE_URL + BASE_NAME + URL_SEPARATOR + disapprovedListStr;
-        List<Request> disapprovedList = SharedData.fetchAllByUrl(url, new ParameterizedTypeReference<List<Request>>() {
+        List<Request> disapprovedList = SharedData.fetchAllByUrl(entity, url, new ParameterizedTypeReference<List<Request>>() {
         });
 
         Map<String, Object> modelMap = new HashMap<>();
@@ -232,6 +240,7 @@ public class RequestController extends AbstractMainController<Request, Long> {
 
     }
 
+
     @Override
     @RequestMapping(value = REMOVE_MAPPING, method = POST)
     public ModelAndView removeAction(@Valid Request... entity) {
@@ -240,12 +249,163 @@ public class RequestController extends AbstractMainController<Request, Long> {
 
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
-        binder.registerCustomEditor(Date.class, "requiredDate", new PropertyEditorSupport() {
+        binder.registerCustomEditor(Date.class, "requestDateFrom", new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
                 setValue(getDate(text));
             }
         });
+
+        binder.registerCustomEditor(Date.class, "requestDateTo", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
+            }
+        });
+
+        binder.registerCustomEditor(List.class, "items", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                List<Item> itemList = new ArrayList<>();
+                String[] itemsStr = text.split(",");
+                for (String itStr : itemsStr) {
+                    Item discoveredItem = fetchItemByStringId(itStr);
+                    if (discoveredItem != null)
+                        itemList.add(discoveredItem);
+                }
+
+                setValue(itemList);
+            }
+        });
+
+        binder.registerCustomEditor(List.class, "requestStatuses", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                List<RequestStatus> statusList = new ArrayList<>();
+                String[] statusStr = text.split(",");
+                for (String itStr : statusStr) {
+                    try {
+                        RequestStatus discoveredStatus = RequestStatus.valueOf(itStr);
+                        if (discoveredStatus != null)
+                            statusList.add(discoveredStatus);
+
+                    } catch (IllegalArgumentException e) {
+                    }
+                }
+
+                setValue(statusList);
+            }
+        });
+
+
+        binder.registerCustomEditor(List.class, "requestDetailsStatuses", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                List<RequestDetailsStatus> statusList = new ArrayList<>();
+                String[] statusDetailsStr = text.split(",");
+                for (String itStr : statusDetailsStr) {
+                    try {
+                        RequestDetailsStatus discoveredStatus = RequestDetailsStatus.valueOf(itStr);
+                        if (discoveredStatus != null)
+                            statusList.add(discoveredStatus);
+                    } catch (IllegalArgumentException e) {
+                    }
+                }
+
+                setValue(statusList);
+            }
+        });
+
+        binder.registerCustomEditor(List.class, "itemTypes", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                List<ItemType> statusList = new ArrayList<>();
+                String[] itemTypeStr = text.split(",");
+                for (String itStr : itemTypeStr) {
+                    try {
+                        ItemType itemType = ItemType.valueOf(itStr);
+                        if (itemType != null)
+                            statusList.add(itemType);
+
+                    } catch (IllegalArgumentException e) {
+                    }
+                }
+
+                setValue(statusList);
+            }
+        });
+
+
+        binder.registerCustomEditor(List.class, "requestedUsers", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(fetchUser(text));
+            }
+        });
+
+        binder.registerCustomEditor(List.class, "consideredByUsers", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(fetchUser(text));
+            }
+        });
+
+        binder.registerCustomEditor(List.class, "issuedByUsers", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(fetchUser(text));
+            }
+        });
+
+        binder.registerCustomEditor(Date.class, "approvalDisapprovalDateFrom", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
+            }
+        });
+
+        binder.registerCustomEditor(Date.class, "approvalDisapprovalDateTo", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
+            }
+        });
+
+        binder.registerCustomEditor(Date.class, "releaseDateFrom", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
+            }
+        });
+
+        binder.registerCustomEditor(Date.class, "releaseDateTo", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
+            }
+        });
+
+//        binder.registerCustomEditor(Item.class, "items", new PropertyEditorSupport() {
+//            @Override
+//            public void setAsText(String text) {
+//                System.out.println(text);
+//            }
+//        });
+    }
+
+    public List<User> fetchUser(String text) {
+        List<User> userList = new ArrayList<>();
+        String[] usersStr = text.split(",");
+
+        for (String itStr : usersStr) {
+            User dummy = new User();
+            dummy.setUsername(itStr);
+            User discoveredUser = SystemUtils.findElementInList(SharedData.getUsers(false), dummy);
+            if (discoveredUser != null)
+                userList.add(discoveredUser);
+        }
+
+        return userList;
     }
 
     @Override

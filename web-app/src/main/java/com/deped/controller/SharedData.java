@@ -1,5 +1,6 @@
 package com.deped.controller;
 
+import com.deped.model.account.User;
 import com.deped.model.brand.Brand;
 import com.deped.model.category.Category;
 import com.deped.model.config.client.ClientConfig;
@@ -35,6 +36,7 @@ public class SharedData {
     private static List<Supplier> suppliers;
     private static String restBaseUrl;
     private static List<Brand> brands;
+    private static List<User> users;
 
 
     public static synchronized void setRestBaseUrl(String restBaseUrl) {
@@ -64,6 +66,15 @@ public class SharedData {
             });
         }
         return items;
+    }
+
+
+    public static synchronized List<User> getUsers(boolean dataIsUpdated) {
+        if (users == null || dataIsUpdated) {
+            users = fetchAll("user", new ParameterizedTypeReference<List<User>>() {
+            });
+        }
+        return users;
     }
 
     public static synchronized List<Item> getGoods(boolean dataIsUpdated) {
@@ -189,13 +200,18 @@ public class SharedData {
     }
 
     public static <T> T fetchAllByUrl(String restUrl, ParameterizedTypeReference<T> param) {
+        return fetchAllByUrl(null, restUrl, param);
+    }
+
+    public static <T> T fetchAllByUrl(Object body, String restUrl, ParameterizedTypeReference<T> param) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity httpEntity = new HttpEntity(null, headers);
+        HttpEntity httpEntity = new HttpEntity(body, headers);
         ResponseEntity<T> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, param);
 
         T list = response.getBody();
         return list;
     }
+
 }

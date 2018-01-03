@@ -334,6 +334,10 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
             SharedData.getUnits(isUpdated);
         }
 
+        if (entityClass == User.class) {
+            SharedData.getUsers(isUpdated);
+        }
+
         if (entityClass == Category.class) {
             SharedData.getCategories(isUpdated);
         }

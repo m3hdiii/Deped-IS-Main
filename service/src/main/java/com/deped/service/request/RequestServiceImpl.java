@@ -5,6 +5,7 @@ import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.request.Request;
 import com.deped.model.request.RequestStatus;
+import com.deped.model.search.RequestSearch;
 import com.deped.repository.request.RequestRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
@@ -99,6 +100,13 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public ResponseEntity<List<Request>> fetchAllByUsername(String username) {
         List<Request> requests = requestRepository.fetchAllByUsername(username);
+        ResponseEntity<List<Request>> responseEntity = new ResponseEntity<>(requests, OK);
+        return responseEntity;
+    }
+
+    @Override
+    public ResponseEntity<List<Request>> requestSearch(RequestSearch requestSearch) {
+        List<Request> requests = requestRepository.requestSearch(requestSearch);
         ResponseEntity<List<Request>> responseEntity = new ResponseEntity<>(requests, OK);
         return responseEntity;
     }
