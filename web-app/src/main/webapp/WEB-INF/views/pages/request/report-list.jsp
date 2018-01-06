@@ -33,93 +33,144 @@
         </div>
 
         <div>
-            <form:form commandName="requestSearch">
+            <form:form cssClass="form-inline" commandName="requestSearch">
+                <table class="table-bordered">
+                    <tbody>
+                        <tr>
+                            <td style="padding: 10px;">
+                                <div class="form-group">
+                                    <label for="requestDateForm">Request Date From: </label><form:input type="date" id="requestDateForm" path="requestDateFrom" cssClass="form-control"
+                                                                                                        placeholder="request date fro"/>
+                                </div>
+                            </td>
+                            <td style="padding: 10px;">
+                                <div class="form-group">
+                                    <label for="requestDateTo">Request Date To: </label><form:input type="date" path="requestDateTo" cssClass="form-control"
+                                                                                                    placeholder="requested date to"/>
+                                </div>
+                            </td>
+                            <td style="padding: 10px;">
+                                <div class="form-group">
+                                    <label for="items">Items:</label>
+                                    <form:select multiple="true" id="items" path="items" items="${itemList}" itemLabel="name" itemValue="name"
+                                                 cssClass="form-control"/>
+                                </div>
+                            </td>
+                            <td style="padding: 10px;">
+                                <div class="form-group">
+                                    <label for="requestedUsers">Requested Users:</label>
+                                    <form:select multiple="true" path="requestedUsers" id="requestedUsers" items="${userList}" itemLabel="username"
+                                                 itemValue="username" cssClass="form-control" placeholder="requested users"/>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;">
+                                <div class="form-group">
+                                    <label for="consideredByUsers">Considered By Users: </label><form:select multiple="true" id="consideredByUsers" path="consideredByUsers" items="${userList}"
+                                                                                                             itemLabel="username" itemValue="username"
+                                                                                                             cssClass="form-control"/>
+                                </div>
+                            </td>
+                            <td style="padding: 10px;">
+                                <label for="issuedByUsers">Issued By Users: </label><form:select multiple="true" id="issuedByUsers" path="issuedByUsers" items="${userList}"
+                                                                                                 itemLabel="username" itemValue="username"
+                                                                                                 cssClass="form-control"/>
+                            </td>
+                            <td style="padding: 10px;">
+                                <label for="userMessage">User Message Contain: </label><form:input path="userMessage" id="userMessage" cssClass="form-control"
+                                                                        placeholder="user message contains"/>
+                            </td>
+                            <td style="padding: 10px;">
+                                <label for="adminNotice">Admin Notice Contains: <form:input path="adminNotice" id="adminNotice" cssClass="form-control"
+                                                                         placeholder="admin notice"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;">
+                                <label for="disapprovalMessage">Disapproval Message Contains: </label><form:input path="disapprovalMessage" id="disapprovalMessage" cssClass="form-control"
+                                                                                placeholder="Disapproval Message Contains"/>
+                            </td>
+                            <td style="padding: 10px;">
+                                <label for="cancellationReason">Cancellation Reason Contains: </label><form:input path="cancellationReason" id="cancellationReason" cssClass="form-control"
+                                                                                placeholder="Cancellation Reason Contains"/>
+                            </td>
+                            <td style="padding: 10px;">
+                                <label for="supplyOfficeRemark">Supply Officer Remark Contains: </label><form:input path="supplyOfficeRemark" id="supplyOfficeRemark" cssClass="form-control"
+                                                                                  placeholder="Supply Officer Remark Contains"/>
+                            </td>
+                            <td style="padding: 10px;">
+                                <label>Item Type:</label>
+                                     <form:select multiple="true" path="itemTypes" items="${itemTypes}" itemLabel="name"
+                                                  class="form-control"/>
 
-                    <span>Request Date From: <form:input type="date" path="requestDateFrom" class="form-control"
-                                                         placeholder="request date fro"/></span>
-                <span>Request Date To: <form:input type="date" path="requestDateTo" class="form-control"
-                                                   placeholder="requested date to"/></span>
-                <span>Items:
-                    <form:select multiple="true" path="items" items="${itemList}" itemLabel="name" itemValue="name"
-                                 class="form-control"/>
-                </span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;">
+                                <label for="requestQuantityFrom">Requested Quantity From: </label><form:input path="requestQuantityFrom" id="requestQuantityFrom" cssClass="form-control"
+                                                                           placeholder="Requested Quantity From"/>
+                            </td>
+                            <td style="padding: 10px;">
+                                <label for="requestQuantityTo">Requested Quantity To: </label><form:input path="requestQuantityTo" id="requestQuantityTo" cssClass="form-control"
+                                                                         placeholder="Requested Quantity To"/>
+                            </td>
+                            <td style="padding: 10px;">
+                                <label for="approvedQuantityFrom">Approved Quantity From: </label><form:input path="approvedQuantityFrom" id="approvedQuantityFrom" cssClass="form-control"
+                                                                          placeholder="Approved Quantity From"/>
+                            </td>
+                            <td style="padding: 10px;">
+                                <label for="approvedQuantityTo">Approved Quantity To: </label><form:input path="approvedQuantityTo" id="approvedQuantityTo" cssClass="form-control"
+                                                                        placeholder="Approved Quantity To"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;">
+                                <label for="approvalDisapprovalDateFrom"></label>Consideration Date From: <form:input type="date" path="approvalDisapprovalDateFrom"
+                                                                           class="form-control" id="approvalDisapprovalDateFrom"
+                                                                           placeholder="Consideration Date From"/>
+                            </td>
+                            <td style="padding: 10px;">
+                                <label for="approvalDisapprovalDateTo">Consideration Date To: </label><form:input type="date" path="approvalDisapprovalDateTo"
+                                                                         class="form-control" id="approvalDisapprovalDateTo"
+                                                                         placeholder="Consideration Date To"/>
+                            </td>
+                            <td style="padding: 10px;">
+                                <label for="releaseDateFrom">Release Date From: </label><form:input type="date" id="releaseDateFrom" path="releaseDateFrom" class="form-control"
+                                                                     placeholder="Release Date From"/>
+                            </td>
+                            <td style="padding: 10px;">
+                                <label for="releaseDateTo">Release Date To: </label><form:input type="date" path="releaseDateTo" id="releaseDateTo" class="form-control"
+                                                                   placeholder="Release Date To"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px;">
+                                <label for="requestStatuses">Request Status: </label>
+                                    <form:select multiple="true" path="requestStatuses" id="requestStatuses" class="form-control"
+                                                 items="${statuses}" itemLabel="name"/>
+                            </td>
+                            <td style="padding: 10px;">
+                                <label for="requestDetailsStatuses">Request Details Status: </label>
+                                <form:select multiple="true" path="requestDetailsStatuses" id="requestDetailsStatuses" class="form-control"
+                                             items="${detailsStatuses}" itemLabel="name"/>
+                            </td>
+                            <td style="padding: 10px;">
+                                <button name="web" value="WEB" class="btn btn-primary"
+                                        data-toggle="tooltip"
+                                        title="Save the list">Report Web
+                                </button>
+                            </td>
+                            <td style="padding: 10px;">
+                                <button name="xml" value="XML" class="btn btn-success"
+                                        data-toggle="tooltip"
+                                        title="Send the Request">Report XMl
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
-
-                <span>Requested Users:
-                    <form:select multiple="true" path="requestedUsers" items="${userList}" itemLabel="username"
-                                 itemValue="username" class="form-control" placeholder="requested users"/>
-                    </span>
-
-                <span>Considered By Users: <form:select multiple="true" path="consideredByUsers" items="${userList}"
-                                                        itemLabel="username" itemValue="username"
-                                                        class="form-control"/></span>
-                <span>Issued By Users: <form:select multiple="true" path="issuedByUsers" items="${userList}"
-                                                    itemLabel="username" itemValue="username"
-                                                    class="form-control"/></span>
-
-
-                <span>User Message Contain: <form:input path="userMessage" class="form-control"
-                                                        placeholder="user message contains"/></span>
-                <span>Admin Notice Contains: <form:input path="adminNotice" class="form-control"
-                                                         placeholder="admin notice"/></span>
-
-                <span>Disapproval Message Contains: <form:input path="disapprovalMessage" class="form-control"
-                                                                placeholder="Disapproval Message Contains"/></span>
-                <span>Cancellation Reason Contains: <form:input path="cancellationReason" class="form-control"
-                                                                placeholder="Cancellation Reason Contains"/></span>
-                <span>Supply Officer Remark Contains: <form:input path="supplyOfficeRemark" class="form-control"
-                                                                  placeholder="Supply Officer Remark Contains"/></span>
-
-
-                <span>Item Type:
-                     <form:select multiple="true" path="itemTypes" items="${itemTypes}" itemLabel="name"
-                                  class="form-control"/>
-                </span>
-
-                <span>Requested Quantity From: <form:input path="requestQuantityFrom" class="form-control"
-                                                           placeholder="Requested Quantity From"/></span>
-                <span>Requested Quantity To: <form:input path="requestQuantityTo" class="form-control"
-                                                         placeholder="Requested Quantity To"/></span>
-
-                <span>Approved Quantity From: <form:input path="approvedQuantityFrom" class="form-control"
-                                                          placeholder="Approved Quantity From"/></span>
-                <span>Approved Quantity To: <form:input path="approvedQuantityTo" class="form-control"
-                                                        placeholder="Approved Quantity To"/></span>
-                <span>Consideration Date From: <form:input type="date" path="approvalDisapprovalDateFrom"
-                                                           class="form-control"
-                                                           placeholder="Consideration Date From"/></span>
-                <span>Consideration Date To: <form:input type="date" path="approvalDisapprovalDateTo"
-                                                         class="form-control"
-                                                         placeholder="Consideration Date To"/></span>
-
-
-                <span>Release Date From: <form:input type="date" path="releaseDateFrom" class="form-control"
-                                                     placeholder="Release Date From"/></span>
-                <span>Release Date To: <form:input type="date" path="releaseDateTo" class="form-control"
-                                                   placeholder="Release Date To"/></span>
-                <span>Request Status:
-                    <form:select multiple="true" path="requestStatuses" class="form-control"
-                                 items="${statuses}" itemLabel="name"/>
-                        </span>
-
-                <span>Request Details Status:
-                <form:select multiple="true" path="requestDetailsStatuses" class="form-control"
-                             items="${detailsStatuses}" itemLabel="name"/>
-
-                </span>
-
-
-                <p>
-                    <button name="web" value="WEB" class="btn btn-primary"
-                            data-toggle="tooltip"
-                            title="Save the list">Report Web
-                    </button>
-
-                    <button name="xml" value="XML" class="btn btn-success"
-                            data-toggle="tooltip"
-                            title="Send the Request">Report XMl
-                    </button>
-                </p>
             </form:form>
 
             <br/>
