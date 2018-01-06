@@ -166,10 +166,12 @@
                                                                     src="${resourceURL}/images/duplicate.png"/></a></td>
                                                             <td><input value="${capInfo.itemName}" disabled/></td>
                                                             <td>
-                                                                <input id="officeSerialNo-${loop.index}"
-                                                                       placeholder="constant part"/>
-                                                                <input id="officeSerialNoChanging-${loop.index}"
-                                                                />
+                                                                <div class="input-group">
+                                                                    <input id="officeSerialNo-${loop.index}"
+                                                                                                placeholder="constant part" class="form-control"/>
+                                                                    <span class="input-group-addon"> - </span>
+                                                                    <input id="officeSerialNoChanging-${loop.index}" class="form-control"/>
+                                                                </div>
                                                             </td>
                                                             <td>
                                                                 <select class="form-control" id="colour-${loop.index}">
