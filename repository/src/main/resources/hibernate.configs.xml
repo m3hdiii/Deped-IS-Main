@@ -20,7 +20,7 @@
         <property name="hibernate.connection.username">
             root
         </property>
-        <property name="hibernate.connection.password"></property>
+        <property name="hibernate.connection.password">mysqlmysql</property>
 
         <property name="connection.pool_size">1000</property>
         <!--<property name="hibernate.enable_lazy_load_no_trans">true</property>-->

@@ -11,5 +11,5 @@ import java.util.List;
 public interface ItemDetailsService extends BaseService<ItemDetails, String> {
     ResponseEntity<List<ItemDetails>> fetchAllByOrderIdAndItemType(Long orderId, ItemType[] itemTypes);
 
-    ResponseEntity<List<CaptureInfo>> fetchToBeCaptureInfo(Long orderId, ItemType[] itemTypes);
+    ResponseEntity<List<CaptureInfo>> fetchToBeCaptureInfo(ItemType[] itemTypes);
 }

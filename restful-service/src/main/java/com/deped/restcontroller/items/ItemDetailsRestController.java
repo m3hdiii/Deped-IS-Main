@@ -77,13 +77,13 @@ public class ItemDetailsRestController extends AbstractMainRestController<ItemDe
         return response;
     }
 
-    @RequestMapping(value = "item-details/capture-info/{id}", method = RequestMethod.POST)
-    public ResponseEntity<List<CaptureInfo>> fetchToBeCaptureInfo(@PathVariable(ID_STRING_LITERAL) Long id, @RequestBody Integer... itemTypeOrdinals) {
+    @RequestMapping(value = "item-details/capture-info", method = RequestMethod.POST)
+    public ResponseEntity<List<CaptureInfo>> fetchToBeCaptureInfo(@RequestBody Integer... itemTypeOrdinals) {
         ItemType[] itemTypes = new ItemType[itemTypeOrdinals.length];
         for (int i = 0; i < itemTypeOrdinals.length; i++) {
             itemTypes[i] = ItemType.values()[itemTypeOrdinals[i]];
         }
-        ResponseEntity<List<CaptureInfo>> response = itemDetailsService.fetchToBeCaptureInfo(id, itemTypes);
+        ResponseEntity<List<CaptureInfo>> response = itemDetailsService.fetchToBeCaptureInfo(itemTypes);
         return response;
 
     }

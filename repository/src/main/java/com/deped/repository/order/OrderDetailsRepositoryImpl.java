@@ -201,14 +201,23 @@ public class OrderDetailsRepositoryImpl implements OrderDetailsRepository {
                 }
             }
 
-            String updateItemQuantityQuery = "UPDATE item SET quantity = quantity + :newQuantity WHERE item_id = :itemId";
-            if (orderDetailsState == OrderDetailsState.ARRIVED) {
+            String updateItemQuantityQuery = "UPDATE item SET quantity = quantity + :newQuantity WHERE item_name = :itemId";
+            String updateOrderDetailsArrivedQuantityQuery = "UPDATE order_details SET total_quantity_arrived_no = total_quantity_arrived_no + :newQuantity WHERE item_item_name = :itemId AND category_category_name = :categoryName AND order_order_id = :orderId";
+            if (orderDetailsState == OrderDetailsState.ARRIVED || orderDetailsState == OrderDetailsState.PARTIALLY_ARRIVED) {
                 for (OrderDetails od : entities) {
                     if (od.getOrderDetailsState() == OrderDetailsState.ARRIVED) {
                         NativeQuery<Item> nativeQuery = hibernateSession.createNativeQuery(updateItemQuantityQuery, Item.class);
                         nativeQuery.setParameter("newQuantity", od.getTotalQuantityArrivedNo());
                         nativeQuery.setParameter("itemId", od.getOrderDetailsID().getItemName());
                         nativeQuery.executeUpdate();
+
+                        NativeQuery<OrderDetails> nativeQuery2 = hibernateSession.createNativeQuery(updateOrderDetailsArrivedQuantityQuery, OrderDetails.class);
+                        nativeQuery2.setParameter("newQuantity", od.getTotalQuantityArrivedNo());
+                        nativeQuery2.setParameter("itemId", od.getOrderDetailsID().getItemName());
+                        nativeQuery2.setParameter("categoryName", od.getOrderDetailsID().getCategoryName());
+                        nativeQuery2.setParameter("orderId", od.getOrderDetailsID().getOrderId());
+                        nativeQuery2.executeUpdate();
+
                     }
                 }
             }

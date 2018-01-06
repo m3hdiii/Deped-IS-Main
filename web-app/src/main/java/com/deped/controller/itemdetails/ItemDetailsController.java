@@ -1,30 +1,32 @@
 package com.deped.controller.itemdetails;
 
 import com.deped.controller.AbstractMainController;
+import com.deped.form.ItemDetailsBeanForm;
 import com.deped.form.ItemDetailsForm;
+import com.deped.form.OrderDetailsForm;
 import com.deped.model.Response;
 import com.deped.model.items.Item;
 import com.deped.model.items.ItemDetails;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import com.deped.model.items.ItemType;
+import com.deped.model.items.features.Colour;
+import com.deped.model.items.features.Material;
+import com.deped.model.order.CaptureInfo;
+import com.deped.model.order.OrderDetails;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.*;
 import java.beans.PropertyEditorSupport;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -32,7 +34,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @Controller
 public class ItemDetailsController extends AbstractMainController<ItemDetails, String> {
 
-    private static final String BASE_NAME = "item-info";
+    private static final String BASE_NAME = "item-details";
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
     private static final String RENDER_UPDATE_MAPPING = BASE_NAME + RENDER_UPDATE_PATTERN;
@@ -46,6 +48,7 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
     private static final String INFO_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + INFO_PAGE;
     private static final String UPDATE_VIEW_PAGE = BASE_SHOW_PAGE + UPDATE_PAGE + BASE_NAME;
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
+    private static final String INSERT_DATA = BASE_NAME + URL_SEPARATOR + "insert-data";
 
 
     @Override
@@ -168,6 +171,82 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
     @Override
     @RequestMapping(value = REMOVE_MAPPING, method = POST)
     public ModelAndView removeAction(@Valid ItemDetails... entity) {
+        return null;
+    }
+
+
+    @RequestMapping(value = INSERT_DATA, method = RequestMethod.GET)
+    public ModelAndView captureData() {
+
+        List<CaptureInfo> captureInfoList = fetchCaptureInfoByItemTypes(new ItemType[]{ItemType.EQUIPMENT});
+
+        ModelAndView mav = createInsertDataModelAndView(captureInfoList);
+
+        return mav;
+    }
+
+    @RequestMapping(value = INSERT_DATA, method = RequestMethod.POST)
+    public ModelAndView captureDataAction(@PathVariable("id") Long orderId, @Valid @ModelAttribute("itemDetailsBeanForm") ItemDetailsForm itemDetailsForm, BindingResult bindingResult) {
+        ModelAndView mav = new ModelAndView();
+        return mav;
+    }
+
+    private List<CaptureInfo> fetchCaptureInfoByItemTypes(ItemType[] itemTypes) {
+        Integer ordinals[] = new Integer[itemTypes.length];
+        for (int i = 0; i < itemTypes.length; i++) {
+            ordinals[i] = itemTypes[i].ordinal();
+        }
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Integer[]> httpEntity = new HttpEntity<>(ordinals, headers);
+        String format = AbstractMainController.BASE_URL.concat("%s%s");
+        String restUrl = String.format(format, "item-details", "/capture-info");
+        ResponseEntity<List<CaptureInfo>> responseDetails = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<CaptureInfo>>() {
+        });
+        List<CaptureInfo> requestDetailsList = responseDetails.getBody();
+        return requestDetailsList;
+    }
+
+    private ModelAndView createInsertDataModelAndView(List<CaptureInfo> captureInfoList) {
+        for (int i = 0; i < captureInfoList.size(); i++) {
+            CaptureInfo ci = captureInfoList.get(i);
+            List<ItemDetails> itemDetailsList = null;
+            if (ci.getNumberOfRemainingCapturedItems() > 0) {
+                itemDetailsList = new ArrayList<>();
+                for (int j = 0; j < ci.getNumberOfRemainingCapturedItems(); j++) {
+                    itemDetailsList.add(new ItemDetails());
+                }
+                ci.setItemDetailsList(itemDetailsList);
+            }
+        }
+
+        ItemDetailsBeanForm itemDetailsBeanForm = new ItemDetailsBeanForm(captureInfoList);
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("itemDetailsBeanForm", itemDetailsBeanForm);
+        modelMap.put("colours", Colour.values());
+        modelMap.put("materials", Material.values());
+        return new ModelAndView("pages/order-details/insert-item-info", modelMap);
+    }
+
+    private ModelAndView insertEquipmentsInformation2(OrderDetailsForm orderDetailsForm, HttpSession session) {
+
+        Collection<OrderDetails> orderDetailsList = orderDetailsForm.getMap().values();
+        List<OrderDetails> orderDetailsSubList = new ArrayList<>();
+        for (OrderDetails od : orderDetailsList) {
+            if (od.getItem().getItemType() == ItemType.EQUIPMENT) {
+                orderDetailsSubList.add(od);
+            }
+        }
+
+        if (orderDetailsSubList.isEmpty()) {
+            return null;
+        }
+
+        String attName = "";/*ARRIVAL_OR_PARTIAL_ARRIVAL_BASKET + orderId;*/
+        session.setAttribute(attName, orderDetailsForm);
         return null;
     }
 

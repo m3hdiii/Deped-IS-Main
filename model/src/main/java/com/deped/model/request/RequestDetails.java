@@ -3,6 +3,7 @@ package com.deped.model.request;
 import com.deped.model.account.User;
 import com.deped.model.items.Item;
 import com.deped.model.tracker.RequestTracker;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -70,6 +71,7 @@ public class RequestDetails implements Serializable {
     private User issuedByUser;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "requestDetails")
+    @JsonIgnore
     private Set<RequestTracker> requestTrackers;
 
     public RequestDetails() {

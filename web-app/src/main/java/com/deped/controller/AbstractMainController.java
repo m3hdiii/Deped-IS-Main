@@ -9,6 +9,7 @@ import com.deped.model.items.Item;
 import com.deped.model.location.City;
 import com.deped.model.location.Country;
 import com.deped.model.location.office.Department;
+import com.deped.model.request.RequestDetails;
 import com.deped.model.security.Role;
 import com.deped.model.supply.Supplier;
 import com.deped.model.unit.Unit;
@@ -334,6 +335,10 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
             SharedData.getUnits(isUpdated);
         }
 
+        if (entityClass == User.class) {
+            SharedData.getUsers(isUpdated);
+        }
+
         if (entityClass == Category.class) {
             SharedData.getCategories(isUpdated);
         }
@@ -369,5 +374,16 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         }
 
         return user;
+    }
+
+    public List<RequestDetails> fetchRequestDetails(Long requestId) {
+        RestTemplate restTemplate = new RestTemplate();
+        //get RequestDetails if there is any
+        HttpEntity httpEntity = makeHttpEntity(null);
+        String restUrl = String.format(FETCH_URL, "request-details").concat("/").concat(requestId + "");
+        ResponseEntity<List<RequestDetails>> responseDetails = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<RequestDetails>>() {
+        });
+        List<RequestDetails> requestDetailsList = responseDetails.getBody();
+        return requestDetailsList;
     }
 }

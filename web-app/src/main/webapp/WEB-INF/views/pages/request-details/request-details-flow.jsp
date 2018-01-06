@@ -32,14 +32,24 @@
     <div class="warper container-fluid">
 
         <div class="page-header">
-            <h3>Manage Request&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
+            <h3><c:choose>
+                <c:when test="${not empty nextRequestDetailsStatuses}">
+                    Manage Request&nbsp;
+                </c:when>
+                <c:otherwise>
+                    Request Details
+                </c:otherwise>
+            </c:choose>
+                <small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
+
             </h3>
         </div>
 
         <div class="row">
             <h4>Order Information</h4>
             <p>Request Number: ${relatedRequest.requestId}</p>
-            <p>Requested By: ${relatedRequest.user.firstName}&nbsp;${relatedRequest.user.middleName}&nbsp;${relatedRequest.user.lastName}</p>
+            <p>Requested
+                By: ${relatedRequest.user.firstName}&nbsp;${relatedRequest.user.middleName}&nbsp;${relatedRequest.user.lastName}</p>
             <p>Reason: ${relatedRequest.userMessage}</p>
         </div>
 
@@ -61,19 +71,23 @@
                            id="toggleColumn-datatable">
                         <thead>
                         <tr>
-                            <th>
-                                <label class="cr-styled">
-                                    <input type="checkbox" ng-model="todo.done">
-                                    <i class="fa"></i>
-                                </label>
-                            </th>
+                            <c:if test="${not empty nextRequestDetailsStatuses}">
+                                <th>
+                                    <label class="cr-styled">
+                                        <input type="checkbox" ng-model="todo.done">
+                                        <i class="fa"></i>
+                                    </label>
+                                </th>
+                            </c:if>
                             <th>Image</th>
                             <th>Name</th>
                             <th data-toggle="tooltip" title="Quantity of Available Item">Available QTY</th>
                             <th data-toggle="tooltip" title="Quantity of Request">Requested QTY</th>
                             <th>Item Type</th>
-                            <th>Note</th>
-                            <th>State</th>
+                            <c:if test="${not empty nextRequestDetailsStatuses}">
+                                <th>Note</th>
+                                <th>State</th>
+                            </c:if>
                         </tr>
                         </thead>
 
@@ -83,16 +97,20 @@
                             <c:set var="strKey" value="${entry.key}"/>
                             <c:set var="requestDet" value="${entry.value}"/>
                             <tr>
-                                <td>
-                                    <label class="cr-styled">
-                                        <input type="checkbox" ng-model="todo.done">
-                                        <i class="fa"></i>
-                                    </label>
-                                </td>
+
+                                <c:if test="${not empty nextRequestDetailsStatuses}">
+                                    <td>
+                                        <label class="cr-styled">
+                                            <input type="checkbox" ng-model="todo.done">
+                                            <i class="fa"></i>
+                                        </label>
+                                    </td>
+                                </c:if>
                                 <td>
                                     <c:choose>
                                         <c:when test="${not empty requestDet.item.picName}">
-                                            <img src="${baseUrl}${requestDet.item.picName}" alt="item image" width="76px" height="50px"/>
+                                            <img src="${baseUrl}${requestDet.item.picName}" alt="item image"
+                                                 width="76px" height="50px"/>
                                         </c:when>
                                         <c:otherwise>
                                             <img src="${resourceURL}/images/shared-images/no-item.png"
@@ -100,9 +118,10 @@
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
-                                <th><div>
-                                        ${requestDet.item.name}
-                                </div>
+                                <th>
+                                    <div>
+                                            ${requestDet.item.name}
+                                    </div>
                                     <div>
                                         <small>SONY</small>
                                     </div>
@@ -111,40 +130,44 @@
                                 <td>${requestDet.item.quantity}</td>
                                 <td>${requestDet.requestQuantity}</td>
                                 <td>${requestDet.item.itemType}</td>
-                                <td>
-                                    <input type="textarea" id="${strKey}" disabled/>
-                                </td>
-                                <td>
-                                    <form:select id="requestDetailsStatus${loop.index}" multiple="single"
-                                                 path="map['${strKey}'].requestDetailsStatus"
-                                                 onchange="processReason('requestDetailsStatus${loop.index}', '${strKey}')">
-                                        <form:options items="${nextRequestDetailsStatuses}"/>
-                                    </form:select>
-                                </td>
 
-                                <form:hidden path="map['${strKey}'].requestDetailsID.requestId"
-                                             value="${requestDet.request.requestId}"/>
-                                <form:hidden path="map['${strKey}'].requestDetailsID.itemName"
-                                             value="${requestDet.item.name}"/>
-                                <form:hidden path="map['${strKey}'].requestQuantity"
-                                             value="${requestDet.requestQuantity}"/>
+                                <c:if test="${not empty nextRequestDetailsStatuses}">
+                                    <td>
+                                        <input type="textarea" id="${strKey}" disabled/>
+                                    </td>
+                                    <td>
+                                        <form:select id="requestDetailsStatus${loop.index}" multiple="single"
+                                                     path="map['${strKey}'].requestDetailsStatus"
+                                                     onchange="processReason('requestDetailsStatus${loop.index}', '${strKey}')">
+                                            <form:options items="${nextRequestDetailsStatuses}"/>
+                                        </form:select>
+                                    </td>
 
+                                    <form:hidden path="map['${strKey}'].requestDetailsID.requestId"
+                                                 value="${requestDet.request.requestId}"/>
+                                    <form:hidden path="map['${strKey}'].requestDetailsID.itemName"
+                                                 value="${requestDet.item.name}"/>
+                                    <form:hidden path="map['${strKey}'].requestQuantity"
+                                                 value="${requestDet.requestQuantity}"/>
+
+                                </c:if>
                             </tr>
                         </c:forEach>
                         </tbody>
                     </table>
                     <hr class="clean">
                 </div>
-
-                <div class="modal-footer">
-                    <a href="/request/approval-list" class="btn btn-default pull-left"><i
-                            class="fa fa-chevron-left"></i><span> Back</span></a>
-                    <button type="submit" class="btn btn-purple pull-right">Confirm</button>
-                </div>
+                <c:if test="${not empty nextRequestDetailsStatuses}">
+                    <div class="modal-footer">
+                        <a href="/request/approval-list" class="btn btn-default pull-left"><i
+                                class="fa fa-chevron-left"></i><span> Back</span></a>
+                        <button type="submit" class="btn btn-purple pull-right">Confirm</button>
+                    </div>
+                </c:if>
             </div>
         </form:form>
     </div>
-            <c:import url="../../includes/footer.jsp"/>
+    <c:import url="../../includes/footer.jsp"/>
     <script type="text/javascript" src="${resourceURL}/js/additional/request-operation.js"></script>
 
 </body>

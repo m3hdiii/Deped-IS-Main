@@ -64,6 +64,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     private static final String BASKET_VIEW_PAGE = BASE_NAME + URL_SEPARATOR + "basket" + URL_SEPARATOR + ID_PATTERN;
     private static final String APPROVAL_MAPPING = BASE_NAME + URL_SEPARATOR + "approval" + URL_SEPARATOR + ID_PATTERN;
     private static final String RELEASED_PAGE = BASE_NAME + URL_SEPARATOR + "issue" + URL_SEPARATOR + ID_PATTERN;
+    private static final String REQUEST_DETAILS_PAGE = BASE_NAME + URL_SEPARATOR + "info" + URL_SEPARATOR + ID_PATTERN;
 
     private static final String SUMMARY_PAGE = BASE_NAME + URL_SEPARATOR + "summary" + URL_SEPARATOR + ID_PATTERN;
 
@@ -327,6 +328,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         );
     }
 
+
     @RequestMapping(value = APPROVAL_MAPPING, method = POST)
     public ModelAndView approvalActionSubmit(@ModelAttribute("requestDetailsForm") RequestDetailsForm orderDetailsForm) {
         ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, RequestDetailsStatus.APPROVED);
@@ -342,6 +344,16 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         ModelAndView mav = createResultPage(resultBean);
         return mav;
     }
+
+
+    @RequestMapping(value = REQUEST_DETAILS_PAGE, method = GET)
+    public ModelAndView showInfo(@PathVariable(ID_STRING_LITERAL) Long requestId) {
+        Request request = fetchRequest(requestId);
+        List<RequestDetails> requestDetailsList = fetchRequestDetails(requestId);
+        ModelAndView mav = renderActions(request, new HashSet<>(requestDetailsList), null);
+        return mav;
+    }
+
 
     public ModelAndView createResultPage(ResultBean resultBean) {
         Map<String, Object> modelMap = new HashMap<>(getConfigMap());
@@ -455,17 +467,6 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         ResponseEntity<Request> response = restTemplate.getForEntity(restUrl, Request.class);
         Request request = response.getBody();
         return request;
-    }
-
-    private List<RequestDetails> fetchRequestDetails(Long requestId) {
-        RestTemplate restTemplate = new RestTemplate();
-        //get RequestDetails if there is any
-        HttpEntity httpEntity = makeHttpEntity(null);
-        String restUrl = String.format(FETCH_URL, "request-details").concat("/").concat(requestId + "");
-        ResponseEntity<List<RequestDetails>> responseDetails = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<RequestDetails>>() {
-        });
-        List<RequestDetails> requestDetailsList = responseDetails.getBody();
-        return requestDetailsList;
     }
 
     private ModelAndView renderActions(Request request, Set<RequestDetails> requestDetailsList, RequestDetailsStatus[] nextStatuses) {

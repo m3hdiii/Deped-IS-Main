@@ -470,4 +470,23 @@ public class User implements Serializable {
     public void setPreviousIdUsername(String previousIdUsername) {
         this.previousIdUsername = previousIdUsername;
     }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        return username != null ? username.equals(user.getUsername()) : user.getUsername() == null;
+    }
+
+    @Override
+    public int hashCode() {
+        if (username == null || username.isEmpty())
+            return super.hashCode();
+        else
+            return username.hashCode();
+    }
 }

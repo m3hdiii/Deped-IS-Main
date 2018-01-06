@@ -1,20 +1,21 @@
 package com.deped.form;
 
+import com.deped.model.order.CaptureInfo;
+
 import java.util.List;
 
 public class ItemDetailsBeanForm {
+    private List<CaptureInfo> captureInfoList;
 
-    private List<ItemDetailsBean> itemDetailsBeans;
-
-    public ItemDetailsBeanForm(List<ItemDetailsBean> itemDetailsBeans) {
-        this.itemDetailsBeans = itemDetailsBeans;
+    public ItemDetailsBeanForm(List<CaptureInfo> captureInfoList) {
+        this.captureInfoList = captureInfoList;
     }
 
-    public List<ItemDetailsBean> getItemDetailsBeans() {
-        return itemDetailsBeans;
+    public List<CaptureInfo> getCaptureInfoList() {
+        return captureInfoList;
     }
 
-    public void setItemDetailsBeans(List<ItemDetailsBean> itemDetailsBeans) {
-        this.itemDetailsBeans = itemDetailsBeans;
+    public void setCaptureInfoList(List<CaptureInfo> captureInfoList) {
+        this.captureInfoList = captureInfoList;
     }
 }

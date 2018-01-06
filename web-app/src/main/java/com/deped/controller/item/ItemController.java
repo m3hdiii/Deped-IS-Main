@@ -137,7 +137,6 @@ public class ItemController extends AbstractMainController<Item, String> {
         return null;
     }
 
-
     @InitBinder
     public void initBinder(WebDataBinder binder) {
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));

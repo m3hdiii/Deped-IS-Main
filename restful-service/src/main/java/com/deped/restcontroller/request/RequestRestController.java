@@ -3,6 +3,7 @@ package com.deped.restcontroller.request;
 import com.deped.model.Response;
 import com.deped.model.request.Request;
 import com.deped.model.request.RequestStatus;
+import com.deped.model.search.RequestSearch;
 import com.deped.repository.utils.Range;
 import com.deped.restcontroller.AbstractMainRestController;
 import com.deped.service.request.RequestService;
@@ -24,6 +25,7 @@ public class RequestRestController extends AbstractMainRestController<Request, L
     private static final String FETCH_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String FETCH_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
+    private static final String SEARCH_REQUEST_MAPPING = BASE_NAME + URL_SEPARATOR + "search-list";
 
 
     @Autowired
@@ -99,5 +101,11 @@ public class RequestRestController extends AbstractMainRestController<Request, L
     public @RequestMapping(value = CREATE_ALL_PATTERN, method = RequestMethod.POST)
     ResponseEntity<Response> createOrUpdateAll(@RequestBody Request... entities) {
         return null;
+    }
+
+    @RequestMapping(value = SEARCH_REQUEST_MAPPING, method = RequestMethod.POST)
+    public ResponseEntity<List<Request>> fetchRequestSearch(@RequestBody RequestSearch requestSearch) {
+        ResponseEntity<List<Request>> requestList = requestService.requestSearch(requestSearch);
+        return requestList;
     }
 }
