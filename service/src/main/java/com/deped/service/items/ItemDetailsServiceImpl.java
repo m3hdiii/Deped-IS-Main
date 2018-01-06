@@ -61,8 +61,8 @@ public class ItemDetailsServiceImpl implements ItemDetailsService {
     }
 
     @Override
-    public ResponseEntity<List<CaptureInfo>> fetchToBeCaptureInfo(Long orderId, ItemType[] itemTypes) {
-        List<CaptureInfo> brands = itemDetailsRepository.fetchToBeCaptureInfo(orderId, itemTypes);
+    public ResponseEntity<List<CaptureInfo>> fetchToBeCaptureInfo(ItemType[] itemTypes) {
+        List<CaptureInfo> brands = itemDetailsRepository.fetchToBeCaptureInfo(itemTypes);
         ResponseEntity<List<CaptureInfo>> responseEntity = new ResponseEntity<>(brands, OK);
         return responseEntity;
     }

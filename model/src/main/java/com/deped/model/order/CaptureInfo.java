@@ -7,18 +7,11 @@ import java.util.List;
 
 public class CaptureInfo implements Serializable {
 
-
-    private Long orderDetailsConstantKey;
-
     //    @Column(name = "inserted_equipment")
     private Long numberOfCapturedItems;
 
     //    @Column(name = "must_insert")
     private Long numberOfRemainingCapturedItems;
-
-    //    @Column(name = "arrived_number")
-    private Long numberOfArrivedItems;
-
 
     private Long totalReuqestedQuantity;
 
@@ -37,23 +30,13 @@ public class CaptureInfo implements Serializable {
     public CaptureInfo() {
     }
 
-    public CaptureInfo(Long orderDetailsConstantKey, Long numberOfCapturedItems, Long numberOfRemainingCapturedItems, Long numberOfArrivedItems, Long totalReuqestedQuantity, String itemName, String pictureName, Long quantityAvailableInSupplyOffice) {
-        this.orderDetailsConstantKey = orderDetailsConstantKey;
+    public CaptureInfo(Long numberOfCapturedItems, Long numberOfRemainingCapturedItems, Long totalReuqestedQuantity, String itemName, String pictureName, Long quantityAvailableInSupplyOffice) {
         this.numberOfCapturedItems = numberOfCapturedItems;
         this.numberOfRemainingCapturedItems = numberOfRemainingCapturedItems;
-        this.numberOfArrivedItems = numberOfArrivedItems;
         this.totalReuqestedQuantity = totalReuqestedQuantity;
         this.itemName = itemName;
         this.pictureName = pictureName;
         this.quantityAvailableInSupplyOffice = quantityAvailableInSupplyOffice;
-    }
-
-    public Long getOrderDetailsConstantKey() {
-        return orderDetailsConstantKey;
-    }
-
-    public void setOrderDetailsConstantKey(Long orderDetailsConstantKey) {
-        this.orderDetailsConstantKey = orderDetailsConstantKey;
     }
 
     public Long getNumberOfCapturedItems() {
@@ -70,14 +53,6 @@ public class CaptureInfo implements Serializable {
 
     public void setNumberOfRemainingCapturedItems(Long numberOfRemainingCapturedItems) {
         this.numberOfRemainingCapturedItems = numberOfRemainingCapturedItems;
-    }
-
-    public Long getNumberOfArrivedItems() {
-        return numberOfArrivedItems;
-    }
-
-    public void setNumberOfArrivedItems(Long numberOfArrivedItems) {
-        this.numberOfArrivedItems = numberOfArrivedItems;
     }
 
     public Long getTotalReuqestedQuantity() {

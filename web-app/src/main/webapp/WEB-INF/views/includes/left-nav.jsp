@@ -58,6 +58,7 @@
                 </ul>
             </li>
 
+
             <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
                 <li class="has-submenu" data-toggle="tooltip" title="Order Items"><a href="#"><i
                         class="fa fa-file-text-o"></i> <span class="nav-label">Order Items</span></a>
@@ -110,11 +111,19 @@
                         </sec:authorize>
 
                         <sec:authorize access="hasRole('ROLE_CHIEF')">
-                            <li><a href="/request/search-list">Search List</a></li>
+                            <li><a href="/request/report-list">Report List</a></li>
                         </sec:authorize>
                     </ul>
                 </li>
             </sec:authorize>
+
+            <li class="has-submenu" data-toggle="tooltip" title="Order Items"><a href="#"><i
+                    class="fa fa-file-text-o"></i> <span class="nav-label">Insert</span></a>
+                <ul class="list-unstyled">
+                    <li><a href="/order-details/insert">Insert</a></li>
+                </ul>
+            </li>
+
             <sec:authorize access="hasRole('ROLE_ADMIN') OR hasRole('ROLE_CHIEF')">
                 <li class="has-submenu" data-toggle="tooltip" title="User Manager"><a href="#"><i
                         class="fa fa-user"></i>

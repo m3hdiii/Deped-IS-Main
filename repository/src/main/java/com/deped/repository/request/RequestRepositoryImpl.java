@@ -113,39 +113,23 @@ public class RequestRepositoryImpl implements RequestRepository {
         boolean isConsideredByUserListEmpty = isEmpty(requestSearch.getConsideredByUsers());
         boolean isIssuedByUserListEmpty = isEmpty(requestSearch.getIssuedByUsers());
 
+        boolean[] emptyList = new boolean[]{isUserMessageEmpty, isRequestDateFromEmpty, isRequestDateToEmpty,
+                isRequestedUserListEmpty, isAdminNoticeEmpty, isItemTypeListEmpty, isItemListEmpty, isRequestQuantityFromEmpty,
+                isRequestQuantityToEmpty, isApprovedQuantityFromEmpty, isApprovedQuantityToEmpty, isApprovalDisapprovalDateFromEmpty,
+                isApprovalDisapprovalDateToEmpty, isDisapprovalMessageEmpty, isReleaseDateFromEmpty, isReleaseDateToEmpty, isRequestDetailsStatusListEmpty,
+                isRequestStatusListEmpty, isCancellationReasonEmpty, isSupplyOfficeRemarkEmpty, isConsideredByUserListEmpty, isIssuedByUserListEmpty
+        };
 
-        ListParameter requestedUserParameter = isRequestedUserListEmpty ? null : createListParameter(requestSearch.getRequestedUsers(), "requestedUser", User.class);
-        ListParameter itemTypeParameter = isItemTypeListEmpty ? null : createListParameter(requestSearch.getItemTypes(), "itemType", ItemType.class);
-        ListParameter itemParameter = isItemListEmpty ? null : createListParameter(requestSearch.getItems(), "item", Item.class);
-        ListParameter requestStatusParameter = isRequestStatusListEmpty ? null : createListParameter(requestSearch.getRequestStatuses(), "requestStatus", RequestDetailsStatus.class);
-        ListParameter requestDetailsStatusParameter = isRequestDetailsStatusListEmpty ? null : createListParameter(requestSearch.getRequestDetailsStatuses(), "requestDetailsStatus", RequestDetailsStatus.class);
-        ListParameter consideredByUserParameter = isConsideredByUserListEmpty ? null : createListParameter(requestSearch.getConsideredByUsers(), "consideredByUsers", User.class);
-        ListParameter issuedByUserParameter = isIssuedByUserListEmpty ? null : createListParameter(requestSearch.getIssuedByUsers(), "issuedByUsers", User.class);
+        StringBuilder sb = new StringBuilder("SELECT * FROM request");
 
-        StringBuilder sb = new StringBuilder("SELECT * FROM request JOIN request_details ON request.request_id = request_details.request_request_id WHERE\n");
-        sb
-                .append(isUserMessageEmpty ? "" : "(request.user_message LIKE %:userMessage%) AND\n")
-                .append(isRequestDateFromEmpty ? "" : "(request.request_date >= :requestDateFrom) AND\n")
-                .append(isRequestDateToEmpty ? "" : "(request.request_date < :requestDateTo) AND\n")
-                .append(isRequestedUserListEmpty ? "" : String.format("(request.username IN (%s)) AND\n)", requestedUserParameter.getWherePartSection()))
-                .append(isAdminNoticeEmpty ? "" : "(request.admin_notice LIKE %:adminNotice%) AND\n")
-                .append(isItemTypeListEmpty ? "" : String.format("(request.item_type IN (%s)) AND\n", itemTypeParameter.getWherePartSection()))
-                .append(isItemListEmpty ? "" : String.format("(request_details.item_item_name IN (%s)) AND\n", itemParameter.getWherePartSection()))
-                .append(isRequestQuantityFromEmpty ? "" : "(request_details.request_quantity >= :requestQuantityFrom) AND\n")
-                .append(isRequestQuantityToEmpty ? "" : "(request_details.request_quantity < :requestQuantityTo) AND\n")
-                .append(isApprovedQuantityFromEmpty ? "" : "(request_details.approved_quantity >= :approvedQuantityFrom) AND\n")
-                .append(isApprovedQuantityToEmpty ? "" : "(request_details.approved_quantity < :approvedQuantityTo) AND\n")
-                .append(isApprovalDisapprovalDateFromEmpty ? "" : "(request_details.approval_disapproval_date >= :approvalDisapprovalDateFrom) AND\n")
-                .append(isApprovalDisapprovalDateToEmpty ? "" : "(request_details.approval_disapproval_date < :approvalDisapprovalDateTo) AND\n")
-                .append(isDisapprovalMessageEmpty ? "" : "(request_details.disapproval_message LIKE %:disapprovalMessage%) AND\n")
-                .append(isReleaseDateFromEmpty ? "" : "(request_details.release_date >= :releaseDateFrom) AND\n")
-                .append(isReleaseDateToEmpty ? "" : "(request_details.release_date < :releaseDateTo) AND\n")
-                .append(isRequestDetailsStatusListEmpty ? "" : String.format("(request_details.request_details_status IN (%s)) AND\n", requestDetailsStatusParameter.getWherePartSection()))
-                .append(isRequestStatusListEmpty ? "" : String.format("(request.request_status IN (%s)) AND\n", requestStatusParameter.getWherePartSection()))
-                .append(isCancellationReasonEmpty ? "" : "(request_details.cancellation_reason LIKE %:cancellationReason%) AND\n")
-                .append(isSupplyOfficeRemarkEmpty ? "" : "(request_details.supply_office_remark LIKE %:supplyOfficeRemark%) AND\n")
-                .append(isConsideredByUserListEmpty ? "" : String.format("(request_details.considered_by_username IN (%s)) AND\n", consideredByUserParameter.getWherePartSection()))
-                .append(isIssuedByUserListEmpty ? "" : String.format("(request_details.issued_by_username IN (%s))", issuedByUserParameter.getWherePartSection()));
+        String where = null;
+        for (boolean b : emptyList) {
+            if (!b) {
+                where = " JOIN request_details ON request.request_id = request_details.request_request_id WHERE\n";
+                break;
+            }
+        }
+
 
         Session hibernateSession;
         try {
@@ -157,96 +141,151 @@ public class RequestRepositoryImpl implements RequestRepository {
 
         Transaction tx = null;
         List<Request> list = null;
-        try {
-            tx = hibernateSession.beginTransaction();
-            NativeQuery<Request> query = hibernateSession.createNativeQuery(sb.toString(), Request.class);
 
-            ListParameter[] listParameters = new ListParameter[]{requestedUserParameter, itemTypeParameter, itemParameter, requestStatusParameter, requestDetailsStatusParameter, consideredByUserParameter, issuedByUserParameter};
+        if (where == null) {
 
-            Map<String, Object> parameterMap = new HashMap<>();
-            for (int i = 0; i < listParameters.length; i++) {
-                ListParameter lpTemp = listParameters[i];
-                if (lpTemp != null) {
-                    parameterMap.putAll(lpTemp.getParameterMap());
+            try {
+                tx = hibernateSession.beginTransaction();
+                NativeQuery<Request> query = hibernateSession.createNativeQuery(sb.toString(), Request.class);
+                list = query.list();
+                tx.commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (tx != null)
+                    tx.rollback();
+                return list;
+            }
+
+
+            return list;
+
+        } else {
+            ListParameter requestedUserParameter = isRequestedUserListEmpty ? null : createListParameter(requestSearch.getRequestedUsers(), "requestedUser", User.class);
+            ListParameter itemTypeParameter = isItemTypeListEmpty ? null : createListParameter(requestSearch.getItemTypes(), "itemType", ItemType.class);
+            ListParameter itemParameter = isItemListEmpty ? null : createListParameter(requestSearch.getItems(), "item", Item.class);
+            ListParameter requestStatusParameter = isRequestStatusListEmpty ? null : createListParameter(requestSearch.getRequestStatuses(), "requestStatus", RequestDetailsStatus.class);
+            ListParameter requestDetailsStatusParameter = isRequestDetailsStatusListEmpty ? null : createListParameter(requestSearch.getRequestDetailsStatuses(), "requestDetailsStatus", RequestDetailsStatus.class);
+            ListParameter consideredByUserParameter = isConsideredByUserListEmpty ? null : createListParameter(requestSearch.getConsideredByUsers(), "consideredByUsers", User.class);
+            ListParameter issuedByUserParameter = isIssuedByUserListEmpty ? null : createListParameter(requestSearch.getIssuedByUsers(), "issuedByUsers", User.class);
+
+
+            sb
+                    .append(isUserMessageEmpty ? "" : "(request.user_message LIKE :userMessage) AND\n")
+                    .append(isRequestDateFromEmpty ? "" : "(request.request_date >= :requestDateFrom) AND\n")
+                    .append(isRequestDateToEmpty ? "" : "(request.request_date < :requestDateTo) AND\n")
+                    .append(isRequestedUserListEmpty ? "" : String.format("(request.username IN ( %s )) AND\n", requestedUserParameter.getWherePartSection()))
+                    .append(isAdminNoticeEmpty ? "" : "(request.admin_notice LIKE :adminNotice) AND\n")
+                    .append(isItemTypeListEmpty ? "" : String.format("(request.item_type IN ( %s )) AND\n", itemTypeParameter.getWherePartSection()))
+                    .append(isItemListEmpty ? "" : String.format("(request_details.item_item_name IN ( %s )) AND\n", itemParameter.getWherePartSection()))
+                    .append(isRequestQuantityFromEmpty ? "" : "(request_details.request_quantity >= :requestQuantityFrom) AND\n")
+                    .append(isRequestQuantityToEmpty ? "" : "(request_details.request_quantity < :requestQuantityTo) AND\n")
+                    .append(isApprovedQuantityFromEmpty ? "" : "(request_details.approved_quantity >= :approvedQuantityFrom) AND\n")
+                    .append(isApprovedQuantityToEmpty ? "" : "(request_details.approved_quantity < :approvedQuantityTo) AND\n")
+                    .append(isApprovalDisapprovalDateFromEmpty ? "" : "(request_details.approval_disapproval_date >= :approvalDisapprovalDateFrom) AND\n")
+                    .append(isApprovalDisapprovalDateToEmpty ? "" : "(request_details.approval_disapproval_date < :approvalDisapprovalDateTo) AND\n")
+                    .append(isDisapprovalMessageEmpty ? "" : "(request_details.disapproval_message LIKE :disapprovalMessage) AND\n")
+                    .append(isReleaseDateFromEmpty ? "" : "(request_details.release_date >= :releaseDateFrom) AND\n")
+                    .append(isReleaseDateToEmpty ? "" : "(request_details.release_date < :releaseDateTo) AND\n")
+                    .append(isRequestDetailsStatusListEmpty ? "" : String.format("(request_details.request_details_status IN ( %s )) AND\n", requestDetailsStatusParameter.getWherePartSection()))
+                    .append(isRequestStatusListEmpty ? "" : String.format("(request.request_status IN ( %s )) AND\n", requestStatusParameter.getWherePartSection()))
+                    .append(isCancellationReasonEmpty ? "" : "(request_details.cancellation_reason LIKE :cancellationReason) AND\n")
+                    .append(isSupplyOfficeRemarkEmpty ? "" : "(request_details.supply_office_remark LIKE :supplyOfficeRemark) AND\n")
+                    .append(isConsideredByUserListEmpty ? "" : String.format("(request_details.considered_by_username IN ( %s )) AND\n", consideredByUserParameter.getWherePartSection()))
+                    .append(isIssuedByUserListEmpty ? "" : String.format("(request_details.issued_by_username IN ( %s ))", issuedByUserParameter.getWherePartSection()));
+
+
+            try {
+                tx = hibernateSession.beginTransaction();
+                NativeQuery<Request> query = hibernateSession.createNativeQuery(sb.toString(), Request.class);
+
+                ListParameter[] listParameters = new ListParameter[]{requestedUserParameter, itemTypeParameter, itemParameter, requestStatusParameter, requestDetailsStatusParameter, consideredByUserParameter, issuedByUserParameter};
+
+                Map<String, Object> parameterMap = new HashMap<>();
+                for (int i = 0; i < listParameters.length; i++) {
+                    ListParameter lpTemp = listParameters[i];
+                    if (lpTemp != null) {
+                        parameterMap.putAll(lpTemp.getParameterMap());
+                    }
                 }
+
+                if (!isUserMessageEmpty) {
+                    parameterMap.put("userMessage", "%" + requestSearch.getUserMessage() + "%");
+                }
+
+                if (!isRequestDateFromEmpty) {
+                    parameterMap.put("requestDateFrom", requestSearch.getRequestDateFrom());
+                }
+
+                if (!isRequestDateToEmpty) {
+                    parameterMap.put("requestDateTo", requestSearch.getRequestDateFrom());
+                }
+
+                if (!isAdminNoticeEmpty) {
+                    parameterMap.put("adminNotice", "%" + requestSearch.getAdminNotice() + "%");
+                }
+
+                if (!isRequestQuantityFromEmpty) {
+                    parameterMap.put("requestQuantityFrom", requestSearch.getRequestQuantityFrom());
+                }
+
+                if (!isRequestQuantityToEmpty) {
+                    parameterMap.put("requestQuantityTo", requestSearch.getRequestQuantityTo());
+                }
+
+                if (!isApprovedQuantityFromEmpty) {
+                    parameterMap.put("approvedQuantityFrom", requestSearch.getApprovedQuantityFrom());
+                }
+
+                if (!isApprovedQuantityToEmpty) {
+                    parameterMap.put("approvedQuantityTo", requestSearch.getApprovedQuantityTo());
+                }
+
+                if (!isApprovalDisapprovalDateFromEmpty) {
+                    parameterMap.put("approvalDisapprovalDateFrom", requestSearch.getApprovalDisapprovalDateFrom());
+                }
+
+                if (!isApprovalDisapprovalDateToEmpty) {
+                    parameterMap.put("approvalDisapprovalDateTo", requestSearch.getApprovalDisapprovalDateTo());
+                }
+
+                if (!isDisapprovalMessageEmpty) {
+                    parameterMap.put("disapprovalMessage", "%" + requestSearch.getDisapprovalMessage() + "%");
+                }
+
+                if (!isReleaseDateFromEmpty) {
+                    parameterMap.put("releaseDateFrom", requestSearch.getReleaseDateFrom());
+                }
+
+                if (!isReleaseDateToEmpty) {
+                    parameterMap.put("releaseDateTo", requestSearch.getReleaseDateTo());
+                }
+
+                if (!isCancellationReasonEmpty) {
+                    parameterMap.put("cancellationReason", "%" + requestSearch.getCancellationReason() + "%");
+                }
+
+                if (!isSupplyOfficeRemarkEmpty) {
+                    parameterMap.put("supplyOfficeRemark", "%" + requestSearch.getSupplyOfficeRemark() + "%");
+                }
+
+                for (Map.Entry<String, Object> entry : parameterMap.entrySet()) {
+                    query.setParameter(entry.getKey(), entry.getValue());
+                }
+
+                list = query.list();
+                tx.commit();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (tx != null)
+                    tx.rollback();
+                return null;
             }
 
-            if (!isUserMessageEmpty) {
-                parameterMap.put("userMessage", requestSearch.getUserMessage());
-            }
 
-            if (!isRequestDateFromEmpty) {
-                parameterMap.put("requestDateFrom", requestSearch.getRequestDateFrom());
-            }
-
-            if (!isRequestDateToEmpty) {
-                parameterMap.put("requestDateTo", requestSearch.getRequestDateFrom());
-            }
-
-            if (!isAdminNoticeEmpty) {
-                parameterMap.put("adminNotice", requestSearch.getAdminNotice());
-            }
-
-            if (!isRequestQuantityFromEmpty) {
-                parameterMap.put("requestQuantityFrom", requestSearch.getRequestQuantityFrom());
-            }
-
-            if (!isRequestQuantityToEmpty) {
-                parameterMap.put("requestQuantityTo", requestSearch.getRequestQuantityTo());
-            }
-
-            if (!isApprovedQuantityFromEmpty) {
-                parameterMap.put("approvedQuantityFrom", requestSearch.getApprovedQuantityFrom());
-            }
-
-            if (!isApprovedQuantityToEmpty) {
-                parameterMap.put("approvedQuantityTo", requestSearch.getApprovedQuantityTo());
-            }
-
-            if (!isApprovalDisapprovalDateFromEmpty) {
-                parameterMap.put("approvalDisapprovalDateFrom", requestSearch.getApprovalDisapprovalDateFrom());
-            }
-
-            if (!isApprovalDisapprovalDateToEmpty) {
-                parameterMap.put("approvalDisapprovalDateTo", requestSearch.getApprovalDisapprovalDateTo());
-            }
-
-            if (!isDisapprovalMessageEmpty) {
-                parameterMap.put("disapprovalMessage", requestSearch.getDisapprovalMessage());
-            }
-
-            if (isReleaseDateFromEmpty) {
-                parameterMap.put("releaseDateFrom", requestSearch.getReleaseDateFrom());
-            }
-
-            if (isReleaseDateToEmpty) {
-                parameterMap.put("releaseDateTo", requestSearch.getReleaseDateTo());
-            }
-
-            if (isCancellationReasonEmpty) {
-                parameterMap.put("cancellationReason", requestSearch.getCancellationReason());
-            }
-
-            if (isSupplyOfficeRemarkEmpty) {
-                parameterMap.put("cancellationReason", requestSearch.getSupplyOfficeRemark());
-            }
-
-            for (Map.Entry<String, Object> entry : parameterMap.entrySet()) {
-                query.setParameter(entry.getKey(), entry.getValue());
-            }
-
-            list = query.list();
-            tx.commit();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (tx != null)
-                tx.rollback();
-            return null;
+            return list;
         }
 
-
-        return list;
     }
 
     private ListParameter createListParameter(List objects, String baseParamKey, Class<?> clazz) {
@@ -279,9 +318,12 @@ public class RequestRepositoryImpl implements RequestRepository {
     }
 
     private boolean isEmpty(Object object) {
+        if (object == null)
+            return true;
+
         if (object instanceof String) {
             String s = (String) object;
-            if (s == null || s.isEmpty()) {
+            if (s.isEmpty()) {
                 return true;
             }
             return false;
@@ -289,14 +331,13 @@ public class RequestRepositoryImpl implements RequestRepository {
 
         if (object instanceof List) {
             List s = (List) object;
-
-            if (s == null || s.isEmpty()) {
+            if (s.isEmpty()) {
                 return true;
             }
             return false;
         }
 
-        return false;
+        return true;
     }
 
 

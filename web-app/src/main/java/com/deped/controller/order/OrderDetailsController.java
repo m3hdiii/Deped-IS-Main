@@ -3,8 +3,6 @@ package com.deped.controller.order;
 import com.deped.ResultBean;
 import com.deped.controller.AbstractMainController;
 import com.deped.controller.SharedData;
-import com.deped.form.ItemDetailsBeanForm;
-import com.deped.form.ItemDetailsForm;
 import com.deped.form.OrderDetailsForm;
 import com.deped.model.Response;
 import com.deped.model.ResponseStatus;
@@ -13,9 +11,10 @@ import com.deped.model.category.Category;
 import com.deped.model.items.Item;
 import com.deped.model.items.ItemDetails;
 import com.deped.model.items.ItemType;
-import com.deped.model.items.features.Colour;
-import com.deped.model.items.features.Material;
-import com.deped.model.order.*;
+import com.deped.model.order.Order;
+import com.deped.model.order.OrderDetails;
+import com.deped.model.order.OrderDetailsState;
+import com.deped.model.order.OrderState;
 import com.deped.model.supply.Supplier;
 import com.deped.model.unit.Unit;
 import com.deped.utils.SystemUtils;
@@ -68,7 +67,6 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
     private static final String APPROVAL_PAGE = BASE_NAME + URL_SEPARATOR + "approval" + URL_SEPARATOR + ID_PATTERN;
     private static final String REQUISITION_PAGE = BASE_NAME + URL_SEPARATOR + "requisition" + URL_SEPARATOR + ID_PATTERN;
     private static final String ARRIVAL_PAGE = BASE_NAME + URL_SEPARATOR + "arrival" + URL_SEPARATOR + ID_PATTERN;
-    private static final String INSERT_DATA = BASE_NAME + URL_SEPARATOR + "insert-data" + URL_SEPARATOR + ID_PATTERN;
 
     private static final String UPDATE_STATE_REST = BASE_NAME + URL_SEPARATOR + "update-state/user/%s/state/%d";
 
@@ -419,69 +417,6 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         ResultBean resultBean = new ResultBean(headTagTitle, headTagDescription, heading, successMessage, failureMessage);
         ModelAndView mav = createResultPage(resultBean);
         return mav;
-    }
-
-
-    @RequestMapping(value = INSERT_DATA, method = RequestMethod.GET)
-    public ModelAndView captureData(@PathVariable("id") Long orderId) {
-        Order fetchedOrder = fetchOrder(orderId);
-        ModelAndView requestChecking = orderChecking(fetchedOrder, OrderState.ORDERED, OrderState.PARTIALLY_ARRIVED);
-        if (requestChecking != null) {
-            //TODO
-            return requestChecking;
-        }
-
-        List<CaptureInfo> captureInfoList = fetchCaptureInfoByItemTypes(orderId, new ItemType[]{ItemType.EQUIPMENT});
-
-        ModelAndView mav = createInsertDataModelAndView(captureInfoList);
-
-        return mav;
-    }
-
-    @RequestMapping(value = INSERT_DATA, method = RequestMethod.POST)
-    public ModelAndView captureDataAction(@PathVariable("id") Long orderId, @Valid @ModelAttribute("itemDetailsBeanForm") ItemDetailsForm itemDetailsForm, BindingResult bindingResult) {
-        ModelAndView mav = new ModelAndView();
-        return mav;
-    }
-
-    private ModelAndView createInsertDataModelAndView(List<CaptureInfo> captureInfoList) {
-        for (int i = 0; i < captureInfoList.size(); i++) {
-            CaptureInfo ci = captureInfoList.get(i);
-            List<ItemDetails> itemDetailsList = null;
-            if (ci.getNumberOfRemainingCapturedItems() > 0) {
-                itemDetailsList = new ArrayList<>();
-                for (int j = 0; j < ci.getNumberOfRemainingCapturedItems(); j++) {
-                    itemDetailsList.add(new ItemDetails());
-                }
-                ci.setItemDetailsList(itemDetailsList);
-            }
-        }
-
-        ItemDetailsBeanForm itemDetailsBeanForm = new ItemDetailsBeanForm(captureInfoList);
-        Map<String, Object> modelMap = new HashMap<>();
-        modelMap.put("itemDetailsBeanForm", itemDetailsBeanForm);
-        modelMap.put("colours", Colour.values());
-        modelMap.put("materials", Material.values());
-        return new ModelAndView("pages/order-details/insert-item-info", modelMap);
-    }
-
-    private ModelAndView insertEquipmentsInformation2(Long orderId, OrderDetailsForm orderDetailsForm, HttpSession session) {
-
-        Collection<OrderDetails> orderDetailsList = orderDetailsForm.getMap().values();
-        List<OrderDetails> orderDetailsSubList = new ArrayList<>();
-        for (OrderDetails od : orderDetailsList) {
-            if (od.getItem().getItemType() == ItemType.EQUIPMENT) {
-                orderDetailsSubList.add(od);
-            }
-        }
-
-        if (orderDetailsSubList.isEmpty()) {
-            return null;
-        }
-
-        String attName = ARRIVAL_OR_PARTIAL_ARRIVAL_BASKET + orderId;
-        session.setAttribute(attName, orderDetailsForm);
-        return null;
     }
 
 
@@ -862,25 +797,6 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         ResponseEntity<List<ItemDetails>> responseDetails = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<ItemDetails>>() {
         });
         List<ItemDetails> requestDetailsList = responseDetails.getBody();
-        return requestDetailsList;
-    }
-
-    private List<CaptureInfo> fetchCaptureInfoByItemTypes(Long orderId, ItemType[] itemTypes) {
-        Integer ordinals[] = new Integer[itemTypes.length];
-        for (int i = 0; i < itemTypes.length; i++) {
-            ordinals[i] = itemTypes[i].ordinal();
-        }
-
-        RestTemplate restTemplate = new RestTemplate();
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        HttpEntity<Integer[]> httpEntity = new HttpEntity<>(ordinals, headers);
-        String format = AbstractMainController.BASE_URL.concat("%s%s").concat("/").concat(orderId + "");
-        String restUrl = String.format(format, "item-details", "/capture-info");
-        ResponseEntity<List<CaptureInfo>> responseDetails = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<CaptureInfo>>() {
-        });
-        List<CaptureInfo> requestDetailsList = responseDetails.getBody();
         return requestDetailsList;
     }
 

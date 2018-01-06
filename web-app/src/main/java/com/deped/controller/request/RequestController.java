@@ -6,10 +6,15 @@ import com.deped.model.account.User;
 import com.deped.model.items.Item;
 import com.deped.model.items.ItemType;
 import com.deped.model.request.Request;
+import com.deped.model.request.RequestDetails;
 import com.deped.model.request.RequestDetailsStatus;
 import com.deped.model.request.RequestStatus;
 import com.deped.model.search.RequestSearch;
 import com.deped.utils.SystemUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -26,8 +31,12 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.beans.PropertyEditorSupport;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -35,6 +44,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 public class RequestController extends AbstractMainController<Request, Long> {
+    private enum ReportType {
+        WEB, XML
+    }
 
     private static final String BASE_NAME = "request";
 
@@ -49,14 +61,15 @@ public class RequestController extends AbstractMainController<Request, Long> {
     private static final String RENDER_LIST_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String RENDER_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
-    private static final String SEARCH_REQUEST = BASE_NAME + URL_SEPARATOR + "search-list";
+    private static final String REPORT_LIST = BASE_NAME + URL_SEPARATOR + "report-list";
+    private static final String REPORT_LIST_XML = BASE_NAME + URL_SEPARATOR + "report-xml-list";
 
     private static final String BASE_SHOW_PAGE = JSP_PAGES + URL_SEPARATOR + BASE_NAME + URL_SEPARATOR;
     private static final String CREATE_VIEW_PAGE = BASE_SHOW_PAGE + CREATE_PAGE + BASE_NAME;
     private static final String INFO_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + INFO_PAGE;
     private static final String UPDATE_VIEW_PAGE = BASE_SHOW_PAGE + UPDATE_PAGE + BASE_NAME;
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
-    private static final String SEARCH_LIST_VIEW_PAGE = BASE_SHOW_PAGE + "search" + LIST_PAGE;
+    private static final String REPORT_LIST_VIEW_PAGE = BASE_SHOW_PAGE + "report" + LIST_PAGE;
 
     private static final String OPERATION_LIST = BASE_SHOW_PAGE + BASE_NAME + "-selected" + LIST_PAGE;
 
@@ -213,7 +226,7 @@ public class RequestController extends AbstractMainController<Request, Long> {
         return new ModelAndView(LIST_VIEW_PAGE);
     }
 
-    @RequestMapping(value = SEARCH_REQUEST, method = GET)
+    @RequestMapping(value = REPORT_LIST, method = GET)
     public ModelAndView searchListRender(@ModelAttribute("requestSearch") RequestSearch entity, BindingResult bindingResult) {
         Map<String, Object> modelMap = new HashMap<>();
         modelMap.put("itemTypes", ItemType.values());
@@ -222,24 +235,118 @@ public class RequestController extends AbstractMainController<Request, Long> {
         modelMap.put("statuses", RequestStatus.values());
         modelMap.put("detailsStatuses", RequestDetailsStatus.values());
 
-        ModelAndView mav = new ModelAndView(SEARCH_LIST_VIEW_PAGE, modelMap);
+        ModelAndView mav = new ModelAndView(REPORT_LIST_VIEW_PAGE, modelMap);
         return mav;
     }
 
-    @RequestMapping(value = SEARCH_REQUEST, method = POST)
+    @RequestMapping(value = REPORT_LIST, method = POST, params = "web")
     public ModelAndView searchListAction(@Valid @ModelAttribute("requestSearch") RequestSearch entity, BindingResult bindingResult) {
+
         String disapprovedListStr = "search-list";
         String url = BASE_URL + BASE_NAME + URL_SEPARATOR + disapprovedListStr;
-        List<Request> disapprovedList = SharedData.fetchAllByUrl(entity, url, new ParameterizedTypeReference<List<Request>>() {
+        List<Request> requestResult = SharedData.fetchAllByUrl(entity, url, new ParameterizedTypeReference<List<Request>>() {
         });
 
         Map<String, Object> modelMap = new HashMap<>();
-        modelMap.put("disapprovedRequests", disapprovedList);
-        ModelAndView mav = new ModelAndView(disapprovedListStr, modelMap);
+        modelMap.put("requests", requestResult);
+        modelMap.put("requestDetailsInfo", "/request-details/info/");
+        ModelAndView mav = new ModelAndView(REPORT_LIST_VIEW_PAGE, modelMap);
         return mav;
 
     }
 
+    @RequestMapping(value = REPORT_LIST, method = POST, params = "xml")
+    public void searchXmlListAction(@Valid @ModelAttribute("requestSearch") RequestSearch entity, BindingResult bindingResult, HttpServletRequest request,
+                                    HttpServletResponse response) {
+        String disapprovedListStr = "search-list";
+        String url = BASE_URL + BASE_NAME + URL_SEPARATOR + disapprovedListStr;
+        List<Request> requestResult = SharedData.fetchAllByUrl(entity, url, new ParameterizedTypeReference<List<Request>>() {
+        });
+        XSSFWorkbook workbook = new XSSFWorkbook();
+
+        for (Request req : requestResult) {
+            XSSFSheet sheet = workbook.createSheet("Request #" + req.getRequestId());
+            Object[][] dataTypes = {
+                    {"Request ID", "Request Date", "Requested Personnel", "Personnel Message", "Admin Remark", "Item Type", "Request Status"},
+                    {req.getRequestId(), req.getRequestDate(), String.format("%s %s", req.getUser().getLastName(), req.getUser().getFirstName()), req.getUserMessage(), req.getAdminNotice(), req.getItemType().getName(), req.getRequestStatus().getName()},
+                    {"", "", "", "", "", "", ""},
+                    {"", "", "", "", "", "", ""}
+            };
+
+            int rowNumber = 0;
+            rowNumber = createXml(dataTypes, sheet, rowNumber);
+
+            List<RequestDetails> requestDetailsList = fetchRequestDetails(req.getRequestId());
+            for (RequestDetails rd : requestDetailsList) {
+                String consideredBy = rd.getConsideredByUser() != null ? String.format("%s %s", rd.getConsideredByUser().getLastName(), rd.getConsideredByUser().getFirstName()) : "";
+                String issuedBy = rd.getIssuedByUser() != null ? String.format("%s %s", rd.getIssuedByUser().getLastName(), rd.getIssuedByUser().getFirstName()) : "";
+
+                Object[][] dataTypes2 = {
+                        {"Request ID", "Item", "Request Quantity", "Approved Quantity", "Consideration Date",
+                                "Release Date", "Supply Office Remark", "Considered By", "Issued By", "Request Details Status",
+                                "Disapproval Message", "Cancellation Reason"},
+                        {rd.getRequest().getRequestId(), rd.getRequestQuantity(), rd.getApprovedQuantity(),
+                                rd.getApprovalDisapprovalDate(), rd.getReleaseDate(), rd.getSupplyOfficeRemark(), consideredBy, issuedBy,
+                                rd.getRequestDetailsStatus() != null ? rd.getRequestDetailsStatus().getName() : "", rd.getDisapprovalMessage(),
+                                rd.getCancellationReason()
+                        },
+
+                };
+
+                rowNumber = createXml(dataTypes2, sheet, rowNumber);
+            }
+        }
+
+
+        String mimeType = "application/xml";
+
+        response.setContentType(mimeType);
+//        response.setContentLength(workbook.get);
+
+        // set headers for the response
+        String headerKey = "Content-Disposition";
+        String headerValue = String.format("attachment; filename=\"%s\"",
+                "request-report.xlsx");
+        response.setHeader(headerKey, headerValue);
+
+        OutputStream outStream = null;
+        try {
+            outStream = response.getOutputStream();
+            workbook.write(outStream);
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (outStream != null) {
+                try {
+                    outStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+
+    private int createXml(Object[][] datatypes, XSSFSheet sheet, int rowNumber) {
+
+        System.out.println("Creating excel");
+
+        for (Object[] datatype : datatypes) {
+            Row row = sheet.createRow(rowNumber++);
+            int colNum = 0;
+            for (Object field : datatype) {
+                Cell cell = row.createCell(colNum++);
+                if (field instanceof String) {
+                    cell.setCellValue((String) field);
+                } else if (field instanceof Integer) {
+                    cell.setCellValue((Integer) field);
+                }
+            }
+        }
+
+        return rowNumber;
+    }
 
     @Override
     @RequestMapping(value = REMOVE_MAPPING, method = POST)
@@ -268,13 +375,18 @@ public class RequestController extends AbstractMainController<Request, Long> {
             public void setAsText(String text) {
                 List<Item> itemList = new ArrayList<>();
                 String[] itemsStr = text.split(",");
-                for (String itStr : itemsStr) {
-                    Item discoveredItem = fetchItemByStringId(itStr);
-                    if (discoveredItem != null)
-                        itemList.add(discoveredItem);
-                }
+                if (itemsStr == null || itemsStr.length == 0)
+                    setValue(null);
 
-                setValue(itemList);
+                else {
+                    for (String itStr : itemsStr) {
+                        Item discoveredItem = fetchItemByStringId(itStr);
+                        if (discoveredItem != null)
+                            itemList.add(discoveredItem);
+                    }
+
+                    setValue(itemList);
+                }
             }
         });
 
@@ -283,17 +395,22 @@ public class RequestController extends AbstractMainController<Request, Long> {
             public void setAsText(String text) {
                 List<RequestStatus> statusList = new ArrayList<>();
                 String[] statusStr = text.split(",");
-                for (String itStr : statusStr) {
-                    try {
-                        RequestStatus discoveredStatus = RequestStatus.valueOf(itStr);
-                        if (discoveredStatus != null)
-                            statusList.add(discoveredStatus);
+                if (statusStr == null || statusStr.length == 0)
+                    setValue(null);
 
-                    } catch (IllegalArgumentException e) {
+                else {
+                    for (String itStr : statusStr) {
+                        try {
+                            RequestStatus discoveredStatus = RequestStatus.valueOf(itStr);
+                            if (discoveredStatus != null)
+                                statusList.add(discoveredStatus);
+
+                        } catch (IllegalArgumentException e) {
+                        }
                     }
-                }
 
-                setValue(statusList);
+                    setValue(statusList);
+                }
             }
         });
 
@@ -303,16 +420,22 @@ public class RequestController extends AbstractMainController<Request, Long> {
             public void setAsText(String text) {
                 List<RequestDetailsStatus> statusList = new ArrayList<>();
                 String[] statusDetailsStr = text.split(",");
-                for (String itStr : statusDetailsStr) {
-                    try {
-                        RequestDetailsStatus discoveredStatus = RequestDetailsStatus.valueOf(itStr);
-                        if (discoveredStatus != null)
-                            statusList.add(discoveredStatus);
-                    } catch (IllegalArgumentException e) {
-                    }
-                }
 
-                setValue(statusList);
+                if (statusDetailsStr == null || statusDetailsStr.length == 0)
+                    setValue(null);
+
+                else {
+                    for (String itStr : statusDetailsStr) {
+                        try {
+                            RequestDetailsStatus discoveredStatus = RequestDetailsStatus.valueOf(itStr);
+                            if (discoveredStatus != null)
+                                statusList.add(discoveredStatus);
+                        } catch (IllegalArgumentException e) {
+                        }
+                    }
+
+                    setValue(statusList);
+                }
             }
         });
 
@@ -321,17 +444,23 @@ public class RequestController extends AbstractMainController<Request, Long> {
             public void setAsText(String text) {
                 List<ItemType> statusList = new ArrayList<>();
                 String[] itemTypeStr = text.split(",");
-                for (String itStr : itemTypeStr) {
-                    try {
-                        ItemType itemType = ItemType.valueOf(itStr);
-                        if (itemType != null)
-                            statusList.add(itemType);
 
-                    } catch (IllegalArgumentException e) {
+                if (itemTypeStr == null || itemTypeStr.length == 0)
+                    setValue(null);
+
+                else {
+                    for (String itStr : itemTypeStr) {
+                        try {
+                            ItemType itemType = ItemType.valueOf(itStr);
+                            if (itemType != null)
+                                statusList.add(itemType);
+
+                        } catch (IllegalArgumentException e) {
+                        }
                     }
-                }
 
-                setValue(statusList);
+                    setValue(statusList);
+                }
             }
         });
 

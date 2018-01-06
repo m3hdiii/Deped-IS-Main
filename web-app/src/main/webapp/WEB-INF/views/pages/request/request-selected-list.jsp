@@ -50,7 +50,6 @@
                         <th>Date Requested</th>
                         <th>Status</th>
                         <th>Action</th>
-                        <th></th>
                     </tr>
                     </thead>
                     <tbody>

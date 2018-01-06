@@ -56,12 +56,15 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
         return null;
     }
 
-    public List<CaptureInfo> fetchToBeCaptureInfo(Long orderId, ItemType[] itemTypes) {
-        String fetchQuery = "SELECT order_details_constant_key AS 'order_details', count(*) AS inserted_equipment, (order_details.total_quantity_arrived_no - count(*)) AS must_insert, \n" +
-                "order_details.total_quantity_arrived_no AS arrived_number , total_quantity_requested_no,  item_item_name AS 'item_name', item.pic_name AS pic_name, item.quantity AS item_quantity\n" +
-                "FROM item_details JOIN order_details USING(order_details_constant_key) JOIN item ON order_details.item_item_name = item.item_name\n" +
-                "WHERE order_details_constant_key IN (SELECT order_details_constant_key FROM order_details INNER JOIN item on order_details.item_item_name = item_name WHERE item_type IN ( %s ) AND order_order_id = :orderId \n" +
-                "ORDER BY order_details_state)  group by order_details_constant_key";
+    @Override
+    public List<CaptureInfo> fetchToBeCaptureInfo(ItemType[] itemTypes) {
+//        String fetchQuery = "SELECT order_details_constant_key AS 'order_details', count(*) AS inserted_equipment, (order_details.total_quantity_arrived_no - count(*)) AS must_insert, \n" +
+//                "order_details.total_quantity_arrived_no AS arrived_number , total_quantity_requested_no,  item_item_name AS 'item_name', item.pic_name AS pic_name, item.quantity AS item_quantity\n" +
+//                "FROM item_details JOIN order_details USING(order_details_constant_key) JOIN item ON order_details.item_item_name = item.item_name\n" +
+//                "WHERE order_details_constant_key IN (SELECT order_details_constant_key FROM order_details INNER JOIN item on order_details.item_item_name = item_name WHERE item_type IN ( %s ) AND order_order_id = :orderId \n" +
+//                "ORDER BY order_details_state)  group by order_details_constant_key";
+
+        String fetchQuery = "select count(item_details.item_name), (cast(quantity as signed) - count(item_details.item_name)), item.quantity, item.item_name, item.pic_name, item.quantity FROM item LEFT JOIN item_details using(item_name) WHERE item_type IN (%s) GROUP BY item_name";
         StringBuilder sb = new StringBuilder();
         for (ItemType it : itemTypes) {
             sb
@@ -87,7 +90,7 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
             tx = hibernateSession.beginTransaction();
             NativeQuery nativeQuery = hibernateSession.createNativeQuery(query);
 
-            nativeQuery.setParameter("orderId", orderId);
+//            nativeQuery.setParameter("orderId", orderId);
             list = nativeQuery.list();
 
             tx.commit();
@@ -102,16 +105,15 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
         if (!list.isEmpty()) {
             for (Object[] o : list) {
 
-                Long orderDetailsConstantKey = Long.valueOf(o[0] + "");
-                Long numberOfCapturedItems = Long.valueOf(o[1] + "");
-                Long numberOfRemainingCapturedItems = Long.valueOf(o[2] + "");
-                Long numberOfArrivedItems = Long.valueOf(o[3] + "");
-                Long totalQuantityRequested = Long.valueOf(o[4] + "");
-                String itemName = o[5] + "";
-                String pictureName = o[6] + "";
-                Long numberOfStockInSupplyOffice = Long.valueOf(o[7] + "");
-                captureInfoList.add(new CaptureInfo(orderDetailsConstantKey, numberOfCapturedItems, numberOfRemainingCapturedItems,
-                        numberOfArrivedItems, totalQuantityRequested, itemName, pictureName, numberOfStockInSupplyOffice));
+
+                Long numberOfCapturedItems = Long.valueOf(o[0] + "");
+                Long numberOfRemainingCapturedItems = Long.valueOf(o[1] + "");
+                Long totalQuantityRequested = Long.valueOf(o[2] + "");
+                String itemName = o[3] + "";
+                String pictureName = o[4] + "";
+                Long numberOfStockInSupplyOffice = Long.valueOf(o[5] + "");
+                captureInfoList.add(new CaptureInfo(numberOfCapturedItems, numberOfRemainingCapturedItems,
+                        totalQuantityRequested, itemName, pictureName, numberOfStockInSupplyOffice));
             }
         }
 

@@ -114,7 +114,7 @@
                                             <form:input min="0" type="number"
                                                         class="form-control form-control-flat no-margn"
                                                         path="map['${strKey}'].totalQuantityArrivedNo"
-                                                        value="${orderDet.totalQuantityRequestNo}"
+                                                        value="${orderDet.totalQuantityRequestNo - orderDet.totalQuantityArrivedNo}"
                                                         max="${orderDet.totalQuantityRequestNo - orderDet.totalQuantityArrivedNo}"
                                             />
                                         </div>

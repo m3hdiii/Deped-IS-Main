@@ -110,7 +110,15 @@
 
 
                 <p>
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button name="web" value="WEB" class="btn btn-primary"
+                            data-toggle="tooltip"
+                            title="Save the list">Report Web
+                    </button>
+
+                    <button name="xml" value="XML" class="btn btn-success"
+                            data-toggle="tooltip"
+                            title="Send the Request">Report XMl
+                    </button>
                 </p>
             </form:form>
 
@@ -119,69 +127,50 @@
             <br/>
         </div>
 
-        <%--<div class="row item-body">
+        <div class="panel panel-default">
+            <div class="panel-heading clean text-center">Report Result</div>
+            <div class="panel-body">
 
-            <c:forEach items="${requests}" var="request" varStatus="loop">
-                <form:form class="panel panel-warning col-md-4 no-padd">
-                    <div class="panel-heading no-padd">
-                    </div>
-                    ${request.requestId}
-                    ${request.user.firstName}
-                    ${request.requestDetails}
-                    <div class="panel-body no-padd">
-                        <nav class="navbar-default hidden-xs col-md-12" role="navigation">
-                            <ul class="nav navbar-nav">
-                                <li><a href="#"><img src="../../assets/images/avtar/user.png" class="img-circle"
-                                                     alt="user#2" width="40"></a></li>
-                                <li><a href="#"><strong>adhwheb u. gfffgf</strong></a></li>
-                                <li class="dropdown">
-                                    <a href="#" data-toggle="dropdown" class="col-md-2"><i class="fa fa-ellipsis-v"></i></a>
-                                    <ul role="menu" class="dropdown-menu">
-                                        <li><a href="#">Approve All</a></li>
-                                        <li><a href="#">Reject All</a></li>
-                                        <li class="divider">
-                                        <li><a href="#">Notify User</a></li>
-                                        </li>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </nav>
-                            &lt;%&ndash;<c:forEach items="${requestDetails}">&ndash;%&gt;
-                            &lt;%&ndash;<div class="panel panel-default no-padd col-md-12">&ndash;%&gt;
-                            &lt;%&ndash;<div class="panel-body">&ndash;%&gt;
-                            &lt;%&ndash;<label class="label label-info pull-left padd-xs text-right">HBW Ballpen</label>&ndash;%&gt;
-                            &lt;%&ndash;<p class="pull-right"><label>QTY: </label> 3 box</p>&ndash;%&gt;
-                            &lt;%&ndash;<div class="request-info col-md-12">&ndash;%&gt;
+                <table cellpadding="0" cellspacing="0" border="0" class="table table-hover" id="basic-datatable">
+                    <thead>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>User</th>
+                        <th>User Message</th>
+                        <th>Date Requested</th>
+                        <th>Item Type</th>
+                        <th>Status</th>
+                        <th>More Info</th>
 
-                            &lt;%&ndash;<p>This Ballpen is for teachers of Boys High Baguio.</p>&ndash;%&gt;
-                            &lt;%&ndash;<div class="req-footer margn-t-sm">&ndash;%&gt;
-                            &lt;%&ndash;<p class="pull-left margn-t-xs text-gray">12/04/2017 11:21:00</p>&ndash;%&gt;
-                            &lt;%&ndash;<div class="btn-group pull-right">&ndash;%&gt;
-                            &lt;%&ndash;<button class="btn btn-danger btn-sm"><i class="fa fa-close"></i></button>&ndash;%&gt;
-                            &lt;%&ndash;<button class="btn btn-success btn-sm"><i class="fa fa-check"></i> </button>&ndash;%&gt;
-                            &lt;%&ndash;</div>&ndash;%&gt;
-                            &lt;%&ndash;</div>&ndash;%&gt;
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach items="${requests}" var="request">
+                        <tr>
+                            <td>${request.requestId}</td>
+                            <td>${request.user.firstName} ${request.user.middleName} ${request.user.lastName}</td>
+                            <td>${request.userMessage}</td>
+                            <td>${request.requestDate}</td>
+                            <td>${request.itemType}</td>
+                            <td>${request.requestStatus}</td>
+                            <td>
+                                <a class="btn btn-info" role="button"
+                                   href="<c:url value='${requestDetailsInfo}${request.requestId}' />">request
+                                    details</a>
+                            </td>
+                            <td>
+                                <a class="btn btn-info" role="button"
+                                   href="<c:url value='${requestDetailsInfo}${request.requestId}' />">request
+                                    details</a>
+                            </td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
 
-                            &lt;%&ndash;</div>&ndash;%&gt;
-                            &lt;%&ndash;</div>&ndash;%&gt;
-                            &lt;%&ndash;</div>&ndash;%&gt;
-                            &lt;%&ndash;</c:forEach>&ndash;%&gt;
+            </div>
+        </div>
 
-
-                    </div>
-                </form:form>
-            </c:forEach>
-
-            &lt;%&ndash;
-                <a href="/item/${item.itemId}">
-                ${item.functionType}
-                ${item.threshold}
-                <a href="/item/update/${item.itemId}"><img src="${resourceURL}/images/edit.png" width="16"/></a>
-                <img src="${resourceURL}/images/delete.png" width="16"/>
-            &ndash;%&gt;
-
-        </div>--%>
         <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>
