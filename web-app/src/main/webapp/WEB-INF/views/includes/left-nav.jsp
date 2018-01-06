@@ -120,7 +120,7 @@
             <li class="has-submenu" data-toggle="tooltip" title="Order Items"><a href="#"><i
                     class="fa fa-file-text-o"></i> <span class="nav-label">Insert</span></a>
                 <ul class="list-unstyled">
-                    <li><a href="/order-details/insert">Insert</a></li>
+                    <li><a href="/item-details/insert-data">Equipment Details</a></li>
                 </ul>
             </li>
 

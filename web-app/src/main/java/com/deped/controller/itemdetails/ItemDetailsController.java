@@ -176,7 +176,7 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
 
 
     @RequestMapping(value = INSERT_DATA, method = RequestMethod.GET)
-    public ModelAndView captureData() {
+    public ModelAndView captureData(@ModelAttribute("itemDetailsBeanForm") ItemDetailsForm itemDetailsForm) {
 
         List<CaptureInfo> captureInfoList = fetchCaptureInfoByItemTypes(new ItemType[]{ItemType.EQUIPMENT});
 
@@ -186,7 +186,7 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
     }
 
     @RequestMapping(value = INSERT_DATA, method = RequestMethod.POST)
-    public ModelAndView captureDataAction(@PathVariable("id") Long orderId, @Valid @ModelAttribute("itemDetailsBeanForm") ItemDetailsForm itemDetailsForm, BindingResult bindingResult) {
+    public ModelAndView captureDataAction(@Valid @ModelAttribute("itemDetailsBeanForm") ItemDetailsForm itemDetailsForm, BindingResult bindingResult) {
         ModelAndView mav = new ModelAndView();
         return mav;
     }
@@ -224,11 +224,12 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
         }
 
         ItemDetailsBeanForm itemDetailsBeanForm = new ItemDetailsBeanForm(captureInfoList);
+
         Map<String, Object> modelMap = new HashMap<>();
         modelMap.put("itemDetailsBeanForm", itemDetailsBeanForm);
         modelMap.put("colours", Colour.values());
         modelMap.put("materials", Material.values());
-        return new ModelAndView("pages/order-details/insert-item-info", modelMap);
+        return new ModelAndView("pages/item-details/insert-item-info", modelMap);
     }
 
     private ModelAndView insertEquipmentsInformation2(OrderDetailsForm orderDetailsForm, HttpSession session) {

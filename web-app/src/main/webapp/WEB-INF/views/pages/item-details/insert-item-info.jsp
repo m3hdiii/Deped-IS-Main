@@ -95,11 +95,6 @@
                                         <label>Ordered QTY:</label>
                                         <span>&nbsp;${capInfo.totalReuqestedQuantity}</span>
                                     </div>
-
-                                    <div class="form-group">
-                                        <label>Arrived QTY:</label>
-                                        <span>&nbsp;${capInfo.numberOfArrivedItems}</span>
-                                    </div>
                                     <div class="form-group">
                                         <label>Inserted Info QTY:</label>
                                         <span>&nbsp;${capInfo.numberOfCapturedItems}</span>
@@ -205,16 +200,8 @@
                                                                    var="itemDetails">
                                                             <tr>
                                                                 <td>${loop2.index + 1}</td>
-                                                                <td>AA
-
-                                                                    <form:input
+                                                                <td><form:input
                                                                             path="captureInfoList['${loop.index}'].itemDetailsList['${loop2.index}'].item"
-                                                                            value="${capInfo.itemName}" disabled="true"
-                                                                            id="item-${loop.index}"
-                                                                            cssClass="form-control"/>
-
-                                                                    <form:input
-                                                                            path="captureInfoList"
                                                                             value="${capInfo.itemName}" disabled="true"
                                                                             id="item-${loop.index}"
                                                                             cssClass="form-control"/>

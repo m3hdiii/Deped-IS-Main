@@ -64,7 +64,7 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
 //                "WHERE order_details_constant_key IN (SELECT order_details_constant_key FROM order_details INNER JOIN item on order_details.item_item_name = item_name WHERE item_type IN ( %s ) AND order_order_id = :orderId \n" +
 //                "ORDER BY order_details_state)  group by order_details_constant_key";
 
-        String fetchQuery = "select count(item_details.item_name), (cast(quantity as signed) - count(item_details.item_name)), item.quantity, item.item_name, item.pic_name, item.quantity FROM item LEFT JOIN item_details using(item_name) WHERE item_type IN (%s) GROUP BY item_name";
+        String fetchQuery = "select count(item_details.item_name), (cast(quantity as signed) - count(item_details.item_name)), item.quantity, item.item_name, item.pic_name, item.quantity AS tmp FROM item LEFT JOIN item_details using(item_name) WHERE item_type IN (%s) GROUP BY item_name";
         StringBuilder sb = new StringBuilder();
         for (ItemType it : itemTypes) {
             sb
