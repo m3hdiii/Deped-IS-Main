@@ -313,12 +313,21 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
             return null;
         }
 
+        Date birthDate = null;
         try {
-            Date birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateText);
+            birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateText);
             return birthDate;
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        try {
+            birthDate = new SimpleDateFormat("MM/dd/yyyy").parse(dateText);
+            return birthDate;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         return null;
     }
 

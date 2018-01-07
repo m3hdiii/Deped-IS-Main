@@ -69,38 +69,48 @@
                                     </thead>
                                     <tbody>
 
-                                        <c:forEach items="${borrowRequestDetailsForm.listOfRequestTacker}" var="reqTracker"
-                                                   varStatus="loop">
+                                    <c:forEach items="${borrowRequestDetailsForm.listOfRequestTracker}" var="reqTracker"
+                                               varStatus="loop">
                                             <tr>
                                                 <td>${loop.index + 1}</td>
                                                 <td>${reqTracker.requestDetails.item.name}</td>
                                                 <td>
-                                                    <form:select path="listOfRequestTacker['${loop.index}'].itemDetails.officeSerialNo"
-                                                                 class="form-control">
+                                                    <form:select
+                                                            path="listOfRequestTracker['${loop.index}'].itemDetails.officeSerialNo"
+                                                            class="form-control">
                                                         <form:option value="-" label="---Choose a Status"/>
-                                                        <form:options items="${reqTracker.itemDetailsList}" itemLabel="officeSerialNo"/>
+                                                        <form:options items="${reqTracker.itemDetailsList}"
+                                                                      itemLabel="officeSerialNo"
+                                                                      itemValue="officeSerialNo"/>
                                                     </form:select>
                                                 </td>
-                                                <td><form:input id="releaseDate" onclick="clickOnDateInput('releaseDate')"
-                                                                path="listOfRequestTacker['${loop.index}'].releaseDate"/></td>
+                                                <td><form:input id="releaseDate${loop.index}"
+                                                                onclick="clickOnDateInput('releaseDate${loop.index}')"
+                                                                path="listOfRequestTracker['${loop.index}'].releaseDate"/></td>
+
                                                 <td>
-                                                    <form:select path="listOfRequestTacker['${loop.index}'].trackingStatus"
-                                                                 class="form-control">
-                                                        <form:option value="-" label="---Choose a Status"/>
-                                                        <form:options items="${trackingStatuses}" itemLabel="name"/>
-                                                    </form:select>
+                                                    GOING TO BE HELD
                                                 </td>
                                                 <td>
-                                                    <form:input disabled="true"
-                                                                path="listOfRequestTacker['${loop.index}'].requestDetails.request"
-                                                                value="${reqTracker.requestDetails.request.requestId}"/>
+                                                        ${reqTracker.requestDetails.request.requestId}
                                                 </td>
 
                                                 <td>
-                                                    <form:input disabled="true"
-                                                                path="listOfRequestTacker['${loop.index}'].requestDetails.request.user"
-                                                                value="${reqTracker.requestDetails.request.user.username}"/>
+                                                        ${reqTracker.requestDetails.request.user.username}
+                                                    <form:hidden
+                                                            path="listOfRequestTracker['${loop.index}'].trackingStatus"
+                                                            value="IN_USE"/>
+                                                    <form:hidden
+                                                            path="listOfRequestTracker['${loop.index}'].requestDetails.request.requestId"/>
+                                                    <form:hidden
+                                                            path="listOfRequestTracker['${loop.index}'].requestDetails.request.requestId"/>
+                                                    <form:hidden
+                                                            path="listOfRequestTracker['${loop.index}'].acquiredUser"
+                                                            value="${reqTracker.requestDetails.request.user.username}"/>
+
                                                 </td>
+
+
                                             </tr>
                                         </c:forEach>
                                     </tbody>
@@ -108,7 +118,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button class="col-sm-2 btn btn-purple pull-right" type="submit">Add To Order</button>
+                            <button class="col-sm-2 btn btn-purple pull-right" type="submit">Lend The Equipment</button>
                         </div>
                     </div>
 

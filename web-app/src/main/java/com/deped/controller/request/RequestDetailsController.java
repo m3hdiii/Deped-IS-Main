@@ -75,6 +75,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     private static final String SUMMARY_PAGE = BASE_NAME + URL_SEPARATOR + "summary" + URL_SEPARATOR + ID_PATTERN;
 
     private static final String UPDATE_STATUS_REST = BASE_NAME + URL_SEPARATOR + "update-status/user/%s/status/%d";
+    private static final String UPDATE_BORROW_STATUS_REST = "request-tracker" + URL_SEPARATOR + "update-status/user/%s/status/%d";
 
 
     @RequestMapping(value = CREATE_MAPPING, method = GET)
@@ -487,8 +488,8 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     }
 
     @RequestMapping(value = BORROW_MAPPING, method = POST)
-    public ModelAndView borrowActionSubmit(@PathVariable(ID_STRING_LITERAL) Long requestId, @ModelAttribute("borrowRequestDetailsForm") RequestDetailsForm orderDetailsForm) {
-        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, RequestDetailsStatus.RELEASED);
+    public ModelAndView borrowActionSubmit(@PathVariable(ID_STRING_LITERAL) Long requestId, @ModelAttribute("borrowRequestDetailsForm") BorrowRequestDetailsForm borrowRequestDetailsForm) {
+        ResponseEntity<Response> updateResponse = updateBorrowStatusAction(borrowRequestDetailsForm, RequestDetailsStatus.RELEASED);
         Response response = updateResponse.getBody();
 
         String headTagTitle = "Release Page";
@@ -499,7 +500,24 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
 
         ResultBean resultBean = new ResultBean(headTagTitle, headTagDescription, heading, successMessage, failureMessage);
         ModelAndView mav = createResultPage(resultBean);
-        return mav;
+        return null;
+    }
+
+    private ResponseEntity<Response> updateBorrowStatusAction(BorrowRequestDetailsForm requestDetailsForm, RequestDetailsStatus status) {
+        List<RequestTracker> list = requestDetailsForm.getListOfRequestTracker();
+        RequestTracker[] requestDetailsArray = list.toArray(new RequestTracker[list.size()]);
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<RequestTracker[]> httpEntity = new HttpEntity<>(requestDetailsArray, headers);
+
+        User user = getUserFromSpringSecurityContext();
+        String username = user.getUsername();
+        String restUrl = String.format((BASE_URL + UPDATE_BORROW_STATUS_REST), username, status.ordinal());
+
+        ResponseEntity<Response> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, Response.class);
+        return response;
     }
 
 
@@ -638,11 +656,21 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
             }
         });
 
-        binder.registerCustomEditor(ItemDetails.class, new PropertyEditorSupport() {
+        binder.registerCustomEditor(TrackingStatus.class, "trackingStatus", new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
+                TrackingStatus trackingStatus = null;
+                if (text != null && !text.isEmpty()) {
+                    trackingStatus = trackingStatus.valueOf(text);
+                }
+                setValue(trackingStatus);
+            }
+        });
 
-                setValue(null);
+        binder.registerCustomEditor(Date.class, "releaseDate", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
             }
         });
     }
