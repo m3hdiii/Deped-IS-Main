@@ -54,6 +54,7 @@
             <div class="request-body-container">
                 <form:form commandName="borrowRequestDetailsForm" method="post">
                     <div class="panel panel-default">
+                        <div class="panel-heading clean text-center">Equipment Information</div>
                         <div class="panel-body">
                             <div class="item-body col-lg-12">
                                 <table cellspacing="0" border="0"
