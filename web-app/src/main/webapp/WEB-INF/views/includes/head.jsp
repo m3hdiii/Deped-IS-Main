@@ -20,6 +20,7 @@
 
     <!-- DateTime Picker  -->
     <link rel="stylesheet" href="${resourceURL}/css/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.css" />
+    <link rel="stylesheet" href="${resourceURL}/css/main/bootstrap-datepicker3.css">
 
     <!-- Bootstrap Validator  -->
     <link rel="stylesheet" href="${resourceURL}/css/bootstrap-validator/bootstrap-validator.css" />
