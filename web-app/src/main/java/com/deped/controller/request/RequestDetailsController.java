@@ -638,11 +638,11 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
             }
         });
 
-        binder.registerCustomEditor(Item.class, new PropertyEditorSupport() {
+        binder.registerCustomEditor(ItemDetails.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
-                Item discoveredItem = fetchItemByStringId(text);
-                setValue(discoveredItem);
+
+                setValue(null);
             }
         });
     }

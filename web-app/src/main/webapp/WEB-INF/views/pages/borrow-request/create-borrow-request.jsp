@@ -93,12 +93,13 @@
                                         <form:options items="${reqTracker.itemDetailsList}" itemLabel="officeSerialNo"/>
                                     </form:select>
                                 </td>
-                                <td><form:input path="listOfRequestTacker['${loop.index}'].releaseDate"/></td>
+                                <td><form:input id="releaseDate" onclick="clickOnDateInput('releaseDate')"
+                                                path="listOfRequestTacker['${loop.index}'].releaseDate"/></td>
                                 <td>
                                     <form:select path="listOfRequestTacker['${loop.index}'].trackingStatus"
                                                  class="form-control">
                                         <form:option value="-" label="---Choose a Status"/>
-                                        <form:options items="${trackingStatuses}"/>
+                                        <form:options items="${trackingStatuses}" itemLabel="name"/>
                                     </form:select>
                                 </td>
                                 <td>
@@ -131,6 +132,8 @@
     <!-- Warper Ends Here (working area) -->
     <c:import url="../../includes/footer.jsp"/>
     <script src="${resourceURL}/js/additional/item-info.js" type="text/javascript"></script>
+        <script type="text/javascript" src="${resourceURL}/js/main/bootstrap-datepicker.js"></script>
+        <script type="text/javascript" src="${resourceURL}/js/main/main.js"></script>
 
 </body>
 </html>
