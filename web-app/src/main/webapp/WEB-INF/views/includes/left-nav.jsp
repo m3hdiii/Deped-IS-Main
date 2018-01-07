@@ -95,6 +95,9 @@
                             <li><a href="/order/requisition-list">Order Requisition</a></li>
                             <li><a href="/order/arrival-list">Arrived Order Checklist</a></li>
                         </sec:authorize>
+                        <sec:authorize access="hasRole('ROLE_CHIEF')">
+                            <li><a href="/order/report-list">Report List</a></li>
+                        </sec:authorize>
                     </ul>
                 </li>
             </sec:authorize>
