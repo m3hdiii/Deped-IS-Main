@@ -116,8 +116,12 @@
                         </c:forEach>
 
                         </tbody>
-                        <button class="col-sm-2 btn btn-success btn-block" type="submit">Add To Order</button>
                         </form:form>
+                    </table>
+                        <div class="modal-footer">
+                            <button class="col-sm-2 btn btn-purple pull-right" type="submit">Add To Order</button>
+                        </div>
+
                 </div>
             </div>
         </div>
