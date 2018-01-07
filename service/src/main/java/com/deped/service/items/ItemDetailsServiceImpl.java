@@ -1,12 +1,16 @@
 package com.deped.service.items;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
+import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.items.ItemDetails;
 import com.deped.model.items.ItemType;
 import com.deped.model.order.CaptureInfo;
 import com.deped.repository.items.ItemDetailsRepository;
 import com.deped.repository.utils.Range;
+import com.deped.service.ServiceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +54,16 @@ public class ItemDetailsServiceImpl implements ItemDetailsService {
 
     @Override
     public ResponseEntity<Response> createOrUpdateAll(ItemDetails... entities) {
-        return null;
+        Boolean isCreated = null;
+        try {
+            isCreated = itemDetailsRepository.createOrUpdateAll(entities);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
+        Response response = ServiceUtils.makeResponse(isCreated, Operation.CREATE, ItemDetails.class);
+        ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
+        return responseEntity;
     }
 
     @Override
@@ -64,6 +77,13 @@ public class ItemDetailsServiceImpl implements ItemDetailsService {
     public ResponseEntity<List<CaptureInfo>> fetchToBeCaptureInfo(ItemType[] itemTypes) {
         List<CaptureInfo> brands = itemDetailsRepository.fetchToBeCaptureInfo(itemTypes);
         ResponseEntity<List<CaptureInfo>> responseEntity = new ResponseEntity<>(brands, OK);
+        return responseEntity;
+    }
+
+    @Override
+    public ResponseEntity<List<ItemDetails>> fetchAllByItemName(String itemName) {
+        List<ItemDetails> brands = itemDetailsRepository.fetchAllByItemName(itemName);
+        ResponseEntity<List<ItemDetails>> responseEntity = new ResponseEntity<>(brands, OK);
         return responseEntity;
     }
 }

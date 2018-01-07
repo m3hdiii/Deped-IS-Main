@@ -5,18 +5,18 @@ import com.deped.model.items.features.Colour;
 import com.deped.model.items.features.Condition;
 import com.deped.model.items.features.EquipmentAvailability;
 import com.deped.model.items.features.Material;
-import com.deped.model.order.OrderDetails;
 import com.deped.protection.validators.xss.XSS;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "item_details")
-public class ItemDetails {
+public class ItemDetails implements Serializable {
 
 
     @NotEmpty(message = "Office serial number field can not be blank")
@@ -42,14 +42,8 @@ public class ItemDetails {
     private EquipmentAvailability equipmentAvailability;
 
 
-    @ManyToOne
-    @JoinColumn(name = "order_details_constant_key", referencedColumnName = "order_details_constant_key")
-    private OrderDetails orderDetails;
-
-
     @Column(name = "equipment_serial_number")
-    @NotEmpty(message = "Equipment serial number field can not be blank")
-    @Length(min = 1, max = 45, message = "Equipment serial number filed length must be between 1 to 45 character")
+    @Length(max = 45, message = "Equipment serial number filed length must less than 45 character")
     @XSS
     private String equipmentSerialNo;
 
@@ -79,6 +73,9 @@ public class ItemDetails {
 
     @Column(name = "pic_url")
     private String picUrl;
+
+    public ItemDetails() {
+    }
 
     public Colour getColour() {
         return colour;
@@ -126,14 +123,6 @@ public class ItemDetails {
 
     public void setEquipmentSerialNo(String equipmentSerialNo) {
         this.equipmentSerialNo = equipmentSerialNo;
-    }
-
-    public OrderDetails getOrderDetails() {
-        return orderDetails;
-    }
-
-    public void setOrderDetails(OrderDetails orderDetails) {
-        this.orderDetails = orderDetails;
     }
 
     public Date getCreationDate() {

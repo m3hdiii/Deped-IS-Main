@@ -12,4 +12,6 @@ public interface ItemDetailsService extends BaseService<ItemDetails, String> {
     ResponseEntity<List<ItemDetails>> fetchAllByOrderIdAndItemType(Long orderId, ItemType[] itemTypes);
 
     ResponseEntity<List<CaptureInfo>> fetchToBeCaptureInfo(ItemType[] itemTypes);
+
+    ResponseEntity<List<ItemDetails>> fetchAllByItemName(String itemName);
 }

@@ -12,4 +12,6 @@ public interface ItemDetailsRepository extends BaseRepository<ItemDetails, Strin
     List<ItemDetails> fetchAllByOrderIdAndItemType(Long orderId, ItemType[] itemTypes);
 
     List<CaptureInfo> fetchToBeCaptureInfo(ItemType[] itemTypes);
+
+    List<ItemDetails> fetchAllByItemName(String itemName);
 }

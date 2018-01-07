@@ -6,7 +6,7 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8" %>
+         pageEncoding="UTF-8" isELIgnored="false" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
@@ -155,6 +155,8 @@
                                                         <th>Price</th>
                                                         <th>Equipment Sr #</th>
                                                         <th>Material</th>
+                                                        <th>Availability</th>
+                                                        <th>Condition</th>
                                                         <th>Weight</th>
                                                         <th>Life Span</th>
 
@@ -193,6 +195,27 @@
                                                                     </c:forEach>
                                                                 </select>
                                                             </td>
+
+                                                            <td>
+                                                                <select class="form-control"
+                                                                        id="availability-${loop.index}">
+                                                                    <c:forEach var="availability"
+                                                                               items="${availabilities}">
+                                                                        <option value="${availability}">${availability.name}</option>
+                                                                    </c:forEach>
+                                                                </select>
+                                                            </td>
+
+                                                            <td>
+                                                                <select class="form-control"
+                                                                        id="condition-${loop.index}">
+                                                                    <c:forEach var="condition" items="${conditions}">
+                                                                        <option value="${condition}">${condition.name}</option>
+                                                                    </c:forEach>
+                                                                </select>
+                                                            </td>
+
+
                                                             <td><input class="form-control"
                                                                        id="weightInGram-${loop.index}"/></td>
                                                             <td><input class="form-control"
@@ -203,10 +226,10 @@
                                                             <tr>
                                                                 <td>${loop2.index + 1}</td>
                                                                 <td><form:input
-                                                                            path="captureInfoList['${loop.index}'].itemDetailsList['${loop2.index}'].item"
-                                                                            value="${capInfo.itemName}" disabled="true"
-                                                                            id="item-${loop.index}"
-                                                                            cssClass="form-control"/>
+                                                                        path="captureInfoList['${loop.index}'].itemDetailsList['${loop2.index}'].item"
+                                                                        value="${capInfo.itemName}" disabled="true"
+                                                                        id="item-${loop.index}"
+                                                                        cssClass="form-control"/>
 
                                                                 </td>
                                                                 <td><form:input
@@ -244,14 +267,35 @@
                                                                                   itemLabel="name"/>
                                                                 </form:select>
                                                                 </td>
+
+                                                                <td><form:select
+                                                                        cssClass="availability-${loop.index} form-control"
+                                                                        multiple="single"
+                                                                        path="captureInfoList['${loop.index}'].itemDetailsList['${loop2.index}'].equipmentAvailability">
+                                                                    <form:options items="${availabilities}"
+                                                                                  itemLabel="name"/>
+                                                                </form:select>
+                                                                </td>
+
+                                                                <td><form:select
+                                                                        cssClass="condition-${loop.index} form-control"
+                                                                        multiple="single"
+                                                                        path="captureInfoList['${loop.index}'].itemDetailsList['${loop2.index}'].condition">
+                                                                    <form:options items="${conditions}"
+                                                                                  itemLabel="name"/>
+                                                                </form:select>
+                                                                </td>
+
                                                                 <td><form:input
                                                                         path="captureInfoList['${loop.index}'].itemDetailsList['${loop2.index}'].weightInGram"
                                                                         cssClass="weightInGram-${loop.index} form-control"/></td>
                                                                 <td><form:input
                                                                         path="captureInfoList['${loop.index}'].itemDetailsList['${loop2.index}'].lifeSpan"
-                                                                        cssClass="lifeSpan-${loop.index} form-control"/></td>
+                                                                        cssClass="lifeSpan-${loop.index} form-control"/>
 
-
+                                                                    <form:hidden
+                                                                            path="captureInfoList['${loop.index}'].itemDetailsList['${loop2.index}'].item.name"/>
+                                                                </td>
                                                             </tr>
                                                         </c:forEach>
 

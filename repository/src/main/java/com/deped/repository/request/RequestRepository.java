@@ -13,4 +13,6 @@ public interface RequestRepository extends BaseRepository<Request, Long> {
     List<Request> fetchAllByUsername(String username);
 
     List<Request> requestSearch(RequestSearch requestSearch);
+
+    List<Request> fetchAllConsideredEquipment();
 }

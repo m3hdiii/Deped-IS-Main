@@ -5,6 +5,7 @@ import com.deped.model.request.RequestDetails;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 
 @Entity
@@ -20,6 +21,9 @@ public class RequestTracker {
     @JoinColumn(name = "office_serial_number")
     private ItemDetails itemDetails;
 
+    @Column(name = "release_date")
+    private Date releaseDate;
+
     @Column(name = "return_date")
     private Date returnDate;
 
@@ -33,6 +37,37 @@ public class RequestTracker {
             @JoinColumn(name = "item_name")
     })
     private RequestDetails requestDetails;
+
+    @Column(name = "acquired_user")
+    private String acquiredUser;
+
+    @Transient
+    private List<ItemDetails> itemDetailsList;
+
+
+    public RequestTracker() {
+    }
+
+    public RequestTracker(RequestDetails requestDetails, List<ItemDetails> itemDetailsList) {
+        this.requestDetails = requestDetails;
+        this.itemDetailsList = itemDetailsList;
+    }
+
+    public RequestTracker(ItemDetails itemDetails, Date releaseDate, Date returnDate, TrackingStatus trackingStatus, RequestDetails requestDetails) {
+        this.itemDetails = itemDetails;
+        this.releaseDate = releaseDate;
+        this.returnDate = returnDate;
+        this.trackingStatus = trackingStatus;
+        this.requestDetails = requestDetails;
+    }
+
+    public Date getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(Date releaseDate) {
+        this.releaseDate = releaseDate;
+    }
 
     public Date getReturnDate() {
         return returnDate;
@@ -72,6 +107,22 @@ public class RequestTracker {
 
     public void setItemDetails(ItemDetails itemDetails) {
         this.itemDetails = itemDetails;
+    }
+
+    public List<ItemDetails> getItemDetailsList() {
+        return itemDetailsList;
+    }
+
+    public void setItemDetailsList(List<ItemDetails> itemDetailsList) {
+        this.itemDetailsList = itemDetailsList;
+    }
+
+    public String getAcquiredUser() {
+        return acquiredUser;
+    }
+
+    public void setAcquiredUser(String acquiredUser) {
+        this.acquiredUser = acquiredUser;
     }
 }
 

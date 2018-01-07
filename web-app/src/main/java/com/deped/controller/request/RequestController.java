@@ -56,6 +56,7 @@ public class RequestController extends AbstractMainController<Request, Long> {
     private static final String RENDER_LIST_MAPPING = BASE_NAME + FETCH_PATTERN;
     private static final String RENDER_LIST_APPROVAL_MAPPING = BASE_NAME + "/approval-list";
     private static final String RENDER_LIST_RELEASE_MAPPING = BASE_NAME + "/release-list";
+    private static final String RENDER_LIST_BORROW_MAPPING = BASE_NAME + "/borrow-list";
     private static final String RENDER_LIST_SUMMARY_MAPPING = BASE_NAME + "/summary";
     private static final String RENDER_LIST_USER_MAPPING = BASE_NAME + FETCH_PATTERN + "/user" + FETCH_BY_ID_PATTERN;
     private static final String RENDER_LIST_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
@@ -139,6 +140,24 @@ public class RequestController extends AbstractMainController<Request, Long> {
         Map<String, Object> modelMap = new HashMap<>();
         modelMap.put("requests", requests);
         modelMap.put("requestUrl", "/request-details/issue/");
+        modelMap.put("anchorName", "Release");
+        ModelAndView mav = new ModelAndView(OPERATION_LIST, modelMap);
+        return mav;
+
+    }
+
+    @RequestMapping(value = RENDER_LIST_BORROW_MAPPING, method = GET)
+    public ModelAndView BorrowListRender() {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity httpEntity = makeHttpEntity(null);
+        String restUrl = BASE_URL + String.format("%s/fetch-considered-equipment", BASE_NAME);
+        ResponseEntity<List<Request>> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<Request>>() {
+        });
+
+        List<Request> requests = response.getBody();
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("requests", requests);
+        modelMap.put("requestUrl", "/request-details/borrow/");
         modelMap.put("anchorName", "Release");
         ModelAndView mav = new ModelAndView(OPERATION_LIST, modelMap);
         return mav;

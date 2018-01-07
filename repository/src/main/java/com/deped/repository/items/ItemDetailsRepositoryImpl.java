@@ -13,7 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
@@ -53,7 +55,8 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
 
     @Override
     public Boolean createOrUpdateAll(ItemDetails... entities) throws DatabaseRolesViolationException {
-        return null;
+        Boolean isDone = hibernateFacade.createOrUpdateAll(ItemDetails.class, entities);
+        return isDone;
     }
 
     @Override
@@ -118,6 +121,16 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
         }
 
         return captureInfoList;
+    }
+
+    @Override
+    public List<ItemDetails> fetchAllByItemName(String itemName) {
+
+        String query = "SELECT * FROM item_details WHERE item_name = :itemName";
+        Map<String, Object> map = new HashMap<>();
+        map.put("itemName", itemName);
+        List<ItemDetails> list = hibernateFacade.fetchAllEntityBySqlQuery(query, null, ItemDetails.class, map);
+        return list;
     }
 
 

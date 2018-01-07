@@ -9,6 +9,8 @@ import com.deped.model.items.Item;
 import com.deped.model.items.ItemDetails;
 import com.deped.model.items.ItemType;
 import com.deped.model.items.features.Colour;
+import com.deped.model.items.features.Condition;
+import com.deped.model.items.features.EquipmentAvailability;
 import com.deped.model.items.features.Material;
 import com.deped.model.order.CaptureInfo;
 import com.deped.model.order.OrderDetails;
@@ -176,7 +178,7 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
 
 
     @RequestMapping(value = INSERT_DATA, method = RequestMethod.GET)
-    public ModelAndView captureData(@ModelAttribute("itemDetailsBeanForm") ItemDetailsForm itemDetailsForm) {
+    public ModelAndView captureData() {
 
         List<CaptureInfo> captureInfoList = fetchCaptureInfoByItemTypes(new ItemType[]{ItemType.EQUIPMENT});
 
@@ -186,9 +188,36 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
     }
 
     @RequestMapping(value = INSERT_DATA, method = RequestMethod.POST)
-    public ModelAndView captureDataAction(@Valid @ModelAttribute("itemDetailsBeanForm") ItemDetailsForm itemDetailsForm, BindingResult bindingResult) {
+    public ModelAndView captureDataAction(@Valid @ModelAttribute("itemDetailsBeanForm") ItemDetailsBeanForm itemDetailsForm, BindingResult bindingResult) {
+
+        List<ItemDetails> subLIst = fetchFilledObjects(itemDetailsForm);
+        String restUrl;
+
+        restUrl = String.format(CREATE_ALL_URL, BASE_NAME);
+
+
+        ItemDetails[] requestDetails = subLIst.toArray(new ItemDetails[subLIst.size()]);
+        ResponseEntity<Response> response = makeGenericListRestRequest(restUrl, requestDetails, HttpMethod.POST, ItemDetails.class);
+        Response body = response.getBody();
         ModelAndView mav = new ModelAndView();
         return mav;
+    }
+
+    private List<ItemDetails> fetchFilledObjects(ItemDetailsBeanForm itemDetailsForm) {
+        List<ItemDetails> subList = new ArrayList<>();
+        List<CaptureInfo> capInfoList = itemDetailsForm.getCaptureInfoList();
+        for (CaptureInfo ci : capInfoList) {
+            List<ItemDetails> itemDetailsList = ci.getItemDetailsList();
+            if (itemDetailsList != null) {
+                for (ItemDetails id : itemDetailsList) {
+                    if (id.getOfficeSerialNo() != null && !id.getOfficeSerialNo().equals("")) {
+                        subList.add(id);
+                    }
+                }
+            }
+        }
+
+        return subList;
     }
 
     private List<CaptureInfo> fetchCaptureInfoByItemTypes(ItemType[] itemTypes) {
@@ -211,24 +240,32 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
     }
 
     private ModelAndView createInsertDataModelAndView(List<CaptureInfo> captureInfoList) {
+        Date d = new Date();
         for (int i = 0; i < captureInfoList.size(); i++) {
             CaptureInfo ci = captureInfoList.get(i);
             List<ItemDetails> itemDetailsList = null;
             if (ci.getNumberOfRemainingCapturedItems() > 0) {
                 itemDetailsList = new ArrayList<>();
                 for (int j = 0; j < ci.getNumberOfRemainingCapturedItems(); j++) {
-                    itemDetailsList.add(new ItemDetails());
+                    ItemDetails id = new ItemDetails();
+                    Item item = new Item();
+                    item.setName(ci.getItemName());
+                    id.setItem(item);
+                    id.setCreationDate(d);
+
+                    itemDetailsList.add(id);
                 }
                 ci.setItemDetailsList(itemDetailsList);
             }
         }
 
         ItemDetailsBeanForm itemDetailsBeanForm = new ItemDetailsBeanForm(captureInfoList);
-
         Map<String, Object> modelMap = new HashMap<>();
         modelMap.put("itemDetailsBeanForm", itemDetailsBeanForm);
         modelMap.put("colours", Colour.values());
         modelMap.put("materials", Material.values());
+        modelMap.put("availabilities", EquipmentAvailability.values());
+        modelMap.put("conditions", Condition.values());
         return new ModelAndView("pages/item-details/insert-item-info", modelMap);
     }
 
@@ -258,6 +295,13 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
             public void setAsText(String text) {
                 Item discoveredItem = fetchItemByStringId(text);
                 setValue(discoveredItem);
+            }
+        });
+
+        binder.registerCustomEditor(Date.class, "creationDate", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
             }
         });
     }

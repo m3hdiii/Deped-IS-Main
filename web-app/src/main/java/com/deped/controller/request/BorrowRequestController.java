@@ -28,6 +28,8 @@ public class BorrowRequestController extends AbstractMainController<Request, Lon
     private static final String RENDER_LIST_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String RENDER_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
+    private static final String BORROW_MAPPING = BASE_NAME + URL_SEPARATOR + "issue" + URL_SEPARATOR + ID_PATTERN;
+
 
     private static final String BASE_SHOW_PAGE = JSP_PAGES + URL_SEPARATOR + BASE_NAME + URL_SEPARATOR;
     private static final String CREATE_VIEW_PAGE = BASE_SHOW_PAGE + CREATE_PAGE + BASE_NAME;

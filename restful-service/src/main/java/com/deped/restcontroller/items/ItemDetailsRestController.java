@@ -24,6 +24,7 @@ public class ItemDetailsRestController extends AbstractMainRestController<ItemDe
     private static final String FETCH_MAPPING_BY_ORDER_ID_AND_ITEM_TYPE = BASE_NAME + "/find-by-order-type" + FETCH_BY_ID_PATTERN;
     private static final String FETCH_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String FETCH_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
+    private static final String FETCH_BY_ITEM_NAME_MAPPING = BASE_NAME + "/fetch-by-item-name" + FETCH_BY_ID_PATTERN;
     private static final String FETCH_BY_STATES = FETCH_MAPPING + URL_SEPARATOR + "by-states";
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
     private static final String UPDATE_STATE_MAPPING = BASE_NAME + "/update-state/user" + FETCH_BY_ID_PATTERN + "/state/{state}";
@@ -53,8 +54,15 @@ public class ItemDetailsRestController extends AbstractMainRestController<ItemDe
     }
 
     @Override
+    @RequestMapping(value = FETCH_BY_ID_MAPPING, method = RequestMethod.GET)
     public ResponseEntity<ItemDetails> fetchById(String s) {
         return null;
+    }
+
+    @RequestMapping(value = FETCH_BY_ITEM_NAME_MAPPING, method = RequestMethod.POST)
+    public ResponseEntity<List<ItemDetails>> fetchByItemId(@PathVariable("id") String itemId) {
+        ResponseEntity<List<ItemDetails>> response = itemDetailsService.fetchAllByItemName(itemId);
+        return response;
     }
 
     @Override
@@ -63,8 +71,10 @@ public class ItemDetailsRestController extends AbstractMainRestController<ItemDe
     }
 
     @Override
-    public ResponseEntity<Response> createOrUpdateAll(ItemDetails... entities) {
-        return null;
+    @RequestMapping(value = CREATE_ALL_MAPPING, method = RequestMethod.POST)
+    public ResponseEntity<Response> createOrUpdateAll(@RequestBody ItemDetails... entities) {
+        ResponseEntity<Response> response = itemDetailsService.createOrUpdateAll(entities);
+        return response;
     }
 
     @RequestMapping(value = FETCH_MAPPING_BY_ORDER_ID_AND_ITEM_TYPE, method = RequestMethod.POST)

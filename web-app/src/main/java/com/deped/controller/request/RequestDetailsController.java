@@ -3,15 +3,20 @@ package com.deped.controller.request;
 import com.deped.ResultBean;
 import com.deped.controller.AbstractMainController;
 import com.deped.controller.SharedData;
+import com.deped.form.BorrowRequestDetailsForm;
 import com.deped.form.RequestDetailsForm;
 import com.deped.model.Response;
 import com.deped.model.ResponseStatus;
 import com.deped.model.account.User;
 import com.deped.model.items.Item;
+import com.deped.model.items.ItemDetails;
+import com.deped.model.items.ItemType;
 import com.deped.model.request.Request;
 import com.deped.model.request.RequestDetails;
 import com.deped.model.request.RequestDetailsStatus;
 import com.deped.model.request.RequestStatus;
+import com.deped.model.tracker.RequestTracker;
+import com.deped.model.tracker.TrackingStatus;
 import com.deped.utils.SystemUtils;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -52,6 +57,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     private static final String RENDER_LIST_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String RENDER_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
+    private static final String BORROW_MAPPING = BASE_NAME + URL_SEPARATOR + "borrow" + URL_SEPARATOR + ID_PATTERN;
 
     private static final String BASE_SHOW_PAGE = JSP_PAGES + URL_SEPARATOR + BASE_NAME + URL_SEPARATOR;
     private static final String CREATE_VIEW_PAGE = BASE_SHOW_PAGE + CREATE_PAGE + BASE_NAME;
@@ -405,6 +411,98 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         return mav;
     }
 
+
+    //Administrative Tasks
+    @RequestMapping(value = BORROW_MAPPING, method = GET)
+    public ModelAndView borrowActionRender(@PathVariable(ID_STRING_LITERAL) Long requestId) {
+
+        Request request = fetchRequest(requestId);
+        if (request.getItemType() != ItemType.EQUIPMENT) {
+            String newRequestRedirectUrl = "redirect:/dashboard";
+            return new ModelAndView(newRequestRedirectUrl);
+        }
+
+        ModelAndView requestChecking = requestChecking(request, RequestStatus.CONSIDERED);
+        if (requestChecking != null) {
+            return requestChecking;
+        }
+
+        List<RequestDetails> requestDetailsList = fetchRequestDetails(requestId);
+        ModelAndView requestDetailsChecking = requestDetailsChecking(requestDetailsList);
+        if (requestDetailsChecking != null) {
+            return requestDetailsChecking;
+        }
+
+        RequestDetailsStatus[] nextRequestDetailsStatuses = new RequestDetailsStatus[]{RequestDetailsStatus.RELEASED, RequestDetailsStatus.CANCELED};
+
+        return renderBorrowActions(
+                request,
+                requestDetailsList,
+                nextRequestDetailsStatuses
+        );
+
+    }
+
+
+    private ModelAndView renderBorrowActions(Request request, List<RequestDetails> requestDetailsList, RequestDetailsStatus[] nextStatuses) {
+        Date d = new Date();
+        List<RequestTracker> requestTrackers = new ArrayList<>();
+        for (int i = 0; i < requestDetailsList.size(); i++) {
+            RequestDetails requestDetails = requestDetailsList.get(i);
+            Integer noOfRequestFromAnItem = requestDetails.getApprovedQuantity();
+            if (noOfRequestFromAnItem != null && noOfRequestFromAnItem > 0) {
+                Item item = requestDetails.getItem();
+                List<ItemDetails> itemDetailsList = getAvailableItemDetails(item);
+                RequestTracker requestTracker = new RequestTracker(requestDetails, itemDetailsList);
+
+                if (noOfRequestFromAnItem <= itemDetailsList.size()) {//we have captured info for all approved requests
+                    for (int j = 0; j < noOfRequestFromAnItem; j++) {
+                        requestTrackers.add(requestTracker);
+                    }
+                } else {
+                    //TODO should check how many of that equipment stock exist and how many has been captured and
+                    //TODO then redirect to capture page if there are uncaptured data and then return back here again
+                    for (int j = 0; j < itemDetailsList.size(); j++) { //only this much can release
+                        requestTrackers.add(requestTracker);
+                    }
+                }
+            }
+        }
+
+        BorrowRequestDetailsForm borrowRequestDetailsForm = new BorrowRequestDetailsForm(requestTrackers);
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("borrowRequestDetailsForm", borrowRequestDetailsForm);
+        modelMap.put("trackingStatuses", TrackingStatus.values());
+        return new ModelAndView("pages/borrow-request/create-borrow-request", modelMap);
+    }
+
+    private List<ItemDetails> getAvailableItemDetails(Item item) {
+        RestTemplate restTemplate = new RestTemplate();
+        HttpEntity httpEntity = makeHttpEntity(null);
+        String restUrl = String.format(FETCH_BY_ID_URL, "item-details/fetch-by-item-name", item.getName());
+
+        ResponseEntity<List<ItemDetails>> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<ItemDetails>>() {
+        });
+        return response.getBody();
+    }
+
+    @RequestMapping(value = BORROW_MAPPING, method = POST)
+    public ModelAndView borrowActionSubmit(@PathVariable(ID_STRING_LITERAL) Long requestId, @ModelAttribute("borrowRequestDetailsForm") RequestDetailsForm orderDetailsForm) {
+        ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, RequestDetailsStatus.RELEASED);
+        Response response = updateResponse.getBody();
+
+        String headTagTitle = "Release Page";
+        String headTagDescription = "Release Result Summary";
+        String heading = "Release Operation";
+        String successMessage = response.getResponseStatus() == com.deped.model.ResponseStatus.SUCCESSFUL ? "You Successfully Processed The Releasing Process" : null;
+        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "Something Went Wrong In Releasing Process" : null;
+
+        ResultBean resultBean = new ResultBean(headTagTitle, headTagDescription, heading, successMessage, failureMessage);
+        ModelAndView mav = createResultPage(resultBean);
+        return mav;
+    }
+
+
     private ModelAndView requestChecking(Request request, RequestStatus mustBeInStatus) {
         String newRequestRedirectUrl;
         if (request == null) {
@@ -529,6 +627,14 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
                     setValue(request);
 
                 }
+            }
+        });
+
+        binder.registerCustomEditor(Item.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                Item discoveredItem = fetchItemByStringId(text);
+                setValue(discoveredItem);
             }
         });
 

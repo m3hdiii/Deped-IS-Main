@@ -7,6 +7,9 @@ import java.util.List;
 public class ItemDetailsBeanForm {
     private List<CaptureInfo> captureInfoList;
 
+    public ItemDetailsBeanForm() {
+    }
+
     public ItemDetailsBeanForm(List<CaptureInfo> captureInfoList) {
         this.captureInfoList = captureInfoList;
     }

@@ -68,7 +68,7 @@ public class RequestRepositoryImpl implements RequestRepository {
 
     @Override
     public List<Request> fetchAllByRequestStatus(RequestStatus requestStatus) {
-        String nativeQuery = "SELECT * FROM request WHERE request_status = :requestStatus";
+        String nativeQuery = "SELECT * FROM request WHERE request_status = :requestStatus AND item_type <> 'EQUIPMENT'";
         Map<String, Object> parameterMap = new HashMap<>();
         parameterMap.put("requestStatus", requestStatus.toString());
         List<Request> requests = hibernateFacade.fetchAllEntityBySqlQuery(nativeQuery, null, Request.class, parameterMap);
@@ -286,6 +286,13 @@ public class RequestRepositoryImpl implements RequestRepository {
             return list;
         }
 
+    }
+
+    @Override
+    public List<Request> fetchAllConsideredEquipment() {
+        String nativeQuery = "SELECT * FROM request WHERE item_type = 'EQUIPMENT' AND request_status = 'CONSIDERED'";
+        List<Request> requests = hibernateFacade.fetchAllEntityBySqlQuery(nativeQuery, null, Request.class, null);
+        return requests;
     }
 
     private ListParameter createListParameter(List objects, String baseParamKey, Class<?> clazz) {

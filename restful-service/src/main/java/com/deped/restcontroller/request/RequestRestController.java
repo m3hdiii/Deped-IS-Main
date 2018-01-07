@@ -21,6 +21,7 @@ public class RequestRestController extends AbstractMainRestController<Request, L
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
     private static final String FETCH_MAPPING = BASE_NAME + FETCH_PATTERN;
     private static final String FETCH_MAPPING_BY_OPERATION = BASE_NAME + FETCH_PATTERN + FETCH_BY_ID_PATTERN;
+    private static final String FETCH_MAPPING_BY_OPERATION_AND_ITEM_TYPE = BASE_NAME + "/fetch-considered-equipment";
     private static final String FETCH_MAPPING_BY_USER = BASE_NAME + FETCH_PATTERN + "/user" + FETCH_BY_ID_PATTERN;
     private static final String FETCH_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String FETCH_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
@@ -67,6 +68,13 @@ public class RequestRestController extends AbstractMainRestController<Request, L
         }
 
         ResponseEntity<List<Request>> response = requestService.fetchAllByRequestStatus(status);
+        return response;
+    }
+
+    @RequestMapping(value = FETCH_MAPPING_BY_OPERATION_AND_ITEM_TYPE, method = RequestMethod.POST)
+    public ResponseEntity<List<Request>> fetchAllByOperationAndItemType() {
+
+        ResponseEntity<List<Request>> response = requestService.fetchAllConsideredEquipment();
         return response;
     }
 

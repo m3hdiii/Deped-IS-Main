@@ -98,6 +98,13 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public ResponseEntity<List<Request>> fetchAllConsideredEquipment() {
+        List<Request> requests = requestRepository.fetchAllConsideredEquipment();
+        ResponseEntity<List<Request>> responseEntity = new ResponseEntity<>(requests, OK);
+        return responseEntity;
+    }
+
+    @Override
     public ResponseEntity<List<Request>> fetchAllByUsername(String username) {
         List<Request> requests = requestRepository.fetchAllByUsername(username);
         ResponseEntity<List<Request>> responseEntity = new ResponseEntity<>(requests, OK);
