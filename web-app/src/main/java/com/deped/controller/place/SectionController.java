@@ -156,9 +156,8 @@ public class SectionController extends AbstractMainController<Section, String> {
                     return;
                 }
 
-                Long departmentId = Long.parseLong(text);
                 RestTemplate restTemplate = new RestTemplate();
-                String restUrl = String.format(FETCH_BY_ID_URL, "department", departmentId);
+                String restUrl = String.format(FETCH_BY_ID_URL, "department", text);
                 ResponseEntity<Department> response = restTemplate.getForEntity(restUrl, Department.class);
                 Department department = response.getBody();
                 setValue((text.equals("")) ? null : department);

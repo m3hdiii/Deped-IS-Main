@@ -28,7 +28,7 @@ public class DepartmentRepositoryImpl implements DepartmentRepository {
 
     @Override
     public Boolean update(Department entity) throws DatabaseRolesViolationException {
-        String sqlQuery = "UPDATE department SET department_name = :departmentName , description = :description , department_head = :departmentHead WHERE category_name = :oldDepartmentName ";
+        String sqlQuery = "UPDATE department SET department_name = :departmentName , description = :description , department_head = :departmentHead WHERE department_name = :oldDepartmentName ";
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("departmentName", entity.getName());
         paramMap.put("description", entity.getDescription());

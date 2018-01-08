@@ -27,9 +27,9 @@ public class SectionRepositoryImpl implements SectionRepository {
 
     @Override
     public Boolean update(Section entity) throws DatabaseRolesViolationException {
-        String sqlQuery = "UPDATE section SET section_name = :sectionName , description = :description , department_name = :departmentName WHERE category_name = :oldSectionName ";
+        String sqlQuery = "UPDATE section SET section_name = :sectionName , description = :description , department_name = :departmentName WHERE section_name = :oldSectionName ";
         Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("section_name", entity.getName());
+        paramMap.put("sectionName", entity.getName());
         paramMap.put("description", entity.getDescription());
         paramMap.put("departmentName", entity.getDepartment() != null ? entity.getDepartment().getName() : null);
         paramMap.put("oldSectionName", entity.getPreviousIdName());

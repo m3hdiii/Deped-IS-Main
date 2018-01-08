@@ -222,7 +222,7 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
 
         } else {
             HttpStatus status = response.getStatusCode();
-            processing(status, result, entityClass, responseMap, modelName, oldObject, freshObject, updateDuplicateMessage, messagePlaceHolder);
+            updateProcessing(status, result, entityClass, responseMap, modelName, oldObject, freshObject, updateDuplicateMessage, messagePlaceHolder);
         }
 
         mv.addAllObjects(responseMap);
@@ -239,6 +239,25 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
 
             case OK:
                 responseMap.put(SUCCESSFULLY_CREATED_KEY, SUCCESS_MESSAGE);
+                responseMap.put(modelName, freshObject);
+                break;
+
+            default:
+                result.addError(new FieldError(entityClass.getSimpleName(), "error", FAILURE_MESSAGE));
+                responseMap.put(modelName, oldObject);
+                break;
+        }
+    }
+
+    private void updateProcessing(HttpStatus status, BindingResult result, Class<T> entityClass, Map<String, Object> responseMap, String modelName, T oldObject, T freshObject, String messageFormat, String... messagePlaceHolder) {
+        switch (status) {
+            case CONFLICT:
+                result.addError(new FieldError(entityClass.getSimpleName(), "error", String.format(messageFormat, messagePlaceHolder)));
+                responseMap.put(modelName, oldObject);
+                break;
+
+            case OK:
+                responseMap.put(SUCCESSFULLY_UPDATED_KEY, SUCCESS_MESSAGE);
                 responseMap.put(modelName, freshObject);
                 break;
 

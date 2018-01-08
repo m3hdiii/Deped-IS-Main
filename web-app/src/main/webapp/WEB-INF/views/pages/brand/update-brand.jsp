@@ -22,7 +22,18 @@
 <section class="content">
 
     <c:import url="../../includes/top-nav.jsp"/>
+    <c:choose>
+    <c:when test="${not empty notUpdated}">
+    <p style="color: red;">${notUpdated}</p>
+    </c:when>
 
+
+    <c:when test="${not empty successfullyUpdated}">
+    <p style="color: green;">${successfullyUpdated}</p>
+    &nbsp;&nbsp;<a href="/brand/create">Create Brand</a>
+    </c:when>
+
+    </c:choose>
     <div class="warper container-fluid">
 
         <div class="page-header">
@@ -75,15 +86,17 @@
 
                                     <div class="form-group">
                                         <label for="newBrandName">Name</label>
-                                        <form:input path="name" type="text" class="form-control" id="newBrandName" placeholder="Name of the Brand"/>
+                                        <form:input path="name" type="text" class="form-control" id="newBrandName"
+                                                    placeholder="Name of the Brand"/>
                                     </div>
                                     <div class="form-group">
                                         <label for="newBrandDesc">Description</label>
                                         <form:textarea path="description" type="text" class="form-control limit-char-45"
-                                                       cols="3" rows="3" id="newBrandDesc" maxlength="100" placeholder="Enter Description Here..."/>
+                                                       cols="3" rows="3" id="newBrandDesc" maxlength="100"
+                                                       placeholder="Enter Description Here..."/>
                                         <!--<span class="word-count">0</span> / <span class="word-left">100</span>-->
                                     </div>
-                                    
+
                                     <div class="form-group">
                                         <label for="newBrandPic">Brand Logo</label>
                                         <input type="file" name="brandPic" id="newBrandPic"/>
@@ -92,7 +105,8 @@
                             </div><!-- New Brand Body closing -->
                             <form:hidden path="previousIdName" value="${brand.name}"/>
                             <div class="modal-footer">
-                                <a href="/brand/list" class="btn btn-default pull-left"><i class="fa fa-chevron-left"></i>
+                                <a href="/brand/list" class="btn btn-default pull-left"><i
+                                        class="fa fa-chevron-left"></i>
                                     Back</a>
                                 <div class="button-footer pull-right">
                                     <input type="reset" value="Clear" class="btn btn-default" value="Reset"/>
@@ -105,6 +119,6 @@
             </div>
         </div>
     </div> <!-- Warper Ends Here (working area) -->
-            <c:import url="../../includes/footer.jsp"/>
+    <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>
