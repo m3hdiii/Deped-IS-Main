@@ -18,7 +18,7 @@ public class RequestTracker implements Serializable {
     @Column(name = "request_tracker_id")
     private Long requestTrackerId;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "office_serial_number")
     private ItemDetails itemDetails;
 
