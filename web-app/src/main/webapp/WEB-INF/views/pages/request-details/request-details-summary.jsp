@@ -49,7 +49,7 @@
             <div class="panel-body">
 
                 <table cellpadding="0" cellspacing="0" border="0" class="table table-hover"
-                       id="toggleColumn-datatable">
+                       id="basic-datatable">
                     <thead>
                     <tr>
                         <th>Image</th>
