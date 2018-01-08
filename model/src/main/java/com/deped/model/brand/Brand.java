@@ -1,6 +1,7 @@
 package com.deped.model.brand;
 
 import com.deped.protection.validators.xss.XSS;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -47,6 +48,7 @@ public class Brand implements Serializable {
     private Date creationDate;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "brand")
+    @JsonIgnore
     private List<BrandModel> brandModels;
 
     @Column(name = "logo_url")

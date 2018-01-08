@@ -126,7 +126,7 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
     @Override
     public List<ItemDetails> fetchAllByItemName(String itemName) {
 
-        String query = "SELECT * FROM item_details WHERE item_name = :itemName";
+        String query = "SELECT * FROM item_details WHERE item_name = :itemName AND equipment_condition = 'OK' AND equipment_availability = 'AVAILABLE'";
         Map<String, Object> map = new HashMap<>();
         map.put("itemName", itemName);
         List<ItemDetails> list = hibernateFacade.fetchAllEntityBySqlQuery(query, null, ItemDetails.class, map);

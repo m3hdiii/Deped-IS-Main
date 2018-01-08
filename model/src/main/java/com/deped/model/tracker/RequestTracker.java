@@ -4,13 +4,14 @@ import com.deped.model.items.ItemDetails;
 import com.deped.model.request.RequestDetails;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 
 @Entity
 @Table(name = "request_tracker")
-public class RequestTracker {
+public class RequestTracker implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -124,6 +125,8 @@ public class RequestTracker {
     public void setAcquiredUser(String acquiredUser) {
         this.acquiredUser = acquiredUser;
     }
+
+
 }
 
 

@@ -14,11 +14,11 @@ public class BorrowRequestDetailsForm {
         this.listOfRequestTracker = listOfRequestTracker;
     }
 
-    public List<RequestTracker> getListOfRequestTacker() {
+    public List<RequestTracker> getListOfRequestTracker() {
         return listOfRequestTracker;
     }
 
-    public void setListOfRequestTacker(List<RequestTracker> listOfRequestTracker) {
-        listOfRequestTracker = listOfRequestTracker;
+    public void setListOfRequestTracker(List<RequestTracker> listOfRequestTracker) {
+        this.listOfRequestTracker = listOfRequestTracker;
     }
 }
