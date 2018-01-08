@@ -2,8 +2,6 @@ package com.deped.model.request;
 
 import com.deped.model.account.User;
 import com.deped.model.items.Item;
-import com.deped.model.tracker.RequestTracker;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
@@ -11,7 +9,6 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Set;
 
 @Entity
 @Table(name = "request_details")
@@ -69,10 +66,6 @@ public class RequestDetails implements Serializable {
     @JoinColumn(name = "issued_by_username")
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User issuedByUser;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "requestDetails")
-    @JsonIgnore
-    private Set<RequestTracker> requestTrackers;
 
     public RequestDetails() {
     }
@@ -181,11 +174,4 @@ public class RequestDetails implements Serializable {
         this.issuedByUser = issuedByUser;
     }
 
-    public Set<RequestTracker> getRequestTrackers() {
-        return requestTrackers;
-    }
-
-    public void setRequestTrackers(Set<RequestTracker> requestTrackers) {
-        this.requestTrackers = requestTrackers;
-    }
 }

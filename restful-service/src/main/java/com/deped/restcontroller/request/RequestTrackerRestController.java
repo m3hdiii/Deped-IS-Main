@@ -1,7 +1,6 @@
 package com.deped.restcontroller.request;
 
 import com.deped.model.Response;
-import com.deped.model.request.RequestDetails;
 import com.deped.model.request.RequestDetailsStatus;
 import com.deped.model.tracker.RequestTracker;
 import com.deped.restcontroller.AbstractMainRestController;
@@ -73,7 +72,7 @@ public class RequestTrackerRestController extends AbstractMainRestController<Req
     }
 
     @RequestMapping(value = UPDATE_STATUS_MAPPING, method = RequestMethod.POST)
-    public ResponseEntity<Response> updateOrderStatus(@PathVariable(ID_STRING_LITERAL) String username, @PathVariable("state") Integer orderDetailsState, @RequestBody RequestDetails... entities) {
+    public ResponseEntity<Response> updateOrderStatus(@PathVariable(ID_STRING_LITERAL) String username, @PathVariable("state") Integer orderDetailsState, @RequestBody RequestTracker... entities) {
         RequestDetailsStatus status = RequestDetailsStatus.values()[orderDetailsState];
         ResponseEntity<Response> response = requestTrackerService.updateRequestStatus(username, status, entities);
         return response;

@@ -23,21 +23,26 @@ public class RequestTracker implements Serializable {
     private ItemDetails itemDetails;
 
     @Column(name = "release_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date releaseDate;
 
     @Column(name = "return_date")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date returnDate;
 
     @Column(name = "tracking_status")
     @Enumerated(value = EnumType.STRING)
     private TrackingStatus trackingStatus;
 
-    @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "request_id"),
-            @JoinColumn(name = "item_name")
-    })
+
+    @Transient
     private RequestDetails requestDetails;
+
+    @Column(name = "request_id")
+    private Long requestId;
+
+    @Column(name = "item_name")
+    private String itemName;
 
     @Column(name = "acquired_user")
     private String acquiredUser;
@@ -126,7 +131,21 @@ public class RequestTracker implements Serializable {
         this.acquiredUser = acquiredUser;
     }
 
+    public Long getRequestId() {
+        return requestId;
+    }
 
+    public void setRequestId(Long requestId) {
+        this.requestId = requestId;
+    }
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public void setItemName(String itemName) {
+        this.itemName = itemName;
+    }
 }
 
 
