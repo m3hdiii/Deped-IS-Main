@@ -89,8 +89,8 @@ public class RequestTrackerRepositoryImpl implements RequestTrackerRepository {
                 String requestDetails = "UPDATE request_details set request_details_status = :requestDetailsStatus, issued_by_username = :username WHERE request_request_id = :requestId AND item_item_name = :itemId";
                 NativeQuery<RequestDetails> requestDetailsUpdateQuery = hibernateSession.createNativeQuery(requestDetails, RequestDetails.class);
                 requestDetailsUpdateQuery.setParameter("requestDetailsStatus", RequestDetailsStatus.RELEASED.toString());
-                requestDetailsUpdateQuery.setParameter("requestId", rd.getRequest().getRequestId());
-                requestDetailsUpdateQuery.setParameter("itemId", rd.getRequestDetailsID().getItemName());//FIXME
+                requestDetailsUpdateQuery.setParameter("requestId", entities[i].getRequestId());
+                requestDetailsUpdateQuery.setParameter("itemId", entities[i].getItemName());//FIXME
                 requestDetailsUpdateQuery.setParameter("username", username);
 
                 updateItemDetailsUpdateQuery.executeUpdate();

@@ -115,7 +115,7 @@
 
                                                 <form:hidden
                                                         path="listOfRequestTracker['${loop.index}'].itemDetails.item.name"
-                                                        value="${reqTracker.itemDetails.item.name}"/>
+                                                        value="${reqTracker.requestDetails.item.name}"/>
 
                                                 <form:hidden path="listOfRequestTracker['${loop.index}'].requestId"
                                                              value="${reqTracker.requestDetails.request.requestId}"/>
