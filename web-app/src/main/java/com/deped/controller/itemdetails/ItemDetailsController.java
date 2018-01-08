@@ -160,7 +160,9 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
     @Override
     @RequestMapping(value = RENDER_LIST_MAPPING, method = GET)
     public ModelAndView renderListPage() {
-        ModelAndView mv = makeHintPage(LIST_VIEW_PAGE, this.getClass().getCanonicalName(), Thread.currentThread().getStackTrace()[1].getMethodName());
+        ResponseEntity<List<ItemDetails>> response = makeFetchAllRestRequest(BASE_NAME, HttpMethod.POST, new ParameterizedTypeReference<List<ItemDetails>>() {
+        });
+        ModelAndView mv = postListProcessing(response, "itemDetailsList", LIST_VIEW_PAGE);
         return mv;
     }
 
@@ -199,7 +201,7 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
         ItemDetails[] requestDetails = subLIst.toArray(new ItemDetails[subLIst.size()]);
         ResponseEntity<Response> response = makeGenericListRestRequest(restUrl, requestDetails, HttpMethod.POST, ItemDetails.class);
         Response body = response.getBody();
-        ModelAndView mav = new ModelAndView();
+        ModelAndView mav = new ModelAndView("redirect:/item-details/list");
         return mav;
     }
 

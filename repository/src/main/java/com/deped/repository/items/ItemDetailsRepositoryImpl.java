@@ -35,7 +35,7 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
 
     @Override
     public List<ItemDetails> fetchAll() {
-        return null;
+        return hibernateFacade.fetchAllEntity("getAll", ItemDetails.class);
     }
 
     @Override

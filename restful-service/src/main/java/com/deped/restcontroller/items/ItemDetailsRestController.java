@@ -44,8 +44,10 @@ public class ItemDetailsRestController extends AbstractMainRestController<ItemDe
     }
 
     @Override
+    @RequestMapping(value = FETCH_MAPPING, method = RequestMethod.POST)
     public ResponseEntity<List<ItemDetails>> fetchAll() {
-        return null;
+        ResponseEntity<List<ItemDetails>> response = itemDetailsService.fetchAll();
+        return response;
     }
 
     @Override

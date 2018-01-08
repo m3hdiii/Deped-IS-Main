@@ -34,7 +34,9 @@ public class ItemDetailsServiceImpl implements ItemDetailsService {
 
     @Override
     public ResponseEntity<List<ItemDetails>> fetchAll() {
-        return null;
+        List<ItemDetails> entities = itemDetailsRepository.fetchAll();
+        ResponseEntity<List<ItemDetails>> responseEntity = new ResponseEntity<>(entities, OK);
+        return responseEntity;
     }
 
     @Override

@@ -113,8 +113,9 @@
                                     <td>${requestDet.item.name}</td>
                                     <td>${requestDet.item.quantity}</td>
                                     <td>
-                                        <form:input path="map['${strKey}'].requestQuantity"
-                                                    value="${requestDet.requestQuantity}"/>
+                                        <form:input type="number" path="map['${strKey}'].requestQuantity"
+                                                    value="${requestDet.requestQuantity}"
+                                                    max="${requestDet.item.quantity}"/>
                                     </td>
                                     <!--
                                     <td>

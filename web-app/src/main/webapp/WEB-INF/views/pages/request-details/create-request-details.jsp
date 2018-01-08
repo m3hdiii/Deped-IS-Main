@@ -114,17 +114,17 @@
                                         </select>
                                     </div>
                                 </li>
-
+                                <c:set var="basketMap" value="${sessionScope[basketName]}"/>
                                 <li class="dropdown">
                                     <div class="order-list-container">
                                         <a href="#" class="btn btn-default btn-sm order-btn" data-toggle="dropdown"><i
                                                 class="fa fa-list-alt fa-lg"></i></a>
-                                        <span class="badge bg-red badge-overlap">13</span>
+                                        <span class="badge bg-red badge-overlap">${basketMap.size()}</span>
                                         <div class="dropdown-menu arrow pull-left md panel panel-default arrow-top-left no-padd">
                                             <div class="panel-heading">
                                                 Item to Request
                                             </div>
-                                            <c:set var="basketMap" value="${sessionScope[basketName]}"/>
+
                                             <c:choose>
                                                 <c:when test="${not empty basketMap}">
                                                     <div class="panel-body no-padd">

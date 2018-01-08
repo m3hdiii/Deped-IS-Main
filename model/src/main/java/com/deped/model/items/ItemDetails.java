@@ -16,7 +16,14 @@ import java.util.Date;
 
 @Entity
 @Table(name = "item_details")
-public class ItemDetails implements Serializable {
+@NamedQueries({
+        @NamedQuery(
+                name = "getAll",
+                query = "SELECT id FROM ItemDetails id ORDER BY id.creationDate"
+        )
+})
+public class
+ItemDetails implements Serializable {
 
 
     @NotEmpty(message = "Office serial number field can not be blank")

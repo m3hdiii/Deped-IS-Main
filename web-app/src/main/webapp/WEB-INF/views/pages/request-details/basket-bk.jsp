@@ -90,7 +90,8 @@
                         </c:choose>
 
                         <td>
-                            <form:input path="map['${strKey}'].requestQuantity" value="${requestDet.requestQuantity}"/>
+                            <form:input path="map['${strKey}'].requestQuantity" value="${requestDet.requestQuantity}"
+                                        maxlength="${requestDet.item.}"/>
                         </td>
 
                         <form:hidden path="map['${strKey}'].request" value="${relatedRequest.requestId}"/>
