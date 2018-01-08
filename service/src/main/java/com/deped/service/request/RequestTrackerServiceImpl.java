@@ -1,6 +1,5 @@
 package com.deped.service.request;
 
-import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.request.RequestDetails;
@@ -53,19 +52,11 @@ public class RequestTrackerServiceImpl implements RequestTrackerService {
 
     @Override
     public ResponseEntity<Response> createOrUpdateAll(RequestTracker... entities) {
-        boolean isCreated = false;
-        try {
-            isCreated = requestTrackerRepository.createOrUpdateAll(entities);
-        } catch (DatabaseRolesViolationException e) {
-            e.printStackTrace();
-        }
-        Response response = ServiceUtils.makeResponse(isCreated, Operation.CREATE, RequestDetails.class);
-        ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
-        return responseEntity;
+        return null;
     }
 
     @Override
-    public ResponseEntity<Response> updateRequestStatus(String username, RequestDetailsStatus status, RequestDetails[] entities) {
+    public ResponseEntity<Response> updateRequestStatus(String username, RequestDetailsStatus status, RequestTracker[] entities) {
         Boolean isUpdated = requestTrackerRepository.updateRequestStatus(username, status, entities);
         Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, RequestDetails.class);
         ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);

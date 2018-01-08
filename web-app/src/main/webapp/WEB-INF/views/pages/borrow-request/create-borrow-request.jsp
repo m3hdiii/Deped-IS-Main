@@ -60,60 +60,73 @@
                                 <table cellspacing="0" border="0"
                                        class="table table-striped table-hover">
                                     <thead>
-                                        <th>#</th>
-                                        <th>Item</th>
-                                        <th>Item Serial</th>
-                                        <th>Release Date</th>
-                                        <th>Tracking Status</th>
-                                        <th>Request #</th>
-                                        <th>Requested By</th>
+                                    <th>#</th>
+                                    <th>Item</th>
+                                    <th>Item Serial</th>
+                                    <th>Release Date</th>
+                                    <th>Tracking Status</th>
+                                    <th>Request #</th>
+                                    <th>Requested By</th>
                                     </thead>
                                     <tbody>
 
                                     <c:forEach items="${borrowRequestDetailsForm.listOfRequestTracker}" var="reqTracker"
                                                varStatus="loop">
-                                            <tr>
-                                                <td>${loop.index + 1}</td>
-                                                <td>${reqTracker.requestDetails.item.name}</td>
-                                                <td>
-                                                    <form:select
-                                                            path="listOfRequestTracker['${loop.index}'].itemDetails.officeSerialNo"
-                                                            class="form-control">
-                                                        <form:option value="-" label="---Choose a Status"/>
-                                                        <form:options items="${reqTracker.itemDetailsList}"
-                                                                      itemLabel="officeSerialNo"
-                                                                      itemValue="officeSerialNo"/>
-                                                    </form:select>
-                                                </td>
-                                                <td><form:input id="releaseDate${loop.index}"
-                                                                onclick="clickOnDateInput('releaseDate${loop.index}')"
-                                                                path="listOfRequestTracker['${loop.index}'].releaseDate"/></td>
+                                        <tr>
+                                            <td>${loop.index + 1}</td>
+                                            <td>${reqTracker.requestDetails.item.name}</td>
+                                            <td>
+                                                <form:select
+                                                        path="listOfRequestTracker['${loop.index}'].itemDetails.officeSerialNo"
+                                                        class="form-control">
+                                                    <form:option value="-" label="---Choose a Status"/>
+                                                    <form:options items="${reqTracker.itemDetailsList}"
+                                                                  itemLabel="officeSerialNo"
+                                                                  itemValue="officeSerialNo"/>
+                                                </form:select>
+                                            </td>
+                                            <td><form:input id="releaseDate${loop.index}"
+                                                            onclick="clickOnDateInput('releaseDate${loop.index}')"
+                                                            path="listOfRequestTracker['${loop.index}'].releaseDate"/></td>
 
-                                                <td>
-                                                    GOING TO BE HELD
-                                                </td>
-                                                <td>
-                                                        ${reqTracker.requestDetails.request.requestId}
-                                                </td>
+                                            <td>
+                                                GOING TO BE HELD
+                                            </td>
+                                            <td>
+                                                    ${reqTracker.requestDetails.request.requestId}
+                                            </td>
 
-                                                <td>
-                                                        ${reqTracker.requestDetails.request.user.username}
-                                                    <form:hidden
-                                                            path="listOfRequestTracker['${loop.index}'].trackingStatus"
-                                                            value="IN_USE"/>
-                                                    <form:hidden
-                                                            path="listOfRequestTracker['${loop.index}'].requestDetails.request.requestId"/>
-                                                    <form:hidden
-                                                            path="listOfRequestTracker['${loop.index}'].requestDetails.request.requestId"/>
-                                                    <form:hidden
-                                                            path="listOfRequestTracker['${loop.index}'].acquiredUser"
-                                                            value="${reqTracker.requestDetails.request.user.username}"/>
+                                            <td>
+                                                    ${reqTracker.requestDetails.request.user.username}
+                                                <form:hidden
+                                                        path="listOfRequestTracker['${loop.index}'].trackingStatus"
+                                                        value="IN_USE"/>
+                                                <form:hidden
+                                                        path="listOfRequestTracker['${loop.index}'].requestDetails.request.requestId"/>
+                                                <form:hidden
+                                                        path="listOfRequestTracker['${loop.index}'].requestDetails.request.requestId"/>
+                                                <form:hidden
+                                                        path="listOfRequestTracker['${loop.index}'].acquiredUser"
+                                                        value="${reqTracker.requestDetails.request.user.username}"/>
 
-                                                </td>
+                                                <form:hidden
+                                                        path="listOfRequestTracker['${loop.index}'].requestDetails.requestDetailsID.requestId"
+                                                        value="${reqTracker.requestDetails.request.requestId}"/>
 
+                                                <form:hidden
+                                                        path="listOfRequestTracker['${loop.index}'].itemDetails.item.name"
+                                                        value="${reqTracker.itemDetails.item.name}"/>
 
-                                            </tr>
-                                        </c:forEach>
+                                                <form:hidden path="listOfRequestTracker['${loop.index}'].requestId"
+                                                             value="${reqTracker.requestDetails.request.requestId}"/>
+
+                                                <form:hidden path="listOfRequestTracker['${loop.index}'].itemName"
+                                                             value="${reqTracker.requestDetails.item.name}"/>
+
+                                            </td>
+
+                                        </tr>
+                                    </c:forEach>
                                     </tbody>
                                 </table>
                             </div>
