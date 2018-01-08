@@ -52,16 +52,10 @@
         <form:form commandName="orderDetailsForm" method="post">
 
             <div class="panel panel-default">
-                <div class="panel-heading">
-                    <a href="#" data-column="0" class="toggle-vis btn btn-default btn-sm">Image</a>
-                    <a href="#" data-column="7" class="toggle-vis btn btn-default btn-sm">Unit</a>
-                    <a href="#" data-column="8" class="toggle-vis btn btn-default btn-sm">Unit Price</a>
-                    <a href="#" data-column="9" class="toggle-vis btn btn-default btn-sm">Supplier</a>
-                </div>
                 <div class="panel-body table-responsive">
 
                     <table cellpadding="0" cellspacing="0" border="0" class="table table-hover"
-                           id="toggleColumn-datatable">
+                           id="basic-datatable">
                         <thead>
                         <tr>
                             <th>Image</th>
