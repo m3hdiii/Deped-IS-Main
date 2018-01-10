@@ -5,6 +5,7 @@ import com.deped.model.Operation;
 import com.deped.model.Response;
 import com.deped.model.order.Order;
 import com.deped.model.order.OrderState;
+import com.deped.model.search.OrderSearch;
 import com.deped.repository.order.OrderRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
@@ -105,6 +106,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public ResponseEntity<List<Order>> fetchAllByStates(List<OrderState> orderStates) {
         List<Order> brands = orderRepository.fetchAllByStates(orderStates);
+        ResponseEntity<List<Order>> responseEntity = new ResponseEntity<>(brands, OK);
+        return responseEntity;
+    }
+
+    @Override
+    public ResponseEntity<List<Order>> orderSearch(OrderSearch orderSearch) {
+        List<Order> brands = orderRepository.orderSearch(orderSearch);
         ResponseEntity<List<Order>> responseEntity = new ResponseEntity<>(brands, OK);
         return responseEntity;
     }

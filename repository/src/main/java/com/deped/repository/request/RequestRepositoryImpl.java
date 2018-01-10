@@ -8,6 +8,7 @@ import com.deped.model.request.Request;
 import com.deped.model.request.RequestDetailsStatus;
 import com.deped.model.request.RequestStatus;
 import com.deped.model.search.RequestSearch;
+import com.deped.repository.ListParameter;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
 import org.hibernate.Session;
@@ -389,29 +390,4 @@ public class RequestRepositoryImpl implements RequestRepository {
         new RequestRepositoryImpl().requestSearch(rs);
     }
 
-    private class ListParameter {
-        String wherePartSection;
-        Map<String, Object> parameterMap;
-
-        public ListParameter(String wherePartSection, Map<String, Object> parameterMap) {
-            this.wherePartSection = wherePartSection;
-            this.parameterMap = parameterMap;
-        }
-
-        public String getWherePartSection() {
-            return wherePartSection;
-        }
-
-        public void setWherePartSection(String wherePartSection) {
-            this.wherePartSection = wherePartSection;
-        }
-
-        public Map<String, Object> getParameterMap() {
-            return parameterMap;
-        }
-
-        public void setParameterMap(Map<String, Object> parameterMap) {
-            this.parameterMap = parameterMap;
-        }
-    }
 }

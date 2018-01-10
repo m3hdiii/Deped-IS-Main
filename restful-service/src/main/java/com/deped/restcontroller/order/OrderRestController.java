@@ -3,6 +3,7 @@ package com.deped.restcontroller.order;
 import com.deped.model.Response;
 import com.deped.model.order.Order;
 import com.deped.model.order.OrderState;
+import com.deped.model.search.OrderSearch;
 import com.deped.repository.utils.Range;
 import com.deped.restcontroller.AbstractMainRestController;
 import com.deped.service.order.OrderService;
@@ -26,6 +27,7 @@ public class OrderRestController extends AbstractMainRestController<Order, Long>
     private static final String FETCH_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
     private static final String FETCH_BY_STATES = FETCH_MAPPING + URL_SEPARATOR + "by-states";
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
+    private static final String SEARCH_REQUEST_MAPPING = BASE_NAME + URL_SEPARATOR + "search-list";
 
 
     @Autowired
@@ -113,5 +115,11 @@ public class OrderRestController extends AbstractMainRestController<Order, Long>
 
         ResponseEntity<List<Order>> response = orderService.fetchAllByStates(orderDetailsStateList);
         return response;
+    }
+
+    @RequestMapping(value = SEARCH_REQUEST_MAPPING, method = RequestMethod.POST)
+    public ResponseEntity<List<Order>> fetchRequestSearch(@RequestBody OrderSearch orderSearch) {
+        ResponseEntity<List<Order>> requestList = orderService.orderSearch(orderSearch);
+        return requestList;
     }
 }
