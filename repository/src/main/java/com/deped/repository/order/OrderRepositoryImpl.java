@@ -1,8 +1,20 @@
 package com.deped.repository.order;
 
 import com.deped.exceptions.DatabaseRolesViolationException;
+import com.deped.model.account.User;
+import com.deped.model.category.Category;
+import com.deped.model.items.Item;
+import com.deped.model.items.ItemType;
 import com.deped.model.order.Order;
+import com.deped.model.order.OrderDetailsState;
 import com.deped.model.order.OrderState;
+import com.deped.model.order.Schedule;
+import com.deped.model.request.RequestDetailsStatus;
+import com.deped.model.request.RequestStatus;
+import com.deped.model.search.OrderSearch;
+import com.deped.model.supply.Supplier;
+import com.deped.model.unit.Unit;
+import com.deped.repository.ListParameter;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
 import org.hibernate.Session;
@@ -138,5 +150,309 @@ public class OrderRepositoryImpl implements OrderRepository {
 
         return list;
 
+    }
+
+
+    @Override
+    public List<Order> orderSearch(OrderSearch orderSearch) {
+
+        if (orderSearch == null)
+            return null;
+
+        boolean isOrderDateFrom = isEmpty(orderSearch.getOrderDateFrom());
+        boolean isOrderDateTo = isEmpty(orderSearch.getOrderDateTo());
+        boolean isRequiredDateFrom = isEmpty(orderSearch.getRequiredDateFrom());
+        boolean isRequiredDateTo = isEmpty(orderSearch.getRequiredDateTo());
+        boolean isOrderedUserListEmpty = isEmpty(orderSearch.getUsers());
+        boolean isOrderScheduleListEmpty = isEmpty(orderSearch.getOrderSchedules());
+        boolean isBudgetAmountFromEmpty = isEmpty(orderSearch.getBudgetAmountFrom());
+        boolean isBudgetAmountToEmpty = isEmpty(orderSearch.getBudgetAmountTo());
+        boolean isOrderStatesEmpty = isEmpty(orderSearch.getOrderStates());
+        boolean isArrivalDescriptionEmpty = isEmpty(orderSearch.getArrivalDescription());
+        boolean isItemListEmpty = isEmpty(orderSearch.getItems());
+        boolean isCategoryListEmpty = isEmpty(orderSearch.getCategories());
+        boolean isUnitListEmpty = isEmpty(orderSearch.getUnits());
+        boolean isUnitPriceFromEmpty = isEmpty(orderSearch.getUnitPriceFrom());
+        boolean isUnitPriceToEmpty = isEmpty(orderSearch.getUnitPriceTo());
+        boolean isUnitCapacityFromEmpty = isEmpty(orderSearch.getUnitCapacityFrom());
+        boolean isUnitCapacityToEmpty = isEmpty(orderSearch.getUnitCapacityTo());
+        boolean isNoOfUnitsFromEmpty = isEmpty(orderSearch.getNoOfUnitsFrom());
+        boolean isNoOfUnitsToEmpty = isEmpty(orderSearch.getNoOfUnitsTo());
+        boolean isTotalQuantityRequestNoFromEmpty = isEmpty(orderSearch.getTotalQuantityRequestNoFrom());
+        boolean isTotalQuantityRequestNoToEmpty = isEmpty(orderSearch.getTotalQuantityRequestNoTo());
+        boolean isTotalQuantityArrivedNoFromEmpty = isEmpty(orderSearch.getTotalQuantityArrivedNoFrom());
+        boolean isTotalQuantityArrivedNoToEmpty = isEmpty(orderSearch.getTotalQuantityArrivedNoTo());
+        boolean isOrderDetailsStatesListEmpty = isEmpty(orderSearch.getOrderDetailsStates());
+        boolean isSuppliersEmpty = isEmpty(orderSearch.getSuppliers());
+        boolean isDisapprovalMessageEmpty = isEmpty(orderSearch.getDisapprovalMessage());
+        boolean isNotArrivalMessageEmpty = isEmpty(orderSearch.getNotArrivalMessage());
+        boolean isConsideredByUserListEmpty = isEmpty(orderSearch.getConsideredByUsers());
+        boolean isOrderedByUserListEmpty = isEmpty(orderSearch.getOrderedByUsers());
+        boolean isReceivedByUserListEmpty = isEmpty(orderSearch.getReceivedByUsers());
+
+        boolean[] emptyList = new boolean[]{
+                isOrderDateFrom, isOrderDateTo, isRequiredDateFrom, isRequiredDateTo,
+                isOrderedUserListEmpty, isOrderScheduleListEmpty, isBudgetAmountFromEmpty, isBudgetAmountToEmpty,
+                isOrderStatesEmpty, isArrivalDescriptionEmpty, isItemListEmpty, isCategoryListEmpty,
+                isUnitListEmpty, isUnitPriceFromEmpty, isUnitPriceToEmpty, isUnitCapacityFromEmpty, isUnitCapacityToEmpty,
+                isNoOfUnitsFromEmpty, isNoOfUnitsToEmpty, isTotalQuantityRequestNoFromEmpty, isTotalQuantityRequestNoToEmpty,
+                isTotalQuantityArrivedNoFromEmpty, isTotalQuantityArrivedNoToEmpty, isOrderDetailsStatesListEmpty, isSuppliersEmpty, isDisapprovalMessageEmpty,
+                isNotArrivalMessageEmpty, isConsideredByUserListEmpty,
+                isOrderedByUserListEmpty, isReceivedByUserListEmpty
+        };
+
+        StringBuilder sb = new StringBuilder("SELECT * FROM order_");
+
+        String where = null;
+        for (boolean b : emptyList) {
+            if (!b) {
+                where = " JOIN order_details ON order_.order_id = order_details.order_order_id WHERE\n";
+                break;
+            }
+        }
+
+
+        Session hibernateSession;
+        try {
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        Transaction tx = null;
+        List<Order> list = null;
+
+        if (where == null) {
+
+            try {
+                tx = hibernateSession.beginTransaction();
+                NativeQuery<Order> query = hibernateSession.createNativeQuery(sb.toString(), Order.class);
+                list = query.list();
+                tx.commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (tx != null)
+                    tx.rollback();
+                return list;
+            }
+
+
+            return list;
+
+        } else {
+
+            ListParameter orderedUserParameter = isOrderedUserListEmpty ? null : createListParameter(orderSearch.getUsers(), "username", User.class);
+            ListParameter orderScheduleListParameter = isOrderScheduleListEmpty ? null : createListParameter(orderSearch.getOrderSchedules(), "order_schedule", Schedule.class);
+            ListParameter orderStateListParameter = isOrderStatesEmpty ? null : createListParameter(orderSearch.getOrderStates(), "order_state", OrderState.class);
+            ListParameter orderItemListParameter = isItemListEmpty ? null : createListParameter(orderSearch.getItems(), "item_item_name", Item.class);
+            ListParameter categoryListParameter = isCategoryListEmpty ? null : createListParameter(orderSearch.getCategories(), "category_category_name", Category.class);
+            ListParameter unitListParameter = isUnitListEmpty ? null : createListParameter(orderSearch.getUnits(), "unit_name", Unit.class);
+            ListParameter orderDetailsStateListParameter = isOrderDetailsStatesListEmpty ? null : createListParameter(orderSearch.getOrderDetailsStates(), "order_details_state", OrderDetailsState.class);
+            ListParameter supplierListParameter = isSuppliersEmpty ? null : createListParameter(orderSearch.getSuppliers(), "supplier_id", Supplier.class);
+            ListParameter consideredByUserParameter = isConsideredByUserListEmpty ? null : createListParameter(orderSearch.getConsideredByUsers(), "considered_by_username", User.class);
+            ListParameter orderedByUserParameter = isOrderedByUserListEmpty ? null : createListParameter(orderSearch.getOrderedByUsers(), "ordered_by_username", User.class);
+            ListParameter receivedByUserParameter = isReceivedByUserListEmpty ? null : createListParameter(orderSearch.getReceivedByUsers(), "received_by_username", User.class);
+
+            sb
+                    .append(isOrderDateFrom ? "" : "(order_.order_date >= :orderDateFrom) AND\n")
+                    .append(isOrderDateTo ? "" : "(order_.order_date < :orderDateTo) AND\n")
+                    .append(isRequiredDateFrom ? "" : "(order_.required_date >= :requiredDateFrom) AND\n")
+                    .append(isRequiredDateTo ? "" : "(order_.required_date < :requiredDateTo) AND\n")
+                    .append(isOrderedUserListEmpty ? "" : String.format("(order_.username IN ( %s )) AND\n", orderedUserParameter.getWherePartSection()))
+                    .append(isOrderScheduleListEmpty ? "" : String.format("(order_.order_schedule IN ( %s )) AND\n", orderScheduleListParameter.getWherePartSection()))
+                    .append(isBudgetAmountFromEmpty ? "" : "(order_.budget_amount >= :budgetAmountFrom) AND\n")
+                    .append(isBudgetAmountToEmpty ? "" : "(order_.budget_amount < :budgetAmountTo) AND\n")
+                    .append(isOrderStatesEmpty ? "" : String.format("(order_.order_state IN ( %s )) AND\n", orderStateListParameter.getWherePartSection()))
+                    .append(isArrivalDescriptionEmpty ? "" : "(order_.arrival_description LIKE :arrivalDescription) AND\n")
+                    .append(isItemListEmpty ? "" : String.format("(order_details.item_item_name IN ( %s )) AND\n", orderItemListParameter.getWherePartSection()))
+                    .append(isCategoryListEmpty ? "" : String.format("(order_details.category_category_name IN ( %s )) AND\n", categoryListParameter.getWherePartSection()))
+                    .append(isUnitListEmpty ? "" : String.format("(order_details.unit_name IN ( %s )) AND\n", unitListParameter.getWherePartSection()))
+
+                    .append(isUnitPriceFromEmpty ? "" : "(order_details.item_unit_price >= :itemUnitPriceFrom) AND\n")
+                    .append(isUnitPriceToEmpty ? "" : "(order_details.item_unit_price < :itemUnitPriceTo) AND\n")
+                    .append(isUnitCapacityFromEmpty ? "" : "(order_details.unit_capacity >= :unitCapacityFrom) AND\n")
+                    .append(isUnitCapacityToEmpty ? "" : "(order_details.unit_capacity < :unitCapacityTo) AND\n")
+                    .append(isNoOfUnitsFromEmpty ? "" : "(order_details.no_of_units >= :noOfUnitsFrom) AND\n")
+                    .append(isNoOfUnitsToEmpty ? "" : "(order_details.no_of_units < :noOfUnitsTo) AND\n")
+                    .append(isTotalQuantityRequestNoFromEmpty ? "" : "(order_details.total_quantity_requested_no >= :totalQuantityRequestedFrom) AND\n")
+                    .append(isTotalQuantityRequestNoToEmpty ? "" : "(order_details.total_quantity_requested_no < :totalQuantityRequestedTo) AND\n")
+                    .append(isTotalQuantityArrivedNoFromEmpty ? "" : "(order_details.total_quantity_arrived_no >= :totalQuantityArrivedFrom) AND\n")
+                    .append(isTotalQuantityArrivedNoToEmpty ? "" : "(order_details.total_quantity_arrived_no < :totalQuantityArrivedTo) AND\n")
+                    .append(isSuppliersEmpty ? "" : String.format("(order_details.supplier_id IN ( %s )) AND\n", supplierListParameter.getWherePartSection()))
+                    .append(isDisapprovalMessageEmpty ? "" : "(order_details.disapproval_message LIKE :disapprovalMessage) AND\n")
+                    .append(isNotArrivalMessageEmpty ? "" : "(order_details.not_arrival_message LIKE :notArrivedMessage ) AND\n")
+                    .append(isOrderDetailsStatesListEmpty ? "" : String.format("(order_details.order_details_state IN ( %s )) AND\n", orderDetailsStateListParameter.getWherePartSection()))
+
+                    .append(isConsideredByUserListEmpty ? "" : String.format("(order_details.considered_by_username IN ( %s )) AND\n", consideredByUserParameter.getWherePartSection()))
+                    .append(isOrderedByUserListEmpty ? "" : String.format("(order_details.ordered_by_username IN ( %s )) AND\n", orderedByUserParameter.getWherePartSection()))
+                    .append(isReceivedByUserListEmpty ? "" : String.format("(order_details.received_by_username IN ( %s )) AND\n", receivedByUserParameter.getWherePartSection()));
+
+            try {
+                tx = hibernateSession.beginTransaction();
+                NativeQuery<Order> query = hibernateSession.createNativeQuery(sb.toString(), Order.class);
+
+                ListParameter[] listParameters = new ListParameter[]{orderedUserParameter, orderScheduleListParameter, orderStateListParameter,
+                        orderItemListParameter, categoryListParameter, unitListParameter, supplierListParameter,
+                        orderDetailsStateListParameter, consideredByUserParameter, orderedByUserParameter, receivedByUserParameter
+                };
+
+                Map<String, Object> parameterMap = new HashMap<>();
+                for (int i = 0; i < listParameters.length; i++) {
+                    ListParameter lpTemp = listParameters[i];
+                    if (lpTemp != null) {
+                        parameterMap.putAll(lpTemp.getParameterMap());
+                    }
+                }
+
+
+                if (!isOrderDateFrom) {
+                    parameterMap.put("orderDateFrom", orderSearch.getOrderDateFrom());
+                }
+
+                if (!isOrderDateTo) {
+                    parameterMap.put("orderDateTo", orderSearch.getOrderDateTo());
+                }
+
+                if (!isRequiredDateFrom) {
+                    parameterMap.put("requiredDateFrom", orderSearch.getRequiredDateFrom());
+                }
+
+                if (!isRequiredDateTo) {
+                    parameterMap.put("requiredDateTo", orderSearch.getRequiredDateTo());
+                }
+
+                if (!isBudgetAmountFromEmpty) {
+                    parameterMap.put("budgetAmountFrom", orderSearch.getBudgetAmountFrom());
+                }
+
+                if (!isBudgetAmountToEmpty) {
+                    parameterMap.put("budgetAmountTo", orderSearch.getBudgetAmountTo());
+                }
+
+                if (!isArrivalDescriptionEmpty) {
+                    parameterMap.put("arrivalDescription", "%" + orderSearch.getArrivalDescription() + "%");
+                }
+
+                if (!isUnitPriceFromEmpty) {
+                    parameterMap.put("itemUnitPriceFrom", orderSearch.getUnitPriceFrom());
+                }
+
+                if (!isUnitPriceToEmpty) {
+                    parameterMap.put("itemUnitPriceTo", orderSearch.getUnitPriceTo());
+                }
+
+                if (!isUnitCapacityFromEmpty) {
+                    parameterMap.put("unitCapacityFrom", orderSearch.getUnitCapacityFrom());
+                }
+
+                if (!isUnitCapacityToEmpty) {
+                    parameterMap.put("unitCapacityTo", orderSearch.getUnitCapacityTo());
+                }
+
+                if (!isNoOfUnitsFromEmpty) {
+                    parameterMap.put("noOfUnitsFrom", orderSearch.getNoOfUnitsFrom());
+                }
+
+                if (!isNoOfUnitsToEmpty) {
+                    parameterMap.put("noOfUnitsTo", orderSearch.getNoOfUnitsTo());
+                }
+
+                if (!isTotalQuantityRequestNoFromEmpty) {
+                    parameterMap.put("totalQuantityRequestedFrom", orderSearch.getTotalQuantityRequestNoFrom());
+                }
+
+                if (!isTotalQuantityRequestNoToEmpty) {
+                    parameterMap.put("totalQuantityRequestedTo", orderSearch.getTotalQuantityRequestNoTo());
+                }
+
+                if (!isTotalQuantityArrivedNoFromEmpty) {
+                    parameterMap.put("totalQuantityArrivedFrom", orderSearch.getTotalQuantityArrivedNoFrom());
+                }
+
+                if (!isTotalQuantityArrivedNoToEmpty) {
+                    parameterMap.put("totalQuantityArrivedTo", orderSearch.getTotalQuantityArrivedNoTo());
+                }
+
+
+                if (!isDisapprovalMessageEmpty) {
+                    parameterMap.put("disapprovalMessage", "%" + orderSearch.getDisapprovalMessage() + "%");
+                }
+
+                if (!isNotArrivalMessageEmpty) {
+                    parameterMap.put("notArrivedMessage", "%" + orderSearch.getNotArrivalMessage() + "%");
+                }
+
+                for (Map.Entry<String, Object> entry : parameterMap.entrySet()) {
+                    query.setParameter(entry.getKey(), entry.getValue());
+                }
+
+
+                list = query.list();
+                tx.commit();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (tx != null)
+                    tx.rollback();
+                return null;
+            }
+
+
+            return list;
+        }
+
+    }
+
+    private ListParameter createListParameter(List objects, String baseParamKey, Class<?> clazz) {
+        if (objects == null || objects.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+
+        Map<String, Object> parameterMap = new HashMap<>();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < objects.size(); i++) {
+            String key = baseParamKey + i;
+            if (clazz == User.class)
+                parameterMap.put(key, ((User) objects.get(i)).getUsername());
+
+            if (clazz == Item.class)
+                parameterMap.put(key, ((Item) objects.get(i)).getName());
+
+            if (clazz == ItemType.class || clazz == RequestDetailsStatus.class || clazz == RequestStatus.class || clazz == RequestStatus.class)
+                parameterMap.put(key, (objects.get(i)).toString());
+
+            sb.append(":" + key + " , ");
+        }
+
+        String tmp = sb.toString();
+        String wherePartSection = tmp.substring(0, (tmp.lastIndexOf(",") - 1));
+
+        ListParameter listParameter = new ListParameter(wherePartSection, parameterMap);
+        return listParameter;
+    }
+
+    private boolean isEmpty(Object object) {
+        if (object == null)
+            return true;
+
+        if (object instanceof String) {
+            String s = (String) object;
+            if (s.isEmpty()) {
+                return true;
+            }
+            return false;
+        }
+
+        if (object instanceof List) {
+            List s = (List) object;
+            if (s.isEmpty()) {
+                return true;
+            }
+            return false;
+        }
+
+        return true;
     }
 }
