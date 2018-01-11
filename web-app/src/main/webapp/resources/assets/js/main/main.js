@@ -67,11 +67,11 @@ function lockDownTotal(loopNo) {//first input
     }
 
     if ((isAcceptable(no1Value) && no1Value != "") || (isAcceptable(no2Value) && no2Value != "")) {
-        totalElement.disabled = true;
+        totalElement.readOnly = true;
+
         totalElement.value = "";
     } else {
-        totalElement.disabled = false;
-
+        totalElement.readOnly = false;
     }
 
 }
@@ -89,13 +89,13 @@ function lockDownTheFirstTwo(loopNo) {//third input
 
 
     if (isAcceptable(totalValue) && totalValue != "") {
-        no1Element.disabled = true;
+        no1Element.readOnly = true;
         no1Element.value = "";
-        no2Element.disabled = true;
+        no2Element.readOnly = true;
         no2Element.value = "";
     } else {
-        no1Element.disabled = false;
-        no2Element.disabled = false;
+        no1Element.readOnly = false;
+        no2Element.readOnly = false;
     }
 
 }

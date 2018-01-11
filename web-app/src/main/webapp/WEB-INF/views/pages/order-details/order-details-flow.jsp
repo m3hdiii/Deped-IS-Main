@@ -66,8 +66,8 @@
                             <th>Total Ordered QTY</th>
 
                             <c:if test="${currentOrderDetailsState eq 'ARRIVED'}">
-                                <th>QTY Remaining</th>
                                 <th>QTY Arrived</th>
+                                <th>QTY Remaining</th>
                             </c:if>
                             <th>Category</th>
                             <th>Unit Price</th>
@@ -104,7 +104,7 @@
                                 <td>${orderDet.totalQuantityRequestNo}</td>
                                 <c:if test="${currentOrderDetailsState eq 'ARRIVED'}">
                                     <th>
-                                            ${orderDet.totalQuantityRequestNo - orderDet.totalQuantityArrivedNo}
+                                            ${orderDet.totalQuantityArrivedNo}
                                     </th>
                                     <th>
                                         <div class="col-md-12">
