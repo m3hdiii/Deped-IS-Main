@@ -121,7 +121,7 @@ public class RequestRepositoryImpl implements RequestRepository {
                 isRequestStatusListEmpty, isCancellationReasonEmpty, isSupplyOfficeRemarkEmpty, isConsideredByUserListEmpty, isIssuedByUserListEmpty
         };
 
-        StringBuilder sb = new StringBuilder("SELECT * FROM request");
+        StringBuilder sb = new StringBuilder("SELECT distinct request_id, user_message, item_type, request_date, username, admin_notice, request_status FROM request");
 
         String where = null;
         for (boolean b : emptyList) {
@@ -161,6 +161,8 @@ public class RequestRepositoryImpl implements RequestRepository {
             return list;
 
         } else {
+            sb.append(where);
+
             ListParameter requestedUserParameter = isRequestedUserListEmpty ? null : createListParameter(requestSearch.getRequestedUsers(), "requestedUser", User.class);
             ListParameter itemTypeParameter = isItemTypeListEmpty ? null : createListParameter(requestSearch.getItemTypes(), "itemType", ItemType.class);
             ListParameter itemParameter = isItemListEmpty ? null : createListParameter(requestSearch.getItems(), "item", Item.class);
@@ -197,7 +199,12 @@ public class RequestRepositoryImpl implements RequestRepository {
 
             try {
                 tx = hibernateSession.beginTransaction();
-                NativeQuery<Request> query = hibernateSession.createNativeQuery(sb.toString(), Request.class);
+                String strQuery = sb.toString().trim();
+                if (strQuery.substring(strQuery.lastIndexOf(" ") + 1).equals("AND")) {
+                    strQuery = strQuery.substring(0, strQuery.lastIndexOf("AND"));
+                }
+
+                NativeQuery<Request> query = hibernateSession.createNativeQuery(strQuery, Request.class);
 
                 ListParameter[] listParameters = new ListParameter[]{requestedUserParameter, itemTypeParameter, itemParameter, requestStatusParameter, requestDetailsStatusParameter, consideredByUserParameter, issuedByUserParameter};
 
@@ -218,7 +225,7 @@ public class RequestRepositoryImpl implements RequestRepository {
                 }
 
                 if (!isRequestDateToEmpty) {
-                    parameterMap.put("requestDateTo", requestSearch.getRequestDateFrom());
+                    parameterMap.put("requestDateTo", requestSearch.getRequestDateTo());
                 }
 
                 if (!isAdminNoticeEmpty) {
@@ -270,7 +277,9 @@ public class RequestRepositoryImpl implements RequestRepository {
                 }
 
                 for (Map.Entry<String, Object> entry : parameterMap.entrySet()) {
-                    query.setParameter(entry.getKey(), entry.getValue());
+                    String key = entry.getKey();
+                    Object value = entry.getValue();
+                    query.setParameter(key, value);
                 }
 
                 list = query.list();
@@ -328,6 +337,13 @@ public class RequestRepositoryImpl implements RequestRepository {
     private boolean isEmpty(Object object) {
         if (object == null)
             return true;
+
+        if (object instanceof Date) {
+            return false;
+        }
+
+        if (object instanceof Integer)
+            return false;
 
         if (object instanceof String) {
             String s = (String) object;

@@ -4,13 +4,10 @@ import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.account.User;
 import com.deped.model.category.Category;
 import com.deped.model.items.Item;
-import com.deped.model.items.ItemType;
 import com.deped.model.order.Order;
 import com.deped.model.order.OrderDetailsState;
 import com.deped.model.order.OrderState;
 import com.deped.model.order.Schedule;
-import com.deped.model.request.RequestDetailsStatus;
-import com.deped.model.request.RequestStatus;
 import com.deped.model.search.OrderSearch;
 import com.deped.model.supply.Supplier;
 import com.deped.model.unit.Unit;
@@ -184,7 +181,7 @@ public class OrderRepositoryImpl implements OrderRepository {
         boolean isTotalQuantityArrivedNoFromEmpty = isEmpty(orderSearch.getTotalQuantityArrivedNoFrom());
         boolean isTotalQuantityArrivedNoToEmpty = isEmpty(orderSearch.getTotalQuantityArrivedNoTo());
         boolean isOrderDetailsStatesListEmpty = isEmpty(orderSearch.getOrderDetailsStates());
-        boolean isSuppliersEmpty = isEmpty(orderSearch.getSuppliers());
+        boolean isSuppliersEmpty = isEmpty(orderSearch.getSuppliers());//Problem
         boolean isDisapprovalMessageEmpty = isEmpty(orderSearch.getDisapprovalMessage());
         boolean isNotArrivalMessageEmpty = isEmpty(orderSearch.getNotArrivalMessage());
         boolean isConsideredByUserListEmpty = isEmpty(orderSearch.getConsideredByUsers());
@@ -202,7 +199,7 @@ public class OrderRepositoryImpl implements OrderRepository {
                 isOrderedByUserListEmpty, isReceivedByUserListEmpty
         };
 
-        StringBuilder sb = new StringBuilder("SELECT * FROM order_");
+        StringBuilder sb = new StringBuilder("SELECT distinct order_id, order_date, username, order_schedule, budget_amount, required_date, order_state, arrival_description FROM order_ ");
 
         String where = null;
         for (boolean b : emptyList) {
@@ -243,6 +240,8 @@ public class OrderRepositoryImpl implements OrderRepository {
 
         } else {
 
+            sb.append(where);
+
             ListParameter orderedUserParameter = isOrderedUserListEmpty ? null : createListParameter(orderSearch.getUsers(), "username", User.class);
             ListParameter orderScheduleListParameter = isOrderScheduleListEmpty ? null : createListParameter(orderSearch.getOrderSchedules(), "order_schedule", Schedule.class);
             ListParameter orderStateListParameter = isOrderStatesEmpty ? null : createListParameter(orderSearch.getOrderStates(), "order_state", OrderState.class);
@@ -254,6 +253,7 @@ public class OrderRepositoryImpl implements OrderRepository {
             ListParameter consideredByUserParameter = isConsideredByUserListEmpty ? null : createListParameter(orderSearch.getConsideredByUsers(), "considered_by_username", User.class);
             ListParameter orderedByUserParameter = isOrderedByUserListEmpty ? null : createListParameter(orderSearch.getOrderedByUsers(), "ordered_by_username", User.class);
             ListParameter receivedByUserParameter = isReceivedByUserListEmpty ? null : createListParameter(orderSearch.getReceivedByUsers(), "received_by_username", User.class);
+
 
             sb
                     .append(isOrderDateFrom ? "" : "(order_.order_date >= :orderDateFrom) AND\n")
@@ -291,7 +291,13 @@ public class OrderRepositoryImpl implements OrderRepository {
 
             try {
                 tx = hibernateSession.beginTransaction();
-                NativeQuery<Order> query = hibernateSession.createNativeQuery(sb.toString(), Order.class);
+
+                String strQuery = sb.toString().trim();
+                if (strQuery.substring(strQuery.lastIndexOf(" ") + 1).equals("AND")) {
+                    strQuery = strQuery.substring(0, strQuery.lastIndexOf("AND"));
+                }
+
+                NativeQuery<Order> query = hibernateSession.createNativeQuery(strQuery, Order.class);
 
                 ListParameter[] listParameters = new ListParameter[]{orderedUserParameter, orderScheduleListParameter, orderStateListParameter,
                         orderItemListParameter, categoryListParameter, unitListParameter, supplierListParameter,
@@ -330,6 +336,7 @@ public class OrderRepositoryImpl implements OrderRepository {
                 if (!isBudgetAmountToEmpty) {
                     parameterMap.put("budgetAmountTo", orderSearch.getBudgetAmountTo());
                 }
+
 
                 if (!isArrivalDescriptionEmpty) {
                     parameterMap.put("arrivalDescription", "%" + orderSearch.getArrivalDescription() + "%");
@@ -385,9 +392,10 @@ public class OrderRepositoryImpl implements OrderRepository {
                 }
 
                 for (Map.Entry<String, Object> entry : parameterMap.entrySet()) {
-                    query.setParameter(entry.getKey(), entry.getValue());
+                    String key = entry.getKey();
+                    Object value = entry.getValue();
+                    query.setParameter(key, value);
                 }
-
 
                 list = query.list();
                 tx.commit();
@@ -421,7 +429,17 @@ public class OrderRepositoryImpl implements OrderRepository {
             if (clazz == Item.class)
                 parameterMap.put(key, ((Item) objects.get(i)).getName());
 
-            if (clazz == ItemType.class || clazz == RequestDetailsStatus.class || clazz == RequestStatus.class || clazz == RequestStatus.class)
+            if (clazz == Category.class)
+                parameterMap.put(key, ((Category) objects.get(i)).getName());
+
+
+            if (clazz == Unit.class)
+                parameterMap.put(key, ((Unit) objects.get(i)).getName());
+
+            if (clazz == Supplier.class)
+                parameterMap.put(key, ((Supplier) objects.get(i)).getName());
+
+            if (clazz == OrderState.class || clazz == Schedule.class || clazz == OrderDetailsState.class)
                 parameterMap.put(key, (objects.get(i)).toString());
 
             sb.append(":" + key + " , ");
@@ -439,8 +457,11 @@ public class OrderRepositoryImpl implements OrderRepository {
             return true;
 
         if (object instanceof Date) {
-            return true;
+            return false;
         }
+
+        if (object instanceof Integer)
+            return false;
 
         if (object instanceof String) {
             String s = (String) object;

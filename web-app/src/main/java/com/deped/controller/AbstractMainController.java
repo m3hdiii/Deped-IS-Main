@@ -396,7 +396,6 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
             birthDate = new SimpleDateFormat("yyyy-MM-dd").parse(dateText);
             return birthDate;
         } catch (ParseException e) {
-            e.printStackTrace();
         }
 
         try {

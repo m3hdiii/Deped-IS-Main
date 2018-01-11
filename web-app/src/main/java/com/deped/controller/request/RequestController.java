@@ -269,6 +269,11 @@ public class RequestController extends AbstractMainController<Request, Long> {
         Map<String, Object> modelMap = new HashMap<>();
         modelMap.put("requests", requestResult);
         modelMap.put("requestDetailsInfo", "/request-details/info/");
+        modelMap.put("itemTypes", ItemType.values());
+        modelMap.put("itemList", SharedData.getItems(false));
+        modelMap.put("userList", SharedData.getUsers(false));
+        modelMap.put("statuses", RequestStatus.values());
+        modelMap.put("detailsStatuses", RequestDetailsStatus.values());
         ModelAndView mav = new ModelAndView(REPORT_LIST_VIEW_PAGE, modelMap);
         return mav;
 

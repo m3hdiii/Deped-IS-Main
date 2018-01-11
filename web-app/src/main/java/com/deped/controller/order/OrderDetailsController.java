@@ -67,6 +67,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
     private static final String APPROVAL_PAGE = BASE_NAME + URL_SEPARATOR + "approval" + URL_SEPARATOR + ID_PATTERN;
     private static final String REQUISITION_PAGE = BASE_NAME + URL_SEPARATOR + "requisition" + URL_SEPARATOR + ID_PATTERN;
     private static final String ARRIVAL_PAGE = BASE_NAME + URL_SEPARATOR + "arrival" + URL_SEPARATOR + ID_PATTERN;
+    private static final String ORDER_DETAILS_PAGE = BASE_NAME + URL_SEPARATOR + "info" + URL_SEPARATOR + ID_PATTERN;
 
     private static final String UPDATE_STATE_REST = BASE_NAME + URL_SEPARATOR + "update-state/user/%s/state/%d";
 
@@ -401,6 +402,21 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
             mav = createOutput(orderDetailsForm, OrderDetailsState.ARRIVED, processName, headTagTitle, headTagDescription, heading);
         }
 
+        return mav;
+    }
+
+    @RequestMapping(value = ORDER_DETAILS_PAGE, method = GET)
+    public ModelAndView showInfo(@PathVariable(ID_STRING_LITERAL) Long orderId) {
+        Order order = fetchOrder(orderId);
+        List<OrderDetails> orderDetailsList = fetchOrderDetails(orderId);
+        ModelAndView mav = renderActions(
+                order, new HashSet<>(orderDetailsList),
+                "Info Page",
+                "Order Details Information Page",
+                "Information",
+                null,
+                null
+        );
         return mav;
     }
 

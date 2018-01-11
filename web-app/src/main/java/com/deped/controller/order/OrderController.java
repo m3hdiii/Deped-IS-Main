@@ -227,6 +227,14 @@ public class OrderController extends AbstractMainController<Order, Long> {
         Map<String, Object> modelMap = new HashMap<>();
         modelMap.put("orders", requestResult);
         modelMap.put("orderDetailsInfo", "/order-details/info/");
+        modelMap.put("userList", SharedData.getUsers(false));
+        modelMap.put("schedules", Schedule.values());
+        modelMap.put("orderStates", OrderState.values());
+        modelMap.put("itemList", SharedData.getItems(false));
+        modelMap.put("categoryList", SharedData.getCategories(false));
+        modelMap.put("unitList", SharedData.getUnits(false));
+        modelMap.put("orderDetailsStateList", OrderDetailsState.values());
+        modelMap.put("suppliers", SharedData.getSuppliers(false));
         ModelAndView mav = new ModelAndView(REPORT_LIST_VIEW_PAGE, modelMap);
         return mav;
 

@@ -64,6 +64,7 @@
                             <th>Unit</th>
                             <th>Unit Capacity</th>
                             <th>Total Ordered QTY</th>
+
                             <c:if test="${currentOrderDetailsState eq 'ARRIVED'}">
                                 <th>QTY Remaining</th>
                                 <th>QTY Arrived</th>
@@ -72,7 +73,9 @@
                             <th>Unit Price</th>
                             <th>Suppliers</th>
                             <th>Item Type</th>
-                            <th>State</th>
+                            <c:if test="${not empty nextOrderDetailsStates}">
+                                <th>State</th>
+                            </c:if>
                         </tr>
                         </thead>
 
@@ -120,18 +123,21 @@
                                 <td>${orderDet.unitPrice}</td>
                                 <td>${orderDet.supplier.name}</td>
                                 <td>${orderDet.item.itemType}</td>
-                                <td>
-                                    <form:select multiple="single" path="map['${strKey}'].orderDetailsState">
-                                        <form:options items="${nextOrderDetailsStates}" itemLabel="action"/>
-                                    </form:select>
-                                </td>
 
-                                <form:hidden path="map['${strKey}'].orderDetailsID.categoryName"
-                                             value="${orderDet.category.name}"/>
-                                <form:hidden path="map['${strKey}'].orderDetailsID.orderId"
-                                             value="${orderDet.order.orderId}"/>
-                                <form:hidden path="map['${strKey}'].orderDetailsID.itemName"
-                                             value="${orderDet.item.name}"/>
+                                <c:if test="${not empty nextOrderDetailsStates}">
+                                    <td>
+                                        <form:select multiple="single" path="map['${strKey}'].orderDetailsState">
+                                            <form:options items="${nextOrderDetailsStates}" itemLabel="action"/>
+                                        </form:select>
+                                    </td>
+
+                                    <form:hidden path="map['${strKey}'].orderDetailsID.categoryName"
+                                                 value="${orderDet.category.name}"/>
+                                    <form:hidden path="map['${strKey}'].orderDetailsID.orderId"
+                                                 value="${orderDet.order.orderId}"/>
+                                    <form:hidden path="map['${strKey}'].orderDetailsID.itemName"
+                                                 value="${orderDet.item.name}"/>
+                                </c:if>
                             </tr>
                         </c:forEach>
 
@@ -140,24 +146,27 @@
                     <hr class="clean">
                 </div>
 
-                <div class="modal-footer">
-                    <a href="/order/approval-list" class="btn btn-default pull-left"><i
-                            class="fa fa-chevron-left"></i><span> Back</span></a>
+                <c:if test="${not empty nextOrderDetailsStates}">
+                    <div class="modal-footer">
+                        <a href="/order/approval-list" class="btn btn-default pull-left"><i
+                                class="fa fa-chevron-left"></i><span> Back</span></a>
 
-                    <c:choose>
-                        <c:when test="${currentOrderDetailsState eq 'ARRIVED'}">
-                            <button type="submit" name="actionParam" value="FINALIZE_DELIVERY"
-                                    class="btn btn-purple pull-right">End The Process
-                            </button>
-                            <button type="submit" name="actionParam" value="PARTIAL_DELIVERY"
-                                    class="btn btn-purple pull-right">Items Partially Delivered
-                            </button>
-                        </c:when>
-                        <c:otherwise>
-                            <button type="submit" class="btn btn-purple pull-right">Confirm</button>
-                        </c:otherwise>
-                    </c:choose>
-                </div>
+                        <c:choose>
+                            <c:when test="${currentOrderDetailsState eq 'ARRIVED'}">
+                                <button type="submit" name="actionParam" value="FINALIZE_DELIVERY"
+                                        class="btn btn-purple pull-right">End The Process
+                                </button>
+                                <button type="submit" name="actionParam" value="PARTIAL_DELIVERY"
+                                        class="btn btn-purple pull-right">Items Partially Delivered
+                                </button>
+                            </c:when>
+                            <c:otherwise>
+                                <button type="submit" class="btn btn-purple pull-right">Confirm</button>
+                            </c:otherwise>
+                        </c:choose>
+                    </div>
+                </c:if>
+
             </div>
         </form:form>
     </div>
