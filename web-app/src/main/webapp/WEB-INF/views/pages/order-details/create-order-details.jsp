@@ -254,7 +254,7 @@
                                                         <th>Capacity/Unit</th>
                                                         <td class="col-md-12">
                                                             <div class="form-group col-md-5 no-margn no-padd">
-                                                                <form:input class="form-control input-sm" type="text" path="unitCapacity"/>
+                                                                <form:input id="num1${loop.index}" onkeyup="lockDownTotal('${loop.index}')" class="form-control input-sm" type="number" path="unitCapacity"/>
                                                             </div>
                                                             <h3 class="col-md-2 no-margn no-padd">&#x2215;</h3>
 
@@ -270,7 +270,7 @@
                                                         <th>No. of Units</th>
                                                         <td>
                                                             <div class="form-group no-margn">
-                                                                <form:input class="form-control input-sm" type="text" min="0" path="noOfUnits"/>
+                                                                <form:input id="num2${loop.index}" onkeyup="lockDownTotal('${loop.index}')" class="form-control input-sm" type="number" min="0" path="noOfUnits"/>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -278,7 +278,7 @@
                                                         <th>Total Qty</th>
                                                         <td>
                                                             <div class="form-group no-margn">
-                                                                <form:input class="form-control input-sm" type="text" min="0" path="totalQuantityRequestNo"/>
+                                                                <form:input id="total${loop.index}" onkeyup="lockDownTheFirstTwo('${loop.index}')" class="form-control input-sm" type="number" min="0" path="totalQuantityRequestNo"/>
                                                             </div>
                                                         </td>
                                                     </tr>
@@ -518,6 +518,8 @@
     </div>--%>
 
             <c:import url="../../includes/footer.jsp"/>
+
+        <script src="${resourceURL}/js/main/main.js"></script>
 
 </body>
 </html>
