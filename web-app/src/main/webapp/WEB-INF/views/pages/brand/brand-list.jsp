@@ -50,7 +50,7 @@
                                 <a href="#" data-toggle="dropdown"><i class="fa fa-ellipsis-v text-purple"></i></a>
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="/brand/update/${brand.name}" class="btn btn-purple"><i
+                                        <a href="/brand/update/${brand.name}"><i
                                                 class="fa fa-pencil text-primary"></i>
                                             Edit</a></li>
                                     <li><a href="#"><i class="fa fa-trash text-danger"></i> Delete</a></li>
