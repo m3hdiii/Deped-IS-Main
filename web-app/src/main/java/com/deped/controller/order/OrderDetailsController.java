@@ -487,7 +487,7 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         return order;
     }
 
-    private List<OrderDetails> fetchOrderDetails(Long orderId) {
+    public List<OrderDetails> fetchOrderDetails(Long orderId) {
         RestTemplate restTemplate = new RestTemplate();
         //get RequestDetails if there is any
         HttpEntity httpEntity = makeHttpEntity(null);

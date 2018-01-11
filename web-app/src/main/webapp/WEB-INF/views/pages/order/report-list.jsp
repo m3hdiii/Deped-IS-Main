@@ -4,14 +4,14 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ page isELIgnored="false" %>
 
-<c:url value="/public" var="resourceURL" scope="order"/>
+<c:url value="/public" var="resourceURL" scope="request"/>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 
 <!DOCTYPE html>
 <html lang="en">
 
-<c:url value="/" var="routePath" scope="order"/>
+<c:url value="/" var="routePath" scope="request"/>
 <c:import url="../../includes/head.jsp">
     <c:param name="title" value="Order Manager"/>
     <c:param name="description" value="List of Item"/>
@@ -27,7 +27,7 @@
 
         <div class="warper container-fluid">
             <div class="page-header">
-                <h1>Requested Items
+                <h1>Ordered Items
                     <small>Goods, Semi-Expandable, and Equipment</small>
                 </h1>
             </div>
@@ -44,121 +44,278 @@
                                     <div class="col-md-12 no-padd">
                                         <label class="col-md-12 no-padd">Order Date</label>
                                         <div class="form-group col-md-5 no-padd">
-                                            <form:input id="orderDateFromId" onclick="clickOnDateInput('orderDateFromId')" name="date" type="text" class="form-control form-control-flat input-sm" path="orderDateFrom" placeholder="MM/DD/YYY"/>
+                                            <form:input id="orderDateFromId" path="orderDateFrom"
+                                                        onclick="clickOnDateInput('orderDateFromId')" type="text"
+                                                        class="form-control form-control-flat input-sm"
+                                                        placeholder="MM/DD/YYY"/>
                                         </div>
                                         <div class="col-md-2 no-padd text-center margn-t-xs">
                                             To
                                         </div>
                                         <div class="form-group col-md-5 no-padd">
-                                            <form:input id="orderDateToId" name="date" onclick="clickOnDateInput('orderDateToId')" type="text" class="form-control form-control-flat input-sm" path="orderDateTo" placeholder="MM/DD/YYY"/>
+                                            <form:input id="orderDateToId" path="orderDateTo"
+                                                        onclick="clickOnDateInput('orderDateToId')" type="text"
+                                                        class="form-control form-control-flat input-sm"
+                                                        placeholder="MM/DD/YYY"/>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="col-md-12 no-padd">
-                                            <label for="itemList">Items</label>
-                                            <form:select class="form-control form-control-flat input-sm chosen-select" id="itemList" path="items" items="${itemList}" itemLabel="name" itemValue="name" multiple="true" data-placeholder="Choose Item..."/>
+
+                                    <div class="col-md-12 no-padd">
+                                        <label class="col-md-12 no-padd">Required Date</label>
+                                        <div class="form-group col-md-5 no-padd">
+                                            <form:input id="orderDateFromId" path="requiredDateFrom"
+                                                        onclick="clickOnDateInput('orderDateFromId')" type="text"
+                                                        class="form-control form-control-flat input-sm"
+                                                        placeholder="MM/DD/YYY"/>
+                                        </div>
+                                        <div class="col-md-2 no-padd text-center margn-t-xs">
+                                            To
+                                        </div>
+                                        <div class="form-group col-md-5 no-padd">
+                                            <form:input id="orderDateToId" path="requiredDateTo"
+                                                        onclick="clickOnDateInput('orderDateToId')" type="text"
+                                                        class="form-control form-control-flat input-sm"
+                                                        placeholder="MM/DD/YYY"/>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
                                         <div class="col-md-12 no-padd margn-t-sm">
-                                            <label for="reqUserList">Ordered User</label>
-                                            <form:select class="form-control form-control-flat input-sm chosen-select" multiple="true" path="orderedUsers" id="reqUserList" items="${userList}" itemLabel="username"
+                                            <label for="reqUserList">Ordered Users</label>
+                                            <form:select class="form-control form-control-flat input-sm chosen-select"
+                                                         multiple="true" path="users"
+                                                         id="reqUserList" items="${userList}" itemLabel="username"
                                                          itemValue="username" data-placeholder="Choose who order..."/>
                                         </div>
                                     </div>
 
                                     <div class="form-group">
-                                        <div class="col-md-12 no-padd margn-t-sm">
-                                            <label for="consideredUserList">Considered By Users</label>
-                                            <form:select class="form-control form-control-flat input-sm chosen-select" id="consideredUserList" multiple="true" data-placeholder="Choose who considered..." path="consideredByUsers" items="${userList}"
-                                                         itemLabel="username" itemValue="username"/>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group col-md-12 no-padd margn-t-sm">
-                                        <label for="userMessage">User Message Contains</label>
-                                        <form:input path="userMessage" type="text" class="form-control form-control-flat input-sm" id="userMessage" placeholder="Enter User Message..."/>
-                                    </div>
-                                    <div class="form-group col-md-12 no-padd">
-                                        <label for="adminNotice">Admin Notice Contains</label>
-                                        <form:input path="adminNotice" type="text" class="form-control form-control-flat input-sm" id="adminNotice" placeholder="Enter Admin Notice..."/>
-                                    </div>
-                                    <div class="form-group col-md-12 no-padd">
-                                        <label for="cancelReason">Cancellation Reason Contains</label>
-                                        <form:input path="cancellationReason" type="text" class="form-control form-control-flat input-sm" id="cancelReason" placeholder="Enter Cancellation Reason..."/>
-                                    </div>
-                                    <div class="form-group col-md-12 no-padd">
-                                        <label for="officerRemark">Supply Officer Remark Contains</label>
-                                        <form:input path="supplyOfficeRemark" type="text" class="form-control form-control-flat input-sm" id="officerRemark" placeholder="Enter Supply Officer Remark..."/>
-                                    </div>
-
-                                    <div class="form-group">
                                         <div class="col-md-12 no-padd">
-                                            <label for="itemType">Item Type</label>
-                                            <form:select path="itemTypes" items="${itemTypes}" itemLabel="name" class="form-control form-control-flat input-sm chosen-select" id="itemType" multiple="true" data-placeholder="Choose Type of Item..."/>
+                                            <label for="schedulesId">Schedules</label>
+                                            <form:select path="orderSchedules" items="${schedules}" itemLabel="name"
+                                                         class="form-control form-control-flat in1put-sm chosen-select"
+                                                         id="schedulesId"
+                                                         multiple="true" data-placeholder="Choose Order Schedules ..."/>
                                         </div>
                                     </div>
 
                                     <div class="col-md-12 no-padd margn-t-sm">
-                                        <label class="col-md-12 no-padd">Order Quantity</label>
+                                        <label class="col-md-12 no-padd">Budget Amount</label>
                                         <div class="form-group col-md-5 no-padd">
-                                            <form:input path="orderQuantityFrom" type="number" min="0" class="form-control form-control-flat input-sm" placeholder="0"/>
+                                            <form:input path="budgetAmountFrom" type="number" min="0"
+                                                        class="form-control form-control-flat input-sm"
+                                                        placeholder="Enter a number"/>
                                         </div>
                                         <div class="col-md-2 no-padd text-center margn-t-xs">
                                             To
                                         </div>
                                         <div class="form-group col-md-5 no-padd">
-                                            <form:input path="orderQuantityTo" type="number" min="0" class="form-control form-control-flat input-sm" placeholder="0"/>
+                                            <form:input path="budgetAmountTo" type="number" min="0"
+                                                        class="form-control form-control-flat input-sm"
+                                                        placeholder="Enter a number"/>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12 no-padd">
-                                        <label class="col-md-12 no-padd">Approved Quantity</label>
-                                        <div class="form-group col-md-5 no-padd">
-                                            <form:input path="approvedQuantityFrom" type="number" min="0" class="form-control form-control-flat input-sm" placeholder="0"/>
-                                        </div>
-                                        <div class="col-md-2 no-padd text-center margn-t-xs">
-                                            To
-                                        </div>
-                                        <div class="form-group col-md-5 no-padd">
-                                            <form:input path="approvedQuantityTo" type="number" min="0" class="form-control form-control-flat input-sm" placeholder="0"/>
+                                    <div class="form-group">
+                                        <div class="col-md-12 no-padd">
+                                            <label for="orderStatesId">Order States</label>
+                                            <form:select path="orderStates" items="${orderStates}" itemLabel="name"
+                                                         class="form-control form-control-flat input-sm chosen-select"
+                                                         id="orderStatesId"
+                                                         multiple="true" data-placeholder="Choose Order States ..."/>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12 no-padd">
-                                        <label class="col-md-12 no-padd">Consideration Date</label>
-                                        <div class="form-group col-md-5 no-padd">
-                                            <form:input id="consideredDateFromId" name="date" onclick="clickOnDateInput('consideredDateFromId')" path="approvalDisapprovalDateFrom" type="text" class="form-control form-control-flat input-sm" placeholder="MM/DD/YYY"/>
-                                        </div>
-                                        <div class="col-md-2 no-padd text-center margn-t-xs">
-                                            To
-                                        </div>
-                                        <div class="form-group col-md-5 no-padd">
-                                            <form:input id="consideredDateToId" name="date" onclick="clickOnDateInput('consideredDateToId')" path="approvalDisapprovalDateTo" type="text" class="form-control form-control-flat input-sm" placeholder="MM/DD/YYY"/>
+                                    <div class="form-group col-md-12 no-padd margn-t-sm">
+                                        <label for="userMessage">Arrival Description Contains</label>
+                                        <form:input path="arrivalDescription" type="text"
+                                                    class="form-control form-control-flat input-sm" id="userMessage"
+                                                    placeholder="Enter Arrival Description words ..."/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12 no-padd">
+                                            <label for="itemList">Items</label>
+                                            <form:select class="form-control form-control-flat input-sm chosen-select"
+                                                         id="itemList" path="items" items="${itemList}" itemLabel="name"
+                                                         itemValue="name" multiple="true"
+                                                         data-placeholder="Choose Items..."/>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-12 no-padd">
-                                        <label class="col-md-12 no-padd">Release Date</label>
+                                    <div class="form-group">
+                                        <div class="col-md-12 no-padd">
+                                            <label for="itemList">Categories</label>
+                                            <form:select class="form-control form-control-flat input-sm chosen-select"
+                                                         id="categoryId" path="categories" items="${categoryList}"
+                                                         itemLabel="name" itemValue="name" multiple="true"
+                                                         data-placeholder="Choose Categories..."/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12 no-padd">
+                                            <label for="itemList">Units</label>
+                                            <form:select class="form-control form-control-flat input-sm chosen-select"
+                                                         id="categoryId" path="units" items="${unitList}"
+                                                         itemLabel="name" itemValue="name" multiple="true"
+                                                         data-placeholder="Choose Units..."/>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 no-padd margn-t-sm">
+                                        <label class="col-md-12 no-padd">Unit Price</label>
                                         <div class="form-group col-md-5 no-padd">
-                                            <form:input id="releaseDateFromId" name="date" onclick="clickOnDateInput('releaseDateFromId')" path="releaseDateFrom" type="text" class="form-control form-control-flat input-sm" placeholder="MM/DD/YYY"/>
+                                            <form:input path="unitPriceFrom" type="number" min="0"
+                                                        class="form-control form-control-flat input-sm"
+                                                        placeholder="Enter a number"/>
                                         </div>
                                         <div class="col-md-2 no-padd text-center margn-t-xs">
                                             To
                                         </div>
                                         <div class="form-group col-md-5 no-padd">
-                                            <form:input id="releaseDateToId" name="date" onclick="clickOnDateInput('releaseDateToId')" path="releaseDateTo" type="text" class="form-control form-control-flat input-sm" placeholder="MM/DD/YYY"/>
+                                            <form:input path="unitPriceTo" type="number" min="0"
+                                                        class="form-control form-control-flat input-sm"
+                                                        placeholder="Enter a number"/>
                                         </div>
                                     </div>
-                                    <div class="form-group col-md-12 no-padd">
-                                        <label for="orderStat">Order Status</label>
-                                        <form:select path="orderStatuses" items="${statuses}" itemLabel="name" class="form-control form-control-flat input-sm chosen-select" multiple="true" id="orderStat"/>
+
+                                    <div class="col-md-12 no-padd margn-t-sm">
+                                        <label class="col-md-12 no-padd">Unit capacity</label>
+                                        <div class="form-group col-md-5 no-padd">
+                                            <form:input path="unitCapacityFrom" type="number" min="0"
+                                                        class="form-control form-control-flat input-sm"
+                                                        placeholder="Enter a number"/>
+                                        </div>
+                                        <div class="col-md-2 no-padd text-center margn-t-xs">
+                                            To
+                                        </div>
+                                        <div class="form-group col-md-5 no-padd">
+                                            <form:input path="unitCapacityTo" type="number" min="0"
+                                                        class="form-control form-control-flat input-sm"
+                                                        placeholder="Enter a number"/>
+                                        </div>
                                     </div>
-                                    <div class="form-group col-md-12 no-padd">
-                                        <label for="reqDetStat">Order Details Status</label>
-                                        <form:select path="orderDetailsStatuses" class="form-control form-control-flat input-sm chosen-select" id="reqDetStat" multiple="true"
-                                                     items="${detailsStatuses}" itemLabel="name"/>
+
+                                    <div class="col-md-12 no-padd margn-t-sm">
+                                        <label class="col-md-12 no-padd">No of units</label>
+                                        <div class="form-group col-md-5 no-padd">
+                                            <form:input path="noOfUnitsFrom" type="number" min="0"
+                                                        class="form-control form-control-flat input-sm"
+                                                        placeholder="Enter a number"/>
+                                        </div>
+                                        <div class="col-md-2 no-padd text-center margn-t-xs">
+                                            To
+                                        </div>
+                                        <div class="form-group col-md-5 no-padd">
+                                            <form:input path="noOfUnitsTo" type="number" min="0"
+                                                        class="form-control form-control-flat input-sm"
+                                                        placeholder="Enter a number"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 no-padd margn-t-sm">
+                                        <label class="col-md-12 no-padd">Total quantity requests</label>
+                                        <div class="form-group col-md-5 no-padd">
+                                            <form:input path="totalQuantityRequestNoFrom" type="number" min="0"
+                                                        class="form-control form-control-flat input-sm"
+                                                        placeholder="Enter a number"/>
+                                        </div>
+                                        <div class="col-md-2 no-padd text-center margn-t-xs">
+                                            To
+                                        </div>
+                                        <div class="form-group col-md-5 no-padd">
+                                            <form:input path="totalQuantityRequestNoTo" type="number" min="0"
+                                                        class="form-control form-control-flat input-sm"
+                                                        placeholder="Enter a number"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12 no-padd margn-t-sm">
+                                        <label class="col-md-12 no-padd">Total quantity Arrived</label>
+                                        <div class="form-group col-md-5 no-padd">
+                                            <form:input path="totalQuantityArrivedNoFrom" type="number" min="0"
+                                                        class="form-control form-control-flat input-sm"
+                                                        placeholder="Enter a number"/>
+                                        </div>
+                                        <div class="col-md-2 no-padd text-center margn-t-xs">
+                                            To
+                                        </div>
+                                        <div class="form-group col-md-5 no-padd">
+                                            <form:input path="totalQuantityArrivedNoTo" type="number" min="0"
+                                                        class="form-control form-control-flat input-sm"
+                                                        placeholder="Enter a number"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12 no-padd">
+                                            <label for="statesId">Order Details States</label>
+                                            <form:select path="orderDetailsStates" items="${orderDetailsStateList}"
+                                                         itemLabel="name"
+                                                         class="form-control form-control-flat input-sm chosen-select"
+                                                         id="statesId" multiple="true"
+                                                         data-placeholder="Order Details State..."/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12 no-padd">
+                                            <label for="itemList">Suppliers</label>
+                                            <form:select class="form-control form-control-flat input-sm chosen-select"
+                                                         id="supplierId" path="suppliers" items="${suppliers}"
+                                                         itemLabel="name" itemValue="name" multiple="true"
+                                                         data-placeholder="Suppliers..."/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-md-12 no-padd margn-t-sm">
+                                        <label for="userMessage">Disapproval Message</label>
+                                        <form:input path="disapprovalMessage" type="text"
+                                                    class="form-control form-control-flat input-sm"
+                                                    id="disapprovalMessageId"
+                                                    placeholder="Enter Disapproval Message ..."/>
+                                    </div>
+
+                                    <div class="form-group col-md-12 no-padd margn-t-sm">
+                                        <label for="userMessage">Not Arrival Message</label>
+                                        <form:input path="notArrivalMessage" type="text"
+                                                    class="form-control form-control-flat input-sm"
+                                                    id="disapprovalMessageId"
+                                                    placeholder="Enter Not Arrival Message ..."/>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12 no-padd margn-t-sm">
+                                            <label for="orderedByUserList1">Ordered By Users</label>
+                                            <form:select path="orderedByUsers" items="${userList}"
+                                                         class="form-control form-control-flat input-sm chosen-select"
+                                                         id="orderedByUserList1" multiple="true"
+                                                         data-placeholder="Choose who Ordered..."
+                                                         itemLabel="username" itemValue="username"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12 no-padd margn-t-sm">
+                                            <label for="receivedByListId">Received By Users</label>
+                                            <form:select path="receivedByUsers" items="${userList}"
+                                                         class="form-control form-control-flat input-sm chosen-select"
+                                                         id="receivedByListId" multiple="true"
+                                                         data-placeholder="Choose who received..."
+                                                         itemLabel="username" itemValue="username"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-12 no-padd margn-t-sm">
+                                            <label for="consideredByListId2">Considered By Users</label>
+                                            <form:select path="consideredByUsers" items="${userList}"
+                                                         class="form-control form-control-flat input-sm chosen-select"
+                                                         id="consideredByListId2" multiple="true"
+                                                         data-placeholder="Choose who considered..."
+                                                         itemLabel="username" itemValue="username"/>
+                                        </div>
                                     </div>
                                     <div class="col-md-12 padd-sm">
                                         <button name="web" value="WEB" class="btn btn-sm btn-purple pull-right" data-toggle="tooltip"

@@ -9,6 +9,7 @@ import com.deped.model.items.Item;
 import com.deped.model.location.City;
 import com.deped.model.location.Country;
 import com.deped.model.location.office.Department;
+import com.deped.model.order.OrderDetails;
 import com.deped.model.request.RequestDetails;
 import com.deped.model.security.Role;
 import com.deped.model.supply.Supplier;
@@ -96,6 +97,64 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         Item discoveredItem = SystemUtils.findElementInList(items, item);
         return discoveredItem;
     }
+
+    protected Category fetchCategoryByStringId(String text) {
+        try {
+            Category discoveredItem = fetchCategoryByName(text);
+            return discoveredItem;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    protected Category fetchCategoryByName(String itemName) {
+        Category category = new Category();
+        category.setName(itemName);
+
+        List<Category> categories = SharedData.getCategories(false);
+        Category discoveredCategory = SystemUtils.findElementInList(categories, category);
+        return discoveredCategory;
+    }
+
+    protected Unit fetchUnitByStringId(String text) {
+        try {
+            Unit discoveredUnit = fetchUnitByName(text);
+            return discoveredUnit;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    protected Unit fetchUnitByName(String itemName) {
+        Unit unit = new Unit();
+        unit.setName(itemName);
+
+        List<Unit> units = SharedData.getUnits(false);
+        Unit discoveredUnit = SystemUtils.findElementInList(units, unit);
+        return discoveredUnit;
+    }
+
+    protected Supplier fetchSupplierByStringId(String text) {
+        try {
+            Supplier discoveredSupplier = fetchSupplierByName(text);
+            return discoveredSupplier;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    protected Supplier fetchSupplierByName(String itemName) {
+        Supplier supplier = new Supplier();
+        supplier.setName(itemName);
+
+        List<Supplier> suppliers = SharedData.getSuppliers(false);
+        Supplier discoveredSupplier = SystemUtils.findElementInList(suppliers, supplier);
+        return discoveredSupplier;
+    }
+
 
 
     public ResponseEntity<Response> makeUpdateRestRequest(T entity, String baseName, HttpMethod method, Class<T> entityClass) {
@@ -412,6 +471,17 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         ResponseEntity<List<RequestDetails>> responseDetails = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<RequestDetails>>() {
         });
         List<RequestDetails> requestDetailsList = responseDetails.getBody();
+        return requestDetailsList;
+    }
+
+    public List<OrderDetails> fetchOrderDetails(Long orderId) {
+        RestTemplate restTemplate = new RestTemplate();
+        //get RequestDetails if there is any
+        HttpEntity httpEntity = makeHttpEntity(null);
+        String restUrl = String.format(FETCH_URL, "order-details").concat("/").concat(orderId + "");
+        ResponseEntity<List<OrderDetails>> responseDetails = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, new ParameterizedTypeReference<List<OrderDetails>>() {
+        });
+        List<OrderDetails> requestDetailsList = responseDetails.getBody();
         return requestDetailsList;
     }
 }
