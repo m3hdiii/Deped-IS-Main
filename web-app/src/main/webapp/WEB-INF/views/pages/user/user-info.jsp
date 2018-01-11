@@ -11,6 +11,7 @@
 <c:url value="/public" var="resourceURL" scope="request"/>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
+<%@ taglib uri="http://www.springframework.org/security/tags" prefix="sec" %>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -101,11 +102,12 @@
                             </div>
                         </section>
 
-                        <div class="button-group col-md-12 text-center">
-                            <a class="btn btn-primary btn-md btn-purple"
-                               href="<c:url value='/user/update/${userInfo.username}'/>">Update Information</a>
-                        </div>
-
+                        <sec:authorize access="hasRole('ROLE_ADMIN')">
+                            <div class="button-group col-md-12 text-center">
+                                <a class="btn btn-primary btn-md btn-purple"
+                                   href="<c:url value='/user/update/${userInfo.username}'/>">Update Information</a>
+                            </div>
+                        </sec:authorize>
                     </div>
                 </div>
             </div>
