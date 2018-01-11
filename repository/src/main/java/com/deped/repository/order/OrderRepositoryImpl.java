@@ -23,6 +23,7 @@ import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -436,6 +437,10 @@ public class OrderRepositoryImpl implements OrderRepository {
     private boolean isEmpty(Object object) {
         if (object == null)
             return true;
+
+        if (object instanceof Date) {
+            return true;
+        }
 
         if (object instanceof String) {
             String s = (String) object;

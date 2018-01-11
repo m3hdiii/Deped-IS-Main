@@ -396,6 +396,34 @@ public class OrderController extends AbstractMainController<Order, Long> {
             }
         });
 
+        binder.registerCustomEditor(Date.class, "orderDateFrom", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
+            }
+        });
+
+        binder.registerCustomEditor(Date.class, "orderDateTo", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
+            }
+        });
+
+        binder.registerCustomEditor(Date.class, "requiredDateFrom", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
+            }
+        });
+
+        binder.registerCustomEditor(Date.class, "requiredDateTo", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
+            }
+        });
+
 
         //==========================
         binder.registerCustomEditor(List.class, "users", new PropertyEditorSupport() {
