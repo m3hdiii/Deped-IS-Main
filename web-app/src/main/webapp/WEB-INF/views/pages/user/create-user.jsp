@@ -30,7 +30,7 @@
     <div class="warper container-fluid">
 
         <div class="page-header">
-            <h3>Register Emplooyee
+            <h3>Register Employee
                 <small>DepEd-Baguio City Division Office</small>
             </h3>
         </div>
