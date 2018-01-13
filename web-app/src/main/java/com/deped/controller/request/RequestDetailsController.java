@@ -446,27 +446,29 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
 
 
     private ModelAndView renderBorrowActions(Request request, List<RequestDetails> requestDetailsList, RequestDetailsStatus[] nextStatuses) {
-        Date d = new Date();
+        final String targetRenderPage = "pages/borrow-request/create-borrow-request";
         List<RequestTracker> requestTrackers = new ArrayList<>();
         for (int i = 0; i < requestDetailsList.size(); i++) {
             RequestDetails requestDetails = requestDetailsList.get(i);
-            Integer noOfRequestFromAnItem = requestDetails.getApprovedQuantity();
-            if (noOfRequestFromAnItem != null && noOfRequestFromAnItem > 0) {
-                Item item = requestDetails.getItem();
-                List<ItemDetails> itemDetailsList = getAvailableItemDetails(item);
-                RequestTracker requestTracker = new RequestTracker(requestDetails, itemDetailsList);
+            Integer noOfRequestFromAnItem = requestDetails.getRequestQuantity();
+            Item item = requestDetails.getItem();
+            List<ItemDetails> itemDetailsList = getAvailableItemDetails(item);
 
-                if (noOfRequestFromAnItem <= itemDetailsList.size()) {//we have captured info for all approved requests
-                    for (int j = 0; j < noOfRequestFromAnItem; j++) {
-                        requestTrackers.add(requestTracker);
-                    }
-                } else {
-                    //TODO should check how many of that equipment stock exist and how many has been captured and
-                    //TODO then redirect to capture page if there are uncaptured data and then return back here again
-                    for (int j = 0; j < itemDetailsList.size(); j++) { //only this much can release
-                        requestTrackers.add(requestTracker);
-                    }
+            if (noOfRequestFromAnItem <= itemDetailsList.size()) {//we have captured info for all approved requests
+                RequestTracker requestTracker = new RequestTracker(requestDetails, itemDetailsList);
+                for (int j = 0; j < noOfRequestFromAnItem; j++) {
+                    requestTrackers.add(requestTracker);
                 }
+            } else {
+                //TODO should check how many of that equipment stock exist and how many has been captured and
+                //TODO then redirect to capture page if there are uncaptured data and then return back here again
+                String message = "You should insert available stocks equipment info before you lend it";
+                String url = "/item-details/insert-data";
+                Map<String, Object> map = new HashMap<>();
+                map.put("errorMessage", message);
+                map.put("insertUrl", url);
+                ModelAndView mav = new ModelAndView(targetRenderPage, map);
+                return mav;
             }
         }
 
@@ -474,7 +476,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         Map<String, Object> modelMap = new HashMap<>();
         modelMap.put("borrowRequestDetailsForm", borrowRequestDetailsForm);
         modelMap.put("trackingStatuses", TrackingStatus.values());
-        return new ModelAndView("pages/borrow-request/create-borrow-request", modelMap);
+        return new ModelAndView(targetRenderPage, modelMap);
     }
 
     private List<ItemDetails> getAvailableItemDetails(Item item) {
@@ -500,7 +502,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
 
         ResultBean resultBean = new ResultBean(headTagTitle, headTagDescription, heading, successMessage, failureMessage);
         ModelAndView mav = createResultPage(resultBean);
-        return null;
+        return mav;
     }
 
     private ResponseEntity<Response> updateBorrowStatusAction(BorrowRequestDetailsForm requestDetailsForm, RequestDetailsStatus status) {

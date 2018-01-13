@@ -69,7 +69,11 @@ public class RequestRepositoryImpl implements RequestRepository {
 
     @Override
     public List<Request> fetchAllByRequestStatus(RequestStatus requestStatus) {
-        String nativeQuery = "SELECT * FROM request WHERE request_status = :requestStatus AND item_type <> 'EQUIPMENT'";
+        String nativeQuery = "SELECT * FROM request WHERE request_status = :requestStatus";
+        if (requestStatus != RequestStatus.PENDING && requestStatus != RequestStatus.SAVED) {
+            nativeQuery += " AND item_type <> 'EQUIPMENT'";
+        }
+
         Map<String, Object> parameterMap = new HashMap<>();
         parameterMap.put("requestStatus", requestStatus.toString());
         List<Request> requests = hibernateFacade.fetchAllEntityBySqlQuery(nativeQuery, null, Request.class, parameterMap);

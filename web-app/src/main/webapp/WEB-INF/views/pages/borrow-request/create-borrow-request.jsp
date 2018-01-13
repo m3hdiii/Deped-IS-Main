@@ -49,6 +49,24 @@
             </div>
         </c:if>
 
+        <c:if test="${not empty errorMessage}">
+            <div>
+                <ul class="list-group">
+
+                    <li class="list-group-item list-group-item-warning text-danger">
+                            <span class="glyphicon glyphicon-exclamation-sign">
+                            &nbsp;${errorMessage}
+                        </span>
+                    </li>
+                    <li class="list-group-item list-group-item-warning text-danger">
+                            <span class="glyphicon glyphicon-exclamation-sign">
+                            &nbsp;Insert equipment info from <a href="<c:url value="${insertUrl}" />">-> Here <-</a>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+        </c:if>
+
         <div class="row">
 
             <div class="request-body-container">

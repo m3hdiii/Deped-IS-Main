@@ -45,25 +45,52 @@ function insertDummy(id, length) {
 
             let colourClassElem = document.getElementsByClassName(colourClass)[row];
             let colourIdElem = document.getElementById(colourId);
-            colourClassElem.value = colourIdElem.value;
+            let colorElemValue = colourIdElem.value;
+            if (colorElemValue) {
+                colourClassElem.value = colorElemValue;
+            }
 
-            document.getElementsByClassName(purchasePriceClass)[row].value = document.getElementById(purchasePriceId).value;
-            document.getElementsByClassName(equipmentSerialNoClass)[row].value = document.getElementById(equipmentSerialNoId).value;
+            let purchasePriceValue = document.getElementById(purchasePriceId).value;
+            if (purchasePriceValue) {
+                document.getElementsByClassName(purchasePriceClass)[row].value = document.getElementById(purchasePriceId).value;
+            }
+
+            let equipmentSerialNumberValue = document.getElementById(equipmentSerialNoId).value;
+            if (equipmentSerialNumberValue) {
+                document.getElementsByClassName(equipmentSerialNoClass)[row].value = equipmentSerialNumberValue;
+            }
+
 
             let materialClassElem = document.getElementsByClassName(materialClass)[row];
             let materialIdElem = document.getElementById(materialId);
-            materialClassElem.value = materialIdElem.value;
+            let materialElemValue = materialIdElem.value;
+            if (materialElemValue) {
+                materialClassElem.value = materialElemValue;
+            }
 
             let availabilityClassElem = document.getElementsByClassName(availabilityClass)[row];
             let availabilityIdElem = document.getElementById(availabilityId);
-            availabilityClassElem.value = availabilityIdElem.value;
+            let availabilityElemValue = availabilityIdElem.value;
+            if (availabilityElemValue) {
+                availabilityClassElem.value = availabilityElemValue;
+            }
 
             let conditionClassElem = document.getElementsByClassName(conditionClass)[row];
             let conditionIdElem = document.getElementById(conditionId);
-            conditionClassElem.value = conditionIdElem.value;
+            let conditionElemValue = conditionIdElem.value;
+            if (conditionElemValue) {
+                conditionClassElem.value = conditionElemValue;
+            }
 
-            document.getElementsByClassName(weightInGramClass)[row].value = document.getElementById(weightInGramId).value;
-            document.getElementsByClassName(lifeSpanClass)[row].value = document.getElementById(lifeSpanId).value;
+            let weightValue = document.getElementById(weightInGramId).value;
+            if (weightValue) {
+                document.getElementsByClassName(weightInGramClass)[row].value = weightValue;
+            }
+
+            let lifeSpanValue = document.getElementById(lifeSpanId).value;
+            if (lifeSpanValue) {
+                document.getElementsByClassName(lifeSpanClass)[row].value = lifeSpanValue;
+            }
         }
     }
 }

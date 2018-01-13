@@ -14,6 +14,7 @@ import com.deped.model.items.features.EquipmentAvailability;
 import com.deped.model.items.features.Material;
 import com.deped.model.order.CaptureInfo;
 import com.deped.model.order.OrderDetails;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -51,6 +52,13 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
     private static final String UPDATE_VIEW_PAGE = BASE_SHOW_PAGE + UPDATE_PAGE + BASE_NAME;
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
     private static final String INSERT_DATA = BASE_NAME + URL_SEPARATOR + "insert-data";
+
+    private Validator validator;
+
+    public ItemDetailsController() {
+        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+        validator = validatorFactory.getValidator();
+    }
 
 
     @Override
@@ -192,9 +200,14 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
     @RequestMapping(value = INSERT_DATA, method = RequestMethod.POST)
     public ModelAndView captureDataAction(@Valid @ModelAttribute("itemDetailsBeanForm") ItemDetailsBeanForm itemDetailsForm, BindingResult bindingResult) {
 
-        List<ItemDetails> subLIst = fetchFilledObjects(itemDetailsForm);
-        String restUrl;
+        List<ItemDetails> subLIst = fetchFilledObjects(itemDetailsForm, bindingResult);
 
+        if (bindingResult.hasErrors()) {
+            ModelAndView mav = captureData();
+            return mav;
+        }
+
+        String restUrl;
         restUrl = String.format(CREATE_ALL_URL, BASE_NAME);
 
 
@@ -205,21 +218,34 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
         return mav;
     }
 
-    private List<ItemDetails> fetchFilledObjects(ItemDetailsBeanForm itemDetailsForm) {
+    private List<ItemDetails> fetchFilledObjects(ItemDetailsBeanForm itemDetailsForm, BindingResult bindingResult) {
         List<ItemDetails> subList = new ArrayList<>();
         List<CaptureInfo> capInfoList = itemDetailsForm.getCaptureInfoList();
+
         for (CaptureInfo ci : capInfoList) {
             List<ItemDetails> itemDetailsList = ci.getItemDetailsList();
             if (itemDetailsList != null) {
                 for (ItemDetails id : itemDetailsList) {
                     if (id.getOfficeSerialNo() != null && !id.getOfficeSerialNo().equals("")) {
                         subList.add(id);
+                        addError(id, bindingResult);
                     }
                 }
             }
         }
 
         return subList;
+    }
+
+    public BindingResult addError(ItemDetails itemDetails, BindingResult bindingResult) {
+        Set<ConstraintViolation<ItemDetails>> violations = validator.validate(itemDetails);
+
+        for (ConstraintViolation<ItemDetails> violation : violations) {
+            String propertyPath = violation.getPropertyPath().toString();
+            String message = violation.getMessage();
+            bindingResult.addError(new FieldError("itemDetails", propertyPath, "Invalid " + propertyPath + "(" + message + ")"));
+        }
+        return bindingResult;
     }
 
     private List<CaptureInfo> fetchCaptureInfoByItemTypes(ItemType[] itemTypes) {
@@ -306,5 +332,8 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
                 setValue(getDate(text));
             }
         });
+
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+
     }
 }
