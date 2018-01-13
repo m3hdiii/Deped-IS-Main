@@ -66,12 +66,7 @@
                         <thead>
                         <tr>
                             <c:if test="${not empty nextRequestDetailsStatuses}">
-                                <th>
-                                    <label class="cr-styled">
-                                        <input type="checkbox" ng-model="todo.done">
-                                        <i class="fa"></i>
-                                    </label>
-                                </th>
+                                <th>#</th>
                             </c:if>
                             <th>Image</th>
                             <th>Name</th>
@@ -93,11 +88,11 @@
                             <tr>
 
                                 <c:if test="${not empty nextRequestDetailsStatuses}">
-                                    <td>
-                                        <label class="cr-styled">
+                                    <td>${loop.index + 1}
+                                        <%--<label class="cr-styled">
                                             <input type="checkbox" ng-model="todo.done">
                                             <i class="fa"></i>
-                                        </label>
+                                        </label>--%>
                                     </td>
                                 </c:if>
                                 <td>

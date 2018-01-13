@@ -37,8 +37,8 @@
         <div class="btn-group visible-lg-inline-block">
             <a href="/unit/create" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
                title="Add Unit"><i class="fa fa-plus"></i></a>
-            <button type="button" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
-                    title="Delete"><i class="fa fa-trash"></i></button>
+            <%--<button type="button" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"--%>
+                    <%--title="Delete"><i class="fa fa-trash"></i></button>--%>
         </div>
         <hr class="clean">
 
@@ -49,11 +49,11 @@
                        id="basic-datatable">
                     <thead>
                     <tr>
-                        <th>
-                            <label class="cr-styled">
+                        <th>#
+                            <%--<label class="cr-styled">
                                 <input type="checkbox" ng-model="todo.done">
                                 <i class="fa"></i>
-                            </label>
+                            </label>--%>
                         </th>
                         <th>Name</th>
                         <th>Description</th>
@@ -64,13 +64,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${units}" var="unit">
+                    <c:forEach items="${units}" var="unit" varStatus="loop">
                         <tr>
-                            <td>
-                                <label class="cr-styled">
+                            <td>${loop.index + 1}
+                                <%--<label class="cr-styled">
                                     <input type="checkbox" ng-model="todo.done">
                                     <i class="fa"></i>
-                                </label>
+                                </label>--%>
                             </td>
                             <td>${unit.name}</td>
                             <td>${unit.description}</td>
@@ -81,8 +81,8 @@
                                            class="btn btn-purple tooltip-btn" data-toggle="tooltip" data-placement="top"
                                            title="Edit Unit"><i
                                                 class="fa fa-pencil"></i></a>
-                                        <button type="button" class="btn btn-danger tooltip-btn" data-toggle="tooltip"
-                                                data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+                                        <%--<button type="button" class="btn btn-danger tooltip-btn" data-toggle="tooltip"
+                                                data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>--%>
                                     </div>
                                 </td>
                             </sec:authorize>

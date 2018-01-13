@@ -33,39 +33,18 @@
     <div class="warper container-fluid">
 
         <div class="page-header">
-            <h3>&nbsp;&nbsp;&nbspCheckout Request&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
+            <h3>Checkout Request&nbsp;<small>&nbsp;for Goods, Semi-Expendable and Equipment</small>
             </h3>
         </div>
 
         <c:set var="requestName" value="requestSessionNo${requestId}"/>
         <c:set var="relatedRequest" value="${sessionScope[requestName]}"/>
-        <div class="row">
-            <p>Request Number: ${relatedRequest.requestId}</p>
-            <p>Request
-                By: ${relatedRequest.user.firstName}&nbsp;${relatedRequest.user.middleName}&nbsp;${relatedRequest.user.lastName}</p>
-        </div>
 
         <div class="row item-body">
 
             <c:set var="requestIdValue" value="${relatedRequest.requestId}"/>
             <c:set var="basketName" value="requestDetailsMap-RequestNo${requestIdValue}"/>
             <c:set var="basketMap" value="${sessionScope[basketName]}"/>
-
-            <nav class="clearfix">
-                <div class="dropdown pull-right">
-                    <button disabled id="exportTo" class="btn btn-default btn-sm dropdown-toggle" type="button"
-                            data-toggle="dropdown"><span class="glyphicon glyphicon-export"></span> Export <span
-                            class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="exportTo">
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><i
-                                class="fa fa-file-excel-o text-green"></i> Excel</a></li>
-                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#"><i
-                                class="fa fa-file-pdf-o text-red"></i> PDF</a></li>
-                    </ul>
-                    <button disabled class="btn btn-purple btn-sm"><i class="fa fa-print"></i> Print</button>
-                </div>
-            </nav>
 
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -78,7 +57,7 @@
                         <table class="table table-hover">
                         <thead>
                         <tr>
-                            <th><input type="checkbox" class="checkbox checkbox-inline"/></th>
+                            <th>#</th>
                             <th>Image</th>
                             <th>Item Name</th>
                             <th>Available Quantity</th>
@@ -94,10 +73,7 @@
                                 <c:set var="requestDet" value="${entry.value}"/>
 
                                 <tr>
-                                    <td>
-                                        <input type="checkbox" class="checkbox checkbox-inline"/>
-                                    </td>
-
+                                    <td>${loop.index + 1}</td>
                                     <c:choose>
                                         <c:when test="${not empty requestDet.item.picName}">
                                             <td><img src="${baseUrl}${requestDet.item.picName}" alt="item image"

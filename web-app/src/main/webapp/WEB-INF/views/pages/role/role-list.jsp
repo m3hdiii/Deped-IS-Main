@@ -33,7 +33,7 @@
 
         <div class="btn-group visible-lg-inline-block">
             <a href="/role/create" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top" title="Add Role"><i class="fa fa-plus"></i></a>
-            <button type="button" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+            <%--<button type="button" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>--%>
         </div>
         <hr class="clean">
 
@@ -44,11 +44,11 @@
                 <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-hover" id="basic-datatable">
                     <thead>
                     <tr>
-                        <th>
-                            <label class="cr-styled">
+                        <th>#
+                            <%--<label class="cr-styled">
                                 <input type="checkbox" ng-model="todo.done">
                                 <i class="fa"></i>
-                            </label>
+                            </label>--%>
                         </th>
                         <th>Name</th>
                         <th>Description</th>
@@ -58,13 +58,13 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${roles}" var="role">
+                    <c:forEach items="${roles}" var="role" varStatus="loop">
                         <tr>
-                            <td>
-                                <label class="cr-styled">
+                            <td>${loop.index + 1}
+                                <%--<label class="cr-styled">
                                     <input type="checkbox" ng-model="todo.done">
                                     <i class="fa"></i>
-                                </label>
+                                </label>--%>
                             </td>
                             <td>
                                 <a href="<c:url value='/role/${role.name}' />">${role.simpleName}</a>
@@ -79,7 +79,7 @@
                                            class="btn btn-purple tooltip-btn"
                                            data-toggle="tooltip" data-placement="top" title="Edit Role"><i
                                                 class="fa fa-pencil"></i></a>
-                                        <button type="button" class="btn btn-danger tooltip-btn" data-toggle="tooltip" data-placement="top" title="Delete" ><i class="fa fa-trash"></i></button>
+                                        <%--<button type="button" class="btn btn-danger tooltip-btn" data-toggle="tooltip" data-placement="top" title="Delete" ><i class="fa fa-trash"></i></button>--%>
                                     </div>
                                 </td>
                             </sec:authorize>

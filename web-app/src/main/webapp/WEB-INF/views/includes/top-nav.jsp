@@ -12,25 +12,25 @@
         <span class="icon-bar"></span>
     </button>
 
-    <nav class=" navbar-default hidden-xs" role="navigation">
+    <nav class="navbar-default hidden-xs" role="navigation">
         <ul class="nav navbar-nav">
             <li><a href="/dashboard">Home</a></li>
             <li><a href="/user/${user.username}">Profile</a></li>
             <li class="dropdown">
                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">Search & Filter <span class="caret"></span></a>
                 <ul role="menu" class="dropdown-menu">
-                    <li><a href="#">Goods</a></li>
-                    <li><a href="#">Semi-Expendable</a></li>
-                    <li><a href="#">Equipment</a></li>
-                    <li class="divider"></li>
-                    <li><a href="#">Electronics</a></li>
-                    <li><a href="#">Non-Electronics</a></li>
+                    <li><a href="/request/report-list">Request Reports</a></li>
+                    <li><a href="/order/report-list">Order Reports</a></li>
                 </ul>
             </li>
         </ul>
     </nav>
 
     <ul class="nav-toolbar">
+        <li><a href="/logout"><i class="fa fa-sign-out"></i></a></li>
+    </ul>
+
+    <%--<ul class="nav-toolbar">
         <li class="dropdown"><a href="#" data-toggle="dropdown"><i class="fa fa-comments-o"></i> <span class="badge bg-warning">7</span></a>
             <div class="dropdown-menu md arrow pull-right panel panel-default arrow-top-right messages-dropdown">
                 <div class="panel-heading">
@@ -178,7 +178,7 @@
                 </div>
             </div>
         </li>
-    </ul>
+    </ul>--%>
 </header>
 <!-- Header Ends -->
 

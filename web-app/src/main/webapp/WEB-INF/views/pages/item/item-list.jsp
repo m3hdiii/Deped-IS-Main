@@ -34,7 +34,7 @@
             </h3>
         </div>
 
-        <div class="btn-group">
+        <%--<div class="btn-group">
 
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                 Item Type <span class="caret"></span>
@@ -56,14 +56,14 @@
                 <li><a href="#">Sandisk</a></li>
                 <li><a href="#">Copy</a></li>
             </ul>
-        </div>
+        </div>--%>
 
         <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
             <div class="btn-group visible-lg-inline-block">
                 <a href="/item/create" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
                    title="Add Item"><i class="fa fa-plus"></i></a>
-                <button type="button" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
-                        title="Delete"><i class="fa fa-trash"></i></button>
+                <%--<button type="button" class="btn btn-default tooltip-btn" data-toggle="tooltip" data-placement="top"
+                        title="Delete"><i class="fa fa-trash"></i></button>--%>
             </div>
         </sec:authorize>
 
@@ -77,12 +77,7 @@
                        id="basic-datatable">
                     <thead>
                     <tr>
-                        <th>
-                            <label class="cr-styled">
-                                <input type="checkbox" ng-model="todo.done">
-                                <i class="fa"></i>
-                            </label>
-                        </th>
+                        <th>#</th>
                         <th>Image</th>
                         <th>Name</th>
                         <%--<th>Brand</th>--%>
@@ -95,14 +90,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <c:forEach items="${itemList}" var="item">
+                    <c:forEach items="${itemList}" var="item" varStatus="loop">
                         <tr>
-                            <td>
-                                <label class="cr-styled">
-                                    <input type="checkbox" ng-model="todo.done">
-                                    <i class="fa"></i>
-                                </label>
-                            </td>
+                            <td>${loop.index + 1}</td>
                             <td>
                                 <c:choose>
                                     <c:when test="${not empty item.picName}">
@@ -129,8 +119,8 @@
                                            class="btn btn-purple tooltip-btn"
                                            data-toggle="tooltip" data-placement="top" title="Edit Item"><i
                                                 class="fa fa-pencil"></i></a>
-                                        <button type="button" class="btn btn-danger tooltip-btn" data-toggle="tooltip"
-                                                data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>
+                                        <%--<button type="button" class="btn btn-danger tooltip-btn" data-toggle="tooltip"
+                                                data-placement="top" title="Delete"><i class="fa fa-trash"></i></button>--%>
                                     </div>
                                 </td>
                             </sec:authorize>
