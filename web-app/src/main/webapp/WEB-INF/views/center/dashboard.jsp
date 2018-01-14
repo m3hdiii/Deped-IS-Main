@@ -75,434 +75,129 @@
         </div>
 
 
+        <hr class="clean">
         <div class="row">
-            <div class="col-lg-8">
-
-                <div class="panel panel-default">
-                    <div class="panel-heading clean">
-                        Statistics
-                        <div class="pull-right">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default btn-sm btn-circle" data-toggle="dropdown">
-                                    Monthly <span class="caret"></span></button>
-                                <ul class="dropdown-menu pull-right" role="menu">
-                                    <li><a href="#">Daily</a></li>
-                                    <li><a href="#">Weekly</a></li>
-                                    <li class="active"><a href="#">Monthly</a></li>
-                                    <li><a href="#">Yearly</a></li>
-                                    <li class="divider"></li>
-                                    <li><a href="#">Specific Time</a></li>
-                                </ul>
-                            </div>
-                            <button type="button" class="btn btn-default btn-sm btn-circle">GO</button>
-                        </div>
-                    </div>
-                    <div class="panel-body">
-                        <div id="side-by-side-bar" style="height:280px;"></div>
-                    </div>
-                </div>
-
-            </div>
-            <div class="col-lg-4">
-                <div class="panel panel-default">
-                    <div class="panel-body text-center">
-                        <h5 class="no-margn"><strong>Disposed Items</strong></h5>
-                        <p class="text-muted">
-                            <small>total 153,248</small>
-                        </p>
-                        <div id="dashboard-stats-sparkline6"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-4">
-                <div class="panel panel-default">
-                    <div class="panel-body text-center">
-                        <h5 class="no-margn"><strong>Damaged Equipment</strong></h5>
-                        <p class="text-muted">
-                            <small>total 153,248</small>
-                        </p>
-                        <div id="dashboard-stats-sparkline5"></div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-lg-7">
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">Calendar</div>
-                            <div class="panel-body">
-
-                                <div class="panel-heading clean clearfix text-center">
-                                    <div class="btn-group pull-left">
-                                        <button class="btn btn-default btn-sm" data-calendar-nav="prev">&lt;< Prev</button>
-                                        <button class="btn btn-sm btn-default" data-calendar-nav="today">Today</button>
-                                        <button class="btn btn-sm btn-default" data-calendar-nav="next">Next >&gt;</button>
-                                    </div>
-                                    <b class="calender-title"></b>
-                                    <div class="btn-group pull-right">
-                                        <button class="btn btn-sm btn-default" data-calendar-view="year">Year</button>
-                                        <button class="btn btn-sm btn-default active" data-calendar-view="month">Month</button>
-                                        <button class="btn btn-sm btn-default" data-calendar-view="week">Week</button>
-                                        <button class="btn btn-sm btn-default" data-calendar-view="day">Day</button>
-                                    </div>
-                                </div>
-
-
-                                <div class="panel-body">
-                                    <div id="calendar"></div>
-                                </div>
-
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-lg-5">
-
-                <ul class="nav nav-tabs" role="tablist">
-                    <li class="active"><a href="#acceptRequest" role="tab" data-toggle="tab"><span class="hidden-xs">Accept</span>
-                        Requests</a></li>
-                    <li><a href="#acceptOrder" role="tab" data-toggle="tab"><span class="hidden-xs">Accept</span>
-                        Orders</a></li>
-                </ul>
-
-                <div class="tab-content">
-
-                    <div class="panel panel-default tab-pane active tabs-up" id="acceptRequest">
-                        <div class="panel-body">
-                            <ul class="activities-list list-unstyled nicescroll">
-                                <li class="default-activity">
-                                    <span class="time">moments ago</span>
-                                    <p><a href="#">Name</a> Request for an .</p>
-                                    <div class="btn-group btn-group-xs activity-actions">
-                                        <button type="button" class="btn btn-default btn-xs">Actions</button>
-                                        <button type="button" class="btn btn-default btn-xs dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="info-activity">
-                                    <span class="time">min ago</span>
-                                    <p class="text-info">Call to customer Jacob and discuss the detail.</p>
-                                    <div class="btn-group btn-group-xs activity-actions">
-                                        <button type="button" class="btn btn-default">Actions</button>
-                                        <button type="button" class="btn btn-default dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="warning-activity">
-                                    <span class="time">10mins ago</span>
-                                    <p class="text-warning">Jessi assign you a <span class="label label-info">task Mockup</span>
-                                        Design.</p>
-                                    <div class="btn-group btn-group-xs activity-actions">
-                                        <button type="button" class="btn btn-default">Actions</button>
-                                        <button type="button" class="btn btn-default dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="default-activity">
-                                    <span class="time">8hrs ago</span>
-                                    <p>Integer ut consequat nulla. Etiam aliquam</p>
-                                    <div class="btn-group  btn-group-xs activity-actions">
-                                        <button type="button" class="btn btn-default">Actions</button>
-                                        <button type="button" class="btn btn-default dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="danger-activity">
-                                    <span class="time">9hrs ago</span>
-                                    <p>Lorem ipsum dolor sit amet, <span class="label label-success">consectetur</span>
-                                        adi...</p>
-                                    <div class="btn-group btn-group-xs activity-actions">
-                                        <button type="button" class="btn btn-default">Actions</button>
-                                        <button type="button" class="btn btn-default dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="success-activity">
-                                    <span class="time">Thu, 28 Jan</span>
-                                    <p>Nam pretium id sem ut convallis. </p>
-                                    <div class="btn-group btn-group-xs activity-actions">
-                                        <button type="button" class="btn btn-default">Actions</button>
-                                        <button type="button" class="btn btn-default dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="primary-activity">
-                                    <span class="time">Wed, 17 Jan</span>
-                                    <p class="text-purple">Maecenas finibus est eget neque pharetra.</p>
-                                    <div class="btn-group btn-group-xs activity-actions">
-                                        <button type="button" class="btn btn-default">Actions</button>
-                                        <button type="button" class="btn btn-default dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="default-activity">
-                                    <span class="time">Tue, 23 Jan</span>
-                                    <p>Integer ut consequat nulla. Etiam aliquam...</p>
-                                    <div class="btn-group btn-group-xs activity-actions">
-                                        <button type="button" class="btn btn-default">Actions</button>
-                                        <button type="button" class="btn btn-default dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                            </ul>
+            <!--===================== Personnel Row ==========================-->
+            <div class="col-md-4 col-sm-6">
+                <div class="panel panel-default clearfix">
+                    <div class="panel-body text-center no-padd padd-t-md">
+                        <i class="fa fa-user fa-5x text-primary"></i>
+                        <h4>My Profile</h4>
+                        <div class="no-padd">
+                            <a href="/user/${user.username}" class="btn btn-primary btn-flat col-md-12 btn-sm"><span class="pull-left">View Profile</span><i class="fa fa-arrow-circle-o-right pull-right padd-xs"></i></a>
                         </div>
 
                     </div>
-                    <!-- Request Tab Ends -->
 
-                    <div class="panel panel-default tab-pane tabs-up" id="acceptOrder">
-                        <div class="panel-body">
-                            <ul class="activities-list list-unstyled nicescroll">
-                                <li class="default-activity">
-                                    <span class="time">moments ago</span>
-                                    <p><a href="#">Akshay</a> commented your post.</p>
-                                    <div class="btn-group btn-group-xs activity-actions">
-                                        <button type="button" class="btn btn-default btn-xs">Actions</button>
-                                        <button type="button" class="btn btn-default btn-xs dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="info-activity">
-                                    <span class="time">min ago</span>
-                                    <p class="text-info">Call to customer Jacob and discuss the detail.</p>
-                                    <div class="btn-group btn-group-xs activity-actions">
-                                        <button type="button" class="btn btn-default">Actions</button>
-                                        <button type="button" class="btn btn-default dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="warning-activity">
-                                    <span class="time">10mins ago</span>
-                                    <p class="text-warning">Jessi assign you a <span class="label label-info">task Mockup</span>
-                                        Design.</p>
-                                    <div class="btn-group btn-group-xs activity-actions">
-                                        <button type="button" class="btn btn-default">Actions</button>
-                                        <button type="button" class="btn btn-default dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="default-activity">
-                                    <span class="time">8hrs ago</span>
-                                    <p>Integer ut consequat nulla. Etiam aliquam</p>
-                                    <div class="btn-group  btn-group-xs activity-actions">
-                                        <button type="button" class="btn btn-default">Actions</button>
-                                        <button type="button" class="btn btn-default dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="danger-activity">
-                                    <span class="time">9hrs ago</span>
-                                    <p>Lorem ipsum dolor sit amet, <span class="label label-success">consectetur</span>
-                                        adi...</p>
-                                    <div class="btn-group btn-group-xs activity-actions">
-                                        <button type="button" class="btn btn-default">Actions</button>
-                                        <button type="button" class="btn btn-default dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="success-activity">
-                                    <span class="time">Thu, 28 Jan</span>
-                                    <p>Nam pretium id sem ut convallis. </p>
-                                    <div class="btn-group btn-group-xs activity-actions">
-                                        <button type="button" class="btn btn-default">Actions</button>
-                                        <button type="button" class="btn btn-default dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="primary-activity">
-                                    <span class="time">Wed, 17 Jan</span>
-                                    <p class="text-purple">Maecenas finibus est eget neque pharetra.</p>
-                                    <div class="btn-group btn-group-xs activity-actions">
-                                        <button type="button" class="btn btn-default">Actions</button>
-                                        <button type="button" class="btn btn-default dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li class="default-activity">
-                                    <span class="time">Tue, 23 Jan</span>
-                                    <p>Integer ut consequat nulla. Etiam aliquam...</p>
-                                    <div class="btn-group btn-group-xs activity-actions">
-                                        <button type="button" class="btn btn-default">Actions</button>
-                                        <button type="button" class="btn btn-default dropdown-toggle"
-                                                data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            <span class="sr-only">Toggle Dropdown</span>
-                                        </button>
-                                        <ul class="dropdown-menu pull-right" role="menu">
-                                            <li><a href="#">Action</a></li>
-                                            <li><a href="#">Another action</a></li>
-                                            <li><a href="#">Something else here</a></li>
-                                            <li class="divider"></li>
-                                            <li><a href="#">Separated link</a></li>
-                                        </ul>
-                                    </div>
-                                </li>
-                            </ul>
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="panel panel-default clearfix">
+                    <div class="panel-body text-center no-padd padd-t-md">
+                        <i class="fa fa-list-alt fa-5x text-success"></i>
+                        <h4>Request</h4>
+                        <div class="no-padd">
+                            <a href="/request/create" class="btn btn-success btn-flat col-md-12 btn-sm"><span class="pull-left">Create</span><i class="fa fa-arrow-circle-o-right pull-right padd-xs"></i></a>
                         </div>
 
                     </div>
-                    <!-- Order Tab Ends -->
 
                 </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="panel panel-default clearfix">
+                    <div class="panel-body text-center no-padd padd-t-md">
+                        <i class="fa fa-list fa-5x text-danger"></i>
+                        <h4>My Requests</h4>
+                        <div class="no-padd">
+                            <a href="/request/summary" class="btn btn-danger btn-flat col-md-12 btn-sm"><span class="pull-left">Show List</span><i class="fa fa-arrow-circle-o-right pull-right padd-xs"></i></a>
+                        </div>
 
+                    </div>
+
+                </div>
+            </div>
+
+            <!--===================== Chief Row ==========================-->
+            <div class="col-md-4 col-sm-6">
+                <div class="panel panel-default clearfix">
+                    <div class="panel-body text-center no-padd padd-t-md">
+                        <i class="fa fa-shopping-cart fa-5x text-info"></i>
+                        <h4>Manage Order</h4>
+                        <div class="no-padd">
+                            <a href="/order/approval-list" class="btn btn-info btn-flat col-md-12 btn-sm"><span class="pull-left">Approve</span><i class="fa fa-arrow-circle-o-right pull-right padd-xs"></i></a>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="panel panel-default clearfix">
+                    <div class="panel-body text-center no-padd padd-t-md">
+                        <i class="fa fa-archive fa-5x text-purple"></i>
+                        <h4>Manage Request</h4>
+                        <div class="no-padd">
+                            <a href="/request/approval-list" class="btn btn-purple btn-flat col-md-12 btn-sm"><span class="pull-left">Approve</span><i class="fa fa-arrow-circle-o-right pull-right padd-xs"></i></a>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="panel panel-default clearfix">
+                    <div class="panel-body text-center no-padd padd-t-md">
+                        <i class="fa fa-info fa-5x text-warning"></i>
+                        <h4>Equipment Details</h4>
+                        <div class="no-padd">
+                            <a href="/item-details/insert-data" class="btn btn-warning btn-flat col-md-12 btn-sm"><span class="pull-left">Insert Info</span><i class="fa fa-arrow-circle-o-right pull-right padd-xs"></i></a>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <!--===================== Supply Officer Row ==========================-->
+            <div class="col-md-4 col-sm-6">
+                <div class="panel panel-default clearfix">
+                    <div class="panel-body text-center no-padd padd-t-md">
+                        <i class="fa fa-truck fa-5x text-purple"></i>
+                        <h4>Manage Order</h4>
+                        <div class="no-padd">
+                            <a href="/order/arrival-list" class="btn btn-purple btn-flat col-md-12 btn-sm"><span class="pull-left">Arrived Checklist</span><i class="fa fa-arrow-circle-o-right pull-right padd-xs"></i></a>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="panel panel-default clearfix">
+                    <div class="panel-body text-center no-padd padd-t-md">
+                        <i class="fa fa-cubes fa-5x text-primary"></i>
+                        <h4>Manage Request</h4>
+                        <div class="no-padd">
+                            <a href="/request/release-list" class="btn btn-primary btn-flat col-md-12 btn-sm"><span class="pull-left">Release</span><i class="fa fa-arrow-circle-o-right pull-right padd-xs"></i></a>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-4 col-sm-6">
+                <div class="panel panel-default clearfix">
+                    <div class="panel-body text-center no-padd padd-t-md">
+                        <i class="fa fa-file-text fa-5x text-success"></i>
+                        <h4>Order</h4>
+                        <div class="no-padd">
+                            <a href="/order/create" class="btn btn-success btn-flat col-md-12 btn-sm"><span class="pull-left">Create</span><i class="fa fa-arrow-circle-o-right pull-right padd-xs"></i></a>
+                        </div>
+
+                    </div>
+
+                </div>
             </div>
         </div>
 

@@ -89,7 +89,7 @@
             <div class="col-md-12 no-padd">
                 <div class="panel panel-default">
                     <form:form commandName="orderDetailsForm" method="post">
-                    <div class="panel-heading">Item to Order</div>
+                    <div class="panel-heading text-center">Item to Order</div>
                     <div class="panel-body no-padd">
                         <table cellpadding="0" cellspacing="0" border="0" class="table table-hover">
                             <thead>

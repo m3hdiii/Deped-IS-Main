@@ -56,11 +56,11 @@
                            id="basic-datatable">
                         <thead>
                         <tr>
-                            <th>
-                                <label class="cr-styled">
+                            <th>#
+                                <%--<label class="cr-styled">
                                     <input type="checkbox" ng-model="todo.done">
                                     <i class="fa"></i>
-                                </label>
+                                </label>--%>
                             </th>
                             <th>Image</th>
                             <th>Name</th>
@@ -78,11 +78,11 @@
                             <c:set var="strKey" value="${entry.key}"/>
                             <c:set var="requestDet" value="${entry.value}"/>
                             <tr>
-                                <td>
-                                    <label class="cr-styled">
+                                <td>${loop.index + 1}
+                                    <%--<label class="cr-styled">
                                         <input type="checkbox" ng-model="todo.done">
                                         <i class="fa"></i>
-                                    </label>
+                                    </label>--%>
                                 </td>
                                 <td>
                                     <c:choose>
