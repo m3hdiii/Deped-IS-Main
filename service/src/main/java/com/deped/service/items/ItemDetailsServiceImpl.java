@@ -6,6 +6,7 @@ import com.deped.model.Response;
 import com.deped.model.items.ItemDetails;
 import com.deped.model.items.ItemType;
 import com.deped.model.order.CaptureInfo;
+import com.deped.model.search.BorrowSearch;
 import com.deped.repository.items.ItemDetailsRepository;
 import com.deped.repository.utils.Range;
 import com.deped.service.ServiceUtils;
@@ -86,6 +87,13 @@ public class ItemDetailsServiceImpl implements ItemDetailsService {
     public ResponseEntity<List<ItemDetails>> fetchAllByItemName(String itemName) {
         List<ItemDetails> brands = itemDetailsRepository.fetchAllByItemName(itemName);
         ResponseEntity<List<ItemDetails>> responseEntity = new ResponseEntity<>(brands, OK);
+        return responseEntity;
+    }
+
+    @Override
+    public ResponseEntity<List<ItemDetails>> itemDetailsSearch(BorrowSearch entity) {
+        List<ItemDetails> requests = itemDetailsRepository.itemDetailsSearch(entity);
+        ResponseEntity<List<ItemDetails>> responseEntity = new ResponseEntity<>(requests, OK);
         return responseEntity;
     }
 }

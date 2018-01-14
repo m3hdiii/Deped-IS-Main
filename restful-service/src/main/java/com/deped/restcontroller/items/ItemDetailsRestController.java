@@ -4,6 +4,7 @@ import com.deped.model.Response;
 import com.deped.model.items.ItemDetails;
 import com.deped.model.items.ItemType;
 import com.deped.model.order.CaptureInfo;
+import com.deped.model.search.BorrowSearch;
 import com.deped.restcontroller.AbstractMainRestController;
 import com.deped.service.items.ItemDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,7 @@ public class ItemDetailsRestController extends AbstractMainRestController<ItemDe
     private static final String FETCH_BY_STATES = FETCH_MAPPING + URL_SEPARATOR + "by-states";
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
     private static final String UPDATE_STATE_MAPPING = BASE_NAME + "/update-state/user" + FETCH_BY_ID_PATTERN + "/state/{state}";
-
+    private static final String SEARCH_REQUEST_MAPPING = BASE_NAME + URL_SEPARATOR + "search-list";
 
     @Autowired
     private ItemDetailsService itemDetailsService;
@@ -98,5 +99,11 @@ public class ItemDetailsRestController extends AbstractMainRestController<ItemDe
         ResponseEntity<List<CaptureInfo>> response = itemDetailsService.fetchToBeCaptureInfo(itemTypes);
         return response;
 
+    }
+
+    @RequestMapping(value = SEARCH_REQUEST_MAPPING, method = RequestMethod.POST)
+    public ResponseEntity<List<ItemDetails>> fetchRequestSearch(@RequestBody BorrowSearch entity) {
+        ResponseEntity<List<ItemDetails>> requestList = itemDetailsService.itemDetailsSearch(entity);
+        return requestList;
     }
 }
