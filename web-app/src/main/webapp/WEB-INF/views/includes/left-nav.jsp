@@ -125,9 +125,10 @@
             </sec:authorize>
 
             <li class="has-submenu" data-toggle="tooltip" title="Order Items"><a href="#"><i
-                    class="fa fa-file-text-o"></i> <span class="nav-label">Insert</span></a>
+                    class="fa fa-file-text-o"></i> <span class="nav-label">Borrow</span></a>
                 <ul class="list-unstyled">
-                    <li><a href="/item-details/insert-data">Equipment Details</a></li>
+                    <li><a href="/item-details/insert-data">Insert Equipment Details</a></li>
+                    <li><a href="/item-details/report-list">Borrowed Report</a></li>
                 </ul>
             </li>
 

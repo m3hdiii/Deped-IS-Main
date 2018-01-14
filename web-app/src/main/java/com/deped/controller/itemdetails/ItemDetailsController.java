@@ -1,6 +1,7 @@
 package com.deped.controller.itemdetails;
 
 import com.deped.controller.AbstractMainController;
+import com.deped.controller.SharedData;
 import com.deped.form.ItemDetailsBeanForm;
 import com.deped.form.ItemDetailsForm;
 import com.deped.form.OrderDetailsForm;
@@ -14,6 +15,8 @@ import com.deped.model.items.features.EquipmentAvailability;
 import com.deped.model.items.features.Material;
 import com.deped.model.order.CaptureInfo;
 import com.deped.model.order.OrderDetails;
+import com.deped.model.search.BorrowSearch;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
@@ -26,6 +29,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.*;
 import java.beans.PropertyEditorSupport;
@@ -52,6 +56,8 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
     private static final String UPDATE_VIEW_PAGE = BASE_SHOW_PAGE + UPDATE_PAGE + BASE_NAME;
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
     private static final String INSERT_DATA = BASE_NAME + URL_SEPARATOR + "insert-data";
+    private static final String REPORT_LIST = BASE_NAME + URL_SEPARATOR + "report-list";
+    private static final String REPORT_LIST_VIEW_PAGE = BASE_SHOW_PAGE + "report" + LIST_PAGE;
 
     private Validator validator;
 
@@ -334,6 +340,77 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
         });
 
         binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+    }
 
+    @RequestMapping(value = REPORT_LIST, method = GET)
+    public ModelAndView searchListRender(@ModelAttribute("borrowSearch") BorrowSearch entity, BindingResult bindingResult) {
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("colors", Colour.values());
+        modelMap.put("conditions", Condition.values());
+        modelMap.put("equipmentAvailabilities", EquipmentAvailability.values());
+        modelMap.put("materials", Material.values());
+        modelMap.put("itemList", SharedData.getItems(false));
+        modelMap.put("userList", SharedData.getUsers(false));
+
+        ModelAndView mav = new ModelAndView(REPORT_LIST_VIEW_PAGE, modelMap);
+        return mav;
+    }
+
+    @RequestMapping(value = REPORT_LIST, method = POST, params = "web")
+    public ModelAndView searchListAction(@Valid @ModelAttribute("borrowSearch") BorrowSearch entity, BindingResult bindingResult) {
+
+        String disapprovedListStr = "search-list";
+        String url = BASE_URL + BASE_NAME + URL_SEPARATOR + disapprovedListStr;
+        List<ItemDetails> itemDetailsList = SharedData.fetchAllByUrl(entity, url, new ParameterizedTypeReference<List<ItemDetails>>() {
+        });
+
+        ModelAndView mav = searchListRender(entity, bindingResult);
+        mav.addObject("itemDetailsList", itemDetailsList);
+        return mav;
+
+    }
+
+    @RequestMapping(value = REPORT_LIST, method = POST, params = "xml")
+    public void searchXmlListAction(@Valid @ModelAttribute("requestSearch") BorrowSearch entity, BindingResult bindingResult, HttpServletRequest request,
+                                    HttpServletResponse response) {
+        String disapprovedListStr = "search-list";
+        String url = BASE_URL + BASE_NAME + URL_SEPARATOR + disapprovedListStr;
+        List<ItemDetails> itemDetailsList = SharedData.fetchAllByUrl(entity, url, new ParameterizedTypeReference<List<ItemDetails>>() {
+        });
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+
+//        for (ItemDetails req : itemDetailsList) {
+//            XSSFSheet sheet = workbook.createSheet("Request #" + req.getRequestId());
+//            Object[][] dataTypes = {
+//                    {"Request ID", "Request Date", "Requested Personnel", "Personnel Message", "Admin Remark", "Item Type", "Request Status"},
+//                    {req.getRequestId(), req.getRequestDate(), String.format("%s %s", req.getUser().getLastName(), req.getUser().getFirstName()), req.getUserMessage(), req.getAdminNotice(), req.getItemType().getName(), req.getRequestStatus().getName()},
+//                    {"", "", "", "", "", "", ""},
+//                    {"", "", "", "", "", "", ""}
+//            };
+//
+//            int rowNumber = 0;
+//            rowNumber = createXml(dataTypes, sheet, rowNumber);
+//
+//            List<RequestDetails> requestDetailsList = fetchRequestDetails(req.getRequestId());
+//            for (RequestDetails rd : requestDetailsList) {
+//                String consideredBy = rd.getConsideredByUser() != null ? String.format("%s %s", rd.getConsideredByUser().getLastName(), rd.getConsideredByUser().getFirstName()) : "";
+//                String issuedBy = rd.getIssuedByUser() != null ? String.format("%s %s", rd.getIssuedByUser().getLastName(), rd.getIssuedByUser().getFirstName()) : "";
+//
+//                Object[][] dataTypes2 = {
+//                        {"Request ID", "Item", "Request Quantity", "Approved Quantity", "Consideration Date",
+//                                "Release Date", "Supply Office Remark", "Considered By", "Issued By", "Request Details Status",
+//                                "Disapproval Message", "Cancellation Reason"},
+//                        {rd.getRequest().getRequestId(), rd.getRequestQuantity(), rd.getApprovedQuantity(),
+//                                rd.getApprovalDisapprovalDate(), rd.getReleaseDate(), rd.getSupplyOfficeRemark(), consideredBy, issuedBy,
+//                                rd.getRequestDetailsStatus() != null ? rd.getRequestDetailsStatus().getName() : "", rd.getDisapprovalMessage(),
+//                                rd.getCancellationReason()
+//                        },
+//
+//                };
+//
+//                rowNumber = createXml(dataTypes2, sheet, rowNumber);
+//            }
+//        }
     }
 }

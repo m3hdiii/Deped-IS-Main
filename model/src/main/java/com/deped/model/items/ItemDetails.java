@@ -1,5 +1,6 @@
 package com.deped.model.items;
 
+import com.deped.model.account.User;
 import com.deped.model.brand.BrandModel;
 import com.deped.model.items.features.Colour;
 import com.deped.model.items.features.Condition;
@@ -77,6 +78,10 @@ ItemDetails implements Serializable {
     @ManyToOne
     @JoinColumn(name = "brand_model_id")
     private BrandModel brandModel;
+
+    @OneToOne
+    @JoinColumn(name = "owns_by")
+    private User ownBy;
 
     @Column(name = "pic_url")
     private String picUrl;
@@ -178,6 +183,14 @@ ItemDetails implements Serializable {
 
     public void setBrandModel(BrandModel brandModel) {
         this.brandModel = brandModel;
+    }
+
+    public User getOwnBy() {
+        return ownBy;
+    }
+
+    public void setOwnBy(User ownBy) {
+        this.ownBy = ownBy;
     }
 
     public String getPicUrl() {

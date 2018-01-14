@@ -1,9 +1,17 @@
 package com.deped.repository.items;
 
 import com.deped.exceptions.DatabaseRolesViolationException;
+import com.deped.model.account.User;
+import com.deped.model.items.Item;
 import com.deped.model.items.ItemDetails;
 import com.deped.model.items.ItemType;
+import com.deped.model.items.features.Colour;
+import com.deped.model.items.features.Condition;
+import com.deped.model.items.features.EquipmentAvailability;
+import com.deped.model.items.features.Material;
 import com.deped.model.order.CaptureInfo;
+import com.deped.model.search.BorrowSearch;
+import com.deped.repository.ListParameter;
 import com.deped.repository.utils.HibernateFacade;
 import com.deped.repository.utils.Range;
 import org.hibernate.Session;
@@ -12,10 +20,7 @@ import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
@@ -175,4 +180,240 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
 
         return list;
     }
+
+
+    public List<ItemDetails> itemDetailsSearch(BorrowSearch borrowSearch) {
+
+        if (borrowSearch == null)
+            return null;
+
+        boolean isOfficialSerialNoEmpty = isEmpty(borrowSearch.getOfficeSerialNo());
+        boolean isColorListEmpty = isEmpty(borrowSearch.getColours());
+        boolean isConditionListEmpty = isEmpty(borrowSearch.getConditions());
+        boolean isPurchasePriceFromEmpty = isEmpty(borrowSearch.getPurchasePriceFrom());
+        boolean isPurchasePriceToEmpty = isEmpty(borrowSearch.getPurchasePriceTo());
+        boolean isEquipmentAvailabilityListEmpty = isEmpty(borrowSearch.getEquipmentAvailabilities());
+        boolean isEquipmentSerialNumberEmpty = isEmpty(borrowSearch.getEquipmentSerialNo());
+        boolean isMaterialListEmpty = isEmpty(borrowSearch.getMaterials());
+        boolean isWeightInGramFromEmpty = isEmpty(borrowSearch.getWeightInGramFrom());
+        boolean isWeightInGramToEmpty = isEmpty(borrowSearch.getWeightInGramTo());
+        boolean isLifeSpanFromEmpty = isEmpty(borrowSearch.getLifeSpanFrom());
+        boolean isLifeSpanToEmpty = isEmpty(borrowSearch.getLifeSpanTo());
+        boolean isItemListEmpty = isEmpty(borrowSearch.getItems());
+        boolean isOwnByListEmpty = isEmpty(borrowSearch.getOwnBy());
+
+        boolean[] emptyList = new boolean[]{
+                isOfficialSerialNoEmpty, isColorListEmpty, isConditionListEmpty, isPurchasePriceFromEmpty,
+                isPurchasePriceToEmpty, isEquipmentAvailabilityListEmpty, isEquipmentSerialNumberEmpty,
+                isMaterialListEmpty, isWeightInGramFromEmpty, isWeightInGramToEmpty, isLifeSpanFromEmpty,
+                isLifeSpanToEmpty, isItemListEmpty, isOwnByListEmpty
+        };
+
+        StringBuilder sb = new StringBuilder("SELECT * FROM item_details");
+
+        String where = null;
+        for (boolean b : emptyList) {
+            if (!b) {
+                where = " WHERE\n";
+                break;
+            }
+        }
+
+
+        Session hibernateSession;
+        try {
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        Transaction tx = null;
+        List<ItemDetails> list = null;
+
+        if (where == null) {
+
+            try {
+                tx = hibernateSession.beginTransaction();
+                NativeQuery<ItemDetails> query = hibernateSession.createNativeQuery(sb.toString(), ItemDetails.class);
+                list = query.list();
+                tx.commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (tx != null)
+                    tx.rollback();
+                return list;
+            }
+
+
+            return list;
+
+        } else {
+            sb.append(where);
+
+            ListParameter colorListParameter = isColorListEmpty ? null : createListParameter(borrowSearch.getColours(), "colour", Colour.class);
+            ListParameter conditionListParameter = isConditionListEmpty ? null : createListParameter(borrowSearch.getConditions(), "condition", Condition.class);
+            ListParameter equipmentAvailabilityListParameter = isEquipmentAvailabilityListEmpty ? null : createListParameter(borrowSearch.getEquipmentAvailabilities(), "equipmentAvailability", EquipmentAvailability.class);
+            ListParameter materialListParameter = isMaterialListEmpty ? null : createListParameter(borrowSearch.getMaterials(), "material", Material.class);
+            ListParameter itemListParameter = isItemListEmpty ? null : createListParameter(borrowSearch.getItems(), "item", Item.class);
+            ListParameter ownByListParameter = isOwnByListEmpty ? null : createListParameter(borrowSearch.getOwnBy(), "ownBy", User.class);
+
+
+            sb
+                    .append(isOfficialSerialNoEmpty ? "" : "(office_serial_number LIKE :officeSerialNo) AND\n")
+                    .append(isColorListEmpty ? "" : String.format("(color IN ( %s )) AND\n", colorListParameter.getWherePartSection()))
+                    .append(isConditionListEmpty ? "" : String.format("(condition IN ( %s )) AND\n", conditionListParameter.getWherePartSection()))
+                    .append(isPurchasePriceFromEmpty ? "" : "(purchase_price >= :purchasePriceFrom) AND\n")
+                    .append(isPurchasePriceToEmpty ? "" : "(purchase_price < :purchasePriceTo) AND\n")
+                    .append(isEquipmentAvailabilityListEmpty ? "" : String.format("(equipment_availability IN ( %s )) AND\n", equipmentAvailabilityListParameter.getWherePartSection()))
+                    .append(isEquipmentSerialNumberEmpty ? "" : "(equipment_serial_number LIKE :equipmentSerialNumber) AND\n")
+                    .append(isMaterialListEmpty ? "" : String.format("(material IN ( %s )) AND\n", materialListParameter.getWherePartSection()))
+                    .append(isWeightInGramFromEmpty ? "" : "(weight_in_gram >= :weightInGramFrom) AND\n")
+                    .append(isWeightInGramToEmpty ? "" : "(weight_in_gram >= :weightInGramTo) AND\n")
+                    .append(isLifeSpanFromEmpty ? "" : "(life_span >= :lifeSpanFrom) AND\n")
+                    .append(isLifeSpanToEmpty ? "" : "(life_span >= :lifeSpanTo) AND\n")
+                    .append(isItemListEmpty ? "" : String.format("(item_name IN ( %s )) AND\n", itemListParameter.getWherePartSection()))
+                    .append(isItemListEmpty ? "" : String.format("(owns_by IN ( %s ))\n", ownByListParameter.getWherePartSection()));
+
+
+            try {
+                tx = hibernateSession.beginTransaction();
+                String strQuery = sb.toString().trim();
+                if (strQuery.substring(strQuery.lastIndexOf(" ") + 1).equals("AND")) {
+                    strQuery = strQuery.substring(0, strQuery.lastIndexOf("AND"));
+                }
+
+                NativeQuery<ItemDetails> query = hibernateSession.createNativeQuery(strQuery, ItemDetails.class);
+
+                ListParameter[] listParameters = new ListParameter[]{
+                        colorListParameter, conditionListParameter, equipmentAvailabilityListParameter, materialListParameter,
+                        itemListParameter, ownByListParameter
+                };
+
+                Map<String, Object> parameterMap = new HashMap<>();
+                for (int i = 0; i < listParameters.length; i++) {
+                    ListParameter lpTemp = listParameters[i];
+                    if (lpTemp != null) {
+                        parameterMap.putAll(lpTemp.getParameterMap());
+                    }
+                }
+
+                if (!isOfficialSerialNoEmpty) {
+                    parameterMap.put("officeSerialNo", "%" + borrowSearch.getOfficeSerialNo() + "%");
+                }
+
+                if (!isPurchasePriceFromEmpty) {
+                    parameterMap.put("purchasePriceFrom", borrowSearch.getPurchasePriceFrom());
+                }
+
+                if (!isPurchasePriceToEmpty) {
+                    parameterMap.put("purchasePriceTo", borrowSearch.getPurchasePriceTo());
+                }
+
+                if (!isEquipmentSerialNumberEmpty) {
+                    parameterMap.put("equipmentSerialNumber", "%" + borrowSearch.getEquipmentSerialNo() + "%");
+                }
+
+                if (!isWeightInGramFromEmpty) {
+                    parameterMap.put("weightInGramFrom", borrowSearch.getWeightInGramFrom());
+                }
+
+                if (!isWeightInGramToEmpty) {
+                    parameterMap.put("weightInGramTo", borrowSearch.getWeightInGramTo());
+                }
+
+                if (!isLifeSpanFromEmpty) {
+                    parameterMap.put("lifeSpanFrom", borrowSearch.getLifeSpanFrom());
+                }
+
+                if (!isLifeSpanToEmpty) {
+                    parameterMap.put("lifeSpanTo", borrowSearch.getLifeSpanTo());
+                }
+
+                for (Map.Entry<String, Object> entry : parameterMap.entrySet()) {
+                    String key = entry.getKey();
+                    Object value = entry.getValue();
+                    query.setParameter(key, value);
+                }
+
+                list = query.list();
+                tx.commit();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (tx != null)
+                    tx.rollback();
+                return null;
+            }
+
+
+            return list;
+        }
+
+    }
+
+
+    private ListParameter createListParameter(List objects, String baseParamKey, Class<?> clazz) {
+        if (objects == null || objects.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+
+        Map<String, Object> parameterMap = new HashMap<>();
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < objects.size(); i++) {
+            String key = baseParamKey + i;
+            if (clazz == User.class)
+                parameterMap.put(key, ((User) objects.get(i)).getUsername());
+
+            if (clazz == Item.class)
+                parameterMap.put(key, ((Item) objects.get(i)).getName());
+
+            if (clazz == Colour.class ||
+                    clazz == Condition.class ||
+                    clazz == EquipmentAvailability.class ||
+                    clazz == Material.class)
+                parameterMap.put(key, (objects.get(i)).toString());
+
+            sb.append(":" + key + " , ");
+        }
+
+        String tmp = sb.toString();
+        String wherePartSection = tmp.substring(0, (tmp.lastIndexOf(",") - 1));
+
+        ListParameter listParameter = new ListParameter(wherePartSection, parameterMap);
+        return listParameter;
+    }
+
+    private boolean isEmpty(Object object) {
+        if (object == null)
+            return true;
+
+        if (object instanceof Date) {
+            return false;
+        }
+
+        if (object instanceof Integer)
+            return false;
+
+        if (object instanceof String) {
+            String s = (String) object;
+            if (s.isEmpty()) {
+                return true;
+            }
+            return false;
+        }
+
+        if (object instanceof List) {
+            List s = (List) object;
+            if (s.isEmpty()) {
+                return true;
+            }
+            return false;
+        }
+
+        return true;
+    }
+
+
 }
