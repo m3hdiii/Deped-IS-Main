@@ -1,6 +1,7 @@
 package com.deped.repository.request;
 
 import com.deped.exceptions.DatabaseRolesViolationException;
+import com.deped.model.borrow.BorrowItem;
 import com.deped.model.items.ItemDetails;
 import com.deped.model.items.features.EquipmentAvailability;
 import com.deped.model.request.Request;
@@ -80,10 +81,11 @@ public class RequestTrackerRepositoryImpl implements RequestTrackerRepository {
                 hibernateSession.save("RequestTracker", entities[i]);
 
                 //insert requestTracker
-                String updateItemDetails = "UPDATE item_details SET equipment_availability = :availability WHERE office_serial_number = :srNo";
+                String updateItemDetails = "UPDATE item_details SET equipment_availability = :availability, owns_by = :ownsBy WHERE office_serial_number = :srNo";
                 NativeQuery<ItemDetails> updateItemDetailsUpdateQuery = hibernateSession.createNativeQuery(updateItemDetails, ItemDetails.class);
                 updateItemDetailsUpdateQuery.setParameter("srNo", entities[i].getItemDetails().getOfficeSerialNo());
                 updateItemDetailsUpdateQuery.setParameter("availability", EquipmentAvailability.HELD.toString());
+                updateItemDetailsUpdateQuery.setParameter("ownsBy", entities[i].getAcquiredUser());
 
                 RequestDetails rd = entities[i].getRequestDetails();
                 String requestDetails = "UPDATE request_details set request_details_status = :requestDetailsStatus, issued_by_username = :username WHERE request_request_id = :requestId AND item_item_name = :itemId";
@@ -93,8 +95,15 @@ public class RequestTrackerRepositoryImpl implements RequestTrackerRepository {
                 requestDetailsUpdateQuery.setParameter("itemId", entities[i].getItemName());//FIXME
                 requestDetailsUpdateQuery.setParameter("username", username);
 
+                String borrowItem = "INSERT INTO borrow_item (item_office_serial_no, username, date_borrowed) VALUES ( :officeSerialNo , :username , :dateBorrowed )";
+                NativeQuery<BorrowItem> borrowItemIsertQuery = hibernateSession.createNativeQuery(borrowItem, BorrowItem.class);
+                borrowItemIsertQuery.setParameter("officeSerialNo", entities[i].getItemDetails().getOfficeSerialNo());
+                borrowItemIsertQuery.setParameter("username", entities[i].getAcquiredUser());
+                borrowItemIsertQuery.setParameter("dateBorrowed", entities[i].getReleaseDate());
+
                 updateItemDetailsUpdateQuery.executeUpdate();
                 requestDetailsUpdateQuery.executeUpdate();
+                borrowItemIsertQuery.executeUpdate();
             }
 
 

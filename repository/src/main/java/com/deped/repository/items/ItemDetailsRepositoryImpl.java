@@ -2,6 +2,7 @@ package com.deped.repository.items;
 
 import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.account.User;
+import com.deped.model.borrow.BorrowItem;
 import com.deped.model.items.Item;
 import com.deped.model.items.ItemDetails;
 import com.deped.model.items.ItemType;
@@ -10,6 +11,7 @@ import com.deped.model.items.features.Condition;
 import com.deped.model.items.features.EquipmentAvailability;
 import com.deped.model.items.features.Material;
 import com.deped.model.order.CaptureInfo;
+import com.deped.model.search.BorrowHistorySearch;
 import com.deped.model.search.BorrowSearch;
 import com.deped.repository.ListParameter;
 import com.deped.repository.utils.HibernateFacade;
@@ -252,7 +254,7 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
             sb.append(where);
 
             ListParameter colorListParameter = isColorListEmpty ? null : createListParameter(borrowSearch.getColours(), "colour", Colour.class);
-            ListParameter conditionListParameter = isConditionListEmpty ? null : createListParameter(borrowSearch.getConditions(), "condition", Condition.class);
+            ListParameter conditionListParameter = isConditionListEmpty ? null : createListParameter(borrowSearch.getConditions(), "equipmentCondition", Condition.class);
             ListParameter equipmentAvailabilityListParameter = isEquipmentAvailabilityListEmpty ? null : createListParameter(borrowSearch.getEquipmentAvailabilities(), "equipmentAvailability", EquipmentAvailability.class);
             ListParameter materialListParameter = isMaterialListEmpty ? null : createListParameter(borrowSearch.getMaterials(), "material", Material.class);
             ListParameter itemListParameter = isItemListEmpty ? null : createListParameter(borrowSearch.getItems(), "item", Item.class);
@@ -261,8 +263,8 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
 
             sb
                     .append(isOfficialSerialNoEmpty ? "" : "(office_serial_number LIKE :officeSerialNo) AND\n")
-                    .append(isColorListEmpty ? "" : String.format("(color IN ( %s )) AND\n", colorListParameter.getWherePartSection()))
-                    .append(isConditionListEmpty ? "" : String.format("(condition IN ( %s )) AND\n", conditionListParameter.getWherePartSection()))
+                    .append(isColorListEmpty ? "" : String.format("(colour IN ( %s )) AND\n", colorListParameter.getWherePartSection()))
+                    .append(isConditionListEmpty ? "" : String.format("(equipment_condition IN ( %s )) AND\n", conditionListParameter.getWherePartSection()))
                     .append(isPurchasePriceFromEmpty ? "" : "(purchase_price >= :purchasePriceFrom) AND\n")
                     .append(isPurchasePriceToEmpty ? "" : "(purchase_price < :purchasePriceTo) AND\n")
                     .append(isEquipmentAvailabilityListEmpty ? "" : String.format("(equipment_availability IN ( %s )) AND\n", equipmentAvailabilityListParameter.getWherePartSection()))
@@ -273,7 +275,7 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
                     .append(isLifeSpanFromEmpty ? "" : "(life_span >= :lifeSpanFrom) AND\n")
                     .append(isLifeSpanToEmpty ? "" : "(life_span >= :lifeSpanTo) AND\n")
                     .append(isItemListEmpty ? "" : String.format("(item_name IN ( %s )) AND\n", itemListParameter.getWherePartSection()))
-                    .append(isItemListEmpty ? "" : String.format("(owns_by IN ( %s ))\n", ownByListParameter.getWherePartSection()));
+                    .append(isOwnByListEmpty ? "" : String.format("(owns_by IN ( %s ))\n", ownByListParameter.getWherePartSection()));
 
 
             try {
@@ -350,6 +352,120 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
             return list;
         }
 
+    }
+
+    @Override
+    public List<BorrowItem> borrowItemSearch(BorrowHistorySearch entity) {
+        if (entity == null) {
+            return null;
+        }
+
+        String officeSerialNo = entity.getOfficeSerialNo();
+        String username = entity.getUsername();
+        Date borrowDateFrom = entity.getBorrowDateFrom();
+        Date borrowDateTo = entity.getBorrowDateTo();
+        Date returnDateFrom = entity.getReturnDateFrom();
+        Date returnDateTo = entity.getReturnDateTo();
+
+        boolean isOfficeSerialNoEmpty = isEmpty(officeSerialNo);
+        boolean isUsernameEmpty = isEmpty(username);
+        boolean isBorrowDateFromEmpty = isEmpty(borrowDateFrom);
+        boolean isBorrowDateToEmpty = isEmpty(borrowDateTo);
+        boolean isReturnDateFromEmpty = isEmpty(returnDateFrom);
+        boolean isReturnDateToEmpty = isEmpty(returnDateTo);
+
+        boolean[] emptyList = new boolean[]{
+                isOfficeSerialNoEmpty, isUsernameEmpty, isBorrowDateFromEmpty, isBorrowDateToEmpty
+                , isReturnDateFromEmpty, isReturnDateToEmpty
+        };
+
+        StringBuilder sb = new StringBuilder("SELECT * FROM borrow_item");
+
+        String where = null;
+        for (boolean b : emptyList) {
+            if (!b) {
+                where = " WHERE\n";
+                break;
+            }
+        }
+
+        Session hibernateSession;
+        try {
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        Transaction tx = null;
+        List<BorrowItem> list = null;
+
+        if (where == null) {
+
+            try {
+                tx = hibernateSession.beginTransaction();
+                NativeQuery<BorrowItem> query = hibernateSession.createNativeQuery(sb.toString(), BorrowItem.class);
+                list = query.list();
+                tx.commit();
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (tx != null)
+                    tx.rollback();
+                return list;
+            }
+
+
+            return list;
+
+        } else {
+
+            try {
+                tx = hibernateSession.beginTransaction();
+                String strQuery = sb.toString().trim();
+                if (strQuery.substring(strQuery.lastIndexOf(" ") + 1).equals("AND")) {
+                    strQuery = strQuery.substring(0, strQuery.lastIndexOf("AND"));
+                }
+
+                NativeQuery<BorrowItem> query = hibernateSession.createNativeQuery(strQuery, BorrowItem.class);
+
+                Map<String, Object> parameterMap = new HashMap<>();
+                if (!isOfficeSerialNoEmpty) {
+                    parameterMap.put("officeSerialNo", "%" + entity.getOfficeSerialNo() + "%");
+                }
+
+                if (!isUsernameEmpty) {
+                    parameterMap.put("username", entity.getUsername());
+                }
+
+                if (!isBorrowDateFromEmpty) {
+                    parameterMap.put("borrowDateFromEmpty", entity.getBorrowDateFrom());
+                }
+
+                if (!isBorrowDateToEmpty) {
+                    parameterMap.put("borrowDateToEmpty", entity.getBorrowDateTo());
+                }
+
+                if (!isReturnDateFromEmpty) {
+                    parameterMap.put("returnDateFromEmpty", entity.getReturnDateFrom());
+                }
+
+                if (!isReturnDateToEmpty) {
+                    parameterMap.put("returnDateToEmpty", entity.getReturnDateTo());
+                }
+
+                list = query.list();
+                tx.commit();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                if (tx != null)
+                    tx.rollback();
+                return null;
+            }
+
+        }
+
+        return list;
     }
 
 

@@ -7,6 +7,7 @@ import com.deped.form.ItemDetailsForm;
 import com.deped.form.OrderDetailsForm;
 import com.deped.model.Response;
 import com.deped.model.account.User;
+import com.deped.model.borrow.BorrowItem;
 import com.deped.model.items.Item;
 import com.deped.model.items.ItemDetails;
 import com.deped.model.items.ItemType;
@@ -16,6 +17,7 @@ import com.deped.model.items.features.EquipmentAvailability;
 import com.deped.model.items.features.Material;
 import com.deped.model.order.CaptureInfo;
 import com.deped.model.order.OrderDetails;
+import com.deped.model.search.BorrowHistorySearch;
 import com.deped.model.search.BorrowSearch;
 import com.deped.utils.SystemUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -60,7 +62,9 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
     private static final String INSERT_DATA = BASE_NAME + URL_SEPARATOR + "insert-data";
     private static final String REPORT_LIST = BASE_NAME + URL_SEPARATOR + "report-list";
+    private static final String REPORT_HISTORY_LIST = BASE_NAME + URL_SEPARATOR + "history-report-list";
     private static final String REPORT_LIST_VIEW_PAGE = BASE_SHOW_PAGE + "report" + LIST_PAGE;
+    private static final String REPORT_HISTORY_LIST_VIEW_PAGE = BASE_SHOW_PAGE + "history-report" + LIST_PAGE;
 
     private Validator validator;
 
@@ -381,6 +385,72 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
         String url = BASE_URL + BASE_NAME + URL_SEPARATOR + disapprovedListStr;
         List<ItemDetails> itemDetailsList = SharedData.fetchAllByUrl(entity, url, new ParameterizedTypeReference<List<ItemDetails>>() {
         });
+
+        XSSFWorkbook workbook = new XSSFWorkbook();
+
+//        for (ItemDetails req : itemDetailsList) {
+//            XSSFSheet sheet = workbook.createSheet("Request #" + req.getRequestId());
+//            Object[][] dataTypes = {
+//                    {"Request ID", "Request Date", "Requested Personnel", "Personnel Message", "Admin Remark", "Item Type", "Request Status"},
+//                    {req.getRequestId(), req.getRequestDate(), String.format("%s %s", req.getUser().getLastName(), req.getUser().getFirstName()), req.getUserMessage(), req.getAdminNotice(), req.getItemType().getName(), req.getRequestStatus().getName()},
+//                    {"", "", "", "", "", "", ""},
+//                    {"", "", "", "", "", "", ""}
+//            };
+//
+//            int rowNumber = 0;
+//            rowNumber = createXml(dataTypes, sheet, rowNumber);
+//
+//            List<RequestDetails> requestDetailsList = fetchRequestDetails(req.getRequestId());
+//            for (RequestDetails rd : requestDetailsList) {
+//                String consideredBy = rd.getConsideredByUser() != null ? String.format("%s %s", rd.getConsideredByUser().getLastName(), rd.getConsideredByUser().getFirstName()) : "";
+//                String issuedBy = rd.getIssuedByUser() != null ? String.format("%s %s", rd.getIssuedByUser().getLastName(), rd.getIssuedByUser().getFirstName()) : "";
+//
+//                Object[][] dataTypes2 = {
+//                        {"Request ID", "Item", "Request Quantity", "Approved Quantity", "Consideration Date",
+//                                "Release Date", "Supply Office Remark", "Considered By", "Issued By", "Request Details Status",
+//                                "Disapproval Message", "Cancellation Reason"},
+//                        {rd.getRequest().getRequestId(), rd.getRequestQuantity(), rd.getApprovedQuantity(),
+//                                rd.getApprovalDisapprovalDate(), rd.getReleaseDate(), rd.getSupplyOfficeRemark(), consideredBy, issuedBy,
+//                                rd.getRequestDetailsStatus() != null ? rd.getRequestDetailsStatus().getName() : "", rd.getDisapprovalMessage(),
+//                                rd.getCancellationReason()
+//                        },
+//
+//                };
+//
+//                rowNumber = createXml(dataTypes2, sheet, rowNumber);
+//            }
+//        }
+    }
+
+    @RequestMapping(value = REPORT_HISTORY_LIST, method = GET)
+    public ModelAndView historySearchListRender(@ModelAttribute("borrowHistorySearch") BorrowHistorySearch entity) {
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("userList", SharedData.getUsers(false));
+        ModelAndView mav = new ModelAndView(REPORT_HISTORY_LIST_VIEW_PAGE, modelMap);
+        return mav;
+    }
+
+    @RequestMapping(value = REPORT_HISTORY_LIST, method = POST, params = "web")
+    public ModelAndView historySearchListAction(@Valid @ModelAttribute("borrowHistorySearch") BorrowHistorySearch entity, BindingResult bindingResult) {
+
+        String disapprovedListStr = "history-search-list";
+        String url = BASE_URL + BASE_NAME + URL_SEPARATOR + disapprovedListStr;
+        List<BorrowItem> borrowItemList = SharedData.fetchAllByUrl(entity, url, new ParameterizedTypeReference<List<BorrowItem>>() {
+        });
+
+        ModelAndView mav = historySearchListRender(entity);
+        mav.addObject("borrowItemList", borrowItemList);
+        return mav;
+
+    }
+
+    @RequestMapping(value = REPORT_HISTORY_LIST, method = POST, params = "xml")
+    public void historySearchXmlListAction(@Valid @ModelAttribute("borrowHistorySearch") BorrowHistorySearch entity, BindingResult bindingResult, HttpServletRequest request,
+                                           HttpServletResponse response) {
+        String disapprovedListStr = "history-search-list";
+        String url = BASE_URL + BASE_NAME + URL_SEPARATOR + disapprovedListStr;
+        /*List<BorrowItem> borrowItemList = SharedData.fetchAllByUrl(entity, url, new ParameterizedTypeReference<List<BorrowItem>>() {
+        });*/
 
         XSSFWorkbook workbook = new XSSFWorkbook();
 

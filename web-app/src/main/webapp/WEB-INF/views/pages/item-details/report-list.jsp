@@ -227,10 +227,10 @@
                                         <td>${itemDetails.purchasePrice}</td>
                                         <td>${itemDetails.equipmentAvailability}</td>
                                         <td>${itemDetails.equipmentSerialNo}</td>
-                                        <td>${itemDetails.material}</td>
+                                        <td>${itemDetails.material.name}</td>
                                         <td>${itemDetails.weightInGram}</td>
                                         <td>${itemDetails.lifeSpan}</td>
-                                        <td>${itemDetails.ownBy}</td>
+                                        <td>${itemDetails.ownBy.username}</td>
                                     </tr>
                                 </c:forEach>
                                 </tbody>

@@ -129,6 +129,7 @@
                 <ul class="list-unstyled">
                     <li><a href="/item-details/insert-data">Insert Equipment Details</a></li>
                     <li><a href="/item-details/report-list">Borrowed Report</a></li>
+                    <li><a href="/item-details/history-report-list">Borrowed History</a></li>
                 </ul>
             </li>
 

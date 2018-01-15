@@ -1,9 +1,11 @@
 package com.deped.restcontroller.items;
 
 import com.deped.model.Response;
+import com.deped.model.borrow.BorrowItem;
 import com.deped.model.items.ItemDetails;
 import com.deped.model.items.ItemType;
 import com.deped.model.order.CaptureInfo;
+import com.deped.model.search.BorrowHistorySearch;
 import com.deped.model.search.BorrowSearch;
 import com.deped.restcontroller.AbstractMainRestController;
 import com.deped.service.items.ItemDetailsService;
@@ -30,6 +32,7 @@ public class ItemDetailsRestController extends AbstractMainRestController<ItemDe
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
     private static final String UPDATE_STATE_MAPPING = BASE_NAME + "/update-state/user" + FETCH_BY_ID_PATTERN + "/state/{state}";
     private static final String SEARCH_REQUEST_MAPPING = BASE_NAME + URL_SEPARATOR + "search-list";
+    private static final String HISTORY_SEARCH_REQUEST_MAPPING = BASE_NAME + URL_SEPARATOR + "history-search-list";
 
     @Autowired
     private ItemDetailsService itemDetailsService;
@@ -104,6 +107,12 @@ public class ItemDetailsRestController extends AbstractMainRestController<ItemDe
     @RequestMapping(value = SEARCH_REQUEST_MAPPING, method = RequestMethod.POST)
     public ResponseEntity<List<ItemDetails>> fetchRequestSearch(@RequestBody BorrowSearch entity) {
         ResponseEntity<List<ItemDetails>> requestList = itemDetailsService.itemDetailsSearch(entity);
+        return requestList;
+    }
+
+    @RequestMapping(value = HISTORY_SEARCH_REQUEST_MAPPING, method = RequestMethod.POST)
+    public ResponseEntity<List<BorrowItem>> fetchHistoryRequestSearch(@RequestBody BorrowHistorySearch entity) {
+        ResponseEntity<List<BorrowItem>> requestList = itemDetailsService.borrowItemSearch(entity);
         return requestList;
     }
 }

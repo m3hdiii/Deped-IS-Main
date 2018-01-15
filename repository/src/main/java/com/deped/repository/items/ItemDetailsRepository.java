@@ -1,8 +1,10 @@
 package com.deped.repository.items;
 
+import com.deped.model.borrow.BorrowItem;
 import com.deped.model.items.ItemDetails;
 import com.deped.model.items.ItemType;
 import com.deped.model.order.CaptureInfo;
+import com.deped.model.search.BorrowHistorySearch;
 import com.deped.model.search.BorrowSearch;
 import com.deped.repository.BaseRepository;
 
@@ -17,4 +19,7 @@ public interface ItemDetailsRepository extends BaseRepository<ItemDetails, Strin
     List<ItemDetails> fetchAllByItemName(String itemName);
 
     List<ItemDetails> itemDetailsSearch(BorrowSearch entity);
+
+    List<BorrowItem> borrowItemSearch(BorrowHistorySearch entity);
+
 }

@@ -3,9 +3,11 @@ package com.deped.service.items;
 import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.Operation;
 import com.deped.model.Response;
+import com.deped.model.borrow.BorrowItem;
 import com.deped.model.items.ItemDetails;
 import com.deped.model.items.ItemType;
 import com.deped.model.order.CaptureInfo;
+import com.deped.model.search.BorrowHistorySearch;
 import com.deped.model.search.BorrowSearch;
 import com.deped.repository.items.ItemDetailsRepository;
 import com.deped.repository.utils.Range;
@@ -94,6 +96,13 @@ public class ItemDetailsServiceImpl implements ItemDetailsService {
     public ResponseEntity<List<ItemDetails>> itemDetailsSearch(BorrowSearch entity) {
         List<ItemDetails> requests = itemDetailsRepository.itemDetailsSearch(entity);
         ResponseEntity<List<ItemDetails>> responseEntity = new ResponseEntity<>(requests, OK);
+        return responseEntity;
+    }
+
+    @Override
+    public ResponseEntity<List<BorrowItem>> borrowItemSearch(BorrowHistorySearch entity) {
+        List<BorrowItem> requests = itemDetailsRepository.borrowItemSearch(entity);
+        ResponseEntity<List<BorrowItem>> responseEntity = new ResponseEntity<>(requests, OK);
         return responseEntity;
     }
 }
