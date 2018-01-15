@@ -1,10 +1,12 @@
 package com.deped.model.account;
 
+import com.deped.model.borrow.BorrowItem;
 import com.deped.model.location.City;
 import com.deped.model.location.office.Section;
 import com.deped.model.security.Role;
 import com.deped.protection.validators.fieldmatcher.FieldMatch;
 import com.deped.protection.validators.xss.XSS;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -15,6 +17,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 import static com.deped.repository.utils.ConstantValues.*;
@@ -218,6 +221,11 @@ public class User implements Serializable {
             inverseJoinColumns = @JoinColumn(
                     name = "role_name"/*, referencedColumnName = "role_id"*/))
     private Set<Role> roles;
+
+
+    @OneToMany(mappedBy = "user")
+    @JsonBackReference
+    private Set<BorrowItem> borrowList = new HashSet<>();
 
     public User() {
     }
@@ -471,6 +479,13 @@ public class User implements Serializable {
         this.previousIdUsername = previousIdUsername;
     }
 
+    public Set<BorrowItem> getBorrowList() {
+        return borrowList;
+    }
+
+    public void setBorrowList(Set<BorrowItem> borrowList) {
+        this.borrowList = borrowList;
+    }
 
     @Override
     public boolean equals(Object o) {

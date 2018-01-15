@@ -6,6 +6,7 @@ import com.deped.form.ItemDetailsBeanForm;
 import com.deped.form.ItemDetailsForm;
 import com.deped.form.OrderDetailsForm;
 import com.deped.model.Response;
+import com.deped.model.account.User;
 import com.deped.model.items.Item;
 import com.deped.model.items.ItemDetails;
 import com.deped.model.items.ItemType;
@@ -16,6 +17,7 @@ import com.deped.model.items.features.Material;
 import com.deped.model.order.CaptureInfo;
 import com.deped.model.order.OrderDetails;
 import com.deped.model.search.BorrowSearch;
+import com.deped.utils.SystemUtils;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.ParameterizedTypeReference;
@@ -26,6 +28,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -349,12 +352,13 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
         modelMap.put("conditions", Condition.values());
         modelMap.put("equipmentAvailabilities", EquipmentAvailability.values());
         modelMap.put("materials", Material.values());
-        modelMap.put("itemList", SharedData.getItems(false));
+        modelMap.put("itemList", SharedData.getEquipment(false));
         modelMap.put("userList", SharedData.getUsers(false));
 
         ModelAndView mav = new ModelAndView(REPORT_LIST_VIEW_PAGE, modelMap);
         return mav;
     }
+
 
     @RequestMapping(value = REPORT_LIST, method = POST, params = "web")
     public ModelAndView searchListAction(@Valid @ModelAttribute("borrowSearch") BorrowSearch entity, BindingResult bindingResult) {
@@ -412,5 +416,65 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
 //                rowNumber = createXml(dataTypes2, sheet, rowNumber);
 //            }
 //        }
+    }
+
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder, WebRequest request) {
+        binder.registerCustomEditor(Date.class, "creationDateFrom", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
+            }
+        });
+
+        binder.registerCustomEditor(Date.class, "creationDateTo", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
+            }
+        });
+
+        binder.registerCustomEditor(List.class, "items", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                List<Item> itemList = new ArrayList<>();
+                String[] itemsStr = text.split(",");
+                if (itemsStr == null || itemsStr.length == 0)
+                    setValue(null);
+
+                else {
+                    for (String itStr : itemsStr) {
+                        Item discoveredItem = fetchItemByStringId(itStr);
+                        if (discoveredItem != null)
+                            itemList.add(discoveredItem);
+                    }
+
+                    setValue(itemList);
+                }
+            }
+        });
+
+        binder.registerCustomEditor(List.class, "ownBy", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(fetchUser(text));
+            }
+        });
+    }
+
+    public List<User> fetchUser(String text) {
+        List<User> userList = new ArrayList<>();
+        String[] usersStr = text.split(",");
+
+        for (String itStr : usersStr) {
+            User dummy = new User();
+            dummy.setUsername(itStr);
+            User discoveredUser = SystemUtils.findElementInList(SharedData.getUsers(false), dummy);
+            if (discoveredUser != null)
+                userList.add(discoveredUser);
+        }
+
+        return userList;
     }
 }

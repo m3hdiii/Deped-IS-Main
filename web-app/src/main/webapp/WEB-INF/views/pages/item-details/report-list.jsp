@@ -56,7 +56,7 @@
                                         <form:select id="colorListId"
                                                      class="form-control form-control-flat input-sm chosen-select"
                                                      multiple="true" path="colours" items="${colors}" itemLabel="name"
-                                                     data-placeholder="Choose who request..."/>
+                                                     data-placeholder="Choose the colors..."/>
                                     </div>
                                 </div>
 
@@ -104,24 +104,24 @@
                                 </div>
 
                                 <div class="col-md-12 no-padd margn-t-sm">
-                                    <label class="col-md-12 no-padd">Creation Date From</label>
+                                    <label class="col-md-12 no-padd">Creation Date</label>
                                     <div class="form-group col-md-5 no-padd">
-                                        <form:input path="creationDateFrom" type="number" min="0"
+                                        <form:input path="creationDateFrom" type="date"
                                                     class="form-control form-control-flat input-sm"/>
                                     </div>
                                     <div class="col-md-2 no-padd text-center margn-t-xs">
                                         To
                                     </div>
                                     <div class="form-group col-md-5 no-padd">
-                                        <form:input path="creationDateTo" type="number" min="0"
+                                        <form:input path="creationDateTo" type="date"
                                                     class="form-control form-control-flat input-sm"/>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <div class="col-md-12 no-padd margn-t-sm">
-                                        <label for="materialsId">Materials</label>
-                                        <form:select id="materialsId" path="materials" items="${materials}"
+                                        <label for="materialId">Materials</label>
+                                        <form:select id="materialId" path="materials" items="${materials}"
                                                      itemLabel="name"
                                                      class="form-control form-control-flat input-sm chosen-select"
                                                      multiple="true"
@@ -145,27 +145,30 @@
                                 </div>
 
                                 <div class="col-md-12 no-padd">
-                                    <label class="col-md-12 no-padd">Life Span From</label>
+                                    <label class="col-md-12 no-padd">Life Span</label>
                                     <div class="form-group col-md-5 no-padd">
-                                        <form:input id="lifeSpanFromId" path="lifeSpanFrom" type="text" min="0"
-                                                    max="120" class="form-control form-control-flat input-sm"/>
+                                        <form:input id="lifeSpanFromId" path="lifeSpanFrom" type="number" min="0"
+                                                    max="120" class="form-control form-control-flat input-sm"
+                                                    placeholder="life span from number ..."/>
                                     </div>
                                     <div class="col-md-2 no-padd text-center margn-t-xs">
                                         To
                                     </div>
                                     <div class="form-group col-md-5 no-padd">
-                                        <form:input id="lifeSpanToId" path="lifeSpanTo" type="text" min="0" max="120"
-                                                    class="form-control form-control-flat input-sm"/>
+                                        <form:input id="lifeSpanToId" path="lifeSpanTo" type="number" min="0" max="120"
+                                                    class="form-control form-control-flat input-sm"
+                                                    placeholder="life span to number ..."/>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
                                     <div class="col-md-12 no-padd margn-t-sm">
                                         <label for="itemsId">Items</label>
-                                        <form:select id="itemsId" path="items" items="${materials}" itemLabel="name"
+                                        <form:select id="itemsId" path="items" items="${itemList}" itemLabel="name"
+                                                     itemValue="name"
                                                      class="form-control form-control-flat input-sm chosen-select"
                                                      multiple="true"
-                                                     data-placeholder="Materials ..."/>
+                                                     data-placeholder="Choose Items ..."/>
                                     </div>
                                 </div>
 
@@ -174,7 +177,9 @@
                                     <form:select id="ownById" path="ownBy" items="${userList}" itemLabel="username"
                                                  itemValue="username"
                                                  class="form-control form-control-flat input-sm chosen-select"
-                                                 multiple="true"/>
+                                                 multiple="true"
+                                                 data-placeholder="Choose who request..."
+                                    />
                                 </div>
 
                                 <div class="col-md-12 padd-sm">

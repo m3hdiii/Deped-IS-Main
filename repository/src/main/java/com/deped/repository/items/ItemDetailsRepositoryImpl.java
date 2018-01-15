@@ -393,7 +393,7 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
             return false;
         }
 
-        if (object instanceof Integer)
+        if (object instanceof Number)
             return false;
 
         if (object instanceof String) {

@@ -1,12 +1,14 @@
 package com.deped.model.items;
 
 import com.deped.model.account.User;
+import com.deped.model.borrow.BorrowItem;
 import com.deped.model.brand.BrandModel;
 import com.deped.model.items.features.Colour;
 import com.deped.model.items.features.Condition;
 import com.deped.model.items.features.EquipmentAvailability;
 import com.deped.model.items.features.Material;
 import com.deped.protection.validators.xss.XSS;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -14,6 +16,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "item_details")
@@ -85,6 +88,10 @@ ItemDetails implements Serializable {
 
     @Column(name = "pic_url")
     private String picUrl;
+
+    @OneToMany(mappedBy = "itemDetails")
+    @JsonBackReference
+    private List<BorrowItem> borrowItems;
 
     public ItemDetails() {
     }
@@ -199,5 +206,13 @@ ItemDetails implements Serializable {
 
     public void setPicUrl(String picUrl) {
         this.picUrl = picUrl;
+    }
+
+    public List<BorrowItem> getBorrowItems() {
+        return borrowItems;
+    }
+
+    public void setBorrowItems(List<BorrowItem> borrowItems) {
+        this.borrowItems = borrowItems;
     }
 }
