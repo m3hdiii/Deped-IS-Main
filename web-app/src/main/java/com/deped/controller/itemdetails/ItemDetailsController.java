@@ -227,7 +227,7 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity httpEntity = new HttpEntity<>(entity, headers);
         ResponseEntity<Response> response = restTemplate.exchange(BASE_URL.concat("item-details/return/").concat(entity.getOfficeSerialNo()), HttpMethod.POST, httpEntity, Response.class);
-        return null;
+        return new ModelAndView(RETURN_VIEW_PAGE, "success", "successfully");
     }
 
 
@@ -382,26 +382,6 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
         return null;
     }
 
-    @InitBinder
-    public void initBinder(WebDataBinder binder, HttpServletRequest request) {
-        binder.registerCustomEditor(Item.class, new PropertyEditorSupport() {
-            @Override
-            public void setAsText(String text) {
-                Item discoveredItem = fetchItemByStringId(text);
-                setValue(discoveredItem);
-            }
-        });
-
-        binder.registerCustomEditor(Date.class, "creationDate", new PropertyEditorSupport() {
-            @Override
-            public void setAsText(String text) {
-                setValue(getDate(text));
-            }
-        });
-
-        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
-    }
-
     @RequestMapping(value = REPORT_LIST, method = GET)
     public ModelAndView searchListRender(@ModelAttribute("borrowSearch") BorrowSearch entity, BindingResult bindingResult) {
         Map<String, Object> modelMap = new HashMap<>();
@@ -544,6 +524,24 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
 
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
+        binder.registerCustomEditor(Item.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                Item discoveredItem = fetchItemByStringId(text);
+                setValue(discoveredItem);
+            }
+        });
+
+        binder.registerCustomEditor(Date.class, "creationDate", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
+            }
+        });
+
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+
+
         binder.registerCustomEditor(Date.class, "creationDateFrom", new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {

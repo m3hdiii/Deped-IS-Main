@@ -15,6 +15,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -380,6 +381,9 @@ public class RequestController extends AbstractMainController<Request, Long> {
 
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
+
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+
         binder.registerCustomEditor(Date.class, "requestDateFrom", new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {

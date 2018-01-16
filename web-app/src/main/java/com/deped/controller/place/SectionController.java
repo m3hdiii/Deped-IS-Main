@@ -5,6 +5,7 @@ import com.deped.controller.SharedData;
 import com.deped.model.Response;
 import com.deped.model.location.office.Department;
 import com.deped.model.location.office.Section;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -149,6 +150,8 @@ public class SectionController extends AbstractMainController<Section, String> {
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
 
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+
         binder.registerCustomEditor(Department.class, "department", new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
@@ -163,7 +166,5 @@ public class SectionController extends AbstractMainController<Section, String> {
                 setValue((text.equals("")) ? null : department);
             }
         });
-
-
     }
 }

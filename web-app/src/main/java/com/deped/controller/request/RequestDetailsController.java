@@ -18,6 +18,7 @@ import com.deped.model.request.RequestStatus;
 import com.deped.model.tracker.RequestTracker;
 import com.deped.model.tracker.TrackingStatus;
 import com.deped.utils.SystemUtils;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -623,6 +624,9 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
 
     @InitBinder
     public void initBinder(WebDataBinder binder, HttpServletRequest request) {
+
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+
         binder.registerCustomEditor(Request.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
@@ -670,6 +674,13 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         });
 
         binder.registerCustomEditor(Date.class, "releaseDate", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
+            }
+        });
+
+        binder.registerCustomEditor(Date.class, "returnDate", new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
                 setValue(getDate(text));

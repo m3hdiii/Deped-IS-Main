@@ -4,19 +4,19 @@ import com.deped.controller.AbstractMainController;
 import com.deped.model.Response;
 import com.deped.model.supply.Supplier;
 import com.deped.utils.ImageUtils;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Date;
@@ -156,6 +156,11 @@ public class SupplierController extends AbstractMainController<Supplier, Long> {
     @Override
     public ModelAndView updateAction(Long aLong, Supplier entity, BindingResult bindingResult) {
         return null;
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder, HttpServletRequest request) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
 
 }

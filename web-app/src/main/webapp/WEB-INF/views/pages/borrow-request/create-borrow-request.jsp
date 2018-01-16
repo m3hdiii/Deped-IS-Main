@@ -103,9 +103,13 @@
                                                                   itemValue="officeSerialNo"/>
                                                 </form:select>
                                             </td>
-                                            <td><form:input id="releaseDate${loop.index}"
+                                            <td>
+                                                <form:input id="releaseDate${loop.index}"
                                                             onclick="clickOnDateInput('releaseDate${loop.index}')"
                                                             path="listOfRequestTracker['${loop.index}'].releaseDate"/></td>
+                                                <%--  <form:input id="releaseDate${loop.index}"
+                                                              type="date"
+                                                              path="listOfRequestTracker['${loop.index}'].releaseDate"/></td>--%>
 
                                             <td>
                                                 GOING TO BE HELD

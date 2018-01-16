@@ -3,12 +3,16 @@ package com.deped.controller.request;
 import com.deped.controller.AbstractMainController;
 import com.deped.model.Response;
 import com.deped.model.request.Request;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -105,5 +109,10 @@ public class BorrowRequestController extends AbstractMainController<Request, Lon
     @RequestMapping(value = REMOVE_MAPPING, method = POST)
     public ModelAndView removeAction(@Valid Request... entity) {
         return null;
+    }
+
+    @InitBinder
+    public void initBinder(WebDataBinder binder, WebRequest request) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
     }
 }

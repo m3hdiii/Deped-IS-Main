@@ -18,6 +18,7 @@ import com.deped.model.order.OrderState;
 import com.deped.model.supply.Supplier;
 import com.deped.model.unit.Unit;
 import com.deped.utils.SystemUtils;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -650,6 +651,9 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
 
     @InitBinder
     public void initBinder(WebDataBinder binder, HttpServletRequest request) {
+
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+
         binder.registerCustomEditor(Unit.class, new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {
