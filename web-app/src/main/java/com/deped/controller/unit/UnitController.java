@@ -5,6 +5,7 @@ import com.deped.controller.SharedData;
 import com.deped.model.Response;
 import com.deped.model.items.Item;
 import com.deped.model.unit.Unit;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -139,6 +140,8 @@ public class UnitController extends AbstractMainController<Unit, String> {
 
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
+
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
 
         binder.registerCustomEditor(Item.class, "item", new PropertyEditorSupport() {
             @Override

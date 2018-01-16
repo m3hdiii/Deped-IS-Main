@@ -12,6 +12,7 @@ import com.deped.model.location.office.Section;
 import com.deped.tools.ControllerImageUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -162,6 +163,7 @@ public class UserController extends AbstractMainController<User, String> {
 
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
 
         binder.registerCustomEditor(Section.class, "section", new PropertyEditorSupport() {
             @Override

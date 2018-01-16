@@ -52,7 +52,14 @@
 
         <div class="row new-item-body margn-t-sm">
             <div class="col-md-12">
-
+                <c:choose>
+                    <c:when test="${not empty success}">
+                        <div class="alert alert-success alert-dismissable fade in">
+                            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                            <strong>Success!</strong>
+                        </div>
+                    </c:when>
+                </c:choose>
                 <form:form commandName="itemDetailsReturn" method="post" class="form-horizontal">
 
                     <div class="panel panel-default">

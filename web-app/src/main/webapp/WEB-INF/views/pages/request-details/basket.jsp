@@ -142,10 +142,10 @@
                                         data-toggle="tooltip"
                                         title="Delete the list and re-request">Delete All
                                 </button>
-                                <button name="actionParam" value="SAVE_ALL" class="btn btn-primary"
-                                        data-toggle="tooltip"
-                                        title="Save the list">Save
-                                </button>
+                                    <%--                                <button name="actionParam" value="SAVE_ALL" class="btn btn-primary"
+                                                                            data-toggle="tooltip"
+                                                                            title="Save the list">Save
+                                                                    </button>--%>
                                 <button name="actionParam" value="REQUEST_ALL" class="btn btn-success"
                                         data-toggle="tooltip"
                                         title="Send the Request">Send Request

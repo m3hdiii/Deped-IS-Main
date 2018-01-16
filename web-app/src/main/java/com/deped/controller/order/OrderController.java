@@ -14,6 +14,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
@@ -250,12 +251,12 @@ public class OrderController extends AbstractMainController<Order, Long> {
         XSSFWorkbook workbook = new XSSFWorkbook();
 
         for (Order or : requestResult) {
-            XSSFSheet sheet = workbook.createSheet("Request #" + or.getOrderId());
+            XSSFSheet sheet = workbook.createSheet("Order #" + or.getOrderId());
             Object[][] dataTypes = {
-                    /*{"Request ID", "Request Date", "Requested Personnel", "Personnel Message", "Admin Remark", "Item Type", "Request Status"},
-                    {or.getRequestId(), or.getRequestDate(), String.format("%s %s", or.getUser().getLastName(), or.getUser().getFirstName()), or.getUserMessage(), or.getAdminNotice(), or.getItemType().getName(), or.getRequestStatus().getName()},
+                    {"Order ID", "Order Date", "Required Date", "Requested User", "Schedule", "Budget Amount", "Order State", "Arrival Description"},
+                    {or.getOrderId(), or.getOrderDate(), or.getRequiredDate(), or.getUser() == null ? "" : or.getUser().getFirstName(), or.getOrderSchedule(), or.getBudgetAmount(), or.getOrderState(), or.getArrivalDescription()},
                     {"", "", "", "", "", "", ""},
-                    {"", "", "", "", "", "", ""}*/
+                    {"", "", "", "", "", "", ""}
             };
 
             int rowNumber = 0;
@@ -264,19 +265,46 @@ public class OrderController extends AbstractMainController<Order, Long> {
             List<OrderDetails> orderDetailsList = fetchOrderDetails(or.getOrderId());
             for (OrderDetails rd : orderDetailsList) {
                 String consideredBy = rd.getConsideredByUser() != null ? String.format("%s %s", rd.getConsideredByUser().getLastName(), rd.getConsideredByUser().getFirstName()) : "";
-                //String issuedBy = rd.getIssuedByUser() != null ? String.format("%s %s", rd.getIssuedByUser().getLastName(), rd.getIssuedByUser().getFirstName()) : "";
+                String orderedBy = rd.getOrderedByUser() != null ? String.format("%s %s", rd.getOrderedByUser().getLastName(), rd.getOrderedByUser().getFirstName()) : "";
+                String receivedBy = rd.getReceivedByUser() != null ? String.format("%s %s", rd.getReceivedByUser().getLastName(), rd.getReceivedByUser().getFirstName()) : "";
 
                 Object[][] dataTypes2 = {
-                        {"Request ID", "Item", "Request Quantity", "Approved Quantity", "Consideration Date",
-                                "Release Date", "Supply Office Remark", "Considered By", "Issued By", "Request Details Status",
-                                "Disapproval Message", "Cancellation Reason"}
-                                /*,
-                        {rd.getRequest().getRequestId(), rd.getRequestQuantity(), rd.getApprovedQuantity(),
-                                rd.getApprovalDisapprovalDate(), rd.getReleaseDate(), rd.getSupplyOfficeRemark(), consideredBy, issuedBy,
-                                rd.getRequestDetailsStatus() != null ? rd.getRequestDetailsStatus().getName() : "", rd.getDisapprovalMessage(),
-                                rd.getCancellationReason()
+                        {"Order ID",
+                                "Item",
+                                "Category",
+                                "Unit",
+                                "Unit Price",
+                                "Unit Capacity",
+                                "No Of Units",
+                                "Quantity Request No",
+                                "Quantity Arrived No",
+                                "Order Details State",
+                                "Supplier",
+                                "Disapproval Message",
+                                "Not Arrival Message",
+                                "Considered By",
+                                "Ordered By",
+                                "Received By"
                         }
-                        ,*/
+                        ,
+                        {rd.getOrderDetailsID().getOrderId(),
+                                rd.getItem() == null ? "" : rd.getItem().getName(),
+                                rd.getCategory() == null ? "" : rd.getCategory().getName(),
+                                rd.getUnit() == null ? "" : rd.getUnit().getName(),
+                                rd.getUnitPrice(),
+                                rd.getUnitCapacity(),
+                                rd.getNoOfUnits(),
+                                rd.getTotalQuantityRequestNo(),
+                                rd.getTotalQuantityArrivedNo(),
+                                rd.getOrderDetailsState() == null ? "" : rd.getOrderDetailsState(),
+                                rd.getSupplier() == null ? "" : rd.getSupplier().getName(),
+                                rd.getDisapprovalMessage(),
+                                rd.getNotArrivalMessage(),
+                                consideredBy,
+                                orderedBy,
+                                receivedBy
+                        }
+                        ,
 
                 };
 
@@ -397,6 +425,8 @@ public class OrderController extends AbstractMainController<Order, Long> {
 
     @InitBinder
     public void initBinder(WebDataBinder binder, WebRequest request) {
+        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+
         binder.registerCustomEditor(Date.class, "requiredDate", new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {

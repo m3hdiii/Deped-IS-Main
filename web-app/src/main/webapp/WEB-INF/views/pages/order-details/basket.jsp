@@ -102,7 +102,7 @@
                                 <th class="col-md-1">Unity Price</th>
                                 <th class="col-sm-2">Category</th>
                                 <th class="col-sm-2">Supplier</th>
-                                <th class="col-xs-1">Remove</th>
+                                    <%--<th class="col-xs-1">Remove</th>--%>
                             </tr>
                             </thead>
                             <tbody>
@@ -197,11 +197,11 @@
                                     <form:hidden path="map['${strKey}'].orderDetailsID.orderId" value="${orderDet.order.orderId}"/>
                                     <form:hidden path="map['${strKey}'].orderDetailsID.itemName" value="${orderDet.item.name}"/>
 
-                                    <td>
-                                        <a href="/order-details/delete/${strKey}" class="btn btn-sm btn-danger">
-                                            <i class="fa fa-trash"></i>
-                                        </a>
-                                    </td>
+                                        <%--<td>
+                                            <a href="/order-details/delete/${strKey}" class="btn btn-sm btn-danger">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        </td>--%>
                                 </tr>
                             </c:forEach>
                             </tbody>
@@ -217,10 +217,10 @@
                                 data-toggle="tooltip"
                                 title="Delete the list and re-request">Delete All
                         </button>
-                        <button name="actionParam" value="SAVE_ALL" class="btn btn-primary"
-                                data-toggle="tooltip"
-                                title="Save the list">Save
-                        </button>
+                            <%--<button name="actionParam" value="SAVE_ALL" class="btn btn-primary"
+                                    data-toggle="tooltip"
+                                    title="Save the list">Save
+                            </button>--%>
                         <button name="actionParam" value="ORDER_ALL" class="btn btn-success"
                                 data-toggle="tooltip"
                                 title="Send the Request">Send Order
