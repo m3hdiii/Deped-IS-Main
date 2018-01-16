@@ -252,11 +252,30 @@ public class OrderController extends AbstractMainController<Order, Long> {
 
         for (Order or : requestResult) {
             XSSFSheet sheet = workbook.createSheet("Order #" + or.getOrderId());
+            String orderId = or.getOrderId() == null ? "" : String.valueOf(or.getOrderId());
+            String orderDate = or.getOrderDate() == null ? "" : or.getOrderDate().toString();
+            String requiredDate = or.getRequiredDate() == null ? "" : or.getRequiredDate().toString();
+            String user = or.getUser() == null ? "" : or.getUser().getFirstName() + " " + or.getUser().getLastName();
+            String orderSchedule = or.getOrderSchedule() == null ? "" : or.getOrderSchedule().name();
+            String budgetAmount = or.getBudgetAmount() == null ? "" : String.valueOf(or.getBudgetAmount());
+            String orderState = or.getOrderState() == null ? "" : or.getOrderState().name();
+            String arrivalDescription = or.getArrivalDescription() == null ? "" : or.getArrivalDescription();
+
+
             Object[][] dataTypes = {
                     {"Order ID", "Order Date", "Required Date", "Requested User", "Schedule", "Budget Amount", "Order State", "Arrival Description"},
-                    {or.getOrderId(), or.getOrderDate(), or.getRequiredDate(), or.getUser() == null ? "" : or.getUser().getFirstName(), or.getOrderSchedule(), or.getBudgetAmount(), or.getOrderState(), or.getArrivalDescription()},
-                    {"", "", "", "", "", "", ""},
-                    {"", "", "", "", "", "", ""}
+                    {
+                            orderId,
+                            orderDate,
+                            requiredDate,
+                            user,
+                            orderSchedule,
+                            budgetAmount,
+                            orderState,
+                            arrivalDescription
+                    },
+                    {},
+                    {}
             };
 
             int rowNumber = 0;
@@ -264,6 +283,21 @@ public class OrderController extends AbstractMainController<Order, Long> {
 
             List<OrderDetails> orderDetailsList = fetchOrderDetails(or.getOrderId());
             for (OrderDetails rd : orderDetailsList) {
+
+
+                String orderIdName = rd.getOrderDetailsID() == null || rd.getOrderDetailsID().getOrderId() == null ? "" : String.valueOf(rd.getOrderDetailsID().getOrderId());
+                String itemName = rd.getItem() == null ? "" : rd.getItem().getName();
+                String categoryName = rd.getCategory() == null ? "" : rd.getCategory().getName();
+                String unitName = rd.getUnit() == null ? "" : rd.getUnit().getName();
+                String unitPrice = rd.getUnitPrice() == null ? "" : String.valueOf(rd.getUnitPrice());
+                String unitCapacity = rd.getUnitCapacity() == null ? "" : String.valueOf(rd.getUnitCapacity());
+                String noOfUnits = rd.getNoOfUnits() == null ? "" : String.valueOf(rd.getNoOfUnits());
+                String totalQuantityRequest = rd.getTotalQuantityRequestNo() == null ? "" : String.valueOf(rd.getTotalQuantityRequestNo());
+                String totalArrivedRequest = rd.getTotalQuantityArrivedNo() == null ? "" : String.valueOf(rd.getTotalQuantityArrivedNo());
+                String orderDetailsState = rd.getOrderDetailsState() == null ? "" : rd.getOrderDetailsState().name();
+                String supplier = rd.getSupplier() == null ? "" : rd.getSupplier().getName();
+                String approvalMessage = rd.getDisapprovalMessage();
+                String notArrivalMessage = rd.getNotArrivalMessage();
                 String consideredBy = rd.getConsideredByUser() != null ? String.format("%s %s", rd.getConsideredByUser().getLastName(), rd.getConsideredByUser().getFirstName()) : "";
                 String orderedBy = rd.getOrderedByUser() != null ? String.format("%s %s", rd.getOrderedByUser().getLastName(), rd.getOrderedByUser().getFirstName()) : "";
                 String receivedBy = rd.getReceivedByUser() != null ? String.format("%s %s", rd.getReceivedByUser().getLastName(), rd.getReceivedByUser().getFirstName()) : "";
@@ -287,19 +321,20 @@ public class OrderController extends AbstractMainController<Order, Long> {
                                 "Received By"
                         }
                         ,
-                        {rd.getOrderDetailsID().getOrderId(),
-                                rd.getItem() == null ? "" : rd.getItem().getName(),
-                                rd.getCategory() == null ? "" : rd.getCategory().getName(),
-                                rd.getUnit() == null ? "" : rd.getUnit().getName(),
-                                rd.getUnitPrice(),
-                                rd.getUnitCapacity(),
-                                rd.getNoOfUnits(),
-                                rd.getTotalQuantityRequestNo(),
-                                rd.getTotalQuantityArrivedNo(),
-                                rd.getOrderDetailsState() == null ? "" : rd.getOrderDetailsState(),
-                                rd.getSupplier() == null ? "" : rd.getSupplier().getName(),
-                                rd.getDisapprovalMessage(),
-                                rd.getNotArrivalMessage(),
+                        {
+                                orderIdName,
+                                itemName,
+                                categoryName,
+                                unitName,
+                                unitPrice,
+                                unitCapacity,
+                                noOfUnits,
+                                totalQuantityRequest,
+                                totalArrivedRequest,
+                                orderDetailsState,
+                                supplier,
+                                approvalMessage,
+                                notArrivalMessage,
                                 consideredBy,
                                 orderedBy,
                                 receivedBy
@@ -313,7 +348,7 @@ public class OrderController extends AbstractMainController<Order, Long> {
         }
 
 
-        String mimeType = "application/xml";
+        String mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
         response.setContentType(mimeType);
 //        response.setContentLength(workbook.get);
@@ -321,7 +356,7 @@ public class OrderController extends AbstractMainController<Order, Long> {
         // set headers for the response
         String headerKey = "Content-Disposition";
         String headerValue = String.format("attachment; filename=\"%s\"",
-                "request-report.xlsx");
+                "order-report.xlsx");
         response.setHeader(headerKey, headerValue);
 
         OutputStream outStream = null;

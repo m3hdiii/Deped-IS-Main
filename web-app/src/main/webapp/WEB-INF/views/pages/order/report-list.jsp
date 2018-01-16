@@ -39,7 +39,7 @@
                             <div class="panel-heading">Filter</div>
                             <form:form commandName="orderSearch">
                                 <div class="panel-body padd-sm">
-                                    <a href="#" class="pull-right" type="reset">Clear all</a>
+                                        <%--<a href="#" class="pull-right" type="reset">Clear all</a>--%>
 
                                     <div class="col-md-12 no-padd">
                                         <label class="col-md-12 no-padd">Order Date</label>

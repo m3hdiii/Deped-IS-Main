@@ -39,7 +39,7 @@
                         <div class="panel-heading">Filter</div>
                         <form:form commandName="borrowSearch">
                             <div class="panel-body padd-sm">
-                                <a href="#" class="pull-right" type="reset">Clear all</a>
+                                    <%--<a href="#" class="pull-right" type="reset">Clear all</a>--%>
 
                                 <div class="form-group">
                                     <div class="col-md-12 no-padd margn-t-sm">

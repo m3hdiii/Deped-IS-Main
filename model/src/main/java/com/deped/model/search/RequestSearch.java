@@ -3,6 +3,7 @@ package com.deped.model.search;
 import com.deped.model.account.User;
 import com.deped.model.items.Item;
 import com.deped.model.items.ItemType;
+import com.deped.model.location.office.Section;
 import com.deped.model.request.RequestDetailsStatus;
 import com.deped.model.request.RequestStatus;
 import com.deped.model.tracker.RequestTracker;
@@ -58,6 +59,8 @@ public class RequestSearch {
     private List<User> issuedByUsers;
 
     private Set<RequestTracker> requestTrackers;
+
+    private List<Section> sections;
 
     public RequestSearch() {
     }
@@ -270,5 +273,13 @@ public class RequestSearch {
 
     public void setRequestTrackers(Set<RequestTracker> requestTrackers) {
         this.requestTrackers = requestTrackers;
+    }
+
+    public List<Section> getSections() {
+        return sections;
+    }
+
+    public void setSections(List<Section> sections) {
+        this.sections = sections;
     }
 }

@@ -9,6 +9,7 @@ import com.deped.model.items.Item;
 import com.deped.model.location.City;
 import com.deped.model.location.Country;
 import com.deped.model.location.office.Department;
+import com.deped.model.location.office.Section;
 import com.deped.model.order.OrderDetails;
 import com.deped.model.request.RequestDetails;
 import com.deped.model.security.Role;
@@ -115,6 +116,25 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         List<Category> categories = SharedData.getCategories(false);
         Category discoveredCategory = SystemUtils.findElementInList(categories, category);
         return discoveredCategory;
+    }
+
+    public Section fetchSectionByStringId(String text) {
+        try {
+            Section discoveredItem = fetchSectionByName(text);
+            return discoveredItem;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Section fetchSectionByName(String sectionName) {
+        Section section = new Section();
+        section.setName(sectionName);
+
+        List<Section> items = SharedData.getSections(false);
+        Section discoveredItem = SystemUtils.findElementInList(items, section);
+        return discoveredItem;
     }
 
     protected Unit fetchUnitByStringId(String text) {
@@ -447,6 +467,10 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
 
         if (entityClass == Department.class) {
             SharedData.getDepartments(isUpdated);
+        }
+
+        if (entityClass == Section.class) {
+            SharedData.getSections(isUpdated);
         }
     }
 

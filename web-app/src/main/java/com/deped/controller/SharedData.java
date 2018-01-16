@@ -9,6 +9,7 @@ import com.deped.model.items.Item;
 import com.deped.model.location.City;
 import com.deped.model.location.Country;
 import com.deped.model.location.office.Department;
+import com.deped.model.location.office.Section;
 import com.deped.model.security.Role;
 import com.deped.model.supply.Supplier;
 import com.deped.model.unit.Unit;
@@ -26,6 +27,7 @@ public class SharedData {
     private static List<City> philippineCities;
     private static List<Role> roles;
     private static List<Department> departments;
+    private static List<Section> sections;
     private static Map<ClientEnumKey, String> clientConfigsMap;
     private static List<Item> items;
     private static List<Item> goods;
@@ -177,6 +179,16 @@ public class SharedData {
         }
 
         return departments;
+    }
+
+    public synchronized static List<Section> getSections(boolean dataIsUpdated) {
+
+        if (sections == null || dataIsUpdated) {
+            sections = fetchAll("section", new ParameterizedTypeReference<List<Section>>() {
+            });
+        }
+
+        return sections;
     }
 
     public synchronized static List<Brand> getBrands(boolean dataIsUpdated) {

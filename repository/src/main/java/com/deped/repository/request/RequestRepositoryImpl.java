@@ -4,6 +4,7 @@ import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.account.User;
 import com.deped.model.items.Item;
 import com.deped.model.items.ItemType;
+import com.deped.model.location.office.Section;
 import com.deped.model.request.Request;
 import com.deped.model.request.RequestDetailsStatus;
 import com.deped.model.request.RequestStatus;
@@ -117,20 +118,23 @@ public class RequestRepositoryImpl implements RequestRepository {
         boolean isSupplyOfficeRemarkEmpty = isEmpty(requestSearch.getSupplyOfficeRemark());
         boolean isConsideredByUserListEmpty = isEmpty(requestSearch.getConsideredByUsers());
         boolean isIssuedByUserListEmpty = isEmpty(requestSearch.getIssuedByUsers());
+        boolean isSectionListEmpty = isEmpty(requestSearch.getSections());
 
         boolean[] emptyList = new boolean[]{isUserMessageEmpty, isRequestDateFromEmpty, isRequestDateToEmpty,
                 isRequestedUserListEmpty, isAdminNoticeEmpty, isItemTypeListEmpty, isItemListEmpty, isRequestQuantityFromEmpty,
                 isRequestQuantityToEmpty, isApprovedQuantityFromEmpty, isApprovedQuantityToEmpty, isApprovalDisapprovalDateFromEmpty,
                 isApprovalDisapprovalDateToEmpty, isDisapprovalMessageEmpty, isReleaseDateFromEmpty, isReleaseDateToEmpty, isRequestDetailsStatusListEmpty,
-                isRequestStatusListEmpty, isCancellationReasonEmpty, isSupplyOfficeRemarkEmpty, isConsideredByUserListEmpty, isIssuedByUserListEmpty
+                isRequestStatusListEmpty, isCancellationReasonEmpty, isSupplyOfficeRemarkEmpty, isConsideredByUserListEmpty, isIssuedByUserListEmpty, isSectionListEmpty
         };
 
-        StringBuilder sb = new StringBuilder("SELECT distinct request_id, user_message, item_type, request_date, username, admin_notice, request_status FROM request");
+        StringBuilder sb = new StringBuilder("SELECT distinct request_id, user_message, item_type, request_date, request.username, admin_notice, request_status FROM request");
 
         String where = null;
         for (boolean b : emptyList) {
             if (!b) {
-                where = " JOIN request_details ON request.request_id = request_details.request_request_id WHERE\n";
+                where = " JOIN request_details ON request.request_id = request_details.request_request_id" +
+                        " JOIN user ON request.username = user.username" +
+                        " WHERE\n";
                 break;
             }
         }
@@ -174,6 +178,7 @@ public class RequestRepositoryImpl implements RequestRepository {
             ListParameter requestDetailsStatusParameter = isRequestDetailsStatusListEmpty ? null : createListParameter(requestSearch.getRequestDetailsStatuses(), "requestDetailsStatus", RequestDetailsStatus.class);
             ListParameter consideredByUserParameter = isConsideredByUserListEmpty ? null : createListParameter(requestSearch.getConsideredByUsers(), "consideredByUsers", User.class);
             ListParameter issuedByUserParameter = isIssuedByUserListEmpty ? null : createListParameter(requestSearch.getIssuedByUsers(), "issuedByUsers", User.class);
+            ListParameter sectionsParameter = isSectionListEmpty ? null : createListParameter(requestSearch.getSections(), "section", Section.class);
 
 
             sb
@@ -198,7 +203,8 @@ public class RequestRepositoryImpl implements RequestRepository {
                     .append(isCancellationReasonEmpty ? "" : "(request_details.cancellation_reason LIKE :cancellationReason) AND\n")
                     .append(isSupplyOfficeRemarkEmpty ? "" : "(request_details.supply_office_remark LIKE :supplyOfficeRemark) AND\n")
                     .append(isConsideredByUserListEmpty ? "" : String.format("(request_details.considered_by_username IN ( %s )) AND\n", consideredByUserParameter.getWherePartSection()))
-                    .append(isIssuedByUserListEmpty ? "" : String.format("(request_details.issued_by_username IN ( %s ))", issuedByUserParameter.getWherePartSection()));
+                    .append(isIssuedByUserListEmpty ? "" : String.format("(request_details.issued_by_username IN ( %s )) AND\n", issuedByUserParameter.getWherePartSection()))
+                    .append(isSectionListEmpty ? "" : String.format("(user.section_name IN ( %s ))", sectionsParameter.getWherePartSection()));
 
 
             try {
@@ -210,7 +216,10 @@ public class RequestRepositoryImpl implements RequestRepository {
 
                 NativeQuery<Request> query = hibernateSession.createNativeQuery(strQuery, Request.class);
 
-                ListParameter[] listParameters = new ListParameter[]{requestedUserParameter, itemTypeParameter, itemParameter, requestStatusParameter, requestDetailsStatusParameter, consideredByUserParameter, issuedByUserParameter};
+                ListParameter[] listParameters = new ListParameter[]{
+                        requestedUserParameter, itemTypeParameter, itemParameter, requestStatusParameter, requestDetailsStatusParameter,
+                        consideredByUserParameter, issuedByUserParameter, sectionsParameter
+                };
 
                 Map<String, Object> parameterMap = new HashMap<>();
                 for (int i = 0; i < listParameters.length; i++) {
@@ -324,6 +333,9 @@ public class RequestRepositoryImpl implements RequestRepository {
 
             if (clazz == Item.class)
                 parameterMap.put(key, ((Item) objects.get(i)).getName());
+
+            if (clazz == Section.class)
+                parameterMap.put(key, ((Section) objects.get(i)).getName());
 
             if (clazz == ItemType.class || clazz == RequestDetailsStatus.class || clazz == RequestStatus.class || clazz == RequestStatus.class)
                 parameterMap.put(key, (objects.get(i)).toString());

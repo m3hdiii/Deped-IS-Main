@@ -97,4 +97,22 @@ public class Section implements Serializable {
     public void setPreviousIdName(String previousIdName) {
         this.previousIdName = previousIdName;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Section)) return false;
+
+        Section section = (Section) o;
+
+        return name != null ? name.equals(section.name) : section.name == null;
+    }
+
+    @Override
+    public int hashCode() {
+        if (name == null || name.isEmpty())
+            return super.hashCode();
+        else
+            return name.hashCode();
+    }
 }

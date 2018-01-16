@@ -5,6 +5,7 @@ import com.deped.controller.SharedData;
 import com.deped.model.account.User;
 import com.deped.model.items.Item;
 import com.deped.model.items.ItemType;
+import com.deped.model.location.office.Section;
 import com.deped.model.request.Request;
 import com.deped.model.request.RequestDetails;
 import com.deped.model.request.RequestDetailsStatus;
@@ -253,6 +254,7 @@ public class RequestController extends AbstractMainController<Request, Long> {
         modelMap.put("itemList", SharedData.getItems(false));
         modelMap.put("userList", SharedData.getUsers(false));
         modelMap.put("statuses", RequestStatus.values());
+        modelMap.put("sections", SharedData.getSections(false));
         modelMap.put("detailsStatuses", RequestDetailsStatus.values());
 
         ModelAndView mav = new ModelAndView(REPORT_LIST_VIEW_PAGE, modelMap);
@@ -274,6 +276,7 @@ public class RequestController extends AbstractMainController<Request, Long> {
         modelMap.put("itemList", SharedData.getItems(false));
         modelMap.put("userList", SharedData.getUsers(false));
         modelMap.put("statuses", RequestStatus.values());
+        modelMap.put("sections", SharedData.getSections(false));
         modelMap.put("detailsStatuses", RequestDetailsStatus.values());
         ModelAndView mav = new ModelAndView(REPORT_LIST_VIEW_PAGE, modelMap);
         return mav;
@@ -291,11 +294,20 @@ public class RequestController extends AbstractMainController<Request, Long> {
 
         for (Request req : requestResult) {
             XSSFSheet sheet = workbook.createSheet("Request #" + req.getRequestId());
+            boolean isRequestedUserInfoNull = req.getUser() == null ? true : false;
             Object[][] dataTypes = {
-                    {"Request ID", "Request Date", "Requested Personnel", "Personnel Message", "Admin Remark", "Item Type", "Request Status"},
-                    {req.getRequestId(), req.getRequestDate(), String.format("%s %s", req.getUser().getLastName(), req.getUser().getFirstName()), req.getUserMessage(), req.getAdminNotice(), req.getItemType().getName(), req.getRequestStatus().getName()},
-                    {"", "", "", "", "", "", ""},
-                    {"", "", "", "", "", "", ""}
+                    {"Request ID", "Request Date", "Requested Person", "Request Message", "Admin Remark", "Item Type", "Request Status"},
+                    {
+                            String.valueOf(req.getRequestId() == null ? "" : req.getRequestId()),
+                            req.getRequestDate() == null ? "" : req.getRequestDate().toString(),
+                            isRequestedUserInfoNull ? "" : String.format("%s %s", req.getUser().getLastName(), req.getUser().getFirstName()),
+                            req.getUserMessage() == null ? "" : req.getUserMessage(),
+                            req.getAdminNotice() == null ? "" : req.getAdminNotice(),
+                            req.getItemType() == null ? "" : req.getItemType().getName(),
+                            req.getRequestStatus() == null ? "" : req.getRequestStatus().getName()
+                    },
+                    {},
+                    {}
             };
 
             int rowNumber = 0;
@@ -310,10 +322,19 @@ public class RequestController extends AbstractMainController<Request, Long> {
                         {"Request ID", "Item", "Request Quantity", "Approved Quantity", "Consideration Date",
                                 "Release Date", "Supply Office Remark", "Considered By", "Issued By", "Request Details Status",
                                 "Disapproval Message", "Cancellation Reason"},
-                        {rd.getRequest().getRequestId(), rd.getRequestQuantity(), rd.getApprovedQuantity(),
-                                rd.getApprovalDisapprovalDate(), rd.getReleaseDate(), rd.getSupplyOfficeRemark(), consideredBy, issuedBy,
-                                rd.getRequestDetailsStatus() != null ? rd.getRequestDetailsStatus().getName() : "", rd.getDisapprovalMessage(),
-                                rd.getCancellationReason()
+                        {
+                                String.valueOf(rd.getRequest().getRequestId()),
+                                rd.getItem().getName(),
+                                String.valueOf(rd.getRequestQuantity() == null ? "" : rd.getRequestQuantity()),
+                                String.valueOf(rd.getApprovedQuantity() == null ? "" : rd.getApprovedQuantity()),
+                                rd.getApprovalDisapprovalDate() == null ? rd.getApprovalDisapprovalDate() : rd.getApprovalDisapprovalDate().toString(),
+                                rd.getReleaseDate() == null ? "" : rd.getReleaseDate().toString(),
+                                String.valueOf(rd.getSupplyOfficeRemark() == null ? "" : rd.getSupplyOfficeRemark()),
+                                consideredBy == null ? "" : consideredBy,
+                                issuedBy == null ? "" : issuedBy,
+                                rd.getRequestDetailsStatus() != null ? String.valueOf(rd.getRequestDetailsStatus().getName()) : "",
+                                rd.getDisapprovalMessage() == null ? "" : rd.getDisapprovalMessage(),
+                                rd.getCancellationReason() == null ? "" : rd.getCancellationReason()
                         },
 
                 };
@@ -323,7 +344,7 @@ public class RequestController extends AbstractMainController<Request, Long> {
         }
 
 
-        String mimeType = "application/xml";
+        String mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
         response.setContentType(mimeType);
 //        response.setContentLength(workbook.get);
@@ -417,6 +438,27 @@ public class RequestController extends AbstractMainController<Request, Long> {
                 }
             }
         });
+
+        binder.registerCustomEditor(List.class, "sections", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                List<Section> sectionList = new ArrayList<>();
+                String[] sectionStr = text.split(",");
+                if (sectionStr == null || sectionStr.length == 0)
+                    setValue(null);
+
+                else {
+                    for (String itStr : sectionStr) {
+                        Section discoveredSection = fetchSectionByStringId(itStr);
+                        if (discoveredSection != null)
+                            sectionList.add(discoveredSection);
+                    }
+
+                    setValue(sectionList);
+                }
+            }
+        });
+
 
         binder.registerCustomEditor(List.class, "requestStatuses", new PropertyEditorSupport() {
             @Override
