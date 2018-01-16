@@ -11,8 +11,8 @@
 
 <c:url value="/" var="routePath" scope="request"/>
 <c:import url="../../includes/head.jsp">
-    <c:param name="title" value="Update Brand"/>
-    <c:param name="description" value="Update Brand Page"/>
+    <c:param name="title" value="Update Equipment Info"/>
+    <c:param name="description" value="Update Equipment Info Page"/>
 </c:import>
 
 <body>
@@ -22,18 +22,7 @@
 <section class="content">
 
     <c:import url="../../includes/top-nav.jsp"/>
-    <c:choose>
-    <c:when test="${not empty notUpdated}">
-    <p style="color: red;">${notUpdated}</p>
-    </c:when>
 
-
-    <c:when test="${not empty successfullyUpdated}">
-    <p style="color: green;">${successfullyUpdated}</p>
-    &nbsp;&nbsp;<a href="/brand/create">Create Brand</a>
-    </c:when>
-
-    </c:choose>
     <div class="warper container-fluid">
 
         <div class="page-header">
@@ -55,6 +44,10 @@
                 </form>
             </div>
         </div>
+
+        <c:if test="${not empty nothingFound}">
+            <p style="color: red;">Nothing Found</p>
+        </c:if>
 
         <c:if test="${not empty itemDetailsResult}">
 

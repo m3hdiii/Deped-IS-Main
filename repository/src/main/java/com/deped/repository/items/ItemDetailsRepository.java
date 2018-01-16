@@ -1,5 +1,6 @@
 package com.deped.repository.items;
 
+import com.deped.exceptions.DatabaseRolesViolationException;
 import com.deped.model.borrow.BorrowItem;
 import com.deped.model.items.ItemDetails;
 import com.deped.model.items.ItemType;
@@ -22,4 +23,5 @@ public interface ItemDetailsRepository extends BaseRepository<ItemDetails, Strin
 
     List<BorrowItem> borrowItemSearch(BorrowHistorySearch entity);
 
+    Boolean returnById(String s, ItemDetails itemDetails) throws DatabaseRolesViolationException;
 }

@@ -27,6 +27,7 @@ public class ItemDetailsRestController extends AbstractMainRestController<ItemDe
     private static final String FETCH_MAPPING_BY_ORDER_ID_AND_ITEM_TYPE = BASE_NAME + "/find-by-order-type" + FETCH_BY_ID_PATTERN;
     private static final String FETCH_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String FETCH_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
+    private static final String RETURN_BY_ID_MAPPING = BASE_NAME + "/return" + FETCH_BY_ID_PATTERN;
     private static final String FETCH_BY_ITEM_NAME_MAPPING = BASE_NAME + "/fetch-by-item-name" + FETCH_BY_ID_PATTERN;
     private static final String FETCH_BY_STATES = FETCH_MAPPING + URL_SEPARATOR + "by-states";
     private static final String REMOVE_MAPPING = BASE_NAME + REMOVE_PATTERN;
@@ -44,7 +45,7 @@ public class ItemDetailsRestController extends AbstractMainRestController<ItemDe
 
     @Override
     @RequestMapping(value = UPDATE_MAPPING, method = RequestMethod.POST)
-    public ResponseEntity<Response> update(ItemDetails entity) {
+    public ResponseEntity<Response> update(@RequestBody ItemDetails entity) {
         ResponseEntity<Response> response = itemDetailsService.update(entity);
         return response;
     }
@@ -65,6 +66,12 @@ public class ItemDetailsRestController extends AbstractMainRestController<ItemDe
     @RequestMapping(value = FETCH_BY_ID_MAPPING, method = RequestMethod.GET)
     public ResponseEntity<ItemDetails> fetchById(@PathVariable(ID_STRING_LITERAL) String s) {
         ResponseEntity<ItemDetails> response = itemDetailsService.fetchById(s);
+        return response;
+    }
+
+    @RequestMapping(value = RETURN_BY_ID_MAPPING, method = RequestMethod.POST)
+    public ResponseEntity<Response> returnById(@PathVariable(ID_STRING_LITERAL) String s, @RequestBody ItemDetails itemDetails) {
+        ResponseEntity<Response> response = itemDetailsService.returnById(s);
         return response;
     }
 

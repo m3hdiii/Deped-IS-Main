@@ -51,6 +51,7 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
     private static final String RENDER_UPDATE_MAPPING = BASE_NAME + RENDER_UPDATE_PATTERN;
     private static final String RENDER_UPDATE_MAPPING_NO_ID = BASE_NAME + "/update";
+    private static final String RENDER_RETURN_MAPPING = BASE_NAME + "/return";
     private static final String RENDER_LIST_MAPPING = BASE_NAME + FETCH_PATTERN;
     private static final String RENDER_LIST_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String RENDER_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
@@ -59,6 +60,7 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
     private static final String BASE_SHOW_PAGE = JSP_PAGES + URL_SEPARATOR + BASE_NAME + URL_SEPARATOR;
     private static final String CREATE_VIEW_PAGE = BASE_SHOW_PAGE + CREATE_PAGE + BASE_NAME;
     private static final String INFO_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + INFO_PAGE;
+    private static final String RETURN_VIEW_PAGE = BASE_SHOW_PAGE + "return-" + BASE_NAME;
     private static final String UPDATE_VIEW_PAGE = BASE_SHOW_PAGE + UPDATE_PAGE + BASE_NAME;
     private static final String LIST_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + LIST_PAGE;
     private static final String INSERT_DATA = BASE_NAME + URL_SEPARATOR + "insert-data";
@@ -177,6 +179,9 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
         modelMap.put("availabilities", EquipmentAvailability.values());
         modelMap.put("conditions", Condition.values());
         modelMap.put("itemDetailsResult", itemDetails);
+        if (itemDetails == null) {
+            modelMap.put("nothingFound", true);
+        }
         return new ModelAndView(UPDATE_VIEW_PAGE, modelMap);
     }
 
@@ -184,9 +189,9 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
     @RequestMapping(value = RENDER_UPDATE_MAPPING_NO_ID, method = POST, params = "update-info")
     public ModelAndView updateAction(String officeSerialNumber, @ModelAttribute("itemDetailsResult") ItemDetails entity, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
-            return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
+            return new ModelAndView(UPDATE_VIEW_PAGE, "itemDetailsResult", entity);
         }
-        entity.setOfficeSerialNo(officeSerialNumber);
+
         //This is actually the update date
         entity.setCreationDate(new Date());
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, ItemDetails.class);
@@ -194,10 +199,37 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
         return mv;
     }
 
-    @RequestMapping(value = RENDER_UPDATE_MAPPING_NO_ID, method = POST, params = "return-action")
-    public ModelAndView returnAction(String officeSerialNumber, @ModelAttribute(BASE_NAME) ItemDetails entity, BindingResult bindingResult) {
+    @RequestMapping(value = RENDER_RETURN_MAPPING, method = GET)
+    public ModelAndView renderReturnNoIdPage() {
+        return new ModelAndView(RETURN_VIEW_PAGE);
+    }
+
+    @RequestMapping(value = RENDER_RETURN_MAPPING, method = POST, params = "fetchObject")
+    public ModelAndView renderReturnNoIdAction(@RequestParam("searchKeyword") String keyword) {
+        ResponseEntity<ItemDetails> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, keyword, ItemDetails.class);
+        ItemDetails itemDetails = response.getBody();
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("itemDetailsReturn", itemDetails);
+        if (itemDetails == null) {
+            modelMap.put("nothingFound", true);
+        }
+        return new ModelAndView(RETURN_VIEW_PAGE, modelMap);
+    }
+
+    @RequestMapping(value = RENDER_RETURN_MAPPING, method = POST, params = "return-action")
+    public ModelAndView returnAction(String officeSerialNumber, @ModelAttribute("itemDetailsReturn") ItemDetails entity, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ModelAndView(RETURN_VIEW_PAGE, "itemDetailsResult", entity);
+        }
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity httpEntity = new HttpEntity<>(entity, headers);
+        ResponseEntity<Response> response = restTemplate.exchange(BASE_URL.concat("item-details/return/").concat(entity.getOfficeSerialNo()), HttpMethod.POST, httpEntity, Response.class);
         return null;
     }
+
 
     @Override
     @RequestMapping(value = RENDER_LIST_MAPPING, method = GET)

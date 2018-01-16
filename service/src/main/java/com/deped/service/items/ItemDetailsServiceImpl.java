@@ -116,4 +116,20 @@ public class ItemDetailsServiceImpl implements ItemDetailsService {
         ResponseEntity<List<BorrowItem>> responseEntity = new ResponseEntity<>(requests, OK);
         return responseEntity;
     }
+
+    @Override
+    public ResponseEntity<Response> returnById(String s, ItemDetails itemDetails) {
+
+        Boolean isReturned = null;
+        try {
+            isReturned = itemDetailsRepository.returnById(s);
+            ;
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
+        Response response = ServiceUtils.makeResponse(isReturned, Operation.UPDATE, ItemDetails.class);
+        ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
+        return responseEntity;
+    }
 }

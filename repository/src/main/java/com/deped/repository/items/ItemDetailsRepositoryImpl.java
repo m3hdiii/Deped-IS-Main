@@ -42,10 +42,10 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
         EquipmentAvailability availability = entity.getEquipmentAvailability();
         Condition condition = entity.getCondition();
         if (entity == null || officeSerialNo == null || availability == null || condition == null) {
-            return null;
+            return false;
         }
 
-        String query = "UPDATE item_details SET equipment_availability = :equipmentAvailability, equipment_condition = :equipmentCondition WHERE office_serial_no = :officeSerialNo";
+        String query = "UPDATE item_details SET equipment_availability = :equipmentAvailability, equipment_condition = :equipmentCondition WHERE office_serial_number = :officeSerialNo";
         Session hibernateSession;
         try {
             hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
@@ -513,6 +513,57 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
         }
 
         return list;
+    }
+
+    @Override
+    public Boolean returnById(String officeSerialNo, ItemDetails itemDetails) throws DatabaseRolesViolationException {
+
+        if (officeSerialNo == null)
+            return false;
+
+
+        String query = "UPDATE item_details SET equipment_availability = 'AVAILABLE', owns_by = :ownBy WHERE office_serial_number = :officeSerialNo";
+        String query2 = "UPDATE borrow_item SET date_return = :dateReturned WHERE item_office_serial_no = :itemOfficeSrNo AND username = :username";
+        String selectQueryStr = "SELECT * FROM item_details WHERE office_serial_number = :officeSerialNumber";
+        Session hibernateSession;
+        try {
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        Transaction tx = null;
+        try {
+
+            tx = hibernateSession.beginTransaction();
+
+
+            NativeQuery<ItemDetails> selectQuery = hibernateSession.createNativeQuery(selectQueryStr, ItemDetails.class);
+            selectQuery.setParameter("officeSerialNumber", officeSerialNo);
+            ItemDetails result = selectQuery.getSingleResult();
+
+            NativeQuery<ItemDetails> nativeQuery = hibernateSession.createNativeQuery(query, ItemDetails.class);
+            nativeQuery.setParameter("ownBy", null);
+            nativeQuery.setParameter("officeSerialNo", officeSerialNo);
+
+
+            NativeQuery<ItemDetails> nativeQuery2 = hibernateSession.createNativeQuery(query2, ItemDetails.class);
+            nativeQuery2.setParameter("dateReturned", new Date());
+            nativeQuery2.setParameter("itemOfficeSrNo", officeSerialNo);
+            nativeQuery2.setParameter("username", result.getOwnBy());
+
+            nativeQuery.executeUpdate();
+            nativeQuery2.executeUpdate();
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null)
+                tx.rollback();
+            return false;
+        }
+
+        return true;
     }
 
 

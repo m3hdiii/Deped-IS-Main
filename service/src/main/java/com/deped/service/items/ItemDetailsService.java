@@ -1,5 +1,6 @@
 package com.deped.service.items;
 
+import com.deped.model.Response;
 import com.deped.model.borrow.BorrowItem;
 import com.deped.model.items.ItemDetails;
 import com.deped.model.items.ItemType;
@@ -22,4 +23,5 @@ public interface ItemDetailsService extends BaseService<ItemDetails, String> {
 
     ResponseEntity<List<BorrowItem>> borrowItemSearch(BorrowHistorySearch entity);
 
+    ResponseEntity<Response> returnById(String s, ItemDetails itemDetails);
 }
