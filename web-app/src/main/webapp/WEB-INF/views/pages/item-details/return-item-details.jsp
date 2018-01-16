@@ -33,7 +33,7 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-3">
+            <div class="col-lg-12">
                 <form class="form-inline" method="post" action="/item-details/return">
                     <div class="form-group">
                         <label for="searchId" class="sr-only">Office Serial Number</label>
@@ -50,7 +50,7 @@
         </c:if>
 
 
-        <div class="row new-item-body">
+        <div class="row new-item-body margn-t-sm">
             <div class="col-md-12">
 
                 <form:form commandName="itemDetailsReturn" method="post" class="form-horizontal">
@@ -58,52 +58,48 @@
                     <div class="panel panel-default">
                         <h3 class="text-center">Update Equipment Information</h3>
                         <div class="panel-body">
-                            <div class="col-md-10 col-sm-offset-1">
 
-                                <table cellpadding="0" cellspacing="0" border="0"
-                                       class="table table-striped table-hover" id="basic-datatable">
-                                    <thead>
+                            <table cellpadding="0" cellspacing="0" border="0"
+                                   class="table table-striped table-hover" id="basic-datatable">
+                                <thead>
+                                <tr>
+                                    <th>Office Sr. No</th>
+                                    <th>Color</th>
+                                    <th>Condition</th>
+                                    <th>Purchase Price</th>
+                                    <th>Availability</th>
+                                    <th>Equipment Sr. No</th>
+                                    <th>Material</th>
+                                    <th>Weight in Gram</th>
+                                    <th>Life Span</th>
+                                    <th>Action</th>
+
+                                </tr>
+                                </thead>
+                                <c:if test="${not empty itemDetailsReturn}">
+                                    <tbody>
                                     <tr>
-                                        <th>Office Sr. No</th>
-                                        <th>Colour</th>
-                                        <th>Condition</th>
-                                        <th>Purchase Price</th>
-                                        <th>Availability</th>
-                                        <th>Equipment Sr. No</th>
-                                        <th>Material</th>
-                                        <th>Weight in Gram</th>
-                                        <th>Life Span</th>
-                                        <th>Action</th>
+                                        <th>${itemDetailsReturn.officeSerialNo}</th>
+                                        <th>${itemDetailsReturn.colour}</th>
+                                        <th>${itemDetailsReturn.condition}</th>
+                                        <th>${itemDetailsReturn.purchasePrice}</th>
+                                        <th>${itemDetailsReturn.equipmentAvailability}</th>
+                                        <th>${itemDetailsReturn.equipmentSerialNo}</th>
+                                        <th>${itemDetailsReturn.material}</th>
+                                        <th>${itemDetailsReturn.weightInGram}</th>
+                                        <th>${itemDetailsReturn.lifeSpan}
+                                            <form:hidden path="officeSerialNo"/>
+                                        </th>
 
+                                        <th>
+                                            <button name="return-action" value="RETURN" class="btn btn-default"
+                                                    type="submit">Return
+                                            </button>
+                                        </th>
                                     </tr>
-                                    </thead>
-                                    <c:if test="${not empty itemDetailsReturn}">
-                                        <tbody>
-                                        <tr>
-                                            <th>${itemDetailsReturn.officeSerialNo}</th>
-                                            <th>${itemDetailsReturn.colour}</th>
-                                            <th>${itemDetailsReturn.condition}</th>
-                                            <th>${itemDetailsReturn.purchasePrice}</th>
-                                            <th>${itemDetailsReturn.equipmentAvailability}</th>
-                                            <th>${itemDetailsReturn.equipmentSerialNo}</th>
-                                            <th>${itemDetailsReturn.material}</th>
-                                            <th>${itemDetailsReturn.weightInGram}</th>
-                                            <th>${itemDetailsReturn.lifeSpan}
-                                                <form:hidden path="officeSerialNo"/>
-                                            </th>
-
-                                            <th>
-                                                <button name="return-action" value="RETURN" class="btn btn-default"
-                                                        type="submit">Return
-                                                </button>
-                                            </th>
-                                        </tr>
-                                        </tbody>
-                                    </c:if>
-                                </table>
-
-
-                            </div>
+                                    </tbody>
+                                </c:if>
+                            </table>
                         </div><!-- New Brand Body closing -->
                     </div>
                 </form:form>

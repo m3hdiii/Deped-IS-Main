@@ -50,7 +50,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group col-md-12 no-padd">
+                                <div class="form-group col-md-12 no-padd padd-t-sm">
                                     <label for="ownById">Own By</label>
                                     <form:select id="ownById" path="username"
                                                  class="form-control form-control-flat input-sm chosen-select"
@@ -64,14 +64,14 @@
                                 <div class="col-md-12 no-padd margn-t-sm">
                                     <label class="col-md-12 no-padd">Borrow Date</label>
                                     <div class="form-group col-md-5 no-padd">
-                                        <form:input path="borrowDateFrom" type="date"
+                                        <form:input id="borrowDateFormId" path="borrowDateFrom" onclick="clickOnDateInput('borrowDateFormId')" placeholder="MM/DD/YYY"
                                                     class="form-control form-control-flat input-sm"/>
                                     </div>
                                     <div class="col-md-2 no-padd text-center margn-t-xs">
                                         To
                                     </div>
                                     <div class="form-group col-md-5 no-padd">
-                                        <form:input path="borrowDateTo" type="date"
+                                        <form:input id="borrowDateToId" path="borrowDateTo" onclick="clickOnDateInput('borrowDateToId')" placeholder="MM/DD/YYY"
                                                     class="form-control form-control-flat input-sm"/>
                                     </div>
                                 </div>
@@ -79,14 +79,14 @@
                                 <div class="col-md-12 no-padd margn-t-sm">
                                     <label class="col-md-12 no-padd">Return Date</label>
                                     <div class="form-group col-md-5 no-padd">
-                                        <form:input path="returnDateFrom" type="date"
+                                        <form:input id="returnDateFromId" path="returnDateFrom" onclick="clickOnDateInput('returnDateFromId')" placeholder="MM/DD/YYY"
                                                     class="form-control form-control-flat input-sm"/>
                                     </div>
                                     <div class="col-md-2 no-padd text-center margn-t-xs">
                                         To
                                     </div>
                                     <div class="form-group col-md-5 no-padd">
-                                        <form:input path="returnDateTo" type="date"
+                                        <form:input id="returnDateToId" path="returnDateTo" onclick="clickOnDateInput('returnDateToId')" placeholder="MM/DD/YYY"
                                                     class="form-control form-control-flat input-sm"/>
                                     </div>
                                 </div>
@@ -110,7 +110,7 @@
                     <div class="panel panel-default col-md-12 no-padd">
                         <div class="panel-heading clean text-center">Report Result</div>
                         <div class="panel-body no-padd padd-t-md">
-                            <table cellpadding="0" cellspacing="0" border="0" class="table table-hover" `>
+                            <table cellpadding="0" cellspacing="0" border="0" class="table table-hover">
                                 <thead>
                                 <tr>
                                     <th>Item</th>

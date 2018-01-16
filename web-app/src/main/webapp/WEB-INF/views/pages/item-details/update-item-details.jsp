@@ -33,15 +33,17 @@
         </div>
 
         <div class="row">
-            <div class="col-lg-3">
-                <form class="form-inline" method="post" action="/item-details/update">
-                    <div class="form-group">
-                        <label for="searchId" class="sr-only">Office Serial Number</label>
-                        <input type="text" name="searchKeyword" class="form-control" id="searchId"
-                               placeholder="Office Serial Number">
-                    </div>
-                    <button name="fetchObject" value="FETCH" class="btn btn-default" type="submit">Find</button>
-                </form>
+            <div class="col-md-12">
+                <div class="col-lg-12">
+                    <form class="form-inline" method="post" action="/item-details/update">
+                        <div class="form-group">
+                            <label for="searchId" class="sr-only">Office Serial Number</label>
+                            <input type="text" name="searchKeyword" class="form-control" id="searchId"
+                                   placeholder="Office Serial Number">
+                        </div>
+                        <button name="fetchObject" value="FETCH" class="btn btn-default" type="submit">Find</button>
+                    </form>
+                </div>
             </div>
         </div>
 
@@ -51,7 +53,7 @@
 
         <c:if test="${not empty itemDetailsResult}">
 
-            <div class="row new-item-body">
+            <div class="row new-item-body margn-t-sm">
                 <div class="col-md-12">
                     <div class="col-md-8 col-md-offset-2">
                         <c:set var="errors"

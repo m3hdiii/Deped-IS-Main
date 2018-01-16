@@ -96,7 +96,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group col-md-12 no-padd">
+                                <div class="form-group col-md-12 no-padd padd-t-sm">
                                     <label for="equipmentSerialNoId">Equipment Serial Number</label>
                                     <form:input path="equipmentSerialNo" type="text"
                                                 class="form-control form-control-flat input-sm" id="equipmentSerialNoId"
@@ -106,14 +106,14 @@
                                 <div class="col-md-12 no-padd margn-t-sm">
                                     <label class="col-md-12 no-padd">Creation Date</label>
                                     <div class="form-group col-md-5 no-padd">
-                                        <form:input path="creationDateFrom" type="date"
+                                        <form:input id="creationDateFromID" path="creationDateFrom" onclick="clickOnDateInput('creationDateFromID')" placeholder="MM/DD/YYY"
                                                     class="form-control form-control-flat input-sm"/>
                                     </div>
                                     <div class="col-md-2 no-padd text-center margn-t-xs">
                                         To
                                     </div>
                                     <div class="form-group col-md-5 no-padd">
-                                        <form:input path="creationDateTo" type="date"
+                                        <form:input id="creationDateToID" path="creationDateTo" onclick="clickOnDateInput('creationDateToID')" placeholder="MM/DD/YYY"
                                                     class="form-control form-control-flat input-sm"/>
                                     </div>
                                 </div>
@@ -129,8 +129,8 @@
                                     </div>
                                 </div>
 
-                                <div class="col-md-12 no-padd">
-                                    <label class="col-md-12 no-padd">Weight in Gram</label>
+                                <div class="col-md-12 no-padd padd-t-sm">
+                                    <label class="col-md-12 no-padd">Weight in Grams</label>
                                     <div class="form-group col-md-5 no-padd">
                                         <form:input path="weightInGramFrom" type="number" min="0"
                                                     class="form-control form-control-flat input-sm" placeholder="0"/>
@@ -172,7 +172,7 @@
                                     </div>
                                 </div>
 
-                                <div class="form-group col-md-12 no-padd">
+                                <div class="form-group col-md-12 no-padd padd-t-sm">
                                     <label for="ownById">Own By</label>
                                     <form:select id="ownById" path="ownBy" items="${userList}" itemLabel="username"
                                                  itemValue="username"
@@ -204,14 +204,14 @@
                                 <thead>
                                 <tr>
                                     <th>Item</th>
-                                    <th>Office Serial Number</th>
+                                    <th>Office Serial No.</th>
                                     <th>Color</th>
                                     <th>Condition</th>
                                     <th>Purchase Price</th>
                                     <th>Availability</th>
-                                    <th>equipmentSerialNo</th>
+                                    <th>Equipment Serial No.</th>
                                     <th>Material</th>
-                                    <th>Weight In Gram</th>
+                                    <th>Weight In Grams</th>
                                     <th>Life Span</th>
                                     <th>Owner</th>
                                     <th>return</th>
