@@ -20,6 +20,9 @@ import com.deped.model.order.OrderDetails;
 import com.deped.model.search.BorrowHistorySearch;
 import com.deped.model.search.BorrowSearch;
 import com.deped.utils.SystemUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.core.ParameterizedTypeReference;
@@ -38,6 +41,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.validation.*;
 import java.beans.PropertyEditorSupport;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -420,39 +425,92 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
         });
 
         XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Equipment Info Report");
 
-//        for (ItemDetails req : itemDetailsList) {
-//            XSSFSheet sheet = workbook.createSheet("Request #" + req.getRequestId());
-//            Object[][] dataTypes = {
-//                    {"Request ID", "Request Date", "Requested Personnel", "Personnel Message", "Admin Remark", "Item Type", "Request Status"},
-//                    {req.getRequestId(), req.getRequestDate(), String.format("%s %s", req.getUser().getLastName(), req.getUser().getFirstName()), req.getUserMessage(), req.getAdminNotice(), req.getItemType().getName(), req.getRequestStatus().getName()},
-//                    {"", "", "", "", "", "", ""},
-//                    {"", "", "", "", "", "", ""}
-//            };
-//
-//            int rowNumber = 0;
-//            rowNumber = createXml(dataTypes, sheet, rowNumber);
-//
-//            List<RequestDetails> requestDetailsList = fetchRequestDetails(req.getRequestId());
-//            for (RequestDetails rd : requestDetailsList) {
-//                String consideredBy = rd.getConsideredByUser() != null ? String.format("%s %s", rd.getConsideredByUser().getLastName(), rd.getConsideredByUser().getFirstName()) : "";
-//                String issuedBy = rd.getIssuedByUser() != null ? String.format("%s %s", rd.getIssuedByUser().getLastName(), rd.getIssuedByUser().getFirstName()) : "";
-//
-//                Object[][] dataTypes2 = {
-//                        {"Request ID", "Item", "Request Quantity", "Approved Quantity", "Consideration Date",
-//                                "Release Date", "Supply Office Remark", "Considered By", "Issued By", "Request Details Status",
-//                                "Disapproval Message", "Cancellation Reason"},
-//                        {rd.getRequest().getRequestId(), rd.getRequestQuantity(), rd.getApprovedQuantity(),
-//                                rd.getApprovalDisapprovalDate(), rd.getReleaseDate(), rd.getSupplyOfficeRemark(), consideredBy, issuedBy,
-//                                rd.getRequestDetailsStatus() != null ? rd.getRequestDetailsStatus().getName() : "", rd.getDisapprovalMessage(),
-//                                rd.getCancellationReason()
-//                        },
-//
-//                };
-//
-//                rowNumber = createXml(dataTypes2, sheet, rowNumber);
-//            }
-//        }
+        Object[][] data = new Object[(itemDetailsList.size() + 1)][11];
+
+        data[0] = new Object[]{
+                "Item Name", "Office Serial No", "Colour",
+                "Condition", "Purchase Price", "Availability", "Equipment Serial No",
+                "Material", "Weight in Gram", "Life Span", "Present Owner"
+        };
+
+        for (int i = 0; i < itemDetailsList.size(); i++) {
+            ItemDetails id = itemDetailsList.get(i);
+            String itemName = id.getItem() == null ? "" : id.getItem().getName();
+            String officeSerialNumber = id.getOfficeSerialNo() == null ? "" : id.getOfficeSerialNo();
+            String colour = id.getColour() == null ? "" : id.getColour().name();
+            String condition = id.getCondition() == null ? "" : id.getCondition().name();
+            String purchasePrice = id.getPurchasePrice() == null ? "" : String.valueOf(id.getPurchasePrice());
+            String availability = id.getEquipmentAvailability() == null ? "" : id.getEquipmentAvailability().name();
+            String equipmentSerialNo = id.getEquipmentSerialNo() == null ? "" : id.getEquipmentSerialNo();
+            String material = id.getMaterial() == null ? "" : id.getMaterial().name();
+            String weightInGram = id.getWeightInGram() == null ? "" : String.valueOf(id.getWeightInGram());
+            String lifeSpan = id.getLifeSpan() == null ? "" : String.valueOf(id.getLifeSpan());
+            String presentOwner = id.getOwnBy() == null ? "" : id.getOwnBy().getFirstName().concat(" ").concat(id.getOwnBy().getLastName());
+
+            data[(i + 1)][0] = itemName;
+            data[(i + 1)][1] = officeSerialNumber;
+            data[(i + 1)][2] = colour;
+            data[(i + 1)][3] = condition;
+            data[(i + 1)][4] = purchasePrice;
+            data[(i + 1)][5] = availability;
+            data[(i + 1)][6] = equipmentSerialNo;
+            data[(i + 1)][7] = material;
+            data[(i + 1)][8] = weightInGram;
+            data[(i + 1)][9] = lifeSpan;
+            data[(i + 1)][10] = presentOwner;
+
+        }
+
+        createXml(data, sheet, 0);
+
+        String mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+        response.setContentType(mimeType);
+//        response.setContentLength(workbook.get);
+
+        // set headers for the response
+        String headerKey = "Content-Disposition";
+        String headerValue = String.format("attachment; filename=\"%s\"",
+                "equipment-info-report.xlsx");
+        response.setHeader(headerKey, headerValue);
+
+        OutputStream outStream = null;
+        try {
+            outStream = response.getOutputStream();
+            workbook.write(outStream);
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (outStream != null) {
+                try {
+                    outStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+    }
+
+    private int createXml(Object[][] datatypes, XSSFSheet sheet, int rowNumber) {
+
+        for (Object[] datatype : datatypes) {
+            Row row = sheet.createRow(rowNumber++);
+            int colNum = 0;
+            for (Object field : datatype) {
+                Cell cell = row.createCell(colNum++);
+                if (field instanceof String) {
+                    cell.setCellValue((String) field);
+                } else if (field instanceof Integer) {
+                    cell.setCellValue((Integer) field);
+                }
+            }
+        }
+
+        return rowNumber;
     }
 
     @RequestMapping(value = REPORT_HISTORY_LIST, method = GET)
@@ -482,43 +540,84 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
                                            HttpServletResponse response) {
         String disapprovedListStr = "history-search-list";
         String url = BASE_URL + BASE_NAME + URL_SEPARATOR + disapprovedListStr;
-        /*List<BorrowItem> borrowItemList = SharedData.fetchAllByUrl(entity, url, new ParameterizedTypeReference<List<BorrowItem>>() {
-        });*/
+        List<BorrowItem> borrowItemList = SharedData.fetchAllByUrl(entity, url, new ParameterizedTypeReference<List<BorrowItem>>() {
+        });
 
         XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFSheet sheet = workbook.createSheet("Equipment Hisotyr Info Report");
 
-//        for (ItemDetails req : itemDetailsList) {
-//            XSSFSheet sheet = workbook.createSheet("Request #" + req.getRequestId());
-//            Object[][] dataTypes = {
-//                    {"Request ID", "Request Date", "Requested Personnel", "Personnel Message", "Admin Remark", "Item Type", "Request Status"},
-//                    {req.getRequestId(), req.getRequestDate(), String.format("%s %s", req.getUser().getLastName(), req.getUser().getFirstName()), req.getUserMessage(), req.getAdminNotice(), req.getItemType().getName(), req.getRequestStatus().getName()},
-//                    {"", "", "", "", "", "", ""},
-//                    {"", "", "", "", "", "", ""}
-//            };
-//
-//            int rowNumber = 0;
-//            rowNumber = createXml(dataTypes, sheet, rowNumber);
-//
-//            List<RequestDetails> requestDetailsList = fetchRequestDetails(req.getRequestId());
-//            for (RequestDetails rd : requestDetailsList) {
-//                String consideredBy = rd.getConsideredByUser() != null ? String.format("%s %s", rd.getConsideredByUser().getLastName(), rd.getConsideredByUser().getFirstName()) : "";
-//                String issuedBy = rd.getIssuedByUser() != null ? String.format("%s %s", rd.getIssuedByUser().getLastName(), rd.getIssuedByUser().getFirstName()) : "";
-//
-//                Object[][] dataTypes2 = {
-//                        {"Request ID", "Item", "Request Quantity", "Approved Quantity", "Consideration Date",
-//                                "Release Date", "Supply Office Remark", "Considered By", "Issued By", "Request Details Status",
-//                                "Disapproval Message", "Cancellation Reason"},
-//                        {rd.getRequest().getRequestId(), rd.getRequestQuantity(), rd.getApprovedQuantity(),
-//                                rd.getApprovalDisapprovalDate(), rd.getReleaseDate(), rd.getSupplyOfficeRemark(), consideredBy, issuedBy,
-//                                rd.getRequestDetailsStatus() != null ? rd.getRequestDetailsStatus().getName() : "", rd.getDisapprovalMessage(),
-//                                rd.getCancellationReason()
-//                        },
-//
-//                };
-//
-//                rowNumber = createXml(dataTypes2, sheet, rowNumber);
-//            }
-//        }
+        Object[][] data = new Object[(borrowItemList.size() + 1)][14];
+
+        data[0] = new Object[]{
+                "Borrow By", "Borrow Date", "Retuen Date", "Item Name", "Office Serial No", "Colour",
+                "Condition", "Purchase Price", "Availability", "Equipment Serial No",
+                "Material", "Weight in Gram", "Life Span", "Present Owner"
+        };
+
+        for (int i = 0; i < borrowItemList.size(); i++) {
+            BorrowItem bi = borrowItemList.get(i);
+            ItemDetails id = bi.getItemDetails();
+            String borrowedBy = bi.getUser() == null ? "" : bi.getUser().getFirstName().concat(" ").concat(bi.getUser().getLastName());
+            String borrowDate = id == null || bi.getBorrowDate() == null ? "" : bi.getBorrowDate().toString();
+            String returnDate = id == null || bi.getReturnDate() == null ? "" : bi.getReturnDate().toString();
+            String itemName = id == null || id.getItem() == null ? "" : id.getItem().getName();
+            String officeSerialNumber = id == null || id.getOfficeSerialNo() == null ? "" : id.getOfficeSerialNo();
+            String colour = id == null || id.getColour() == null ? "" : id.getColour().name();
+            String condition = id == null || id.getCondition() == null ? "" : id.getCondition().name();
+            String purchasePrice = id == null || id.getPurchasePrice() == null ? "" : String.valueOf(id.getPurchasePrice());
+            String availability = id == null || id.getEquipmentAvailability() == null ? "" : id.getEquipmentAvailability().name();
+            String equipmentSerialNo = id == null || id.getEquipmentSerialNo() == null ? "" : id.getEquipmentSerialNo();
+            String material = id == null || id.getMaterial() == null ? "" : id.getMaterial().name();
+            String weightInGram = id == null || id.getWeightInGram() == null ? "" : String.valueOf(id.getWeightInGram());
+            String lifeSpan = id == null || id.getLifeSpan() == null ? "" : String.valueOf(id.getLifeSpan());
+            String presentOwner = id == null || id.getOwnBy() == null ? "" : id.getOwnBy().getFirstName().concat(" ").concat(id.getOwnBy().getLastName());
+
+            data[(i + 1)][0] = borrowedBy;
+            data[(i + 1)][1] = borrowDate;
+            data[(i + 1)][2] = returnDate;
+            data[(i + 1)][3] = itemName;
+            data[(i + 1)][4] = officeSerialNumber;
+            data[(i + 1)][5] = colour;
+            data[(i + 1)][6] = condition;
+            data[(i + 1)][7] = purchasePrice;
+            data[(i + 1)][8] = availability;
+            data[(i + 1)][9] = equipmentSerialNo;
+            data[(i + 1)][10] = material;
+            data[(i + 1)][11] = weightInGram;
+            data[(i + 1)][12] = lifeSpan;
+            data[(i + 1)][13] = presentOwner;
+
+        }
+
+        createXml(data, sheet, 0);
+
+        String mimeType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+        response.setContentType(mimeType);
+//        response.setContentLength(workbook.get);
+
+        // set headers for the response
+        String headerKey = "Content-Disposition";
+        String headerValue = String.format("attachment; filename=\"%s\"",
+                "equipment-history-report.xlsx");
+        response.setHeader(headerKey, headerValue);
+
+        OutputStream outStream = null;
+        try {
+            outStream = response.getOutputStream();
+            workbook.write(outStream);
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (outStream != null) {
+                try {
+                    outStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 

@@ -210,7 +210,7 @@
                                 </div>
 
                                 <div class="form-group col-md-12 no-padd">
-                                    <label for="sectionId">Request Details Status</label>
+                                    <label for="sectionId">Sections</label>
                                     <form:select path="sections"
                                                  class="form-control form-control-flat input-sm chosen-select"
                                                  id="sectionId" multiple="true"
