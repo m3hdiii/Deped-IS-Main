@@ -124,16 +124,18 @@
                 </li>
             </sec:authorize>
 
-            <li class="has-submenu" data-toggle="tooltip" title="Order Items"><a href="#"><i
-                    class="fa fa-file-text-o"></i> <span class="nav-label">Borrow</span></a>
-                <ul class="list-unstyled">
-                    <li><a href="/item-details/update">Update Equipment Info</a></li>
-                    <li><a href="/item-details/return">Return Equipment</a></li>
-                    <li><a href="/item-details/insert-data">Insert Equipment Details</a></li>
-                    <li><a href="/item-details/report-list">Borrowed Report</a></li>
-                    <li><a href="/item-details/history-report-list">Borrowed History</a></li>
-                </ul>
-            </li>
+            <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
+                <li class="has-submenu" data-toggle="tooltip" title="Order Items"><a href="#"><i
+                        class="fa fa-file-text-o"></i> <span class="nav-label">Borrow</span></a>
+                    <ul class="list-unstyled">
+                        <li><a href="/item-details/update">Update Equipment Info</a></li>
+                        <li><a href="/item-details/return">Return Equipment</a></li>
+                        <li><a href="/item-details/insert-data">Insert Equipment Details</a></li>
+                        <li><a href="/item-details/report-list">Borrowed Report</a></li>
+                        <li><a href="/item-details/history-report-list">Borrowed History</a></li>
+                    </ul>
+                </li>
+            </sec:authorize>
 
             <sec:authorize access="hasRole('ROLE_ADMIN') OR hasRole('ROLE_CHIEF')">
                 <li class="has-submenu" data-toggle="tooltip" title="User Manager"><a href="#"><i
@@ -164,7 +166,8 @@
                 </li>
             </sec:authorize>
             <sec:authorize access="hasRole('ROLE_ADMIN')">
-                <li class="has-submenu" data-toggle="tooltip" title="Department"><a href="#"><i class="fa fa-caret-square-o-up"></i>
+                <li class="has-submenu" data-toggle="tooltip" title="Department"><a href="#"><i
+                        class="fa fa-caret-square-o-up"></i>
                     <span class="nav-label">Department</span></a>
                     <ul class="list-unstyled">
                         <li><a href="/department/list">Department List</a></li>
@@ -172,7 +175,8 @@
                     </ul>
                 </li>
 
-                <li class="has-submenu" data-toggle="tooltip" title="Section"><a href="#"><i class="fa fa-caret-square-o-down"></i>
+                <li class="has-submenu" data-toggle="tooltip" title="Section"><a href="#"><i
+                        class="fa fa-caret-square-o-down"></i>
                     <span
                             class="nav-label">Section</span></a>
                     <ul class="list-unstyled">

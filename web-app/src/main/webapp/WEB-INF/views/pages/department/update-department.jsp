@@ -22,17 +22,6 @@
 <section class="content">
 
     <c:import url="../../includes/top-nav.jsp"/>
-    <c:choose>
-    <c:when test="${not empty notUpdated}">
-    <p style="color: red;">${notUpdated}</p>
-    </c:when>
-
-    <c:when test="${not empty successfullyUpdated}">
-    <p style="color: green;">${successfullyUpdated}</p>
-    &nbsp;&nbsp;<a href="/department/create">Create Department</a>
-    </c:when>
-
-    </c:choose>
 
     <div class="warper container-fluid">
 

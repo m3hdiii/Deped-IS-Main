@@ -22,89 +22,82 @@
 <section class="content">
 
     <c:import url="../../includes/top-nav.jsp"/>
-    <c:choose>
-    <c:when test="${not empty notUpdated}">
-    <p style="color: red;">${notUpdated}</p>
-    </c:when>
-    <c:when test="${not empty successfullyUpdated}">
-    <p style="color: green;">${successfullyUpdated}</p>
-    &nbsp;&nbsp;<a href="/unit/create">Create Unit</a>
-    </c:when>
-    </c:choose>
-        <div class="warper container-fluid">
 
-            <div class="page-header">
-                <h3>Unit
-                    <small>
-                    for Goods, Semi-Expendable and Equipment</small>
-                </h3>
-            </div>
-            <div class="row new-item-body">
+    <div class="warper container-fluid">
 
-                <div class="col-md-12">
-                    <div class="col-md-8 col-md-offset-2">
-                        <div class="panel panel-default">
-                            <c:set var="errors"
-                                   value="${requestScope['org.springframework.validation.BindingResult.unit'].allErrors}"/>
+        <div class="page-header">
+            <h3>Unit
+                <small>
+                    for Goods, Semi-Expendable and Equipment
+                </small>
+            </h3>
+        </div>
+        <div class="row new-item-body">
 
-                            <form:form commandName="unit" method="post" class="form-horizontal" role="form">
-                                <c:if test="${not empty errors}">
-                                    <div>
-                                        <ul class="list-group">
-                                            <c:forEach items="${errors}" var="error" varStatus="loop">
-                                                <li class="list-group-item list-group-item-warning text-danger"><span
-                                                        class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
-                                                </li>
-                                            </c:forEach>
-                                        </ul>
+            <div class="col-md-12">
+                <div class="col-md-8 col-md-offset-2">
+                    <div class="panel panel-default">
+                        <c:set var="errors"
+                               value="${requestScope['org.springframework.validation.BindingResult.unit'].allErrors}"/>
+
+                        <form:form commandName="unit" method="post" class="form-horizontal" role="form">
+                            <c:if test="${not empty errors}">
+                                <div>
+                                    <ul class="list-group">
+                                        <c:forEach items="${errors}" var="error" varStatus="loop">
+                                            <li class="list-group-item list-group-item-warning text-danger"><span
+                                                    class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
+                                            </li>
+                                        </c:forEach>
+                                    </ul>
+                                </div>
+                            </c:if>
+                            <h3 class="text-center">Update Unit</h3>
+                            <div class="panel-body">
+                                <div class="col-md-10 col-sm-offset-1">
+                                    <c:choose>
+                                        <c:when test="${not empty notUpdated}">
+                                            <div class="alert alert-danger alert-dismissable fade in">
+                                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                <strong>Failed!</strong> ${notUpdated}.
+                                            </div>
+                                        </c:when>
+                                        <c:when test="${not empty successfullyUpdated}">
+                                            <div class="alert alert-success alert-dismissable fade in">
+                                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                                <strong>Success!</strong> ${successfullyUpdated}.
+                                            </div>
+                                        </c:when>
+                                    </c:choose>
+
+                                    <div class="form-group">
+                                        <label for="updateUnitName">Name</label>
+                                        <form:input path="name" class="form-control" placeholder="Unit Name"
+                                                    id="updateUnitName"/>
                                     </div>
-                                </c:if>
-                                <h3 class="text-center">Update Unit</h3>
-                                <div class="panel-body">
-                                    <div class="col-md-10 col-sm-offset-1">
-                                        <c:choose>
-                                            <c:when test="${not empty notCreated}">
-                                                <div class="alert alert-danger alert-dismissable fade in">
-                                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                                    <strong>Failed!</strong> ${notCreated}.
-                                                </div>
-                                            </c:when>
-                                            <c:when test="${not empty successfullyCreated}">
-                                                <div class="alert alert-success alert-dismissable fade in">
-                                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-                                                    <strong>Success!</strong> ${successfullyCreated}.
-                                                </div>
-                                            </c:when>
-                                        </c:choose>
-
-                                        <div class="form-group">
-                                            <label for="updateUnitName">Name</label>
-                                            <form:input path="name" class="form-control" placeholder="Unit Name"
-                                                        id="updateUnitName"/>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="updateUnitDesc">Description</label>
-                                            <form:textarea type="text" path="description" class="form-control"
-                                                           placeholder="Unit Description Here..." cols="3" rows="3"
-                                                           id="updateUnitDesc" maxlength="100"></form:textarea>
-                                        </div>
+                                    <div class="form-group">
+                                        <label for="updateUnitDesc">Description</label>
+                                        <form:textarea type="text" path="description" class="form-control"
+                                                       placeholder="Unit Description Here..." cols="3" rows="3"
+                                                       id="updateUnitDesc" maxlength="100"></form:textarea>
                                     </div>
                                 </div>
-                                <form:hidden path="previousIdName" value="${unit.name}"/>
-                                <div class="modal-footer">
-                                    <a href="/unit/list" class="btn btn-default pull-left"><i
-                                            class="fa fa-chevron-left"></i> Back</a>
-                                    <div class="button-footer pull-right">
-                                        <input type="reset" class="btn btn-default" value="Reset"/>
-                                        <button type="submit" class="btn btn-primary">Update</button>
-                                    </div>
+                            </div>
+                            <form:hidden path="previousIdName" value="${unit.name}"/>
+                            <div class="modal-footer">
+                                <a href="/unit/list" class="btn btn-default pull-left"><i
+                                        class="fa fa-chevron-left"></i> Back</a>
+                                <div class="button-footer pull-right">
+                                    <input type="reset" class="btn btn-default" value="Reset"/>
+                                    <button type="submit" class="btn btn-primary">Update</button>
                                 </div>
-                            </form:form>
-                        </div>
+                            </div>
+                        </form:form>
                     </div>
                 </div>
-            </div><!-- New Item Body closing -->
-        </div><!-- Warper Ends Here (working area) -->
-            <c:import url="../../includes/footer.jsp"/>
+            </div>
+        </div><!-- New Item Body closing -->
+    </div><!-- Warper Ends Here (working area) -->
+    <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>

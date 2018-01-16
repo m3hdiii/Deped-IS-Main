@@ -22,12 +22,7 @@
 <section class="content">
 
     <c:import url="../../includes/top-nav.jsp"/>
-    <c:choose>
-    <c:when test="${not empty successfullyCreated}">
-    <p style="color: green;">${successfullyCreated}</p>
-    &nbsp;&nbsp;<a href="/department/list">Department List</a>
-    </c:when>
-    </c:choose>
+
     <div class="warper container-fluid">
 
         <div class="page-header">

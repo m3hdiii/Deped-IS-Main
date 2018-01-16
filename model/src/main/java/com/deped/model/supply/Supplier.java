@@ -48,12 +48,12 @@ Supplier {
     @NotEmpty(message = "Supplier contact no 1 field can not be blank")
     @XSS
     @Length(min = 2, max = 45, message = "Supplier contact no 1 field must be between 2 to 45 character")
-    @Pattern(regexp = "[\\s]*[0-9]*[1-9]+", message = "Supplier contact no 1 field must only contain number")
+//    @Pattern(regexp = "[\\s]*[0-9]*[1-9]+", message = "Supplier contact no 1 field must only contain number")
     private String supplierContactNo1;
 
     @Column(name = "contact_no2")
     @Length(min = 2, max = 45, message = "Supplier contact no 2 field must be between 2 to 45 character")
-    @Pattern(regexp = "[\\s]*[0-9]*[1-9]+", message = "Supplier contact no 2 field must only contain number")
+//    @Pattern(regexp = "[\\s]*[0-9]*[1-9]+", message = "Supplier contact no 2 field must only contain number")
     @XSS
     private String supplierContactNo2;
 

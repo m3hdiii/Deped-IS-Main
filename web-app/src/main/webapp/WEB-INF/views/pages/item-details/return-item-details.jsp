@@ -49,35 +49,35 @@
             <p style="color: red;">Nothing Found</p>
         </c:if>
 
-        <c:if test="${not empty itemDetailsReturn}">
 
-            <div class="row new-item-body">
-                <div class="col-md-12">
+        <div class="row new-item-body">
+            <div class="col-md-12">
 
-                    <form:form commandName="itemDetailsReturn" method="post" class="form-horizontal">
+                <form:form commandName="itemDetailsReturn" method="post" class="form-horizontal">
 
-                        <div class="panel panel-default">
-                            <h3 class="text-center">Update Equipment Information</h3>
-                            <div class="panel-body">
-                                <div class="col-md-10 col-sm-offset-1">
+                    <div class="panel panel-default">
+                        <h3 class="text-center">Update Equipment Information</h3>
+                        <div class="panel-body">
+                            <div class="col-md-10 col-sm-offset-1">
 
-                                    <table cellpadding="0" cellspacing="0" border="0"
-                                           class="table table-striped table-hover" id="basic-datatable">
-                                        <thead>
-                                        <tr>
-                                            <th>Office Sr. No</th>
-                                            <th>Colour</th>
-                                            <th>Condition</th>
-                                            <th>Purchase Price</th>
-                                            <th>Availability</th>
-                                            <th>Equipment Sr. No</th>
-                                            <th>Material</th>
-                                            <th>Weight in Gram</th>
-                                            <th>Life Span</th>
-                                            <th>Action</th>
+                                <table cellpadding="0" cellspacing="0" border="0"
+                                       class="table table-striped table-hover" id="basic-datatable">
+                                    <thead>
+                                    <tr>
+                                        <th>Office Sr. No</th>
+                                        <th>Colour</th>
+                                        <th>Condition</th>
+                                        <th>Purchase Price</th>
+                                        <th>Availability</th>
+                                        <th>Equipment Sr. No</th>
+                                        <th>Material</th>
+                                        <th>Weight in Gram</th>
+                                        <th>Life Span</th>
+                                        <th>Action</th>
 
-                                        </tr>
-                                        </thead>
+                                    </tr>
+                                    </thead>
+                                    <c:if test="${not empty itemDetailsReturn}">
                                         <tbody>
                                         <tr>
                                             <th>${itemDetailsReturn.officeSerialNo}</th>
@@ -99,17 +99,18 @@
                                             </th>
                                         </tr>
                                         </tbody>
-                                    </table>
+                                    </c:if>
+                                </table>
 
 
-                                </div>
-                            </div><!-- New Brand Body closing -->
-                        </div>
-                    </form:form>
+                            </div>
+                        </div><!-- New Brand Body closing -->
+                    </div>
+                </form:form>
 
-                </div>
             </div>
-        </c:if>
+        </div>
+
     </div> <!-- Warper Ends Here (working area) -->
     <c:import url="../../includes/footer.jsp"/>
 </body>
