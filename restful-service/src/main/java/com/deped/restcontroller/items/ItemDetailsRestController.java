@@ -71,7 +71,7 @@ public class ItemDetailsRestController extends AbstractMainRestController<ItemDe
 
     @RequestMapping(value = RETURN_BY_ID_MAPPING, method = RequestMethod.POST)
     public ResponseEntity<Response> returnById(@PathVariable(ID_STRING_LITERAL) String s, @RequestBody ItemDetails itemDetails) {
-        ResponseEntity<Response> response = itemDetailsService.returnById(s);
+        ResponseEntity<Response> response = itemDetailsService.returnById(s, itemDetails);
         return response;
     }
 

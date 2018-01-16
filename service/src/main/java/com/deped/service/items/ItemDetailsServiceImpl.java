@@ -122,8 +122,8 @@ public class ItemDetailsServiceImpl implements ItemDetailsService {
 
         Boolean isReturned = null;
         try {
-            isReturned = itemDetailsRepository.returnById(s);
-            ;
+            isReturned = itemDetailsRepository.returnById(s, itemDetails);
+
         } catch (DatabaseRolesViolationException e) {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.CONFLICT);
