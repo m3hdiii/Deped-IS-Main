@@ -27,7 +27,7 @@
 
     <div class="warper container-fluid">
         <div class="page-header">
-            <h1>Equipment Information
+            <h1>Borrow History
                 <small> report</small>
             </h1>
         </div>
@@ -52,11 +52,13 @@
 
                                 <div class="form-group col-md-12 no-padd">
                                     <label for="ownById">Own By</label>
-                                    <form:select id="ownById" path="username" items="${userList}" itemLabel="username"
-                                                 itemValue="username"
+                                    <form:select id="ownById" path="username"
                                                  class="form-control form-control-flat input-sm chosen-select"
                                                  data-placeholder="Choose who request..."
-                                    />
+                                    >
+                                        <form:option value="" label="--Please Select"/>
+                                        <form:options items="${userList}" itemLabel="username" itemValue="username"/>
+                                    </form:select>
                                 </div>
 
                                 <div class="col-md-12 no-padd margn-t-sm">

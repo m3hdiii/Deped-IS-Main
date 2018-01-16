@@ -401,17 +401,6 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
         List<BorrowItem> list = null;
 
         if (where == null) {
-            sb.append(where);
-
-            sb
-                    .append(isOfficeSerialNoEmpty ? "" : "(item_office_serial_no LIKE :officeSerialNo) AND\n")
-                    .append(isUsernameEmpty ? "" : "(username LIKE :username) AND\n")
-                    .append(isBorrowDateFromEmpty ? "" : "(date_borrowed >= :borrowDateFrom) AND\n")
-                    .append(isBorrowDateToEmpty ? "" : "(date_borrowed < :borrowDateTo AND\n")
-                    .append(isReturnDateFromEmpty ? "" : "(date_return >= :returnDateFrom) AND\n")
-                    .append(isReturnDateToEmpty ? "" : "(date_return < :returnDateTo \n");
-
-
             try {
                 tx = hibernateSession.beginTransaction();
                 NativeQuery<BorrowItem> query = hibernateSession.createNativeQuery(sb.toString(), BorrowItem.class);
@@ -428,6 +417,16 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
             return list;
 
         } else {
+            sb.append(where);
+            sb
+                    .append(isOfficeSerialNoEmpty ? "" : "( item_office_serial_no LIKE :officeSerialNo ) AND\n")
+                    .append(isUsernameEmpty ? "" : "( username LIKE :username ) AND\n")
+                    .append(isBorrowDateFromEmpty ? "" : "( date_borrowed >= :borrowDateFrom ) AND\n")
+                    .append(isBorrowDateToEmpty ? "" : "( date_borrowed < :borrowDateTo ) AND\n")
+                    .append(isReturnDateFromEmpty ? "" : "( date_return >= :returnDateFrom ) AND\n")
+                    .append(isReturnDateToEmpty ? "" : "( date_return < :returnDateTo )");
+
+
 
             try {
                 tx = hibernateSession.beginTransaction();
@@ -461,6 +460,12 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
 
                 if (!isReturnDateToEmpty) {
                     parameterMap.put("returnDateTo", entity.getReturnDateTo());
+                }
+
+                for (Map.Entry<String, Object> entry : parameterMap.entrySet()) {
+                    String key = entry.getKey();
+                    Object value = entry.getValue();
+                    query.setParameter(key, value);
                 }
 
                 list = query.list();

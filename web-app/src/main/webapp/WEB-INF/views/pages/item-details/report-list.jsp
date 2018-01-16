@@ -27,7 +27,7 @@
 
     <div class="warper container-fluid">
         <div class="page-header">
-            <h1>Equipment Information
+            <h1>Borrow
                 <small> report</small>
             </h1>
         </div>
