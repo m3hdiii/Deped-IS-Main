@@ -32,7 +32,16 @@ public class ItemDetailsServiceImpl implements ItemDetailsService {
 
     @Override
     public ResponseEntity<Response> update(ItemDetails entity) {
-        return null;
+        Boolean isUpdated = null;
+        try {
+            isUpdated = itemDetailsRepository.update(entity);
+        } catch (DatabaseRolesViolationException e) {
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.CONFLICT);
+        }
+        Response response = ServiceUtils.makeResponse(isUpdated, Operation.UPDATE, ItemDetails.class);
+        ResponseEntity<Response> responseEntity = new ResponseEntity<>(response, OK);
+        return responseEntity;
     }
 
     @Override
@@ -49,7 +58,9 @@ public class ItemDetailsServiceImpl implements ItemDetailsService {
 
     @Override
     public ResponseEntity<ItemDetails> fetchById(String s) {
-        return null;
+        ItemDetails itemDetails = itemDetailsRepository.fetchById(s);
+        ResponseEntity<ItemDetails> responseEntity = new ResponseEntity<>(itemDetails, OK);
+        return responseEntity;
     }
 
     @Override

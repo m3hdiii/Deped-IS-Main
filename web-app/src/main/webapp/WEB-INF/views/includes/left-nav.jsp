@@ -127,6 +127,8 @@
             <li class="has-submenu" data-toggle="tooltip" title="Order Items"><a href="#"><i
                     class="fa fa-file-text-o"></i> <span class="nav-label">Borrow</span></a>
                 <ul class="list-unstyled">
+                    <li><a href="/item-details/update">Update Equipment Info</a></li>
+                    <li><a href="/item-details/return">Return Equipment</a></li>
                     <li><a href="/item-details/insert-data">Insert Equipment Details</a></li>
                     <li><a href="/item-details/report-list">Borrowed Report</a></li>
                     <li><a href="/item-details/history-report-list">Borrowed History</a></li>

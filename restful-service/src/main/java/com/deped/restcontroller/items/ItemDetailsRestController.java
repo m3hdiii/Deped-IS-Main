@@ -43,8 +43,10 @@ public class ItemDetailsRestController extends AbstractMainRestController<ItemDe
     }
 
     @Override
+    @RequestMapping(value = UPDATE_MAPPING, method = RequestMethod.POST)
     public ResponseEntity<Response> update(ItemDetails entity) {
-        return null;
+        ResponseEntity<Response> response = itemDetailsService.update(entity);
+        return response;
     }
 
     @Override
@@ -61,12 +63,13 @@ public class ItemDetailsRestController extends AbstractMainRestController<ItemDe
 
     @Override
     @RequestMapping(value = FETCH_BY_ID_MAPPING, method = RequestMethod.GET)
-    public ResponseEntity<ItemDetails> fetchById(String s) {
-        return null;
+    public ResponseEntity<ItemDetails> fetchById(@PathVariable(ID_STRING_LITERAL) String s) {
+        ResponseEntity<ItemDetails> response = itemDetailsService.fetchById(s);
+        return response;
     }
 
     @RequestMapping(value = FETCH_BY_ITEM_NAME_MAPPING, method = RequestMethod.POST)
-    public ResponseEntity<List<ItemDetails>> fetchByItemId(@PathVariable("id") String itemId) {
+    public ResponseEntity<List<ItemDetails>> fetchByItemId(@PathVariable(ID_STRING_LITERAL) String itemId) {
         ResponseEntity<List<ItemDetails>> response = itemDetailsService.fetchAllByItemName(itemId);
         return response;
     }

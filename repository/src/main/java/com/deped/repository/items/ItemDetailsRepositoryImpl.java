@@ -37,7 +37,40 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
 
     @Override
     public Boolean update(ItemDetails entity) throws DatabaseRolesViolationException {
-        return null;
+
+        String officeSerialNo = entity.getOfficeSerialNo();
+        EquipmentAvailability availability = entity.getEquipmentAvailability();
+        Condition condition = entity.getCondition();
+        if (entity == null || officeSerialNo == null || availability == null || condition == null) {
+            return null;
+        }
+
+        String query = "UPDATE item_details SET equipment_availability = :equipmentAvailability, equipment_condition = :equipmentCondition WHERE office_serial_no = :officeSerialNo";
+        Session hibernateSession;
+        try {
+            hibernateSession = hibernateFacade.getSessionFactory().getCurrentSession();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
+        Transaction tx = null;
+        try {
+            tx = hibernateSession.beginTransaction();
+            NativeQuery<ItemDetails> nativeQuery = hibernateSession.createNativeQuery(query, ItemDetails.class);
+            nativeQuery.setParameter("equipmentAvailability", entity.getEquipmentAvailability().toString());
+            nativeQuery.setParameter("equipmentCondition", entity.getCondition().toString());
+            nativeQuery.setParameter("officeSerialNo", entity.getOfficeSerialNo());
+            nativeQuery.executeUpdate();
+            tx.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (tx != null)
+                tx.rollback();
+            return false;
+        }
+
+        return true;
     }
 
     @Override
@@ -51,8 +84,8 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
     }
 
     @Override
-    public ItemDetails fetchById(String s) {
-        return null;
+    public ItemDetails fetchById(String id) {
+        return hibernateFacade.fetchEntityById(ItemDetails.class, id);
     }
 
     @Override
@@ -425,7 +458,6 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
                     .append(isBorrowDateToEmpty ? "" : "( date_borrowed < :borrowDateTo ) AND\n")
                     .append(isReturnDateFromEmpty ? "" : "( date_return >= :returnDateFrom ) AND\n")
                     .append(isReturnDateToEmpty ? "" : "( date_return < :returnDateTo )");
-
 
 
             try {

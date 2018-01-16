@@ -214,6 +214,9 @@
                                     <th>Weight In Gram</th>
                                     <th>Life Span</th>
                                     <th>Owner</th>
+                                    <th>return</th>
+
+
                                 </tr>
                                 </thead>
 
@@ -231,6 +234,7 @@
                                         <td>${itemDetails.weightInGram}</td>
                                         <td>${itemDetails.lifeSpan}</td>
                                         <td>${itemDetails.ownBy.username}</td>
+                                        <td><a href="/item-details/update/${itemDetails.officeSerialNo}">R</a></td>
                                     </tr>
                                 </c:forEach>
                                 </tbody>

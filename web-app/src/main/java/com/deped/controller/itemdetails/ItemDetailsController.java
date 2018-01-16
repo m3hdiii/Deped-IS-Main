@@ -50,6 +50,7 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
     private static final String CREATE_MAPPING = BASE_NAME + CREATE_PATTERN;
     private static final String UPDATE_MAPPING = BASE_NAME + UPDATE_PATTERN;
     private static final String RENDER_UPDATE_MAPPING = BASE_NAME + RENDER_UPDATE_PATTERN;
+    private static final String RENDER_UPDATE_MAPPING_NO_ID = BASE_NAME + "/update";
     private static final String RENDER_LIST_MAPPING = BASE_NAME + FETCH_PATTERN;
     private static final String RENDER_LIST_BY_RANGE_MAPPING = BASE_NAME + FETCH_PATTERN + RANGE_PATTERN;
     private static final String RENDER_BY_ID_MAPPING = BASE_NAME + FETCH_BY_ID_PATTERN;
@@ -158,15 +159,30 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
     }
 
     @Override
-    @RequestMapping(value = RENDER_UPDATE_MAPPING, method = GET)
     public ModelAndView renderUpdatePage(@PathVariable(ID_STRING_LITERAL) String officeSerialNumber) {
-        ResponseEntity<ItemDetails> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, String.valueOf(officeSerialNumber), ItemDetails.class);
+        return null;
+    }
+
+
+    @RequestMapping(value = RENDER_UPDATE_MAPPING_NO_ID, method = GET)
+    public ModelAndView renderUpdateNoIdPage() {
+        return new ModelAndView(UPDATE_VIEW_PAGE);
+    }
+
+    @RequestMapping(value = RENDER_UPDATE_MAPPING_NO_ID, method = POST, params = "fetchObject")
+    public ModelAndView renderUpdateNoIdAction(@RequestParam("searchKeyword") String keyword) {
+        ResponseEntity<ItemDetails> response = makeFetchByIdRequest(BASE_NAME, HttpMethod.POST, keyword, ItemDetails.class);
         ItemDetails itemDetails = response.getBody();
-        return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, itemDetails);
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("availabilities", EquipmentAvailability.values());
+        modelMap.put("conditions", Condition.values());
+        modelMap.put("itemDetailsResult", itemDetails);
+        return new ModelAndView(UPDATE_VIEW_PAGE, modelMap);
     }
 
     @Override
-    public ModelAndView updateAction(String officeSerialNumber, ItemDetails entity, BindingResult bindingResult) {
+    @RequestMapping(value = RENDER_UPDATE_MAPPING_NO_ID, method = POST, params = "update-info")
+    public ModelAndView updateAction(String officeSerialNumber, @ModelAttribute("itemDetailsResult") ItemDetails entity, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return new ModelAndView(UPDATE_VIEW_PAGE, BASE_NAME, entity);
         }
@@ -176,6 +192,11 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_NAME, HttpMethod.POST, ItemDetails.class);
         ModelAndView mv = postUpdateProcessing(ItemDetails.class, response, UPDATE_VIEW_PAGE, BASE_NAME, entity, new ItemDetails(), bindingResult, "item details");
         return mv;
+    }
+
+    @RequestMapping(value = RENDER_UPDATE_MAPPING_NO_ID, method = POST, params = "return-action")
+    public ModelAndView returnAction(String officeSerialNumber, @ModelAttribute(BASE_NAME) ItemDetails entity, BindingResult bindingResult) {
+        return null;
     }
 
     @Override
@@ -532,7 +553,6 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
                 setValue(getDate(text));
             }
         });
-
 
 
         binder.registerCustomEditor(List.class, "items", new PropertyEditorSupport() {
