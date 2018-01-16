@@ -505,6 +505,36 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
             }
         });
 
+        binder.registerCustomEditor(Date.class, "borrowDateFrom", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
+            }
+        });
+
+        binder.registerCustomEditor(Date.class, "borrowDateTo", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
+            }
+        });
+
+        binder.registerCustomEditor(Date.class, "returnDateFrom", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
+            }
+        });
+
+        binder.registerCustomEditor(Date.class, "returnDateTo", new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                setValue(getDate(text));
+            }
+        });
+
+
+
         binder.registerCustomEditor(List.class, "items", new PropertyEditorSupport() {
             @Override
             public void setAsText(String text) {

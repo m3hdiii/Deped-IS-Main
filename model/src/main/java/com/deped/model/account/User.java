@@ -6,7 +6,7 @@ import com.deped.model.location.office.Section;
 import com.deped.model.security.Role;
 import com.deped.protection.validators.fieldmatcher.FieldMatch;
 import com.deped.protection.validators.xss.XSS;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -223,8 +223,8 @@ public class User implements Serializable {
     private Set<Role> roles;
 
 
-    @OneToMany(mappedBy = "user")
-    @JsonBackReference
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<BorrowItem> borrowList = new HashSet<>();
 
     public User() {

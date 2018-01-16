@@ -8,7 +8,7 @@ import com.deped.model.items.features.Condition;
 import com.deped.model.items.features.EquipmentAvailability;
 import com.deped.model.items.features.Material;
 import com.deped.protection.validators.xss.XSS;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -89,8 +89,8 @@ ItemDetails implements Serializable {
     @Column(name = "pic_url")
     private String picUrl;
 
-    @OneToMany(mappedBy = "itemDetails")
-    @JsonBackReference
+    @OneToMany(mappedBy = "itemDetails", fetch = FetchType.EAGER)
+    @JsonIgnore
     private List<BorrowItem> borrowItems;
 
     public ItemDetails() {

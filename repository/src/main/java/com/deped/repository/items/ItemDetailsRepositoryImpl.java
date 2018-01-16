@@ -401,6 +401,16 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
         List<BorrowItem> list = null;
 
         if (where == null) {
+            sb.append(where);
+
+            sb
+                    .append(isOfficeSerialNoEmpty ? "" : "(item_office_serial_no LIKE :officeSerialNo) AND\n")
+                    .append(isUsernameEmpty ? "" : "(username LIKE :username) AND\n")
+                    .append(isBorrowDateFromEmpty ? "" : "(date_borrowed >= :borrowDateFrom) AND\n")
+                    .append(isBorrowDateToEmpty ? "" : "(date_borrowed < :borrowDateTo AND\n")
+                    .append(isReturnDateFromEmpty ? "" : "(date_return >= :returnDateFrom) AND\n")
+                    .append(isReturnDateToEmpty ? "" : "(date_return < :returnDateTo \n");
+
 
             try {
                 tx = hibernateSession.beginTransaction();
@@ -438,19 +448,19 @@ public class ItemDetailsRepositoryImpl implements ItemDetailsRepository {
                 }
 
                 if (!isBorrowDateFromEmpty) {
-                    parameterMap.put("borrowDateFromEmpty", entity.getBorrowDateFrom());
+                    parameterMap.put("borrowDateFrom", entity.getBorrowDateFrom());
                 }
 
                 if (!isBorrowDateToEmpty) {
-                    parameterMap.put("borrowDateToEmpty", entity.getBorrowDateTo());
+                    parameterMap.put("borrowDateTo", entity.getBorrowDateTo());
                 }
 
                 if (!isReturnDateFromEmpty) {
-                    parameterMap.put("returnDateFromEmpty", entity.getReturnDateFrom());
+                    parameterMap.put("returnDateFrom", entity.getReturnDateFrom());
                 }
 
                 if (!isReturnDateToEmpty) {
-                    parameterMap.put("returnDateToEmpty", entity.getReturnDateTo());
+                    parameterMap.put("returnDateTo", entity.getReturnDateTo());
                 }
 
                 list = query.list();

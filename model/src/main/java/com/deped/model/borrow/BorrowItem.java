@@ -2,7 +2,6 @@ package com.deped.model.borrow;
 
 import com.deped.model.account.User;
 import com.deped.model.items.ItemDetails;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,13 +17,11 @@ public class BorrowItem implements Serializable {
     private long id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "office_serial_no")
-    @JsonManagedReference
+    @JoinColumn(name = "item_office_serial_no")
     private ItemDetails itemDetails;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "username")
-    @JsonManagedReference
     private User user;
 
     @Temporal(TemporalType.TIMESTAMP)

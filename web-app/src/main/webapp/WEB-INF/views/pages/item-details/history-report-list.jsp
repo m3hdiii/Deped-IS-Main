@@ -55,7 +55,6 @@
                                     <form:select id="ownById" path="username" items="${userList}" itemLabel="username"
                                                  itemValue="username"
                                                  class="form-control form-control-flat input-sm chosen-select"
-                                                 multiple="true"
                                                  data-placeholder="Choose who request..."
                                     />
                                 </div>
@@ -113,9 +112,10 @@
                                 <thead>
                                 <tr>
                                     <th>Item</th>
-                                    <th>equipmentSerialNo</th>
+                                    <th>Office Serial No</th>
                                     <th>Colour</th>
                                     <th>Condition</th>
+                                    <th>Current Availability</th>
                                     <th>User</th>
                                     <th>Borrow Date</th>
                                     <th>Return Date</th>
@@ -126,9 +126,10 @@
                                 <c:forEach items="${borrowItemList}" var="borrowItem">
                                     <tr>
                                         <th>${borrowItem.itemDetails.item.name}</th>
-                                        <th>${borrowItem.itemDetails.equipmentSerialNo}</th>
-                                        <th>${borrowItem.itemDetails.colour}</th>
-                                        <th>${borrowItem.itemDetails.condition}</th>
+                                        <th>${borrowItem.itemDetails.officeSerialNo}</th>
+                                        <th>${borrowItem.itemDetails.colour.name}</th>
+                                        <th>${borrowItem.itemDetails.condition.name}</th>
+                                        <th>${borrowItem.itemDetails.equipmentAvailability.name}</th>
                                         <td>${borrowItem.user.username}</td>
                                         <td>${borrowItem.borrowDate}</td>
                                         <td>${borrowItem.returnDate}</td>
