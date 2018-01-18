@@ -232,7 +232,10 @@ public class ItemDetailsController extends AbstractMainController<ItemDetails, S
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity httpEntity = new HttpEntity<>(entity, headers);
         ResponseEntity<Response> response = restTemplate.exchange(BASE_URL.concat("item-details/return/").concat(entity.getOfficeSerialNo()), HttpMethod.POST, httpEntity, Response.class);
-        return new ModelAndView(RETURN_VIEW_PAGE, "success", "successfully");
+        Map<String, Object> map = new HashMap<>();
+        map.put("success", "successfully");
+        map.put("itemDetailsReturn", null);
+        return new ModelAndView(RETURN_VIEW_PAGE);
     }
 
 

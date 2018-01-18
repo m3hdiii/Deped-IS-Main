@@ -80,59 +80,59 @@
                         <div class="panel-body">
                             <nav class="col-md-12 padd-t-lg">
 
-                                <form role="search" class="col-md-6 col-lg-offset-3 hidden-xs">
+                                <%--<form role="search" class="col-md-6 col-lg-offset-3 hidden-xs">
                                     <div class="app-search">
                                         <input type="text" placeholder="Search for an item..."
                                                class="form-control form-control-circle">
                                         <hr class="clean">
                                     </div>
-                                </form>
+                                </form>--%>
 
                                 <ul class="list-inline col-md-12">
 
-                                    <li class="pull-right">
-                                        <a href="#" class="text-purple"><i class="fa fa-list fa-lg"></i> </a>
-                                    </li>
+                                    <%-- <li class="pull-right">
+                                         <a href="#" class="text-purple"><i class="fa fa-list fa-lg"></i> </a>
+                                     </li>
 
-                                    <li class="pull-right active">
-                                        <a href="#" class="text-purple"><i class="fa fa-th-large fa-lg"></i></a>
-                                    </li>
+                                     <li class="pull-right active">
+                                         <a href="#" class="text-purple"><i class="fa fa-th-large fa-lg"></i></a>
+                                     </li>
 
-                                    <li>
-                                        <div class="form-inline">
-                                            <label for="sortingItem">Sort by:</label>
-                                            <select id="sortingItem" class="form-control form-control-flat input-sm">
-                                                <option>Name: A-Z</option>
-                                                <option>Name: Z-A</option>
-                                                <option>Quantity: Ascending</option>
-                                                <option>Quantity: Decending</option>
-                                            </select>
-                                        </div>
-                                    </li>
+                                     <li>
+                                         <div class="form-inline">
+                                             <label for="sortingItem">Sort by:</label>
+                                             <select id="sortingItem" class="form-control form-control-flat input-sm">
+                                                 <option>Name: A-Z</option>
+                                                 <option>Name: Z-A</option>
+                                                 <option>Quantity: Ascending</option>
+                                                 <option>Quantity: Decending</option>
+                                             </select>
+                                         </div>
+                                     </li>
 
-                                    <li>
-                                        <div class="form-inline">
-                                            <label for="itemType">Type:</label>
-                                            <select id="itemType" class="form-control input-sm">
-                                                <option>All</option>
-                                                <option>Goods</option>
-                                                <option>Semi-Expandable</option>
-                                                <option>Equipment</option>
-                                            </select>
-                                        </div>
-                                    </li>
+                                     <li>
+                                         <div class="form-inline">
+                                             <label for="itemType">Type:</label>
+                                             <select id="itemType" class="form-control input-sm">
+                                                 <option>All</option>
+                                                 <option>Goods</option>
+                                                 <option>Semi-Expandable</option>
+                                                 <option>Equipment</option>
+                                             </select>
+                                         </div>
+                                     </li>
 
-                                    <li>
-                                        <div class="form-inline">
-                                            <label for="filterBrand">Brand:</label>
-                                            <select id="filterBrand" class="form-control input-sm">
-                                                <option>Brand Name</option>
-                                                <option>Brand Name</option>
-                                                <option>Choose Brand Name Here</option>
-                                                <option>Choose Brand Naem Here</option>
-                                            </select>
-                                        </div>
-                                    </li>
+                                     <li>
+                                         <div class="form-inline">
+                                             <label for="filterBrand">Brand:</label>
+                                             <select id="filterBrand" class="form-control input-sm">
+                                                 <option>Brand Name</option>
+                                                 <option>Brand Name</option>
+                                                 <option>Choose Brand Name Here</option>
+                                                 <option>Choose Brand Naem Here</option>
+                                             </select>
+                                         </div>
+                                     </li>--%>
 <!--START========================================================================================== -->
                                     <c:set var="basketMap" value="${sessionScope[basketName]}"/>
                                     <li class="dropdown">
