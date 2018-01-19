@@ -51,8 +51,7 @@
         <mapping class="com.deped.model.delivery.DeliveryInformation"/>
         <mapping class="com.deped.model.supply.Supplier"/>
         <mapping class="com.deped.model.security.PasswordResetToken"/>
+        <mapping class="com.deped.model.borrow.BorrowItem"/>
 
     </session-factory>
-
-
 </hibernate-configuration>
