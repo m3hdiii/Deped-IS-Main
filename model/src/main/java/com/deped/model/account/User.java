@@ -141,7 +141,6 @@ public class User implements Serializable {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "birth_date")
-//    @NotEmpty(message = "Birthday field can not be blank")
     private Date birthDate;
 
 
@@ -179,17 +178,18 @@ public class User implements Serializable {
     @Column(name = "referrer_phone_no1")
     @Length(min = 5, max = 45, message = "Referrer phone number field must be between 5 to 45 character")
     @NotNull(message = "First referrer phone number name can not be blank!")
-    @Pattern(regexp = "[\\s]*[0-9]*[1-9]+", message = "Referrer phone number 1 field must only contain number")
+    //@Pattern(regexp = "[\\s]*[0-9]*[1-9]+", message = "Referrer phone number 1 field must only contain number")
     private String referrerPhoneNo1;
 
     @Column(name = "referrer_phone_no2")
     @Length(min = 5, max = 45, message = "Referrer phone number field must be between 5 to 45 character")
-    @Pattern(regexp = "[\\s]*[0-9]*[1-9]+", message = "Referrer phone number 2 field must only contain number")
+    //@Pattern(regexp = "[\\s]*[0-9]*[1-9]+", message = "Referrer phone number 2 field must only contain number")
     private String referrerPhoneNo2;
 
 
     @ManyToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "section_name")
+    @NotNull(message = "Section can not be null")
     private Section section;
 
 //    @Column(name = "manager_id")

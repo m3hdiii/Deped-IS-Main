@@ -107,21 +107,21 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><span class="text-red">*</span> Full Name </label>
                                 <div class="col-sm-7">
-                                    <form:input path="firstName" id="firstName" type="text" class="form-control" placeholder="First Name"/>
+                                    <form:input path="firstName" id="firstName" type="text" class="form-control" placeholder="First Name (Required)"/>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"> </label>
                                 <div class="col-sm-7">
-                                    <form:input path="middleName" id="middleName" type="text" class="form-control" placeholder="Middle Name"/>
+                                    <form:input path="middleName" id="middleName" type="text" class="form-control" placeholder="Middle Name (Optional)"/>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"> </label>
                                 <div class="col-sm-7">
-                                    <form:input path="lastName" id="lastName" type="text" class="form-control" placeholder="Last Name"/>
+                                    <form:input path="lastName" id="lastName" type="text" class="form-control" placeholder="Last Name (Required)"/>
                                 </div>
                             </div>
 
@@ -136,7 +136,7 @@
                             <div class="form-group">
                                 <div class="col-sm-7 col-sm-offset-2">
                                     <select onchange="getCities(this)" class="form-control chosen-select">
-                                        <option>---Choose a Country</option>
+                                        <option>---Choose a Country (Optional)</option>
                                         <c:forEach items="${countries}" var="country">
                                             <option value="${country.countryCode}">${country.name}</option>
                                         </c:forEach>
@@ -147,7 +147,7 @@
                             <div class="form-group">
                                 <div class="col-sm-7 col-sm-offset-2">
                                     <form:select id="cities" path="cityOfBorn" class="form-control">
-                                        <form:option value="">---Choose a City</form:option>
+                                        <form:option value="">---Choose a City (Optional)</form:option>
                                     </form:select>
                                 </div>
                             </div>
@@ -178,16 +178,16 @@
 
                             <hr class="dotted">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Mobile Number</label>
+                                <label class="col-sm-2 control-label"><span class="text-red">*</span> Mobile Number</label>
                                 <div class="col-sm-3">
-                                    <form:input path="phoneNo1" id="phoneNo1" type="number" class="form-control"/>
+                                    <form:input path="phoneNo1" id="phoneNo1" type="text" class="form-control"/>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <label class="col-sm-2 control-label">Telephone Number</label>
                                 <div class="col-sm-3">
-                                    <form:input path="phoneNo2" id="phoneNo2" type="number" class="form-control"/>
+                                    <form:input path="phoneNo2" id="phoneNo2" type="text" class="form-control"/>
                                 </div>
                             </div>
 
@@ -200,7 +200,7 @@
 
                             <hr class="dotted">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label"><span class="text-red">*</span> Postion</label>
+                                <label class="col-sm-2 control-label">Position</label>
                                 <div class="col-sm-7">
                                     <form:select path="position" class="form-control">
                                         <form:option value="" label="---Choose a Position"/>
@@ -232,27 +232,27 @@
 
                             <hr class="dotted">
                             <div class="form-group">
-                                <label class="col-sm-2 control-label">Referrer Info</label>
+                                <label class="col-sm-2 control-label"><span class="text-red">*</span> Referrer Info</label>
                                 <div class="col-sm-7">
-                                    <form:input path="referrerName" type="text" id="referrerName" class="form-control" placeholder="Full Name"/>
+                                    <form:input path="referrerName" type="text" id="referrerName" class="form-control" placeholder="Full Name (Required)"/>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-sm-7 col-sm-offset-2">
-                                    <form:textarea path="referrerAddress" id="referrerAddress" class="form-control" placeholder="Full Address..."/>
+                                    <form:textarea path="referrerAddress" id="referrerAddress" class="form-control" placeholder="Full Address... (Optional)"/>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-sm-7 col-sm-offset-2">
-                                    <form:input path="referrerPhoneNo1" type="number" id="referrerPhoneNo1" class="form-control" placeholder="Phone Number"/>
+                                    <form:input path="referrerPhoneNo1" type="text" id="referrerPhoneNo1" class="form-control" placeholder="Phone Number (Required)"/>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-sm-7 col-sm-offset-2">
-                                    <form:input path="referrerPhoneNo2" type="number" id="referrerPhoneNo2" class="form-control" placeholder="Telephone Number"/>
+                                    <form:input path="referrerPhoneNo2" type="text" id="referrerPhoneNo2" class="form-control" placeholder="Telephone Number (Optional)"/>
                                 </div>
                             </div>
 
