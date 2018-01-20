@@ -4,6 +4,8 @@ import com.deped.model.borrow.BorrowItem;
 import com.deped.model.location.City;
 import com.deped.model.location.office.Section;
 import com.deped.model.security.Role;
+import com.deped.protection.validators.date.Age;
+import com.deped.protection.validators.date.DateRange;
 import com.deped.protection.validators.fieldmatcher.FieldMatch;
 import com.deped.protection.validators.xss.XSS;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -141,6 +143,7 @@ public class User implements Serializable {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "birth_date")
+    @Age(age = 140, message = "your input for birth date is out of the scope")
     private Date birthDate;
 
 
@@ -201,6 +204,7 @@ public class User implements Serializable {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "employment_date")
+    @DateRange(yearFrom = 1901, monthFrom = 1, dayFrom = 21, message = "your employment date must be between 1/21/1901 up to now")
     private Date employmentDate;
 
     @OneToOne(cascade = CascadeType.MERGE)

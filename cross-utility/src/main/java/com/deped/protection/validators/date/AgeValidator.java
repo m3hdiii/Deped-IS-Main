@@ -19,6 +19,6 @@ public class AgeValidator implements ConstraintValidator<Age, Date> {
     public boolean isValid(Date date, ConstraintValidatorContext constraintValidatorContext) {
         Date from = DateUtils.addYears(new Date(), -age);
         Date to = new Date();
-        return date.before(to) && date.after(from);
+        return (date.compareTo(to) <= 0) && date.compareTo(from) > 0;
     }
 }

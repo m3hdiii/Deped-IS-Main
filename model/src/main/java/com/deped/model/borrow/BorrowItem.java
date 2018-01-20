@@ -2,6 +2,8 @@ package com.deped.model.borrow;
 
 import com.deped.model.account.User;
 import com.deped.model.items.ItemDetails;
+import com.deped.protection.validators.date.Age;
+import com.deped.protection.validators.date.DateRange;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -26,10 +28,12 @@ public class BorrowItem implements Serializable {
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_borrowed", nullable = false)
+    @DateRange(yearFrom = 1901, monthFrom = 1, dayFrom = 21, message = "your borrow date must be between 1/21/1901 up to now")
     private Date borrowDate;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "date_return")
+    @DateRange(yearFrom = 1901, monthFrom = 1, dayFrom = 21, message = "your return date must be between 1/21/1901 up to now")
     private Date returnDate;
 
     public long getId() {

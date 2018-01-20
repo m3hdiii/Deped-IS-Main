@@ -8,7 +8,7 @@ import java.lang.annotation.*;
 
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = DoubleRangeValidator.class)
+@Constraint(validatedBy = AgeValidator.class)
 @Documented
 public @interface Age {
     String message() default "you have a wrong date";
