@@ -7,6 +7,9 @@
 <%@ taglib uri="http://www.springframework.org/tags/form" prefix="form" %>
 <%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <!DOCTYPE html>
+
+<sec:authentication var="pc" property="principal"/>
+<c:set var="user" value="${pc.user}"/>
 <html lang="en">
 
 <c:import url="../includes/head.jsp">

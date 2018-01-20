@@ -119,7 +119,7 @@
                                     <td>${requestDet.item.itemType}</td>
 
                                     <td>
-                                        <a href="#" class="text-danger" aria-label="Close"><i
+                                        <a href="/request-details/basket/request/${requestIdValue}/remove/${strKey}" class="text-danger" aria-label="Close"><i
                                                 class="fa fa-trash"> </i></a>
                                         <!-- <button type="button" class="close" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>

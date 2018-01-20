@@ -69,6 +69,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     private static final String SUMMARY_VIEW_PAGE = BASE_SHOW_PAGE + BASE_NAME + "-summary";
 
     private static final String BASKET_VIEW_PAGE = BASE_NAME + URL_SEPARATOR + "basket" + URL_SEPARATOR + ID_PATTERN;
+    private static final String BASKET_REMOVE_VIEW_PAGE = BASE_NAME + URL_SEPARATOR + "basket" + URL_SEPARATOR +"request" + URL_SEPARATOR +"{request-id}"+URL_SEPARATOR+"remove"+ URL_SEPARATOR +ID_PATTERN;
     private static final String APPROVAL_MAPPING = BASE_NAME + URL_SEPARATOR + "approval" + URL_SEPARATOR + ID_PATTERN;
     private static final String RELEASED_PAGE = BASE_NAME + URL_SEPARATOR + "issue" + URL_SEPARATOR + ID_PATTERN;
     private static final String REQUEST_DETAILS_PAGE = BASE_NAME + URL_SEPARATOR + "info" + URL_SEPARATOR + ID_PATTERN;
@@ -222,6 +223,21 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         modelMap.put("requestDetailsForm", new RequestDetailsForm());
         ModelAndView mav = new ModelAndView("pages/request-details/basket", modelMap);
         return mav;
+    }
+
+    @RequestMapping(value = BASKET_REMOVE_VIEW_PAGE, method = RequestMethod.GET)
+    public ModelAndView removeElementFromBasket(@PathVariable("request-id")Long requestId, @PathVariable(ID_STRING_LITERAL) String mapId, HttpSession httpSession){
+        Object object = httpSession.getAttribute(BASKET + requestId);
+        if (object == null) {
+            String redirectUrl = String.format("redirect:/request-details/create/%d", requestId);
+            return new ModelAndView(redirectUrl);
+        }
+        Map<String, RequestDetails> sessionBasket = (Map<String, RequestDetails>) object;
+        sessionBasket.remove(mapId);
+
+        ModelAndView mav = new ModelAndView("redirect:/request-details/basket/"+ requestId);
+        return mav;
+
     }
 
     @RequestMapping(value = BASKET_VIEW_PAGE, method = POST)
@@ -625,7 +641,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     @InitBinder
     public void initBinder(WebDataBinder binder, HttpServletRequest request) {
 
-        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
+//        binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
 
         binder.registerCustomEditor(Request.class, new PropertyEditorSupport() {
             @Override
