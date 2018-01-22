@@ -143,7 +143,8 @@ public class User implements Serializable {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "birth_date")
-    @Age(age = 140, message = "your input for birth date is out of the scope")
+    @Age(age = 140, required = true, message = "your input for birth date is out of the scope")
+    @NotNull(message = "this messa")
     private Date birthDate;
 
 
@@ -204,7 +205,7 @@ public class User implements Serializable {
 
     @Temporal(TemporalType.DATE)
     @Column(name = "employment_date")
-    @DateRange(yearFrom = 1901, monthFrom = 1, dayFrom = 21, message = "your employment date must be between 1/21/1901 up to now")
+    @DateRange(required = false, yearFrom = 1901, monthFrom = 1, dayFrom = 21, message = "your employment date must be between 1/21/1901 up to now")
     private Date employmentDate;
 
     @OneToOne(cascade = CascadeType.MERGE)

@@ -1,7 +1,5 @@
 package com.deped.protection.validators.date;
 
-import com.deped.protection.validators.decimal.DoubleRangeValidator;
-
 import javax.validation.Constraint;
 import javax.validation.Payload;
 import java.lang.annotation.*;
@@ -18,4 +16,6 @@ public @interface Age {
     Class<? extends Payload>[] payload() default {};
 
     int age();
+
+    boolean required();
 }
