@@ -82,9 +82,11 @@ function lockDownTheFirstTwo(loopNo) {//third input
 
     var no1Id = 'num1' + loopNo;
     var no2Id = 'num2' + loopNo;
+    var unitId = 'unit' + loopNo;                       /*To Get the Unit ID*/
     var totalId = 'total' + loopNo;
     var no1Element = document.getElementById(no1Id);
     var no2Element = document.getElementById(no2Id);
+    var unitElement = document.getElementById(unitId);  /*Unit Element*/
     var totalValue = document.getElementById(totalId).value;
 
 
@@ -93,9 +95,12 @@ function lockDownTheFirstTwo(loopNo) {//third input
         no1Element.value = "";
         no2Element.readOnly = true;
         no2Element.value = "";
+        unitElement.disabled = true;    /*I put this to disable the unit dropdown list*/
+
     } else {
         no1Element.readOnly = false;
         no2Element.readOnly = false;
+        unitElement.disabled = false;  /*I put this to enable the unit dropdown list*/
     }
 
 }
