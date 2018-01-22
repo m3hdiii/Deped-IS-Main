@@ -88,7 +88,6 @@
                                 <a href="/unit/list" class="btn btn-default pull-left"><i
                                         class="fa fa-chevron-left"></i> Back</a>
                                 <div class="button-footer pull-right">
-                                    <input type="reset" class="btn btn-default" value="Reset"/>
                                     <button type="submit" class="btn btn-primary">Update</button>
                                 </div>
                             </div>
