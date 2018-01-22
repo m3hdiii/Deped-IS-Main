@@ -238,7 +238,7 @@
                     <span class="nav-label">Roles</span></a>
                     <ul class="list-unstyled">
                         <li><a href="/role/list">Role List</a></li>
-                        <li><a href="/role/create">Create Role</a></li>
+                        <%--<li><a href="/role/create">Create Role</a></li>--%>
                     </ul>
                 </li>
                 <li><a href="/refresh-all"><i class="fa fa-refresh" data-toggle="tooltip"
