@@ -89,23 +89,6 @@
                                         <form:input path="name" type="text" class="form-control" id="updateItemName"/>
                                     </div>
                                     <div class="form-group">
-                                        <label for="updateItemBrand">Brand</label>
-                                        <select id="updateItemBrand" class="form-control">
-                                            <option disabled selected>Choose...</option>
-                                            <option>Generic</option>
-                                            <option>Sand Disk</option>
-                                            <option selected>Bosch</option>
-                                            <option>Standard</option>
-                                            <option>SONY</option>
-                                            <option>SAMSUNG</option>
-                                        </select>
-                                    </div>
-                                    <div class="text-right">
-                                        <button class="btn btn-purple btn-xs" data-toggle="modal"
-                                                data-target="#new-brand-modal"><i class="fa fa-plus-circle"> Add
-                                            Brand</i></button>
-                                    </div>
-                                    <div class="form-group">
                                         <label for="updateItemDesc">Description</label>
                                         <form:textarea path="description" type="text" class="form-control limit-char-45"
                                                        cols="3" rows="3" id="updateItemDesc"
