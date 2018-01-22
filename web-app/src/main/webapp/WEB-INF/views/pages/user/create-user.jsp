@@ -102,7 +102,8 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><span class="text-red">*</span> Full Name </label>
                                 <div class="col-sm-7">
-                                    <form:input path="firstName" id="firstName" type="text" class="form-control" placeholder="First Name (Required)"/>
+                                    <form:input path="firstName" id="firstName" type="text" class="form-control"
+                                                placeholder="First Name (*Required)"/>
                                 </div>
                             </div>
 
@@ -116,7 +117,8 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"> </label>
                                 <div class="col-sm-7">
-                                    <form:input path="lastName" id="lastName" type="text" class="form-control" placeholder="Last Name (Required)"/>
+                                    <form:input path="lastName" id="lastName" type="text" class="form-control"
+                                                placeholder="Last Name (*Required)"/>
                                 </div>
                             </div>
 
@@ -229,19 +231,22 @@
                             <div class="form-group">
                                 <label class="col-sm-2 control-label"><span class="text-red">*</span> Referrer Info</label>
                                 <div class="col-sm-7">
-                                    <form:input path="referrerName" type="text" id="referrerName" class="form-control" placeholder="Full Name (Required)"/>
+                                    <form:input path="referrerName" type="text" id="referrerName" class="form-control"
+                                                placeholder="Full Name (*Required)"/>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-sm-7 col-sm-offset-2">
-                                    <form:textarea path="referrerAddress" id="referrerAddress" class="form-control" placeholder="Full Address... (Optional)"/>
+                                    <form:textarea path="referrerAddress" id="referrerAddress" class="form-control"
+                                                   placeholder="Full Address... (*Required)"/>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-sm-7 col-sm-offset-2">
-                                    <form:input path="referrerPhoneNo1" type="text" id="referrerPhoneNo1" class="form-control" placeholder="Phone Number (Required)"/>
+                                    <form:input path="referrerPhoneNo1" type="text" id="referrerPhoneNo1"
+                                                class="form-control" placeholder="Phone Number (*Required)"/>
                                 </div>
                             </div>
 

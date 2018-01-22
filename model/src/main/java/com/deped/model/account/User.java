@@ -177,6 +177,7 @@ public class User implements Serializable {
     @Column(name = "referrer_address")
     @Length(min = 2, max = 400, message = "Referrer address field field must be between 2 to 400 character")
     @XSS
+    @NotEmpty(message = "Referrer address can not be blank")
     private String referrerAddress;
 
     @Column(name = "referrer_phone_no1")
