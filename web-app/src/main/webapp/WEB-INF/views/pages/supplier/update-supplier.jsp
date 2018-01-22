@@ -117,6 +117,7 @@
                                         class="fa fa-chevron-left"></i>
                                     Back</a>
                                 <div class="button-footer pull-right">
+                                    <input type="reset" value="Reset Fields" class="btn btn-default"/>
                                     <button type="submit" value="Submit" class="btn btn-primary">Update</button>
                                 </div>
                             </div>
