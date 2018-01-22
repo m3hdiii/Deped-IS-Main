@@ -1,7 +1,6 @@
 <section class="navbar navbar-fixed-bottom">
 <footer class="container-fluid footer">
     Copyright &copy; 2017 <a href="#" target="_blank">DepEd-IS Group</a>
-    &nbsp;|&nbsp; <a href="/pages">All Pages</a>
     <a href="#" class="pull-right scrollToTop"><i class="fa fa-chevron-up"></i></a>
 </footer>
 
