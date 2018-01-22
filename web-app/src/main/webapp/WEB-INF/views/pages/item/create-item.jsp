@@ -78,7 +78,7 @@
                                     </c:choose>
 
                                     <div class="form-group">
-                                        <label for="newItemName">Name</label>
+                                        <label for="newItemName">* Name</label>
                                         <form:input path="name" class="form-control typeahead" placeholder="Item Name" id="newItemName"/>
                                     </div>
                                     <%--<div class="form-group">--%>
@@ -97,7 +97,7 @@
                                         <%--<a href="/brand/create" class="btn btn-purple btn-xs"><i class="fa fa-plus-circle"> Add Brand</i></a>--%>
                                     <%--</div>--%>
                                     <div class="form-group">
-                                        <label for="newItemDesc">Description</label>
+                                        <label for="newItemDesc">* Description</label>
                                         <form:textarea type="text" path="description" class="form-control typeahead"
                                                    placeholder="Item Description Here..." cols="3" rows="3" id="newItemDesc" maxlength="100"></form:textarea>
                                     </div>
@@ -108,11 +108,11 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="newItemThresh">Threshold</label>
+                                        <label for="newItemThresh">* Threshold</label>
                                         <form:input path="threshold" min="0" type="number" class="form-control" id="newItemThresh"/>
                                     </div>
                                     <div class="form-group">
-                                        <label for="newItemType">Item Type</label>
+                                        <label for="newItemType">* IItem Type</label>
 
                                         <form:select path="itemType" id="newItemType" class="form-control chosen-select"
                                                      data-placeholder="Select a Type">

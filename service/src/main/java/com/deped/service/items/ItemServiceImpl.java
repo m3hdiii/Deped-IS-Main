@@ -38,8 +38,15 @@ public class ItemServiceImpl implements ItemService {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
-        ResponseEntity<Item> responseEntity = new ResponseEntity<>(savedEntity, OK);
-        return responseEntity;
+
+        if (savedEntity == null) {
+            ResponseEntity<Item> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return responseEntity;
+        } else {
+            ResponseEntity<Item> responseEntity = new ResponseEntity<>(savedEntity, OK);
+            return responseEntity;
+        }
+
     }
 
     @Override

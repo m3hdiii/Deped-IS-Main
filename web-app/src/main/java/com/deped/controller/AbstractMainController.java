@@ -276,6 +276,10 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         Map<String, Object> responseMap = new HashMap<>(getConfigMap());
         ModelAndView mv = new ModelAndView();
 
+        if (response.getStatusCode() == HttpStatus.NO_CONTENT) {
+            result.addError(new FieldError(entityClass.getSimpleName(), "error", FAILURE_MESSAGE));
+        }
+
         if (response == null || response.getStatusCode() == null) {
             result.addError(new FieldError(entityClass.getSimpleName(), "error", FAILURE_MESSAGE));
 

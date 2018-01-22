@@ -85,11 +85,11 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="updateItemName">Name</label>
+                                        <label for="updateItemName">* Name</label>
                                         <form:input path="name" type="text" class="form-control" id="updateItemName"/>
                                     </div>
                                     <div class="form-group">
-                                        <label for="updateItemBrand">Brand</label>
+                                        <label for="updateItemBrand">* Brand</label>
                                         <select id="updateItemBrand" class="form-control">
                                             <option disabled selected>Choose...</option>
                                             <option>Generic</option>
@@ -106,7 +106,7 @@
                                             Brand</i></button>
                                     </div>
                                     <div class="form-group">
-                                        <label for="updateItemDesc">Description</label>
+                                        <label for="updateItemDesc">* Description</label>
                                         <form:textarea path="description" type="text" class="form-control limit-char-45"
                                                        cols="3" rows="3" id="updateItemDesc"
                                                        maxlength="100"></form:textarea>
@@ -114,7 +114,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="updateItemThresh">Threshold</label>
+                                        <label for="updateItemThresh">* Threshold</label>
                                         <form:input path="threshold" type="number" class="form-control"
                                                     id="updateItemThresh"/>
                                     </div>
@@ -153,6 +153,7 @@
                                     <button type="submit" class="btn btn-primary">Save</button>
                                 </div>
                             </div>
+                            <form:hidden path="itemType"/>
                         </form:form>
                     </div>
                 </div>

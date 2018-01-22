@@ -7,6 +7,7 @@ import com.deped.protection.validators.xss.XSS;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import javax.persistence.*;
@@ -47,6 +48,7 @@ public class Item implements Serializable {
     @Column(name = "description")
     @Length(max = 400, message = "Description must not be more than 400 character")
     @XSS
+    @NotBlank(message = "Description can not be empty")
     private String description;
 
     @Column(name = "item_type")
@@ -60,7 +62,7 @@ public class Item implements Serializable {
     protected FunctionType functionType;
 
     @Column(name = "threshold")
-    @IntegerRange(min = 1, message = "Threshold field must not be negative")
+    @IntegerRange(min = 1, mandatory = true, message = "Threshold field must not be negative")
     private Integer threshold;
 
     @Column(name = "quantity")
