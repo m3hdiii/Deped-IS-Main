@@ -118,15 +118,17 @@
                                         <form:input path="threshold" type="number" class="form-control"
                                                     id="updateItemThresh"/>
                                     </div>
-                                    <div class="form-group">
-                                        <label for="newItemType">Item Type</label>
-                                        <form:select path="itemType" id="newItemType" class="form-control chosen-select"
-                                                     data-placeholder="Select a Type">
-                                            <form:option value="" label="--Please Select"/>
-                                            <form:options items="${itemType}" itemLabel="name"/>
-                                        </form:select>
 
-                                    </div>
+                                        <%-- This section removed due to the problems that might be created after changing the type from an equipment to the other two-->
+    <%--                                    <div class="form-group">
+                                            <label for="newItemType">Item Type</label>
+                                            <form:select path="itemType" id="newItemType" class="form-control chosen-select"
+                                                         data-placeholder="Select a Type">
+                                                <form:option value="" label="--Please Select"/>
+                                                <form:options items="${itemType}" itemLabel="name"/>
+                                            </form:select>
+
+                                        </div>--%>
                                     <div class="form-group">
                                         <label for="newItemCategory">Function Type</label>
                                         <form:select path="functionType" id="newItemCategory"
