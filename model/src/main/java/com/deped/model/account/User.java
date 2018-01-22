@@ -121,10 +121,10 @@ public class User implements Serializable {
     private String middleName;
 
     @Column(name = "email_address", unique = true)
-    @NotEmpty(message = "Email address field can not be blank")
+    @NotEmpty(message = "Email address is blank")
 //    @Pattern(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Please provide correct email address")
-    @Email(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Please provide correct email address")
-    @Length(min = 5, max = 100, message = "Email address field must be between 5 to 100 character")
+    @Email(regexp = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$", message = "Email is wrong")
+    @Length(min = 5, max = 100, message = "Email address must be between 5 to 100 character")
     private String emailAddress;
 
     @Column(name = "phone_no1")

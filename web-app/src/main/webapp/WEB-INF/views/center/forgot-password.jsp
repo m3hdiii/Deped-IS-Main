@@ -35,6 +35,7 @@
                         <c:forEach items="${errors}" var="error" varStatus="loop">
                             <li class="list-group-item list-group-item-warning text-danger"><span
                                     class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;${error.defaultMessage}
+                                &nbsp;&nbsp;<a href="/login" class="btn btn-default btn-sm" role="button">Login Page</a>
                             </li>
                         </c:forEach>
                     </ul>
