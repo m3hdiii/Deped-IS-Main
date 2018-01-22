@@ -142,6 +142,7 @@
                                     <form:hidden path="previousIdName" value="${item.name}"/>
                                     <form:hidden path="quantity"/>
                                     <form:hidden path="picName"/>
+                                    <form:hidden path="itemType"/>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -153,7 +154,7 @@
                                     <button type="submit" class="btn btn-primary">Save</button>
                                 </div>
                             </div>
-                            <form:hidden path="itemType"/>
+
                         </form:form>
                     </div>
                 </div>
