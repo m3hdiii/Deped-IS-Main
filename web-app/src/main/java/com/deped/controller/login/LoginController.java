@@ -103,6 +103,13 @@ public class LoginController {
         ResponseEntity<Response> response = restTemplate.exchange(restUrl, HttpMethod.POST, httpEntity, Response.class);
 
         Response responseObject = response.getBody();
+        if (response.getStatusCode() == HttpStatus.NO_CONTENT) {
+            result.addError(new FieldError(User.class.getSimpleName(), "undefined", "Your email is wrong!"));
+            modelMap.put("user", user);
+            mav.addAllObjects(modelMap);
+            return mav;
+        }
+
         if (responseObject == null || responseObject.getResponseStatus() == ResponseStatus.FAILED) {
             result.addError(new FieldError(User.class.getSimpleName(), "undefined", "Something has gone wrong. Contact your administrator!"));
             modelMap.put("user", user);

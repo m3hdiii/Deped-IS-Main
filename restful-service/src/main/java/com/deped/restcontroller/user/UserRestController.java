@@ -96,7 +96,8 @@ public class UserRestController extends AbstractMainRestController<User, String>
 
         User user = userService.fetchByEmail(emailAddress);
         if (user == null) {
-
+            ResponseEntity<Response> responseNull = new ResponseEntity<Response>(HttpStatus.NO_CONTENT);
+            return responseNull;
         }
 
         ResponseEntity<Response> response = userService.createPasswordResetTokenForUser(user, context);
@@ -114,7 +115,6 @@ public class UserRestController extends AbstractMainRestController<User, String>
         ResponseEntity<Response> response = userService.changePasswordByToken(values[0], values[1], values[2]);
         return response;
     }
-
 
 
     public String getBaseUrl() {
