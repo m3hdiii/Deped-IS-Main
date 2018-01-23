@@ -123,8 +123,16 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
 
 
         Map<String, Object> modelMap = new HashMap<>(getConfigMap());
+        addItemListToMap(request.getItemType(), modelMap);
+        modelMap.put("requestId", requestId);
+        modelMap.put("requestDetails", new RequestDetails());
+        ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
+        return mv;
 
-        switch (request.getItemType()) {
+    }
+
+    private void addItemListToMap(ItemType itemType, Map<String, Object> modelMap) {
+        switch (itemType) {
             case GOODS:
                 modelMap.put("itemList", SharedData.getGoods(false));
                 break;
@@ -135,12 +143,6 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
                 modelMap.put("itemList", SharedData.getEquipment(false));
                 break;
         }
-
-        modelMap.put("requestId", requestId);
-        modelMap.put("requestDetails", new RequestDetails());
-        ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
-        return mv;
-
     }
 
 
@@ -162,7 +164,7 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         if (bindingResult.hasErrors()) {
             Map<String, Object> modelMap = new HashMap<>(getConfigMap());
             modelMap.put("requestId", requestId);
-            modelMap.put("itemList", SharedData.getItems(false));
+            addItemListToMap(request.getItemType(), modelMap);
             modelMap.put("requestDetails", entity);
             ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
             return mv;
