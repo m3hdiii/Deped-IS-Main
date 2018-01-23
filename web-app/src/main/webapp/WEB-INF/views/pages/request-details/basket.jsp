@@ -91,7 +91,7 @@
                                     <td>
                                         <form:input type="number" path="map['${strKey}'].requestQuantity"
                                                     value="${requestDet.requestQuantity}"
-                                                    max="${requestDet.item.quantity}"/>
+                                                    max="${requestDet.item.quantity}" min="0"/>
                                     </td>
                                     <!--
                                     <td>

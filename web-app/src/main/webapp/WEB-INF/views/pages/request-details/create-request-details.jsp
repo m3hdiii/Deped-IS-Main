@@ -157,8 +157,8 @@
                                                             <i class="fa fa-list-alt fa-5x text-primary"></i>
                                                             <h4><strong>Your Don't Have Item Yet</strong></h4>
                                                             <p>Browse the Request that You Saved.</p>
-                                                            <button type="button" class="btn btn-primary">View other Request
-                                                            </button>
+                                                            <a href="/request/summary/" class="btn btn-primary">View other Request
+                                                            </a>
                                                         </div>
                                                         <hr class="clean">
                                                     </div> <!--end of panel body-->

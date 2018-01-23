@@ -260,7 +260,32 @@
                             </div>
 
                             <hr class="dotted">
-                            <div class="form-group text-center">
+             <%--=================================== My Picture starting =====================================--%>
+                            <div class="form-group margn-t-sm text-center">
+                                <h3>My Picture</h3>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <div class="image-upload-container">
+            <%-- ************************* Please change this to the recent picture of the user who is SELECTED ****************** --%>
+                                              <img src="${resourceURL}/images/avtar/add-user.png" class="img-circle" id="img-upload" alt="User-Image" width="142" height="142"/>
+                                        </div>
+                                            <%--<i class="fa fa-user fa-5x text-white" aria-hidden="true"></i>--%>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <div class="col-md-12 input-group">
+                                            <span class="input-group-btn">
+                                                <span class="btn btn-default btn-file">
+                                                    Change Image<input type="file" name="userPic" id="profilePicture" class="form-control files"/>
+                                                </span>
+                                            </span>
+                                                <%--<input type="text" class="form-control" readonly>--%>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <%--<div class="form-group text-center">
                                 <label>My Picture</label>
                                 <div class="form-group">
                                     <div class="bg-gray col-md-2 col-sm-offset-5">
@@ -273,7 +298,7 @@
                                                class="form-control files"/>
                                     </div>
                                 </div>
-                            </div>
+                            </div>--%>
                         </div>
                         <form:hidden path="previousIdUsername" value="${user.username}"/>
                         <div class="modal-footer">
@@ -295,6 +320,7 @@
 </section>
 
 <c:import url="../../includes/footer.jsp"/>
+<script type="text/javascript" src="${resourceURL}/js/main/main.js"></script>
 
 <c:url var="findCitiesURL" value="/city/list"/>
 <c:url var="findSectionURL" value="/section/list"/>
