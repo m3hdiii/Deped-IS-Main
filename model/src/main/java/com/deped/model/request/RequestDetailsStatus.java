@@ -8,7 +8,7 @@ public enum RequestDetailsStatus {
     APPROVED("Approved", "Approve"),
     DISAPPROVED("Disapproved", "Disapprove"),
     RELEASED("Released", "Released"),
-    CANCELED("Canceled", "Cancel");
+    CANCELED("Cancelled", "Cancel");
 
     private final String name;
     private final String action;

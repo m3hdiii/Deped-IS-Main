@@ -8,7 +8,7 @@ public enum OrderDetailsState {
     ARRIVED("Arrived", "Arrived"), //when order for that specific item arrived
     PARTIALLY_ARRIVED("Partially Arrived", "Partially Arrived"), //When we have partial delivery
     NOT_ARRIVED("Not Arrived", "Not Arrived"), //when order for that specific item didn't arrived (this is a problem from supplier part)
-    CANCELED("Canceled", "Cancel");
+    CANCELED("Cancelled", "Cancel");
 
     private final String name;
     private final String action;
