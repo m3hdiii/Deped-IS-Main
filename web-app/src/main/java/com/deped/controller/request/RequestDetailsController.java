@@ -362,8 +362,8 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         String headTagTitle = "Approval Result";
         String headTagDescription = "Approval Result Summary";
         String heading = "Operation Result";
-        String successMessage = response.getResponseStatus() == com.deped.model.ResponseStatus.SUCCESSFUL ? "You Successfully Processed The Approval Process" : null;
-        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "Something Went Wrong In Approval Process" : null;
+        String successMessage = response.getResponseStatus() == com.deped.model.ResponseStatus.SUCCESSFUL ? "The approval process has been successful" : null;
+        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "The approval process has not been successful" : null;
 
         ResultBean resultBean = new ResultBean(headTagTitle, headTagDescription, heading, successMessage, failureMessage);
         ModelAndView mav = createResultPage(resultBean);
@@ -422,8 +422,8 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
         String headTagTitle = "Release Page";
         String headTagDescription = "Release Result Summary";
         String heading = "Release Operation";
-        String successMessage = response.getResponseStatus() == com.deped.model.ResponseStatus.SUCCESSFUL ? "You Successfully Processed The Releasing Process" : null;
-        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "Something Went Wrong In Releasing Process" : null;
+        String successMessage = response.getResponseStatus() == com.deped.model.ResponseStatus.SUCCESSFUL ? "The release process has been successful" : null;
+        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "The release process has not been successful" : null;
 
         ResultBean resultBean = new ResultBean(headTagTitle, headTagDescription, heading, successMessage, failureMessage);
         ModelAndView mav = createResultPage(resultBean);
