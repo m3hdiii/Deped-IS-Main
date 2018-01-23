@@ -215,7 +215,8 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
     public List<RequestDetails> fetchAllById(Long requestId) {
         Map<String, Object> parameterMap = new HashMap<>();
         parameterMap.put("requestId", requestId);
-        String sqlQuery = "SELECT * FROM request_details WHERE request_request_id = :requestId AND request_details_status != 'DISAPPROVED'";
+//        String sqlQuery = "SELECT * FROM request_details WHERE request_request_id = :requestId AND request_details_status != 'DISAPPROVED'";
+        String sqlQuery = "SELECT * FROM request_details WHERE request_request_id = :requestId";
         List<RequestDetails> list = hibernateFacade.fetchAllEntityBySqlQuery(sqlQuery, null, RequestDetails.class, parameterMap);
         return list;
     }

@@ -89,10 +89,10 @@
 
                                 <c:if test="${not empty nextRequestDetailsStatuses}">
                                     <td>${loop.index + 1}
-                                        <%--<label class="cr-styled">
-                                            <input type="checkbox" ng-model="todo.done">
-                                            <i class="fa"></i>
-                                        </label>--%>
+                                            <%--<label class="cr-styled">
+                                                <input type="checkbox" ng-model="todo.done">
+                                                <i class="fa"></i>
+                                            </label>--%>
                                     </td>
                                 </c:if>
                                 <td>
@@ -124,13 +124,25 @@
                                     <td>
                                         <input type="textarea" id="${strKey}" disabled/>
                                     </td>
-                                    <td>
-                                        <form:select id="requestDetailsStatus${loop.index}" multiple="single"
-                                                     path="map['${strKey}'].requestDetailsStatus"
-                                                     onchange="processReason('requestDetailsStatus${loop.index}', '${strKey}')">
-                                            <form:options items="${nextRequestDetailsStatuses}"/>
-                                        </form:select>
-                                    </td>
+
+                                    <c:choose>
+                                        <c:when test="${requestDet.requestDetailsStatus == 'DISAPPROVED' || requestDet.requestDetailsStatus == 'CANCELED'}">
+                                            <td>
+                                                    ${requestDet.requestDetailsStatus.name}
+                                                <form:hidden path="map['${strKey}'].requestDetailsStatus"/>
+                                            </td>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <td>
+                                                <form:select id="requestDetailsStatus${loop.index}" multiple="single"
+                                                             path="map['${strKey}'].requestDetailsStatus"
+                                                             onchange="processReason('requestDetailsStatus${loop.index}', '${strKey}')">
+                                                    <form:options items="${nextRequestDetailsStatuses}"/>
+                                                </form:select>
+                                            </td>
+                                        </c:otherwise>
+                                    </c:choose>
+
 
                                     <form:hidden path="map['${strKey}'].requestDetailsID.requestId"
                                                  value="${requestDet.request.requestId}"/>
