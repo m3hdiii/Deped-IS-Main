@@ -3,6 +3,7 @@ package com.deped.controller;
 import com.deped.ResultBean;
 import com.deped.model.Response;
 import com.deped.model.account.User;
+import com.deped.model.brand.Brand;
 import com.deped.model.category.Category;
 import com.deped.model.config.client.ClientEnumKey;
 import com.deped.model.items.Item;
@@ -97,6 +98,25 @@ public abstract class AbstractMainController<T, ID> implements MainController<T,
         List<Item> items = SharedData.getItems(false);
         Item discoveredItem = SystemUtils.findElementInList(items, item);
         return discoveredItem;
+    }
+
+    public Brand fetchBrandByStringId(String text) {
+        try {
+            Brand discoveredBrand = fetchBrandByName(text);
+            return discoveredBrand;
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Brand fetchBrandByName(String brandName) {
+        Brand brand = new Brand();
+        brand.setName(brandName);
+
+        List<Brand> brands = SharedData.getBrands(false);
+        Brand discoveredBrand = SystemUtils.findElementInList(brands, brand);
+        return discoveredBrand;
     }
 
     protected Category fetchCategoryByStringId(String text) {

@@ -58,7 +58,7 @@ public class Brand implements Serializable {
     private String logoPic;
 
 //    @ManyToMany(cascade = CascadeType.ALL, mappedBy = "brands")
-//    private Set<Item> items;
+//    private Set<Brand> Brands;
 
     public Brand() {
     }
@@ -119,11 +119,29 @@ public class Brand implements Serializable {
         this.previousIdName = previousIdName;
     }
 
-    //    public Set<Item> getItems() {
-//        return items;
+    //    public Set<Brand> getBrands() {
+//        return Brands;
 //    }
 //
-//    public void setItems(Set<Item> items) {
-//        this.items = items;
+//    public void setBrands(Set<Brand> Brands) {
+//        this.Brands = Brands;
 //    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Brand)) return false;
+
+        Brand brand = (Brand) o;
+
+        return name != null ? name.equals(brand.name) : brand.name == null;
+    }
+
+    @Override
+    public int hashCode() {
+        if (name == null || name.isEmpty())
+            return super.hashCode();
+        else
+            return name.hashCode();
+    }
 }

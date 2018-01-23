@@ -81,6 +81,20 @@
                                         <label for="newItemName">* Name</label>
                                         <form:input path="name" class="form-control typeahead" placeholder="Item Name" id="newItemName"/>
                                     </div>
+
+                                    <div class="form-group">
+                                        <label for="itemBrandId">* Brand</label>
+                                        <form:select path="brand" id="itemBrandId" class="form-control chosen-select"
+                                                     data-placeholder="Select a Brand">
+                                            <form:option value="" label="--Please Select"/>
+                                            <form:options items="${brands}" itemLabel="name" itemValue="name"/>
+                                        </form:select>
+                                    </div>
+                                    <div class="text-right">
+                                        <a href="/brand/create" target="_blank" class="btn btn-purple btn-xs"
+                                           role="button"><i class="fa fa-plus-circle">&nbsp;Add
+                                            Brand</i></a>
+                                    </div>
                                     <%--<div class="form-group">--%>
                                         <%--<label for="newItemBrand">Brand</label>--%>
                                         <%--<select id="newItemBrand" class="form-control">--%>

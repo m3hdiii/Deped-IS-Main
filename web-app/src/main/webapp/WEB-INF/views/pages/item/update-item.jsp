@@ -79,7 +79,7 @@
                                             </div>
                                         </c:if>
                                         <input class="btn btn-purple btn-sm" type="file"/>
-                                        <%--<button class="btn btn-purple btn-sm" type="file"><i class="fa fa-pencil"></i>--%>
+                                            <%--<button class="btn btn-purple btn-sm" type="file"><i class="fa fa-pencil"></i>--%>
                                         </input>
 
                                     </div>
@@ -89,21 +89,18 @@
                                         <form:input path="name" type="text" class="form-control" id="updateItemName"/>
                                     </div>
                                     <div class="form-group">
-                                        <label for="updateItemBrand">* Brand</label>
-                                        <select id="updateItemBrand" class="form-control">
-                                            <option disabled selected>Choose...</option>
-                                            <option>Generic</option>
-                                            <option>Sand Disk</option>
-                                            <option selected>Bosch</option>
-                                            <option>Standard</option>
-                                            <option>SONY</option>
-                                            <option>SAMSUNG</option>
-                                        </select>
+                                        <label for="itemBrandId">* Brand</label>
+                                        <form:select path="brand" id="itemBrandId"
+                                                     class="form-control chosen-select"
+                                                     data-placeholder="Select a Brand">
+                                            <form:option value="" label="--Please Select"/>
+                                            <form:options items="${brands}" itemLabel="name" itemValue="name"/>
+                                        </form:select>
                                     </div>
                                     <div class="text-right">
-                                        <button class="btn btn-purple btn-xs" data-toggle="modal"
-                                                data-target="#new-brand-modal"><i class="fa fa-plus-circle"> Add
-                                            Brand</i></button>
+                                        <a href="/brand/create" target="_blank" class="btn btn-purple btn-xs"
+                                           role="button"><i class="fa fa-plus-circle">&nbsp;Add
+                                            Brand</i></a>
                                     </div>
                                     <div class="form-group">
                                         <label for="updateItemDesc">* Description</label>
@@ -163,6 +160,6 @@
     </div> <!-- Warper Ends Here (working area) -->
 
 
-            <c:import url="../../includes/footer.jsp"/>
+        <c:import url="../../includes/footer.jsp"/>
 </body>
 </html>

@@ -1,8 +1,10 @@
 package com.deped.controller.item;
 
 import com.deped.controller.AbstractMainController;
+import com.deped.controller.SharedData;
 import com.deped.exception.ResponseErrorMessages;
 import com.deped.model.Response;
+import com.deped.model.brand.Brand;
 import com.deped.model.items.Item;
 import com.deped.model.items.ItemType;
 import com.deped.model.items.features.FunctionType;
@@ -56,7 +58,9 @@ public class ItemController extends AbstractMainController<Item, String> {
     @Override
     @RequestMapping(value = CREATE_MAPPING, method = GET)
     public ModelAndView renderCreatePage(@ModelAttribute(BASE_NAME) Item entity) {
-        ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE);
+        Map<String, Object> modelMap = new HashMap<>();
+        modelMap.put("brands", SharedData.getBrands(false));
+        ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, modelMap);
         return mv;
     }
 
@@ -64,8 +68,13 @@ public class ItemController extends AbstractMainController<Item, String> {
     public ModelAndView createActionWithPic(@PathVariable MultipartFile itemPic, @Valid @ModelAttribute(BASE_NAME) Item entity, BindingResult bindingResult) {
         String encodeBase64 = ControllerImageUtils.imageUploadProcessing(itemPic, bindingResult);
 
+        Map<String, Object> modelMap = new HashMap<>(getConfigMap());
+        modelMap.put("brands", SharedData.getBrands(false));
+
+
         if (bindingResult.hasErrors()) {
-            ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, BASE_NAME, entity);
+            modelMap.put(BASE_NAME, entity);
+            ModelAndView mv = new ModelAndView(CREATE_VIEW_PAGE, BASE_NAME, modelMap);
             return mv;
         }
 
@@ -75,6 +84,7 @@ public class ItemController extends AbstractMainController<Item, String> {
         ResponseEntity<Item> response = makeCreateRestRequest(entity, BASE_ENTITY_URL_NAME, HttpMethod.POST, Item.class);
 
         ModelAndView mv = postCreateProcessing(Item.class, response, CREATE_VIEW_PAGE, BASE_NAME, entity, new Item(), bindingResult, "item");
+        mv.addAllObjects(modelMap);
         return mv;
     }
 
@@ -82,7 +92,10 @@ public class ItemController extends AbstractMainController<Item, String> {
     @RequestMapping(value = RENDER_BY_ID_MAPPING, method = GET)
     public ModelAndView renderInfo(@PathVariable(ID_STRING_LITERAL) String name) {
         ResponseEntity<Item> response = makeFetchByIdRequest(BASE_ENTITY_URL_NAME, HttpMethod.POST, String.valueOf(name), Item.class);
+        Map<String, Object> modelMap = new HashMap<>(getConfigMap());
+        modelMap.put("brands", SharedData.getBrands(false));
         ModelAndView mv = renderProcessing(response, name, BASE_NAME, INFO_VIEW_PAGE);
+        mv.addAllObjects(modelMap);
         return mv;
     }
 
@@ -94,6 +107,7 @@ public class ItemController extends AbstractMainController<Item, String> {
 
         Map<String, Object> modelMap = new HashMap<>(getConfigMap());
         modelMap.put(BASE_NAME, item);
+        modelMap.put("brands", SharedData.getBrands(false));
         return new ModelAndView(UPDATE_VIEW_PAGE, modelMap);
     }
 
@@ -101,10 +115,13 @@ public class ItemController extends AbstractMainController<Item, String> {
     public ModelAndView updateActionWithPic(@PathVariable MultipartFile itemPic, @PathVariable(ID_STRING_LITERAL) String name, @Valid @ModelAttribute(BASE_NAME) Item entity, BindingResult bindingResult) {
         String encodeBase64 = ControllerImageUtils.imageUploadProcessing(itemPic, bindingResult);
 
+        Map<String, Object> modelMap = new HashMap<>(getConfigMap());
+        modelMap.put("brands", SharedData.getBrands(false));
+
         if (bindingResult.hasErrors()) {
-            Map<String, Object> modelMap = new HashMap<>(getConfigMap());
             modelMap.put(BASE_NAME, entity);
             ModelAndView mav = new ModelAndView(UPDATE_VIEW_PAGE, modelMap);
+            mav.addAllObjects(modelMap);
             return mav;
         }
         entity.setPictureBase64(encodeBase64);
@@ -112,6 +129,7 @@ public class ItemController extends AbstractMainController<Item, String> {
 
         ResponseEntity<Response> response = makeUpdateRestRequest(entity, BASE_ENTITY_URL_NAME, HttpMethod.POST, Item.class);
         ModelAndView mv = postUpdateProcessing(Item.class, response, UPDATE_VIEW_PAGE, BASE_NAME, entity, new Item(), bindingResult, BASE_NAME);
+        mv.addAllObjects(modelMap);
         return mv;
     }
 
@@ -179,6 +197,14 @@ public class ItemController extends AbstractMainController<Item, String> {
                     e.printStackTrace();
                 }
                 setValue(null);
+            }
+        });
+
+        binder.registerCustomEditor(Brand.class, new PropertyEditorSupport() {
+            @Override
+            public void setAsText(String text) {
+                Brand discoveredBrand = fetchBrandByStringId(text);
+                setValue(discoveredBrand);
             }
         });
 

@@ -1,6 +1,7 @@
 package com.deped.model.items;
 
 
+import com.deped.model.brand.Brand;
 import com.deped.model.items.features.FunctionType;
 import com.deped.protection.validators.integer.IntegerRange;
 import com.deped.protection.validators.xss.XSS;
@@ -89,12 +90,9 @@ public class Item implements Serializable {
 //    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pk.item", cascade=CascadeType.ALL)
 //    private Set<RequestItem> requestItems;
 
-//    @ManyToMany(cascade = CascadeType.ALL)
-//    @JoinTable(name = "item_all",
-//            joinColumns=@JoinColumn(name = "item_id"),
-//            inverseJoinColumns = @JoinColumn(name = "brand_id")
-//    )
-    //    private Set<Brand> brands;
+    @ManyToOne
+    @JoinColumn(name = "brand_name")
+    private Brand brand;
 
 //TODO
 //    @ManyToMany
@@ -195,6 +193,14 @@ public class Item implements Serializable {
 
     public void setPreviousIdName(String previousIdName) {
         this.previousIdName = previousIdName;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
     }
 
     @Override
