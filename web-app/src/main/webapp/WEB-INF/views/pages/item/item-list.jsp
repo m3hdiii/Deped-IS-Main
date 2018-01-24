@@ -84,6 +84,7 @@
                         <th class="col-xs-2">Description</th>
                         <th>Item Type</th>
                         <th>QTY</th>
+                        <th>Brand</th>
                         <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
                             <th>Actions</th>
                         </sec:authorize>
@@ -111,6 +112,7 @@
                             <td>${item.description}</td>
                             <td>${item.itemType}</td>
                             <td>${item.quantity}</td>
+                            <td>${item.brand.name}</td>
                             </td>
                             <sec:authorize access="hasRole('ROLE_SUPPLY_OFFICER')">
                                 <td>

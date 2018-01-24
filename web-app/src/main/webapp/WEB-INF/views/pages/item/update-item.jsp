@@ -92,7 +92,7 @@
                                         <label for="itemBrandId">* Brand</label>
                                         <form:select path="brand" id="itemBrandId"
                                                      class="form-control chosen-select"
-                                                     data-placeholder="Select a Brand">
+                                                     data-placeholder="Select a Brand" multiple="single">
                                             <form:option value="" label="--Please Select"/>
                                             <form:options items="${brands}" itemLabel="name" itemValue="name"/>
                                         </form:select>

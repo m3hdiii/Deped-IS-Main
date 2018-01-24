@@ -286,8 +286,8 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         String headTagTitle = "Approval Result";
         String headTagDescription = "Approval Result Summary";
         String heading = "Operation Result";
-        String successMessage = response.getResponseStatus() == ResponseStatus.SUCCESSFUL ? "You Successfully Processed The Approval Process" : null;
-        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "Something Went Wrong In Approval Process" : null;
+        String successMessage = response.getResponseStatus() == ResponseStatus.SUCCESSFUL ? "The approval process has been successful" : null;
+        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "The approval process has not been successful" : null;
 
         ResultBean resultBean = new ResultBean(headTagTitle, headTagDescription, heading, successMessage, failureMessage);
         ModelAndView mav = createResultPage(resultBean);
@@ -329,8 +329,9 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
         String headTagTitle = "Order Result";
         String headTagDescription = "Order Result Summary";
         String heading = "Operation Result";
-        String successMessage = response.getResponseStatus() == ResponseStatus.SUCCESSFUL ? "You Successfully Process The Ordering Process" : null;
-        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "Something Went Wrong In Ordering Process" : null;
+        String successMessage = response.getResponseStatus() == ResponseStatus.SUCCESSFUL ? "The ordering process has been successful" : null;
+        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? "The ordering process has not been successful" : null;
+
 
         ResultBean resultBean = new ResultBean(headTagTitle, headTagDescription, heading, successMessage, failureMessage);
         ModelAndView mav = createResultPage(resultBean);
@@ -424,8 +425,8 @@ public class OrderDetailsController extends AbstractMainController<OrderDetails,
     private ModelAndView createOutput(OrderDetailsForm orderDetailsForm, OrderDetailsState orderDetailsState, String processName, String headTagTitle, String headTagDescription, String heading) {
         ResponseEntity<Response> updateResponse = updateStatusAction(orderDetailsForm, orderDetailsState);
         Response response = updateResponse.getBody();
-        String successMessage = response.getResponseStatus() == ResponseStatus.SUCCESSFUL ? String.format("You Successfully Process The %s Process", processName) : null;
-        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? String.format("Something Went Wrong In %s Process", processName) : null;
+        String successMessage = response.getResponseStatus() == ResponseStatus.SUCCESSFUL ? String.format("The %s process has been successful", processName) : null;
+        String failureMessage = response.getResponseStatus() == ResponseStatus.FAILED ? String.format("The %s process has not been successful", processName) : null;
 
         if (response.getResponseStatus() == ResponseStatus.SUCCESSFUL) {
             SharedData.getItems(true);
