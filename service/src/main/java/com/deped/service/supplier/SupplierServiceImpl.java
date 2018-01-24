@@ -35,6 +35,12 @@ public class SupplierServiceImpl implements SupplierService {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
+
+        if (savedEntity == null) {
+            ResponseEntity<Supplier> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return responseEntity;
+        }
+
         ResponseEntity<Supplier> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }

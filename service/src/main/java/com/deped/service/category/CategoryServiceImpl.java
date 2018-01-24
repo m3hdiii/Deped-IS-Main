@@ -29,6 +29,12 @@ public class CategoryServiceImpl implements CategoryService {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
+
+        if (savedEntity == null) {
+            ResponseEntity<Category> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return responseEntity;
+        }
+
         ResponseEntity<Category> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }

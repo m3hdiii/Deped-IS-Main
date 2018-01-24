@@ -44,6 +44,12 @@ public class UserServiceImpl implements UserService {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
+
+        if (savedEntity == null) {
+            ResponseEntity<User> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return responseEntity;
+        }
+
         ResponseEntity<User> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }

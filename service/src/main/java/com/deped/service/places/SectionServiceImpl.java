@@ -29,6 +29,12 @@ public class SectionServiceImpl implements SectionService {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
+
+        if (savedEntity == null) {
+            ResponseEntity<Section> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return responseEntity;
+        }
+
         ResponseEntity<Section> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }

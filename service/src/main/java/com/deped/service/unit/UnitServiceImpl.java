@@ -29,6 +29,12 @@ public class UnitServiceImpl implements UnitService {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
+
+        if (savedEntity == null) {
+            ResponseEntity<Unit> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return responseEntity;
+        }
+
         ResponseEntity<Unit> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }

@@ -30,6 +30,12 @@ public class DepartmentServiceImpl implements DepartmentService {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.CONFLICT);
         }
+
+        if (savedEntity == null) {
+            ResponseEntity<Department> responseEntity = new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            return responseEntity;
+        }
+
         ResponseEntity<Department> responseEntity = new ResponseEntity<>(savedEntity, OK);
         return responseEntity;
     }
