@@ -112,7 +112,7 @@
                                             ${requestDet.item.name}
                                     </div>
                                     <div>
-                                        <small>SONY</small>
+                                        <small>${requestDet.item.brand.name}</small>
                                     </div>
                                 </th>
 
