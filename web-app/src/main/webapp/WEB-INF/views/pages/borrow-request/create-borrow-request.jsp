@@ -139,6 +139,8 @@
                                                 <form:hidden
                                                         path="listOfRequestTracker['${loop.index}'].requestDetails.request.requestId"/>
                                                 <form:hidden
+                                                        path="listOfRequestTracker['${loop.index}'].requestDetails.requestDetailsStatus"/>
+                                                <form:hidden
                                                         path="listOfRequestTracker['${loop.index}'].requestDetails.request.requestId"/>
                                                 <form:hidden
                                                         path="listOfRequestTracker['${loop.index}'].acquiredUser"
