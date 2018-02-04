@@ -267,7 +267,8 @@
                                     <div class="col-md-12">
                                         <div class="image-upload-container">
             <%-- ************************* Please change this to the recent picture of the user who is SELECTED ****************** --%>
-                                              <img src="${resourceURL}/images/avtar/add-user.png" class="img-circle" id="img-upload" alt="User-Image" width="142" height="142"/>
+                                            <img src="${baseUrl}${user.picUrl}" class="img-circle" id="img-upload"
+                                                 alt="User-Image" width="142" height="142"/>
                                         </div>
                                             <%--<i class="fa fa-user fa-5x text-white" aria-hidden="true"></i>--%>
                                     </div>
