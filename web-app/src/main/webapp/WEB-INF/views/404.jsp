@@ -19,12 +19,12 @@
     <div class="row">
         <div class="col-lg-6 col-lg-offset-3">
             <h1 class="text-center" style="font-size:150px; font-weight:800;">404</h1>
-            <p class="text-center lead">The Page you requested does not exist</p>
-            <hr class="">
+            <p class="text-center lead">Not Found</p>
+            <%--<hr class="">--%>
         </div>
     </div>
 
-    <div class="row">
+    <%--<div class="row">
         <div class="col-lg-4 col-lg-offset-4">
 
             <form>
@@ -38,13 +38,13 @@
 
 
         </div>
-    </div>
+    </div>--%>
 
     <div class="row">
         <div class="col-lg-6 col-lg-offset-3 text-center ">
             <hr class="">
-            <p class="text-gray">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin iaculis quam sit amet nisi dictum, in iaculis dolor lobortis. Aenean placerat purus non faucibus aliquam.</p>
-            <button type="submit" class="btn btn-default">Go Home</button>
+            <p class="text-gray">The requested page was not found on this server.</p>
+            <a href="/dashboard" class="btn btn-default" role="button">Go Home</a>
         </div>
     </div>
 

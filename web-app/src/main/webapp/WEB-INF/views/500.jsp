@@ -20,12 +20,12 @@
     <div class="row">
         <div class="col-lg-6 col-lg-offset-3">
             <h1 class="text-center" style="font-size:150px; font-weight:800;">500</h1>
-            <p class="text-center lead">Your Operation encountered with some problems</p>
-            <hr class="">
+            <p class="text-center lead">Internal Server Error</p>
+            <%--<hr class="">--%>
         </div>
     </div>
 
-    <div class="row">
+    <%--<div class="row">
         <div class="col-lg-4 col-lg-offset-4">
 
             <form>
@@ -39,13 +39,14 @@
 
 
         </div>
-    </div>
+    </div>--%>
 
     <div class="row">
         <div class="col-lg-6 col-lg-offset-3 text-center ">
             <hr class="">
-            <p class="text-gray">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin iaculis quam sit amet nisi dictum, in iaculis dolor lobortis. Aenean placerat purus non faucibus aliquam.</p>
-            <a href="/" class="btn btn-default" role="button">Go Home</a>
+            <p class="text-gray">Sorry, something went wrong</p>
+            <p class="text-gray">Please Contact the server administrator, and inform them of the time the error occurred, and anything you might have done that may have caused the error.</p>
+            <a href="/dashboard" class="btn btn-default" role="button">Go Home</a>
         </div>
     </div>
 
