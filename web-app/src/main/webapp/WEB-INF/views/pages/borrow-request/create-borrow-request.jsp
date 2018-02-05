@@ -90,30 +90,43 @@
 
                                     <c:forEach items="${borrowRequestDetailsForm.listOfRequestTracker}" var="reqTracker"
                                                varStatus="loop">
+
+
                                         <tr>
                                             <td>${loop.index + 1}</td>
                                             <td>${reqTracker.requestDetails.item.name}</td>
-                                            <td>
-                                                <form:select
-                                                        path="listOfRequestTracker['${loop.index}'].itemDetails.officeSerialNo"
-                                                        class="form-control">
-                                                    <form:option value="-" label="---Choose a Status"/>
-                                                    <form:options items="${reqTracker.itemDetailsList}"
-                                                                  itemLabel="officeSerialNo"
-                                                                  itemValue="officeSerialNo"/>
-                                                </form:select>
-                                            </td>
-                                            <td>
-                                                <form:input id="releaseDate${loop.index}"
-                                                            onclick="clickOnDateInput('releaseDate${loop.index}')"
-                                                            path="listOfRequestTracker['${loop.index}'].releaseDate"/></td>
-                                                <%--  <form:input id="releaseDate${loop.index}"
-                                                              type="date"
-                                                              path="listOfRequestTracker['${loop.index}'].releaseDate"/></td>--%>
+                                            <c:choose>
+                                                <c:when test="${reqTracker.requestDetails.requestDetailsStatus ne 'CANCELED' and reqTracker.requestDetails.requestDetailsStatus ne 'DISAPPROVED'}">
+                                                    <td>
+                                                        <form:select
+                                                                path="listOfRequestTracker['${loop.index}'].itemDetails.officeSerialNo"
+                                                                class="form-control">
+                                                            <form:option value="-" label="---Choose a Status"/>
+                                                            <form:options items="${reqTracker.itemDetailsList}"
+                                                                          itemLabel="officeSerialNo"
+                                                                          itemValue="officeSerialNo"/>
+                                                        </form:select>
+                                                    </td>
+                                                    <td>
+                                                        <form:input id="releaseDate${loop.index}"
+                                                                    onclick="clickOnDateInput('releaseDate${loop.index}')"
+                                                                    path="listOfRequestTracker['${loop.index}'].releaseDate"/>
+                                                    </td>
+                                                    <%--  <form:input id="releaseDate${loop.index}"
+                                                                  type="date"
+                                                                  path="listOfRequestTracker['${loop.index}'].releaseDate"/></td>--%>
+                                                    <td>
+                                                        GOING TO BE HELD
+                                                    </td>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <td>-----</td>
+                                                    <td>-----</td>
+                                                    <td>${reqTracker.requestDetails.requestDetailsStatus.name}</td>
+                                                </c:otherwise>
+                                            </c:choose>
 
-                                            <td>
-                                                GOING TO BE HELD
-                                            </td>
+
                                             <td>
                                                     ${reqTracker.requestDetails.request.requestId}
                                             </td>
@@ -125,6 +138,8 @@
                                                         value="IN_USE"/>
                                                 <form:hidden
                                                         path="listOfRequestTracker['${loop.index}'].requestDetails.request.requestId"/>
+                                                <form:hidden
+                                                        path="listOfRequestTracker['${loop.index}'].requestDetails.requestDetailsStatus"/>
                                                 <form:hidden
                                                         path="listOfRequestTracker['${loop.index}'].requestDetails.request.requestId"/>
                                                 <form:hidden
@@ -148,6 +163,7 @@
                                             </td>
 
                                         </tr>
+
                                     </c:forEach>
                                     </tbody>
                                 </table>

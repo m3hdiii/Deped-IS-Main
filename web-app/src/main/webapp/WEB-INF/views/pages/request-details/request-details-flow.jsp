@@ -112,7 +112,7 @@
                                             ${requestDet.item.name}
                                     </div>
                                     <div>
-                                        <small>SONY</small>
+                                        <small>${requestDet.item.brand.name}</small>
                                     </div>
                                 </th>
 
@@ -137,7 +137,8 @@
                                                 <form:select id="requestDetailsStatus${loop.index}" multiple="single"
                                                              path="map['${strKey}'].requestDetailsStatus"
                                                              onchange="processReason('requestDetailsStatus${loop.index}', '${strKey}')">
-                                                    <form:options items="${nextRequestDetailsStatuses}"/>
+                                                    <form:options items="${nextRequestDetailsStatuses}"
+                                                                  itemLabel="action"/>
                                                 </form:select>
                                             </td>
                                         </c:otherwise>

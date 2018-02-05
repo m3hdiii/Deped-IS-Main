@@ -114,6 +114,20 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
         return true;
     }
 
+    public RequestStatus checkCancelDisapproveAll(RequestDetails[] entities) {
+        int tmp = 0;
+        for (RequestDetails rd : entities) {
+            if (rd.getRequestDetailsStatus() == RequestDetailsStatus.DISAPPROVED || rd.getRequestDetailsStatus() == RequestDetailsStatus.CANCELED) {
+                tmp++;
+            }
+        }
+
+        if (entities.length == tmp) {
+            return RequestStatus.FINALIZED;
+        } else
+            return RequestStatus.CONSIDERED;
+    }
+
 
     @Override
     public boolean updateRequestStatus(String username, RequestDetailsStatus requestDetailsStatus, RequestDetails[] entities) {
@@ -136,7 +150,7 @@ public class RequestDetailsRepositoryImpl implements RequestDetailsRepository {
             switch (requestDetailsStatus) {
                 case APPROVED:
                 case DISAPPROVED:
-                    nextRequestStatus = RequestStatus.CONSIDERED;
+                    nextRequestStatus = checkCancelDisapproveAll(entities);
                     break;
                 case RELEASED:
                     nextRequestStatus = RequestStatus.FINALIZED;

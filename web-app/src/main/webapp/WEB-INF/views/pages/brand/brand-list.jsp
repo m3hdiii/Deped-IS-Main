@@ -80,7 +80,6 @@
                                          alt="item image"/>
                                 </c:otherwise>
                             </c:choose>
-                            <hr size="30">
                         </div>
                     </div>
                 </c:forEach>

@@ -524,7 +524,14 @@ public class RequestDetailsController extends AbstractMainController<RequestDeta
     }
 
     private ResponseEntity<Response> updateBorrowStatusAction(BorrowRequestDetailsForm requestDetailsForm, RequestDetailsStatus status) {
-        List<RequestTracker> list = requestDetailsForm.getListOfRequestTracker();
+        List<RequestTracker> listMain = requestDetailsForm.getListOfRequestTracker();
+        List<RequestTracker> list = new ArrayList<>();
+        for (RequestTracker rt : listMain) {
+            if (rt.getRequestDetails().getRequestDetailsStatus() != RequestDetailsStatus.DISAPPROVED && rt.getRequestDetails().getRequestDetailsStatus() != RequestDetailsStatus.CANCELED) {
+                list.add(rt);
+            }
+        }
+
         RequestTracker[] requestDetailsArray = list.toArray(new RequestTracker[list.size()]);
 
         RestTemplate restTemplate = new RestTemplate();

@@ -254,7 +254,7 @@
                                                         <th>Capacity / Unit</th>
                                                         <td class="col-md-12">
                                                             <div class="form-group col-md-6 no-margn no-padd">
-                                                                <form:input id="num1${loop.index}" onkeyup="lockDownTotal('${loop.index}')" class="form-control input-sm" type="number" path="unitCapacity"/>
+                                                                <form:input id="num1${loop.index}" onkeyup="lockDownTotal('${loop.index}')" class="form-control input-sm" type="number" min="0" path="unitCapacity"/>
                                                             </div>
                                                                 <%--<h3 class="col-md-2 no-margn no-padd">&#x2215;</h3>--%>
 
